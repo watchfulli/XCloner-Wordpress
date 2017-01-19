@@ -61,7 +61,7 @@ class Xcloner_Admin {
 	 */
 	public function enqueue_styles($hook) {
 		
-		if(!stristr($hook, "page_".$this->plugin_name))
+		if(!stristr($hook, "page_".$this->plugin_name) || (isset($_GET['option']) and $_GET['option']=="com_cloner"))
 			return;
 
 		/**
@@ -77,6 +77,7 @@ class Xcloner_Admin {
 		 */
 		
 		wp_enqueue_style( $this->plugin_name."_materialize", plugin_dir_url( __FILE__ ) . 'css/materialize.min.css', array(), $this->version, 'all' );
+		wp_enqueue_style( $this->plugin_name."_jstree", dirname(plugin_dir_url( __FILE__ )) . '/vendor/vakata/jstree/dist/themes/default/style.min.css', array(), '3.3', 'all' );
 		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/xcloner-admin.css', array(), $this->version, 'all' );
 
 	}
@@ -104,14 +105,9 @@ class Xcloner_Admin {
 		 */
 
 		wp_enqueue_script( $this->plugin_name."_materialize", plugin_dir_url( __FILE__ ) . 'js/materialize.min.js', array( 'jquery' ), $this->version, false );
+		wp_enqueue_script( $this->plugin_name."_vakata", dirname(plugin_dir_url( __FILE__ )) . '/vendor/vakata/jstree/dist/jstree.min.js', array( 'jquery' ), '3.3', false );
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/xcloner-admin.js', array( 'jquery' ), $this->version, false );
 
-	}
-	
-	public function xcloner_init_page()
-	{
-		require_once("partials/xcloner_init_page.php");
-		
 	}
 	
 	public function trigger_message_notice($message, $status = "success")
@@ -121,6 +117,17 @@ class Xcloner_Admin {
 	        <p><?php _e( $message, 'xcloner' ); ?></p>
 	    </div>
 		<?php
+	}
+	
+	public function xcloner_init_page()
+	{
+		require_once("partials/xcloner_init_page.php");
+		
+	}
+	
+	public function xcloner_generate_backups_page()
+	{
+		require_once("partials/xcloner_generate_backups_page.php");
 	}
 	
 	public function xcloner_settings_page()
@@ -154,13 +161,13 @@ class Xcloner_Admin {
         ?>
         <h1><?= esc_html(get_admin_page_title()); ?></h1>
          
-        <h2 class="nav-tab-wrapper row">
-            <a href="?page=xcloner_settings_page&tab=general_options" class="nav-tab col s12 m3 l2 <?php echo $active_tab == 'general_options' ? 'nav-tab-active' : ''; ?>"><?php echo __('General Options')?></a>
-            <a href="?page=xcloner_settings_page&tab=mysql_options" class="nav-tab col s12 m3 l2 <?php echo $active_tab == 'mysql_options' ? 'nav-tab-active' : ''; ?>"><?php echo __('Mysql Options')?></a>
-            <a href="?page=xcloner_settings_page&tab=system_options" class="nav-tab col s12 m3 l2 <?php echo $active_tab == 'system_options' ? 'nav-tab-active' : ''; ?>"><?php echo __('System Options')?></a>
-            <a href="?page=xcloner_settings_page&tab=cron_options" class="nav-tab col s12 m3 l2 <?php echo $active_tab == 'cron_options' ? 'nav-tab-active' : ''; ?>"><?php echo __('Cron Options')?></a>
-        </h2>
-         
+        <ul class="nav-tab-wrapper row">
+            <li><a href="?page=xcloner_settings_page&tab=general_options" class="nav-tab col s12 m3 l2 <?php echo $active_tab == 'general_options' ? 'nav-tab-active' : ''; ?>"><?php echo __('General Options')?></a></li>
+            <li><a href="?page=xcloner_settings_page&tab=mysql_options" class="nav-tab col s12 m3 l2 <?php echo $active_tab == 'mysql_options' ? 'nav-tab-active' : ''; ?>"><?php echo __('Mysql Options')?></a></li>
+            <li><a href="?page=xcloner_settings_page&tab=system_options" class="nav-tab col s12 m3 l2 <?php echo $active_tab == 'system_options' ? 'nav-tab-active' : ''; ?>"><?php echo __('System Options')?></a></li>
+            <li><a href="?page=xcloner_settings_page&tab=cron_options" class="nav-tab col s12 m3 l2 <?php echo $active_tab == 'cron_options' ? 'nav-tab-active' : ''; ?>"><?php echo __('Cron Options')?></a></li>
+        </ul>
+
 	    <div class="wrap">
 	        
 	        <form action="options.php" method="post">

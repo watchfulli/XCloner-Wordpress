@@ -75,6 +75,7 @@ function xcloner_display()
 		$plugin->display($page);
 }
 
+
 /**
  * Begins execution of the plugin.
  *

@@ -81,6 +81,8 @@ class Xcloner {
 		$this->define_admin_menu();
 		$this->define_plugin_settings();
 		
+		$this->define_ajax_hooks();
+		
 	}
 	
 	public function check_dependencies(){
@@ -142,6 +144,11 @@ class Xcloner {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-xcloner-settings.php';
 		
 		/**
+		 * The class responsible for implementing the database backup methods.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-xcloner-database.php';
+		
+		/**
 		 * The class responsible for sanitization of users input.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-xcloner-sanitization.php';
@@ -150,6 +157,11 @@ class Xcloner {
 		 * The class responsible for XCloner system requirements validation.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-xcloner-requirements.php';
+		
+		/**
+		 * The class responsible for XCloner API requests.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-xcloner-api.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the public-facing
@@ -175,6 +187,9 @@ class Xcloner {
 		$plugin_i18n = new Xcloner_i18n();
 
 		$this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
+		
+		//wp_localize_script( 'ajax-script', 'my_ajax_object',
+        //   array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
 
 	}
 
@@ -192,7 +207,7 @@ class Xcloner {
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
-
+		
 	}
 	
 	/**
@@ -228,6 +243,14 @@ class Xcloner {
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
 
+	}
+	
+	private function define_ajax_hooks()
+	{
+		$plugin_public = new Xcloner_Public( $this->get_plugin_name(), $this->get_version() );
+		//$this->loader->add_action( 'wp_ajax_get_database_tables_action', $plugin_public, array('Xcloner_Api','get_database_tables_action') );
+		$xcloner_api = new Xcloner_Api();
+		add_action( 'wp_ajax_get_database_tables_action', array($xcloner_api,'get_database_tables_action')  );
 	}
 
 	/**

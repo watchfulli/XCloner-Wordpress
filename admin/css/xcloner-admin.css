@@ -66,6 +66,26 @@ span.shorten_string{
 	display: none;
 }
 
+.nav-tab-wrapper li{
+	margin-bottom: 0px;
+}
+
+.nav-tab-wrapper-content .tab-content{
+	display: none;
+}
+
+.nav-tab-wrapper-content .tab-content.active{
+	display: block;
+}
+
+.input-field label.active {
+	font-size: 1rem;
+}
+
+#error_modal textarea{
+	height: 150px;
+}
+
 @media only screen and (min-width: 993px){
 	.dashboard .backup-ready{
 		float: right;

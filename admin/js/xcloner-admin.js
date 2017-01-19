@@ -16,6 +16,17 @@
 			jQuery(".additional_system_info").toggle();
 		})
 		
+		jQuery(".nav-tab-wrapper.content li").click(function(){
+				jQuery(".nav-tab-wrapper li a").removeClass("nav-tab-active");
+				jQuery(this).find('a').addClass("nav-tab-active");
+				jQuery(".nav-tab-wrapper-content .tab-content").removeClass('active');
+				jQuery(".nav-tab-wrapper-content "+jQuery(this).find('a').attr('href')).addClass('active');
+		})
+	
+		var hash = window.location.hash;
+		if(hash){
+			next_tab(hash);
+		}
 	})
 	
 	/**
@@ -48,6 +59,11 @@
 
 })( jQuery );
 
+function next_tab(hash){
+		jQuery(".nav-tab-wrapper").find("li a[href='"+hash+"']").trigger('click');
+		location.hash = hash;
+	}
+	
 function doShortText(elem)
 {
 	if(elem.hasClass("full")){

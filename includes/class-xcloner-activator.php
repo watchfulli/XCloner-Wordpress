@@ -48,6 +48,9 @@ class Xcloner_Activator {
 		
 		if(!get_option('xcloner_split_backup_limit'))
 			update_option('xcloner_split_backup_limit', 2048);
+			
+		if(!get_option('xcloner_size_limit_per_request'))
+			update_option('xcloner_size_limit_per_request', 50);
 
 	}
 
