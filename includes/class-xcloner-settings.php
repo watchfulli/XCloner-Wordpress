@@ -13,6 +13,13 @@ class Xcloner_Settings
 		return $path;
 	}
 	
+	public static function get_xcloner_dir_path($dir)
+	{
+		$path = self::get_xcloner_start_path().DS.$dir;
+		
+		return $path;
+	}
+	
 	public static function get_xcloner_store_path()
 	{
 		if(!get_option('xcloner_start_path'))

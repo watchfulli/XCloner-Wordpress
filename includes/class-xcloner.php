@@ -162,6 +162,11 @@ class Xcloner {
 		 * The class responsible for XCloner API requests.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-xcloner-api.php';
+		
+		/**
+		 * The class responsible for the XCloner File System methods.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-xcloner-file-system.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the public-facing
@@ -250,7 +255,8 @@ class Xcloner {
 		$plugin_public = new Xcloner_Public( $this->get_plugin_name(), $this->get_version() );
 		//$this->loader->add_action( 'wp_ajax_get_database_tables_action', $plugin_public, array('Xcloner_Api','get_database_tables_action') );
 		$xcloner_api = new Xcloner_Api();
-		add_action( 'wp_ajax_get_database_tables_action', array($xcloner_api,'get_database_tables_action')  );
+		add_action( 'wp_ajax_get_database_tables_action'	, array($xcloner_api,'get_database_tables_action')  );
+		add_action( 'wp_ajax_get_file_system_action'		, array($xcloner_api,'get_file_system_action')  );
 	}
 
 	/**

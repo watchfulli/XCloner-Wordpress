@@ -48,25 +48,42 @@ $xcloner_settings = new Xcloner_Settings();
 		     </div>
 		     
 		     <div class="row">
-					<div class="input-field col s12 m10 l6 right-align">
-						<a class="waves-effect waves-light btn" onclick="next_tab('#database_options');"><i class="material-icons right">skip_next</i>Next</a>
-					</div>
+				<div class="input-field col s12 m10 l6 right-align">
+					<a class="waves-effect waves-light btn" onclick="next_tab('#database_options');"><i class="material-icons right">skip_next</i>Next</a>
+				</div>
 			 </div>
 		</div>
 		
 		<div id="database_options" class="tab-content">
 			<h2><?php echo __('Select database data to include in the backup')?>:
-			<a class="btn-floating tooltipped btn-small" data-position="right" data-delay="50" data-tooltip="<?php echo __('Disable the \'Backup only WP tables\' setting if you don\'t want to show all other databases and tables not related to this Wordpress install');?>" data-tooltip-id=""><i class="material-icons">help_outline</i></a>
+				<a class="btn-floating tooltipped btn-small" data-position="right" data-delay="50" data-tooltip="<?php echo __('Disable the \'Backup only WP tables\' setting if you don\'t want to show all other databases and tables not related to this Wordpress install');?>" data-tooltip-id=""><i class="material-icons">help_outline</i></a>
 			</h2>
-			<div id="jstree_database_container">
+			
 			<!-- database/tables tree -->
-		    </div>
+			<div id="jstree_database_container"></div>
+		    
+		    <div class="row">
+				<div class="input-field col s12 m10 l6 right-align">
+					<a class="waves-effect waves-light btn" onclick="next_tab('#files_options');"><i class="material-icons right">skip_next</i>Next</a>
+				</div>
+			</div>
+			
 		</div>
 		
 		<div id="files_options" class="tab-content">
-			<div id="jstree_files_container">
-			<!-- database/tables tree -->
-		    </div>
+			<h2><?php echo __('Select from below the files/folders you want to exclude from your Backup Archive')?>:
+				<a class="btn-floating tooltipped btn-small" data-position="right" data-delay="50" data-tooltip="<?php echo __('You can navigate through all your site structure to exclude any file/folder you need by clicking the checkbox near it');?>" data-tooltip-id=""><i class="material-icons">help_outline</i></a>
+			</h2>
+			
+			<!-- Files System Container -->
+			<div id="jstree_files_container"></div>
+			
+					    <div class="row">
+				<div class="input-field col s12 m10 l6 right-align">
+					<a class="waves-effect waves-light btn" onclick="next_tab('#generate_backup');"><i class="material-icons right">skip_next</i>Next</a>
+				</div>
+			</div>
+			
 		</div>
 		<div id="generate_backup" class="tab-content">
 			<div class="row center">
@@ -76,7 +93,7 @@ $xcloner_settings = new Xcloner_Settings();
 	</div>
 </form>
 
-<!-- Modal Structure -->
+<!-- Error Modal Structure -->
   <div id="error_modal" class="modal">
     <div class="modal-content">
       <h4 class="title_line"><span class="title"></span></h4>
@@ -88,7 +105,6 @@ $xcloner_settings = new Xcloner_Settings();
       <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Close</a>
     </div>
   </div>
-
   
 <script>
 jQuery(function () { 
@@ -132,21 +148,54 @@ jQuery(function () {
 					"unique",
 				]
 		});
+		
+	jQuery('#jstree_files_container').jstree({
+			'core' : {
+				'check_callback' : true,
+				'data' : {
+					'method': 'POST',
+					'dataType': 'json',
+					'url' : ajaxurl,
+					'data' : function (node) {
+								var data = { 
+									'action': 'get_file_system_action',
+									'id' : node.id
+									}
+								return data;
+							}
+				},		
+					
+			'error' : function (err) { 
+				//alert("We have encountered a communication error with the server, please review the javascript console."); 
+				show_ajax_error("Error loading database structure ", err.reason, err.data);
+				},
+			 
+			'strings' : { 'Loading ...' : 'Loading the database structure...' },			
+			'themes' : {
+					"variant" : "default"
+				},
+			},
+			'checkbox': {
+				  three_state: true
+			},
+			'plugins' : [
+					"checkbox",
+					"massload",
+					"search",
+					//"sort",
+					//"state",
+					"types",
+					"unique",
+				]
+		});
 });
 
 
 function start_backup()
 {
 		jQuery.each(jQuery("#jstree_database_container").jstree("get_checked",true),function(){console.log(this.id+"-"+this.parent);});
+		jQuery.each(jQuery("#jstree_files_container").jstree("get_checked",true),function(){console.log(this.id+"-"+this.parent);});
 
 }
 
-function show_ajax_error(title, msg, body){
-	console.log(title+""+body);
-	jQuery("#error_modal .title").text(title);
-	jQuery("#error_modal .msg").text(msg);
-	jQuery("#error_modal .body").text(body);
-	var error_modal = jQuery("#error_modal").modal();
-	error_modal.modal('open');
-	}
 </script>

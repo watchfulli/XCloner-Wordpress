@@ -77,3 +77,14 @@ function doShortText(elem)
 	
 	elem.attr("data-text", text).text(first+"..."+last);
 }
+
+function show_ajax_error(title, msg, body){
+	
+	var modal = 
+	console.log(title+""+body);
+	jQuery("#error_modal .title").text(title);
+	jQuery("#error_modal .msg").text(msg);
+	jQuery("#error_modal .body").text(body);
+	var error_modal = jQuery("#error_modal").modal();
+	error_modal.modal('open');
+	}

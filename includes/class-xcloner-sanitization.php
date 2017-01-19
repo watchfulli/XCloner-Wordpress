@@ -17,6 +17,14 @@ class Xcloner_Sanitization {
 		return filter_var($option, FILTER_SANITIZE_URL);
 	}
 	
+	public function sanitize_input_as_relative_path($option)
+	{
+		$option = filter_var($option, FILTER_SANITIZE_URL);
+		$option = str_replace("..", "", $option);
+		
+		return $option;
+	}
+	
 	public function sanitize_input_as_email($option)
 	{
 		return filter_var($option, FILTER_SANITIZE_EMAIL);

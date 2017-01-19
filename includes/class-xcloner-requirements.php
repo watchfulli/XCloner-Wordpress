@@ -174,7 +174,7 @@ class XCloner_Requirements
 			return $this->file_format_size(disk_free_space(Xcloner_Settings::get_xcloner_store_path()));
 	}
 	
-	private function file_format_size($bytes, $decimals = 2) {
+	public function file_format_size($bytes, $decimals = 2) {
 	  $unit_list = array('B', 'KB', 'MB', 'GB', 'PB');
 	
 	  if ($bytes == 0) {
