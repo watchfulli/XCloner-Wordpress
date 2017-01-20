@@ -1,13 +1,16 @@
 <?php 
 $xcloner_settings = new Xcloner_Settings();
+$tab = 1;
 ?>
 <h1><?= esc_html(get_admin_page_title()); ?></h1>
          
 <ul class="nav-tab-wrapper content row">
-	<li><a href="#backup_options" class="nav-tab col s12 m3 l2 nav-tab-active"><?php echo __('1. Backup Options')?></a></li>
-	<li><a href="#database_options" class="nav-tab col s12 m3 l2 "><?php echo __('2. Database Options')?></a></li>
-	<li><a href="#files_options" class="nav-tab col s12 m3 l2 "><?php echo __('3. Files Options')?></a></li>
-	<li><a href="#generate_backup" class="nav-tab col s12 m3 l2 "><?php echo __('4. Generate Backup')?></a></li>
+	<li><a href="#backup_options" class="nav-tab col s12 m3 l2 nav-tab-active"><?php echo $tab.". ".__('Backup Options')?></a></li>
+	<?php if($xcloner_settings->get_enable_mysql_backup()):?>
+		<li><a href="#database_options" class="nav-tab col s12 m3 l2 "><?php echo ++$tab.". ".__('Database Options')?></a></li>
+	<?php endif?>
+	<li><a href="#files_options" class="nav-tab col s12 m3 l2 "><?php echo ++$tab.". ".__('Files Options')?></a></li>
+	<li><a href="#generate_backup" class="nav-tab col s12 m3 l2 "><?php echo ++$tab.". ".__('Generate Backup')?></a></li>
 </ul>
 
 <form action="" method="POST">
@@ -54,13 +57,18 @@ $xcloner_settings = new Xcloner_Settings();
 			 </div>
 		</div>
 		
+		<?php if($xcloner_settings->get_enable_mysql_backup()):?>
 		<div id="database_options" class="tab-content">
 			<h2><?php echo __('Select database data to include in the backup')?>:
 				<a class="btn-floating tooltipped btn-small" data-position="right" data-delay="50" data-tooltip="<?php echo __('Disable the \'Backup only WP tables\' setting if you don\'t want to show all other databases and tables not related to this Wordpress install');?>" data-tooltip-id=""><i class="material-icons">help_outline</i></a>
 			</h2>
 			
 			<!-- database/tables tree -->
-			<div id="jstree_database_container"></div>
+			<div class="row">
+				<div class="col s12 l6">
+					<div id="jstree_database_container"></div>
+				</div>
+			</div>
 		    
 		    <div class="row">
 				<div class="input-field col s12 m10 l6 right-align">
@@ -69,16 +77,21 @@ $xcloner_settings = new Xcloner_Settings();
 			</div>
 			
 		</div>
+		<?php endif ?>
 		
 		<div id="files_options" class="tab-content">
 			<h2><?php echo __('Select from below the files/folders you want to exclude from your Backup Archive')?>:
-				<a class="btn-floating tooltipped btn-small" data-position="right" data-delay="50" data-tooltip="<?php echo __('You can navigate through all your site structure to exclude any file/folder you need by clicking the checkbox near it');?>" data-tooltip-id=""><i class="material-icons">help_outline</i></a>
+				<a class="btn-floating tooltipped btn-small" data-position="bottom" data-delay="50" data-tooltip="<?php echo __('You can navigate below through all your site structure(Backup Start Location) to exclude any file/folder you need by clicking the checkbox near it');?>" data-tooltip-id=""><i class="material-icons">help_outline</i></a>
 			</h2>
 			
 			<!-- Files System Container -->
-			<div id="jstree_files_container"></div>
+			<div class="row">
+				<div class="col s12 l6">
+					<div id="jstree_files_container"></div>
+				</div>
+			</div>
 			
-					    <div class="row">
+			<div class="row">
 				<div class="input-field col s12 m10 l6 right-align">
 					<a class="waves-effect waves-light btn" onclick="next_tab('#generate_backup');"><i class="material-icons right">skip_next</i>Next</a>
 				</div>
@@ -109,6 +122,7 @@ $xcloner_settings = new Xcloner_Settings();
 <script>
 jQuery(function () { 
 	
+	<?php if($xcloner_settings->get_enable_mysql_backup()):?>
 	jQuery('#jstree_database_container').jstree({
 			'core' : {
 				'check_callback' : true,
@@ -146,8 +160,10 @@ jQuery(function () {
 					//"state",
 					"types",
 					"unique",
+					"wholerow"
 				]
 		});
+	<?php endif ?>
 		
 	jQuery('#jstree_files_container').jstree({
 			'core' : {
@@ -186,6 +202,7 @@ jQuery(function () {
 					//"state",
 					"types",
 					"unique",
+					"wholerow"
 				]
 		});
 });

@@ -58,8 +58,9 @@ class Xcloner_Settings
 	public static function get_default_backup_name()
 	{
 		$data = parse_url(get_site_url());
+		$suffix = substr( md5(rand()), 0, 5);
 			
-		$backup_name = "backup_".$data['host'].(isset($data['port'])?":".$data['port']:"").'-'.date("Y-m-d_H-i")."-".(self::get_enable_mysql_backup()?"sql":"nosql")/*.".".$this->get_backup_extension_name()*/;
+		$backup_name = "backup_".$suffix."_".$data['host'].(isset($data['port'])?":".$data['port']:"").'-'.date("Y-m-d_H-i")."-".(self::get_enable_mysql_backup()?"sql":"nosql")/*.".".$this->get_backup_extension_name()*/;
 		
 		return $backup_name;
 	}
@@ -121,6 +122,7 @@ class Xcloner_Settings
 	public function settings_init()
 	{
 	    global $wpdb;
+	    $this->xcloner_sanitization = new Xcloner_Sanitization();
 	    
 	    //ADDING MISSING OPTIONS
 	    if( false == get_option( 'xcloner_mysql_settings_page' ) ) {  
@@ -172,7 +174,7 @@ class Xcloner_Settings
 	    
 	    
 		//REGISTERING THE 'GENERAL SECTION' FIELDS
-		register_setting('xcloner_general_settings_group', 'xcloner_backup_compression_level', array('Xcloner_Sanitization', "sanitize_input_as_int"));
+		register_setting('xcloner_general_settings_group', 'xcloner_backup_compression_level', array($this->xcloner_sanitization, "sanitize_input_as_int"));
 	    add_settings_field(
 	        'xcloner_backup_compression_level',
 	       __('Backup Compression Level'),
@@ -186,7 +188,7 @@ class Xcloner_Settings
 	         )
 	    );
 	    
-	    register_setting('xcloner_general_settings_group', 'xcloner_start_path', array('Xcloner_Sanitization', "sanitize_input_as_path"));
+	    register_setting('xcloner_general_settings_group', 'xcloner_start_path', array($this->xcloner_sanitization, "sanitize_input_as_path"));
 	    add_settings_field(
 	        'xcloner_start_path',
 	        __('Backup Start Location'),
@@ -200,7 +202,7 @@ class Xcloner_Settings
 				)
 	    );
 	    
-	    register_setting('xcloner_general_settings_group', 'xcloner_store_path', array('Xcloner_Sanitization', "sanitize_input_as_path"));
+	    register_setting('xcloner_general_settings_group', 'xcloner_store_path', array($this->xcloner_sanitization, "sanitize_input_as_path"));
 	    add_settings_field(
 	        'xcloner_store_path',
 	        __('Backup Storage Location'),
@@ -214,7 +216,7 @@ class Xcloner_Settings
 				)
 	    );
 	    
-	    register_setting('xcloner_mysql_settings_group', 'xcloner_enable_log', array('Xcloner_Sanitization', "sanitize_input_as_int"));
+	    register_setting('xcloner_mysql_settings_group', 'xcloner_enable_log', array($this->xcloner_sanitization, "sanitize_input_as_int"));
 	    add_settings_field(
 	        'xcloner_enable_log',
 	        __('Enable XCloner Backup Log'),
@@ -227,7 +229,7 @@ class Xcloner_Settings
 		);	
 	 
 		//REGISTERING THE 'MYSQL SECTION' FIELDS
-		register_setting('xcloner_mysql_settings_group', 'xcloner_enable_mysql_backup', array('Xcloner_Sanitization', "sanitize_input_as_int"));
+		register_setting('xcloner_mysql_settings_group', 'xcloner_enable_mysql_backup', array($this->xcloner_sanitization, "sanitize_input_as_int"));
 	    add_settings_field(
 	        'xcloner_enable_mysql_backup',
 	        __('Enable Mysql Backup'),
@@ -251,7 +253,7 @@ class Xcloner_Settings
 				)
 	    );
 	    
-	    register_setting('xcloner_mysql_settings_group', 'xcloner_mysql_hostname', array('Xcloner_Sanitization', "sanitize_input_as_raw"));
+	    register_setting('xcloner_mysql_settings_group', 'xcloner_mysql_hostname', array($this->xcloner_sanitization, "sanitize_input_as_raw"));
 	    add_settings_field(
 	        'xcloner_mysql_hostname',
 	        __('Mysql Hostname'),
@@ -265,7 +267,7 @@ class Xcloner_Settings
 				)
 	    );
 
-	    register_setting('xcloner_mysql_settings_group', 'xcloner_mysql_username', array('Xcloner_Sanitization', "sanitize_input_as_raw"));
+	    register_setting('xcloner_mysql_settings_group', 'xcloner_mysql_username', array($this->xcloner_sanitization, "sanitize_input_as_raw"));
 	    add_settings_field(
 	        'xcloner_mysql_username',
 	        __('Mysql Username'),
@@ -279,7 +281,7 @@ class Xcloner_Settings
 				)
 	    );
 	    
-	    register_setting('xcloner_mysql_settings_group', 'xcloner_mysql_database', array('Xcloner_Sanitization', "sanitize_input_as_raw"));
+	    register_setting('xcloner_mysql_settings_group', 'xcloner_mysql_database', array($this->xcloner_sanitization, "sanitize_input_as_raw"));
 	    add_settings_field(
 	        'xcloner_mysql_database',
 	        __('Mysql Database'),
@@ -294,7 +296,7 @@ class Xcloner_Settings
 	    );
 	    
 	    //REGISTERING THE 'SYSTEM SECTION' FIELDS
-	    register_setting('xcloner_system_settings_group', 'xcloner_size_per_request_limit', array('Xcloner_Sanitization', "sanitize_input_as_int"));
+	    register_setting('xcloner_system_settings_group', 'xcloner_size_per_request_limit', array($this->xcloner_sanitization, "sanitize_input_as_int"));
 	    add_settings_field(
 	        'xcloner_size_limit_per_request',
 	       __('Data Size Limit Per Request'),
@@ -308,7 +310,7 @@ class Xcloner_Settings
 	         )
 	    );
 	    
-		register_setting('xcloner_system_settings_group', 'xcloner_files_to_process_per_request', array('Xcloner_Sanitization', "sanitize_input_as_int"));
+		register_setting('xcloner_system_settings_group', 'xcloner_files_to_process_per_request', array($this->xcloner_sanitization, "sanitize_input_as_int"));
 	    add_settings_field(
 	        'xcloner_files_to_process_per_request',
 	       __('Files To Process Per Request'),
@@ -322,7 +324,7 @@ class Xcloner_Settings
 	         )
 	    );
 	    
-		register_setting('xcloner_system_settings_group', 'xcloner_database_records_per_request', array('Xcloner_Sanitization', "sanitize_input_as_int"));
+		register_setting('xcloner_system_settings_group', 'xcloner_database_records_per_request', array($this->xcloner_sanitization, "sanitize_input_as_int"));
 	    add_settings_field(
 	        'xcloner_database_records_per_request',
 	       __('Database Records Per Request'),
@@ -336,7 +338,7 @@ class Xcloner_Settings
 	         )
 	    );
 	    
-		register_setting('xcloner_system_settings_group', 'xcloner_exclude_files_larger_than_mb', array('Xcloner_Sanitization', "sanitize_input_as_int"));
+		register_setting('xcloner_system_settings_group', 'xcloner_exclude_files_larger_than_mb', array($this->xcloner_sanitization, "sanitize_input_as_int"));
 	    add_settings_field(
 	        'xcloner_exclude_files_larger_than_mb',
 	       __('Exclude files larger than (MB)'),
@@ -350,7 +352,7 @@ class Xcloner_Settings
 	         )
 	    );
 	    
-		register_setting('xcloner_system_settings_group', 'xcloner_split_backup_limit', array('Xcloner_Sanitization', "sanitize_input_as_int"));
+		register_setting('xcloner_system_settings_group', 'xcloner_split_backup_limit', array($this->xcloner_sanitization, "sanitize_input_as_int"));
 	    add_settings_field(
 	        'xcloner_split_backup_limit',
 	       __('Split Backup Archive Limit (MB)'),

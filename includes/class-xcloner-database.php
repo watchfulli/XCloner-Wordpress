@@ -172,6 +172,12 @@ class XCloner_Database{
 
 	}
 
+	public function get_database_num_tables($database)
+	{
+		$query = "show tables in `".$database."`";
+		$res =  $this->query($query);
+		return mysqli_num_rows($res);
+	}
 	
 	public function get_all_databases()
 	{
@@ -181,11 +187,19 @@ class XCloner_Database{
 		
 		$databases_list = array();
 		
-		$databases_list[]['name'] = self::$dbDatabase;
+		$i = 0;
+		
+		$databases_list[$i]['name'] = self::$dbDatabase;
+		$databases_list[$i]['num_tables'] = $this->get_database_num_tables(self::$dbDatabase);
+		$i++;
 		
 		while ($row = mysqli_fetch_array( $result)){
 			if($row[0] != self::$dbDatabase)
-				$databases_list[]['name'] = $row[0];
+			{
+				$databases_list[$i]['name'] = $row[0];
+				$databases_list[$i]['num_tables'] = $this->get_database_num_tables($row[0]);
+				$i++;
+			}
 		}
 		
 		return $databases_list;

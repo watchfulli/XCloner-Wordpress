@@ -118,7 +118,7 @@ class Xcloner_Api{
 				$data[] = array(
 						'id' => $database['name'],
 						'parent' => '#',
-						'text' => $database['name'],
+						'text' => $database['name']." (".(int)$database['num_tables'].")",
 						'children' => true,
 						'state' => $state,
 						'icon' => plugin_dir_url(dirname(__FILE__))."/admin/assets/database-icon.png"

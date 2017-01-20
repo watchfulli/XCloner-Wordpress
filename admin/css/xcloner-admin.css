@@ -4,6 +4,10 @@
  */
 /* fallback */
 
+html {
+    font-family: GillSans, Calibri, Trebuchet, sans-serif;
+  }
+  
 @font-face {
   font-family: 'Material Icons';
   font-style: normal;
