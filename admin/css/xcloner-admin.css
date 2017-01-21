@@ -90,6 +90,19 @@ span.shorten_string{
 	height: 150px;
 }
 
+#error_modal .msg{
+	font-size: 14px;
+}
+
+#generate_backup .backup-status, #generate_backup ul.backup-status li{
+	display: none;
+}
+
+#generate_backup .action-buttons .cancel, 
+#generate_backup .action-buttons .restart{
+	display: none;
+} 
+
 @media only screen and (min-width: 993px){
 	.dashboard .backup-ready{
 		float: right;

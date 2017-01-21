@@ -173,7 +173,7 @@ class Xcloner {
 		 * side of the site.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-xcloner-public.php';
-
+		
 		$this->loader = new Xcloner_Loader();
 
 	}
@@ -257,8 +257,16 @@ class Xcloner {
 		$xcloner_api = new Xcloner_Api();
 		add_action( 'wp_ajax_get_database_tables_action'	, array($xcloner_api,'get_database_tables_action')  );
 		add_action( 'wp_ajax_get_file_system_action'		, array($xcloner_api,'get_file_system_action')  );
+		add_action( 'wp_ajax_scan_filesystem'		, array($xcloner_api,'scan_filesystem')  );
+		
+		
+		add_action( 'admin_notices', array($this, 'xcloner_error_admin_notices' ));
 	}
-
+	
+	function xcloner_error_admin_notices() {
+			settings_errors( 'xcloner_error_message' );
+		}
+	
 	/**
 	 * Run the loader to execute all of the hooks with WordPress.
 	 *

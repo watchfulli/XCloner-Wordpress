@@ -22,10 +22,10 @@ class Xcloner_Settings
 	
 	public static function get_xcloner_store_path()
 	{
-		if(!get_option('xcloner_start_path'))
+		if(!get_option('xcloner_store_path'))
 			$path = realpath(XCLONER_STORAGE_PATH);
 		else
-			$path = get_option('xcloner_start_path');
+			$path = get_option('xcloner_store_path');
 		
 		return $path;
 	}
@@ -188,7 +188,7 @@ class Xcloner_Settings
 	         )
 	    );
 	    
-	    register_setting('xcloner_general_settings_group', 'xcloner_start_path', array($this->xcloner_sanitization, "sanitize_input_as_path"));
+	    register_setting('xcloner_general_settings_group', 'xcloner_start_path', array($this->xcloner_sanitization, "sanitize_input_as_absolute_path"));
 	    add_settings_field(
 	        'xcloner_start_path',
 	        __('Backup Start Location'),
@@ -198,11 +198,11 @@ class Xcloner_Settings
 	        array('xcloner_start_path',
 				__('Base path location from where XCloner can start the Backup.'),
 				$this->get_xcloner_start_path(),
-				'disabled'
+				//'disabled'
 				)
 	    );
 	    
-	    register_setting('xcloner_general_settings_group', 'xcloner_store_path', array($this->xcloner_sanitization, "sanitize_input_as_path"));
+	    register_setting('xcloner_general_settings_group', 'xcloner_store_path', array($this->xcloner_sanitization, "sanitize_input_as_absolute_path"));
 	    add_settings_field(
 	        'xcloner_store_path',
 	        __('Backup Storage Location'),
@@ -212,7 +212,7 @@ class Xcloner_Settings
 	        array('xcloner_store_path',
 				__('Location where XCloner will store the Backup archives.'),
 				$this->get_xcloner_store_path(), 
-				'disabled'
+				//'disabled'
 				)
 	    );
 	    
@@ -409,7 +409,7 @@ class Xcloner_Settings
 	    ?>
 	    <div class="row">
 	        <div class="input-field col s10 m10 l6">
-	          <input <?php echo ($disabled)?"disabled":""?> name="<?php echo $fieldname?>" id="<?php echo $fieldname?>" type="text" class="validate" value="<?php echo isset($value) ? esc_attr($value) : ''; ?>">
+	          <input class="validate" <?php echo ($disabled)?"disabled":""?> name="<?php echo $fieldname?>" id="<?php echo $fieldname?>" type="text" class="validate" value="<?php echo isset($value) ? esc_attr($value) : ''; ?>">
 	        </div>
 	        <div class="col s2 m2 ">
 				<a class="btn-floating tooltipped btn-small" data-position="right" data-delay="50" data-tooltip="<?php echo $label?>" data-tooltip-id=""><i class="material-icons">help_outline</i></a>

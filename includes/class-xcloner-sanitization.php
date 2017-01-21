@@ -1,4 +1,5 @@
 <?php
+use League\Flysystem\Util;
 
 class Xcloner_Sanitization {
 	
@@ -10,6 +11,24 @@ class Xcloner_Sanitization {
 	public function sanitize_input_as_string($option)
 	{
 		return filter_var($option, FILTER_SANITIZE_STRING);
+	}
+	
+	public function sanitize_input_as_absolute_path($option)
+	{
+		$path = filter_var($option, FILTER_SANITIZE_URL);
+		
+		try{
+			$option = Util::normalizePath($path);
+		}catch(Exception $e){
+			add_settings_error('xcloner_error_message', '', __($e->getMessage()), 'error');
+		}
+		
+		if($path and !is_dir($path)){
+			add_settings_error('xcloner_error_message', '', __(sprintf('Invalid Server Path %s',$option)), 'error');
+			return false;
+		}
+		
+		return $path;
 	}
 	
 	public function sanitize_input_as_path($option)

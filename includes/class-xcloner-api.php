@@ -1,11 +1,20 @@
 <?php
 
+use League\Flysystem\Config;
+use League\Flysystem\Filesystem;
+use League\Flysystem\Util;
+//use League\Flysystem\Util\ContentListingFormatter;
+use League\Flysystem\Adapter\Local;
+
 class Xcloner_Api{
 
-	var $db_link;
-	var $xcloner_settings;
-	var $xcloner_file_system;
-	var $xcloner_requirements;
+	protected $db_link;
+	protected $xcloner_settings;
+	protected $xcloner_file_system;
+	protected $xcloner_requirements;
+	protected $_file_system;
+	protected $exclude_files_by_default = array("administrator/backups", "wp-content/backups");
+	protected $form_params;
 	
 	public function __construct()
 	{
@@ -14,26 +23,91 @@ class Xcloner_Api{
 		$this->xcloner_sanitization 	= new Xcloner_Sanitization();
 		$this->xcloner_requirements 	= new XCloner_Requirements();
 		
-		
 	}
 	
 	public function init_db()
 	{
-		$xcloner_db = new XCloner_Database();
-		
 		
 		$data['dbHostname'] = $this->xcloner_settings->get_db_hostname();
 		$data['dbUsername'] = $this->xcloner_settings->get_db_username();
 		$data['dbPassword'] = $this->xcloner_settings->get_db_password();
 		$data['dbDatabase'] = $this->xcloner_settings->get_db_database();
 		
-		$data['recordsPerSession'] = $this->xcloner_settings->get_xcloner_option('xcloner_database_records_per_request');
 		
-		$xcloner_db->init($data);
+		$data['recordsPerSession'] 		= $this->xcloner_settings->get_xcloner_option('xcloner_database_records_per_request');
+		$data['TEMP_DBPROCESS_FILE'] 	= $this->xcloner_settings->get_xcloner_tmp_path().DS.".database";
+		$data['TEMP_DUMP_FILE'] 		= $this->xcloner_settings->get_xcloner_tmp_path().DS."database-sql.sql";
+		
+		try
+		{
+			$xcloner_db = new XCloner_Database($data['dbUsername'], $data['dbPassword'], $data['dbDatabase'], $data['dbHostname']);
+			$xcloner_db->init($data);
+
+		}catch(Exception $e)
+		{
+			$this->send_response($e->getMessage());
+			
+		}
 		
 		$this->db_link = $xcloner_db;
 		
 	
+	}
+	
+	public function scan_filesystem()
+	{
+		$params = json_decode(stripslashes($_POST['data']));
+		$init 	= (int)$_POST['init'];
+		
+		if($params === NULL)
+			 die( '{"status":false,"msg":"The post_data parameter must be valid JSON"}' );
+			 
+		$this->process_params($params);
+		
+		//print_r($this->form_params);
+		
+		$this->xcloner_file_system->set_excluded_files($this->form_params['excluded_files']);
+		
+		$return = $this->xcloner_file_system->start_file_recursion($init);
+		
+		$data["finished"] = !$return;
+		$data["status"] = $this->xcloner_file_system->get_scanned_files_num();
+		return $this->send_response($data);
+	}
+	
+	private function process_params($params)
+	{
+		$this->form_params['system'] = array();
+		
+		if(isset($params->backup_params))
+		{
+			foreach($params->backup_params as $param)
+			{
+				$this->form_params['system'][$param->name] = $this->xcloner_sanitization->sanitize_input_as_string($param->value);
+			}
+		}
+		
+		$this->form_params['database'] = array();
+		
+		if(isset($params->table_params))
+		{
+			foreach($params->table_params as $param)
+			{
+				$this->form_params['database'][$param->parent][] = $this->xcloner_sanitization->sanitize_input_as_raw($param->id);
+			}
+		}
+		
+		$this->form_params['excluded_files'] =  $this->exclude_files_by_default;
+		if(isset($params->files_params))
+		{
+			foreach($params->files_params as $param)
+			{
+				$this->form_params['excluded_files'][] = $this->xcloner_sanitization->sanitize_input_as_relative_path($param->id);
+			}
+			
+		}
+		
+		return $this;
 	}
 	
 	public function get_file_system_action()
@@ -43,47 +117,75 @@ class Xcloner_Api{
 		}
 		
 		$folder = $this->xcloner_sanitization->sanitize_input_as_relative_path($_POST['id']);
+		
 		$data = array();
 		
 		if($folder == "#"){
 			
-			$folder = "$";
-			$list_directory = $this->xcloner_settings->get_xcloner_start_path();
+			$folder = "/";
+			//$list_directory = $this->xcloner_settings->get_xcloner_start_path();
 			$data[] = array(
 						'id' => $folder,
 						'parent' => '#',
-						'text' => $list_directory,
+						'text' => $this->xcloner_settings->get_xcloner_start_path(),
 						//'children' => true,
 						'state' =>  array('selected' => false, 'opened' => true),
 						'icon' => plugin_dir_url(dirname(__FILE__))."/admin/assets/file-icon-root.png"
 						);
 		}
-		else
-			$list_directory = $this->xcloner_settings->get_xcloner_dir_path(substr($folder, 1, strlen($folder)));
+		//else
+			//$list_directory = $this->xcloner_settings->get_xcloner_dir_path(substr($folder, 1, strlen($folder)));
 		
-			$files = $this->xcloner_file_system->list_directory($list_directory);
-		
+			//$files = $this->xcloner_file_system->list_directory($list_directory);
+			
+			try{
+
+				#$adapter = new Local($this->xcloner_settings->get_xcloner_start_path(),'', 'SKIP_LINKS');
+				#$filesystem = new Filesystem($adapter, new Config([
+				#		'disable_asserts' => true,
+				#]));
+			
+				//$filesystem = $this->xcloner_file_system->get_fileystem_handler();
+				$files = $this->xcloner_file_system->list_directory($folder);
+
+			}catch(Exception $e){
+				
+				print $e->getMessage();
+				return;
+			}
+			
+			$type = array();
+			foreach ($files as $key => $row)
+			{
+				$type[$key] = $row['type'];
+			}
+			array_multisort($type, SORT_ASC, $files);
+			
 			foreach($files as $file)
 			{
 				$children = false;
-				$text = $file['filename'];
+				$text = $file['basename'];
 				
-				if($file['type'] == "D")
+				if($file['type'] == "dir")
 					$children = true;
 				else
 					 $text .= " (". $this->xcloner_requirements->file_format_size($file['size']).")";
+				
+				if(in_array($file['path'], $this->exclude_files_by_default))
+					$selected = true;
+				else
+					$selected = false;
 					
 				$data[] = array(
-							'id' => $folder.DS.$file['filename'],
+							'id' => $file['path'],
 							'parent' => $folder,
 							'text' => $text,
 							'children' => $children,
-							'state' =>  array('selected' => false, 'opened' => false),
-							'icon' => plugin_dir_url(dirname(__FILE__))."/admin/assets/file-icon-".$file['type'].".png"
+							'state' =>  array('selected' => $selected, 'opened' => false),
+							'icon' => plugin_dir_url(dirname(__FILE__))."/admin/assets/file-icon-".strtolower(substr($file['type'], 0, 1)).".png"
 							);
 			}
 		
-		//print_r($data);exit;
 		
 		return $this->send_response($data);
 	}
@@ -152,11 +254,10 @@ class Xcloner_Api{
 			}
 		}
 		
-		
 		return $this->send_response($data);
 	}
 	
-	public function send_response($data)
+	private function send_response($data)
 	{
 		if( ob_get_length() )
 			ob_clean();

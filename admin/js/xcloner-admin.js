@@ -59,6 +59,12 @@
 
 })( jQuery );
 
+jQuery( document ).ajaxError(function(err, request) {
+		//console.log( err );
+		//console.log( request );
+		//show_ajax_error("dd", "dd12", request)
+});
+
 function next_tab(hash){
 		jQuery(".nav-tab-wrapper").find("li a[href='"+hash+"']").trigger('click');
 		location.hash = hash;
@@ -78,13 +84,23 @@ function doShortText(elem)
 	elem.attr("data-text", text).text(first+"..."+last);
 }
 
-function show_ajax_error(title, msg, body){
+function show_ajax_error(title, msg, json){
 	
-	var modal = 
-	console.log(title+""+body);
+	//var json = jQuery.parseJSON( body )
+	
+	if(json.responseText)
+		msg = msg+": "+json.responseText;
+		
 	jQuery("#error_modal .title").text(title);
 	jQuery("#error_modal .msg").text(msg);
-	jQuery("#error_modal .body").text(body);
+	
+	if(json.status)
+		jQuery("#error_modal .status").text(json.status+" "+json.statusText);
+		
+	jQuery("#error_modal .body").text(JSON.stringify(json));
 	var error_modal = jQuery("#error_modal").modal();
 	error_modal.modal('open');
-	}
+}
+
+
+

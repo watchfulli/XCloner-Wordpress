@@ -11,12 +11,20 @@ class ComposerStaticInit571f9d19802717f7be61d57b40d60b28
         array (
             'splitbrain\\PHPArchive\\' => 22,
         ),
+        'L' => 
+        array (
+            'League\\Flysystem\\' => 17,
+        ),
     );
 
     public static $prefixDirsPsr4 = array (
         'splitbrain\\PHPArchive\\' => 
         array (
             0 => __DIR__ . '/..' . '/splitbrain/php-archive/src',
+        ),
+        'League\\Flysystem\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/league/flysystem/src',
         ),
     );
 

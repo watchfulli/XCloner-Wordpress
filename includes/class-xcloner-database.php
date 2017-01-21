@@ -21,26 +21,22 @@
  */
 
 
-class XCloner_Database{
+class XCloner_Database extends wpdb{
 
-	public static $dbHostname 			= "localhost";
-	public static $dbUsername 			= "root";
-	public static $dbPassword 			= "";
-	public static $dbDatabase 			= "";
-	public static $excludedTables 		= array();
+	public  $excludedTables 			= array();
 
-	public static $debug 				= 0;
-	public static $recordsPerSession	= 10000;
-	public static $dbCompatibility		= "";
-	public static $dbDropSyntax			= 1;
-	public static $countRecords			= 0;
+	public  $debug 						= 0;
+	public  $recordsPerSession			= 10000;
+	public  $dbCompatibility			= "";
+	public  $dbDropSyntax				= 1;
+	public  $countRecords				= 0;
 
-	private static $link;
-	private static $db_selected;
+	private  $link;
+	private  $db_selected;
 
-	public static  $TEMP_DBPROCESS_FILE = "tmp/.database";
-	public static  $TEMP_DUMP_FILE = "tmp/database-sql.sql";
-
+	public   $TEMP_DBPROCESS_FILE = "tmp/.database";
+	public   $TEMP_DUMP_FILE = "tmp/database-sql.sql";
+	
 	/*
 	 * Initialize the database connection
 	 *
@@ -50,30 +46,45 @@ class XCloner_Database{
 	 */
 	public function init($data, $start = 0){
 
-		self::$dbHostname 				= $data['dbHostname'];
-		self::$dbUsername 				= $data['dbUsername'];
-		self::$dbPassword 				= $data['dbPassword'];
-		self::$dbDatabase 				= $data['dbDatabase'];
-		
 		if(isset($data['excludedTables']))
-			self::$excludedTables 			= $data['excludedTables'];
+			$this->excludedTables 			= $data['excludedTables'];
 		if(isset($data['TEMP_DBPROCESS_FILE']))
-			self::$TEMP_DBPROCESS_FILE 		= $data['TEMP_DBPROCESS_FILE'];
+			$this->TEMP_DBPROCESS_FILE 		= $data['TEMP_DBPROCESS_FILE'];
 		if(isset($data['TEMP_DUMP_FILE']))
-			self::$TEMP_DUMP_FILE 			= $data['TEMP_DUMP_FILE'];
+			$this->TEMP_DUMP_FILE 			= $data['TEMP_DUMP_FILE'];
 		if(isset($data['recordsPerSession']))
-			self::$recordsPerSession		= $data['recordsPerSession'];
+			$this->recordsPerSession		= $data['recordsPerSession'];
 		if(isset($data['dbCompatibility']))
-			self::$dbCompatibility			= $data['dbCompatibility'];
+			$this->dbCompatibility			= $data['dbCompatibility'];
 		if(isset($data['dbCompatibility']))
-			self::$dbDropSyntax				= $data['dbDropSyntax'];
+			$this->dbDropSyntax				= $data['dbDropSyntax'];
 
-		self::connect();
-		self::headers();
+		$this->headers();
 
 		if($start){
-				@unlink(self::$TEMP_DBPROCESS_FILE);
+				@unlink($this->TEMP_DBPROCESS_FILE);
 		}
+
+	}
+	
+
+	public function log($message, $error = 0){
+
+		$return = "";
+		$date = date("M j, Y @ H:i:s");
+
+		if(($this->debug)){
+				//we send the debug message
+				//not ready here!!!!!!
+				printf("Debug(%s) - %s \n", $date, $message);
+		}
+
+		if($error){
+				//we have an error message
+				throw new Exception(sprintf("Error(%s) - %s \n", $date, $message));
+			}
+
+		return;
 
 	}
 	
@@ -84,53 +95,11 @@ class XCloner_Database{
 	 * @param string $message
 	 * @return
 	*/
-	public function error($message, $force = ""){
-
-		$return = "";
-		$date = date("M j, Y @ H:i:s");
-
-		if((self::$debug) && ($force)){
-				//we have debug message as force is 1
-				printf("Debug(%s) - %s \n", $date, $message);
-		}
-
-		if(!$force){
-				//we have an error message
-				printf("Error(%s) - %s \n", $date, $message);
-			}
-
+	public function error($message)
+	{
+		$this->log($message, 1);
+		
 		return;
-
-	}
-
-	/*
-	 * Connect to the database
-	 *
-	 * name: connect
-	 * @param
-	 * @return
-	 */
-	public function connect(){
-
-		self::$link = new mysqli(self::$dbHostname, self::$dbUsername, self::$dbPassword, self::$dbDatabase);
-		if (mysqli_connect_errno()) {
-			printf("Connect failed: %s\n", mysqli_connect_error());
-			exit();
-		}
-
-	}
-
-	/*
-	 * Disconnect from the database
-	 *
-	 * name: disconnect
-	 * @param
-	 * @return
-	 */
-	public function disconnect(){
-
-		//mysqli_close(self::$link);
-
 	}
 
 	/*
@@ -141,63 +110,44 @@ class XCloner_Database{
 	 * @return
 	 */
 	private function headers(){
-
-		self::query("SET SQL_QUOTE_SHOW_CREATE=1;");
-		self::query("SET sql_mode = 0;");
-		mysqli_set_charset(self::$link, 'utf8');
-		if (self::$dbCompatibility)
-			self::query("SET sql_mode=" . self::$dbCompatibility . ";");
-
-	}
-
-	/*
-	 * Run a mysql qeury
-	 *
-	 * name: query
-	 * @param string $query Query to run
-	 * @return $result or false
-	 */
-	public function query($query){
-
-		$result = mysqli_query(self::$link, $query.";");
-		self::error($query, 1);
-
-		if (!$result) {
-			self::error('Invalid query: ' . mysqli_error(self::$link));
-			return false;
-		}
-		else{
-			return $result;
-		}
+		
+		$this->query("SET SQL_QUOTE_SHOW_CREATE=1;");
+		$this->query("SET sql_mode = 0;");
+		
+		$this->set_charset($this->dbh, 'utf8');
+		
+		if ($this->dbCompatibility)
+			$this->set_sql_mode($this->dbCompatibility);
 
 	}
 
 	public function get_database_num_tables($database)
 	{
 		$query = "show tables in `".$database."`";
-		$res =  $this->query($query);
-		return mysqli_num_rows($res);
+		
+		$res =  $this->get_results($query);
+		return count($res);
 	}
 	
 	public function get_all_databases()
 	{
 		$query = "SHOW DATABASES;";
 		
-		$result = $this->query($query);
+		$databases = $this->get_results($query);
 		
 		$databases_list = array();
 		
 		$i = 0;
 		
-		$databases_list[$i]['name'] = self::$dbDatabase;
-		$databases_list[$i]['num_tables'] = $this->get_database_num_tables(self::$dbDatabase);
+		$databases_list[$i]['name'] = $this->dbname;
+		$databases_list[$i]['num_tables'] = $this->get_database_num_tables($this->dbname);
 		$i++;
 		
-		while ($row = mysqli_fetch_array( $result)){
-			if($row[0] != self::$dbDatabase)
+		foreach( $databases as $db){
+			if($db->Database != $this->dbname)
 			{
-				$databases_list[$i]['name'] = $row[0];
-				$databases_list[$i]['num_tables'] = $this->get_database_num_tables($row[0]);
+				$databases_list[$i]['name'] = $db->Database;
+				$databases_list[$i]['num_tables'] = $this->get_database_num_tables($db->Database);
 				$i++;
 			}
 		}
@@ -218,19 +168,18 @@ class XCloner_Database{
 		$inc = 0;
 
 		if(!$database)
-			$database = self::$dbDatabase;
+			$database = $this->dbname;
 				
-		$result = self::query("SHOW TABLES in `".$database."`");
+		$tables = $this->get_results("SHOW TABLES in `".$database."`");
 
-		while ($row = mysqli_fetch_array( $result)){
-			$tablesList[$inc]['name'] = $row[0];
+		foreach ($tables as $table){
+			$tablesList[$inc]['name'] = $table->Tables_in_wordpress;
 			$tablesList[$inc]['database'] = $database;
 
 			if($get_num_records)
 			{
-				$records_num_result = self::query("SELECT count(*) FROM `".$database."`.`".$row[0]."`");
-				$row = mysqli_fetch_row($records_num_result);
-				$tablesList[$inc]['records'] = $row[0];
+				$records_num_result = $this->get_var("SELECT count(*) FROM `".$database."`.`".$table->Tables_in_wordpress."`");
+				$tablesList[$inc]['records'] = $records_num_result;
 			}
 
 			if(is_array($excluded))
@@ -245,13 +194,13 @@ class XCloner_Database{
 
 	public function writeTempFile(){
 
-		$tables = self::listTables(self::$excludedTables);
+		$tables = $this->listTables($this->excludedTables);
 
-		$fp = fopen(self::$TEMP_DBPROCESS_FILE, "a");
+		$fp = fopen($this->TEMP_DBPROCESS_FILE, "a");
 
 		if($fp){
 
-			fwrite($fp, sprintf("###newdump###\t%s\t%s\n", self::$dbDatabase, self::$TEMP_DUMP_FILE));
+			fwrite($fp, sprintf("###newdump###\t%s\t%s\n", $this->dbname, $this->TEMP_DUMP_FILE));
 
 			// write this to the class and write to $TEMP_DBPROCESS_FILE file as database.table records
 			foreach($tables as $key=>$table) if($table!= ""){
@@ -259,9 +208,9 @@ class XCloner_Database{
 				$tables[$key]['records'] = 0;
 
 				if(!$tables[$key]['excluded'])
-					$tables[$key]['records'] = self::countRecords($tables[$key]['table']);
+					$tables[$key]['records'] = $this->countRecords($tables[$key]['table']);
 
-				$tmp = sprintf("`%s`.`%s`\t%s\t%s\n", self::$dbDatabase, $tables[$key]['table'], $tables[$key]['records'], $tables[$key]['excluded']);
+				$tmp = sprintf("`%s`.`%s`\t%s\t%s\n", $this->dbname, $tables[$key]['table'], $tables[$key]['records'], $tables[$key]['excluded']);
 				fwrite($fp, $tmp);
 			}
 
@@ -269,7 +218,7 @@ class XCloner_Database{
 			fclose($fp);
 		}
 		else{
-			self::error("Unable to open for writing file ".self::$TEMP_DBPROCESS_FILE);
+			$this->error("Unable to open for writing file ".$this->TEMP_DBPROCESS_FILE);
 		}
 
 	}
@@ -283,13 +232,11 @@ class XCloner_Database{
 	 */
 	public function countRecords($table){
 
-			$table = "`".self::$dbDatabase."`.`$table`";
+			$table = "`".$this->dbname."`.`$table`";
 
-			$result = self::query("SELECT count(*) FROM $table;");
+			$result = $this->get_var("SELECT count(*) FROM $table;");
 
-			$count = mysqli_fetch_row($result);
-
-			return intval($count[0]) ;// not max limit on 32 bit systems 2147483647; on 64 bit 9223372036854775807
+			return intval($result) ;// not max limit on 32 bit systems 2147483647; on 64 bit 9223372036854775807
 
 	}
 
@@ -310,9 +257,9 @@ class XCloner_Database{
 		$count = 0;
 		$return = array();
 
-		self::error("Starting new process at line $startAtLine from record $startAtRecord", 1);
+		$this->log("Starting new process at line $startAtLine from record $startAtRecord", 1);
 
-		$fp = fopen(self::$TEMP_DBPROCESS_FILE, "r");
+		$fp = fopen($this->TEMP_DBPROCESS_FILE, "r");
 		if($fp){
 
 			while (($buffer = fgets($fp, 4096)) !== false){
@@ -326,11 +273,11 @@ class XCloner_Database{
 							// we create a new mysql dump file
 							if($dumpfile != ""){
 									// we finished a previous one and write the footers
-									$return['dumpsize'] = self::dataFooters($dumpfile);
+									$return['dumpsize'] = $this->dataFooters($dumpfile);
 							}
 
 							$dump = fopen($tableInfo[2], "w");
-							fwrite($dump, self::dataHeaders($tableInfo[1]));
+							fwrite($dump, $this->dataHeaders($tableInfo[1]));
 							$startAtLine++;
 							fclose($dump);
 							$dumpfile = $tableInfo[2];
@@ -347,7 +294,7 @@ class XCloner_Database{
 
 							if($fd){
 
-								$next = $startAtRecord + self::$recordsPerSession;
+								$next = $startAtRecord + $this->recordsPerSession;
 								// $tableInfo[1] number of records in the table
 								$table = explode("`.`", $tableInfo[0]);
 								$tableName = str_replace("`", "", $table[1]);
@@ -360,7 +307,7 @@ class XCloner_Database{
 
 								//if(intval($return['totalRecords']) != 0)
 								if(trim($tableName) !=""  and !$tableInfo[2])
-									self::exportTable($databaseName, $tableName, $startAtRecord, self::$recordsPerSession, $fd);
+									$this->exportTable($databaseName, $tableName, $startAtRecord, $this->recordsPerSession, $fd);
 
 								fclose($fd);
 
@@ -369,7 +316,7 @@ class XCloner_Database{
 										$startAtLine ++;
 										$startAtRecord = 0;
 								}else{
-										$startAtRecord = $startAtRecord + self::$recordsPerSession;
+										$startAtRecord = $startAtRecord + $this->recordsPerSession;
 									}
 
 								//$return['dbCompatibility'] 	= self::$dbCompatibility;
@@ -382,7 +329,7 @@ class XCloner_Database{
 								break;
 
 							}else{
-								self::error("Unable to open for writing file $dumpfile");
+								$this->error("Unable to open for writing file $dumpfile");
 							}
 						}
 
@@ -396,7 +343,7 @@ class XCloner_Database{
 			//while is finished, lets go home...
 			if($dumpfile != ""){
 				// we finished a previous one and write the footers
-				$return['dumpsize'] = self::dataFooters($dumpfile);
+				$return['dumpsize'] = $this->dataFooters($dumpfile);
 			}
 			$return['finished'] = 1;
 			$return['startAtLine']	= $startAtLine;
@@ -404,7 +351,7 @@ class XCloner_Database{
 			return $return;
 
 		}else{
-			self::error("Unable to open for reading file ".self::$TEMP_DBPROCESS_FILE);
+			$this->error("Unable to open for reading file ".$this->TEMP_DBPROCESS_FILE);
 		}
 
 
@@ -426,23 +373,23 @@ class XCloner_Database{
 	public function exportTable($databaseName, $tableName, $start, $limit, $fd){
 
 		if($start == 0)
-			self::dumpStructure($databaseName, $tableName, $fd);
+			$this->dumpStructure($databaseName, $tableName, $fd);
 
 		$start = intval($start);
 		$limit = intval($limit);
 		//exporting the table content now
 
-		$result = self::query("SELECT * from `$databaseName`.`$tableName` Limit $start, $limit ;");
+		$result = mysqli_query($this->dbh, "SELECT * from `$databaseName`.`$tableName` Limit $start, $limit ;");
 		if($result){
-			while($row = mysqli_fetch_array($result, MYSQL_ASSOC)){
+			while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
 
 					fwrite($fd, "INSERT INTO `$tableName` VALUES (");
 					$arr = $row;
 					$buffer = "";
-					self::$countRecords++;
+					$this->countRecords++;
 
 	                foreach ($arr as $key => $value) {
-						$value = mysqli_real_escape_string(self::$link, $value);
+						$value = mysqli_real_escape_string($this->dbh, $value);
 						$buffer .= "'".$value."', ";
 					}
 					$buffer = rtrim($buffer, ', ') . ");\n";
@@ -458,10 +405,10 @@ class XCloner_Database{
 
 		fwrite($fd, "\n#\n# Table structure for table `$tableName`\n#\n\n");
 
-        if (self::$dbDropSyntax)
+        if ($this->dbDropSyntax)
 			fwrite($fd, "\nDROP table IF EXISTS `$tableName`;\n");
 
-		$result = self::query("SHOW CREATE table `$databaseName`.`$tableName`;");
+		$result = mysqli_query($this->dbh,"SHOW CREATE table `$databaseName`.`$tableName`;");
 		if($result){
 			$row = mysqli_fetch_row( $result);
 			fwrite($fd, $row[1].";\n");
@@ -481,7 +428,7 @@ class XCloner_Database{
 			fwrite($ftemp, "\n#\n# Finished at: ".date("M j, Y \a\\t H:i")."\n#");
 			fclose($ftemp);
 		}else{
-			self::error("Unable to open file $ftemp for writing");
+			$this->error("Unable to open file $ftemp for writing");
 			}
 
 		return sprintf("%u", filesize($dumpfile));
@@ -489,13 +436,13 @@ class XCloner_Database{
 	}
 
 	public function resetcountRecords(){
-		self::$countRecords = 0;
+		$this->$countRecords = 0;
 
-		return self::$countRecords;
+		return $this->countRecords;
 	}
 
 	public function getcountRecords(){
-		return self::$countRecords;
+		return $this->countRecords;
 	}
 
 
@@ -510,9 +457,9 @@ class XCloner_Database{
 		$return .= "# Host: " . $_SERVER['HTTP_HOST'] . "\n";
 		$return .= "# Generation Time: " . date("M j, Y \a\\t H:i") . "\n";
 		$return .= "# PHP Version: " . phpversion() . "\n";
-		$return .= "# Mysql Compatibility: ". self::$dbCompatibility . "\n";
+		$return .= "# Mysql Compatibility: ". $this->dbCompatibility . "\n";
 
-		$result = self::query("SHOW VARIABLES LIKE \"%version%\";");
+		$result = mysqli_query($this->dbh, "SHOW VARIABLES LIKE \"%version%\";");
 		if($result){
 			while($row = mysqli_fetch_array($result)){
 

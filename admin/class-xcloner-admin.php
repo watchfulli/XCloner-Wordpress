@@ -106,6 +106,7 @@ class Xcloner_Admin {
 
 		wp_enqueue_script( $this->plugin_name."_materialize", plugin_dir_url( __FILE__ ) . 'js/materialize.min.js', array( 'jquery' ), $this->version, false );
 		wp_enqueue_script( $this->plugin_name."_vakata", dirname(plugin_dir_url( __FILE__ )) . '/vendor/vakata/jstree/dist/jstree.min.js', array( 'jquery' ), '3.3', false );
+		wp_enqueue_script( $this->plugin_name."_xcloner-backup-class", plugin_dir_url( __FILE__ ) . 'js/xcloner-backup-class.js', array( 'jquery' ), $this->version, false );
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/xcloner-admin.js', array( 'jquery' ), $this->version, false );
 
 	}

@@ -2,6 +2,9 @@
 $xcloner_settings = new Xcloner_Settings();
 $tab = 1;
 ?>
+
+<script>var xcloner_backup = new Xcloner_Backup();</script>
+
 <h1><?= esc_html(get_admin_page_title()); ?></h1>
          
 <ul class="nav-tab-wrapper content row">
@@ -13,14 +16,14 @@ $tab = 1;
 	<li><a href="#generate_backup" class="nav-tab col s12 m3 l2 "><?php echo ++$tab.". ".__('Generate Backup')?></a></li>
 </ul>
 
-<form action="" method="POST">
+<form action="" method="POST" id="generate_backup_form">
 	<div class="nav-tab-wrapper-content">
 		<!-- Backup Options Content Tab-->
 		<div id="backup_options" class="tab-content active">
 			<div class="row">
 		        <div class="input-field inline col s12 m10 l6">
 					<i class="material-icons prefix">input</i>
-					<input id="backup_name" type="text" value=<?php echo $xcloner_settings->get_default_backup_name() ?> >
+					<input name="backup_name" id="backup_name" type="text" value=<?php echo $xcloner_settings->get_default_backup_name() ?> >
 					<label for="backup_name"><?php echo __('Backup Name')?></label>
 				</div>
 				<div class="hide-on-small-only m2">
@@ -31,7 +34,7 @@ $tab = 1;
 		     <div class="row">
 		        <div class="input-field inline col s12 m10 l6">
 					<i class="material-icons prefix">input</i>
-					<input id="email_notification" type="text" value="<?php echo get_option('admin_email');?>" >
+					<input name="email_notification" id="email_notification" type="text" value="<?php echo get_option('admin_email');?>" >
 					<label for="email_notification"><?php echo __('Send Email Notification To')?></label>
 				</div>
 				<div class="hide-on-small-only m2">
@@ -42,7 +45,7 @@ $tab = 1;
 		     <div class="row">
 				<div class="input-field col s12 m10 l6">
 					<i class="material-icons prefix">input</i>
-					<textarea id="backup_comments" class="materialize-textarea"></textarea>
+					<textarea name="backup_comments" id="backup_comments" class="materialize-textarea"></textarea>
 					<label for="backup_comments"><?php echo __('Backup Comments')?></label>
 				</div>
 				<div class="hide-on-small-only m2">
@@ -99,8 +102,44 @@ $tab = 1;
 			
 		</div>
 		<div id="generate_backup" class="tab-content">
-			<div class="row center">
-				<a class="waves-effect waves-light btn-large red darken-1" onclick="start_backup()">Start Backup<i class="material-icons left">forward</i></a>
+			<div class="row ">
+				<div class="col l6 s12">
+					<ul class="backup-status collapsible" data-collapsible="accordion">
+					    <li class="file-system">
+						      <div class="collapsible-header">
+									<i class="material-icons">folder</i><?php echo __('Scanning The File System...')?>
+									<p class="right"><?php echo __(sprintf('Found %s files', '<span class="file-counter">0</span>'))?></p>
+									<div class="progress">
+										<div class="indeterminate"></div>
+									</div>
+								</div>	
+						      <div class="collapsible-body status-body"></div>
+					    </li>
+					    <li class="mysql_backup">
+						      <div class="collapsible-header">
+									<i class="material-icons">pan_tool</i><?php echo __('Generating the Mysql Backup...')?>
+									<div class="progress">
+										<div class="indeterminate"></div>
+									</div>
+								</div>	
+						      <div class="collapsible-body status-body"><p>loading status here</p></div>
+					    </li>
+					    <li class="files_backup">
+						      <div class="collapsible-header">
+									<i class="material-icons">pan_tool</i><?php echo __('Adding Files to Archive...')?>
+									<div class="progress">
+										<div class="indeterminate"></div>
+									</div>
+								</div>	
+						      <div class="collapsible-body status-body"><p>loading status here</p></div>
+					    </li>
+				  </ul>
+				 </div> 
+				 <div class="col s12 l6 action-buttons">
+					<a class="waves-effect waves-light btn-large green darken-1 start" onclick="xcloner_backup.start_backup()">Start Backup<i class="material-icons left">forward</i></a>
+					<a class="waves-effect waves-light btn-large green darken-1 restart" onclick="xcloner_backup.start_backup()">Restart Backup<i class="material-icons left">cached</i></a>
+					<a class="waves-effect waves-light btn-large red darken-1 cancel" onclick="xcloner_backup.cancel_backup()">Cancel Backup<i class="material-icons left">cancel</i></a>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -110,12 +149,12 @@ $tab = 1;
   <div id="error_modal" class="modal">
     <div class="modal-content">
       <h4 class="title_line"><span class="title"></span></h4>
-      <h5 class="title_line">Message: <span class="msg"></span></h5>
-	  <h5>Response: </h5>
+      <!--<h5 class="title_line"><?php echo __('Message')?>: <span class="msg.old"></span></h5>-->
+	  <h5><?php echo __('Response Code')?>: <span class="status"></span></h5>
 	  <textarea  class="body" rows="5"></textarea>
     </div>
     <div class="modal-footer">
-      <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+      <a class=" modal-action modal-close waves-effect waves-green btn-flat  red darken-2"><?php echo __('Close')?></a>
     </div>
   </div>
   
@@ -141,7 +180,8 @@ jQuery(function () {
 					
 			'error' : function (err) { 
 				//alert("We have encountered a communication error with the server, please review the javascript console."); 
-				show_ajax_error("Error loading database structure ", err.reason, err.data);
+				var json = jQuery.parseJSON( err.data )
+				show_ajax_error("Error Loading Database Structure ", err.reason, json.xhr);
 				},
 			 
 			'strings' : { 'Loading ...' : 'Loading the database structure...' },			
@@ -181,9 +221,10 @@ jQuery(function () {
 							}
 				},		
 					
-			'error' : function (err) { 
+			'error' : function (err) {
 				//alert("We have encountered a communication error with the server, please review the javascript console."); 
-				show_ajax_error("Error loading database structure ", err.reason, err.data);
+				var json = jQuery.parseJSON( err.data )
+				show_ajax_error("Error Loading Files Structure ", err.reason, json.xhr);
 				},
 			 
 			'strings' : { 'Loading ...' : 'Loading the database structure...' },			
@@ -207,12 +248,5 @@ jQuery(function () {
 		});
 });
 
-
-function start_backup()
-{
-		jQuery.each(jQuery("#jstree_database_container").jstree("get_checked",true),function(){console.log(this.id+"-"+this.parent);});
-		jQuery.each(jQuery("#jstree_files_container").jstree("get_checked",true),function(){console.log(this.id+"-"+this.parent);});
-
-}
 
 </script>
