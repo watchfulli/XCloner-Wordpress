@@ -11,6 +11,14 @@ class ComposerStaticInit571f9d19802717f7be61d57b40d60b28
         array (
             'splitbrain\\PHPArchive\\' => 22,
         ),
+        'P' => 
+        array (
+            'Psr\\Log\\' => 8,
+        ),
+        'M' => 
+        array (
+            'Monolog\\' => 8,
+        ),
         'L' => 
         array (
             'League\\Flysystem\\' => 17,
@@ -21,6 +29,14 @@ class ComposerStaticInit571f9d19802717f7be61d57b40d60b28
         'splitbrain\\PHPArchive\\' => 
         array (
             0 => __DIR__ . '/..' . '/splitbrain/php-archive/src',
+        ),
+        'Psr\\Log\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
+        ),
+        'Monolog\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
         ),
         'League\\Flysystem\\' => 
         array (

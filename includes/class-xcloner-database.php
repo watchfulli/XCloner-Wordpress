@@ -33,6 +33,7 @@ class XCloner_Database extends wpdb{
 
 	private  $link;
 	private  $db_selected;
+	private  $logger;
 
 	public   $TEMP_DBPROCESS_FILE = "tmp/.database";
 	public   $TEMP_DUMP_FILE = "tmp/database-sql.sql";
@@ -44,8 +45,10 @@ class XCloner_Database extends wpdb{
 	 * @param array $data {'dbHostname', 'dbUsername', 'dbPassword', 'dbDatabase'}
 	 * @return
 	 */
-	public function init($data, $start = 0){
-
+	public function init($data, $start = 0)
+	{
+		$this->logger = new XCloner_Logger("xcloner_database");
+		
 		if(isset($data['excludedTables']))
 			$this->excludedTables 			= $data['excludedTables'];
 		if(isset($data['TEMP_DBPROCESS_FILE']))
@@ -60,7 +63,10 @@ class XCloner_Database extends wpdb{
 			$this->dbDropSyntax				= $data['dbDropSyntax'];
 
 		$this->headers();
-
+		
+		
+		$this->suppress_errors = true;
+		
 		if($start){
 				@unlink($this->TEMP_DBPROCESS_FILE);
 		}
@@ -68,24 +74,19 @@ class XCloner_Database extends wpdb{
 	}
 	
 
-	public function log($message, $error = 0){
-
-		$return = "";
-		$date = date("M j, Y @ H:i:s");
-
-		if(($this->debug)){
-				//we send the debug message
-				//not ready here!!!!!!
-				printf("Debug(%s) - %s \n", $date, $message);
+	public function log($message = "")
+	{
+		
+		if($message){
+			$this->logger->info( $message);
+		}else{	
+			if($this->last_query)
+				$this->logger->info( $this->last_query);
+			if($this->last_error)
+				$this->logger->error( $this->last_error);
 		}
-
-		if($error){
-				//we have an error message
-				throw new Exception(sprintf("Error(%s) - %s \n", $date, $message));
-			}
-
+		
 		return;
-
 	}
 	
 	/*
@@ -97,7 +98,7 @@ class XCloner_Database extends wpdb{
 	*/
 	public function error($message)
 	{
-		$this->log($message, 1);
+		$this->logger->error( $message);
 		
 		return;
 	}
@@ -112,12 +113,17 @@ class XCloner_Database extends wpdb{
 	private function headers(){
 		
 		$this->query("SET SQL_QUOTE_SHOW_CREATE=1;");
+		$this->log();
 		$this->query("SET sql_mode = 0;");
+		$this->log();
 		
 		$this->set_charset($this->dbh, 'utf8');
+		$this->log();
 		
-		if ($this->dbCompatibility)
+		if ($this->dbCompatibility){
 			$this->set_sql_mode($this->dbCompatibility);
+			$this->log();
+		}
 
 	}
 
@@ -126,6 +132,8 @@ class XCloner_Database extends wpdb{
 		$query = "show tables in `".$database."`";
 		
 		$res =  $this->get_results($query);
+		$this->log();
+			
 		return count($res);
 	}
 	
@@ -134,6 +142,7 @@ class XCloner_Database extends wpdb{
 		$query = "SHOW DATABASES;";
 		
 		$databases = $this->get_results($query);
+		$this->log();
 		
 		$databases_list = array();
 		
@@ -171,14 +180,20 @@ class XCloner_Database extends wpdb{
 			$database = $this->dbname;
 				
 		$tables = $this->get_results("SHOW TABLES in `".$database."`");
+		$this->log();
 
 		foreach ($tables as $table){
-			$tablesList[$inc]['name'] = $table->Tables_in_wordpress;
+			
+			$table = array_values((array)$table)[0];
+			
+			$tablesList[$inc]['name'] = $table;
 			$tablesList[$inc]['database'] = $database;
 
 			if($get_num_records)
 			{
-				$records_num_result = $this->get_var("SELECT count(*) FROM `".$database."`.`".$table->Tables_in_wordpress."`");
+				$records_num_result = $this->get_var("SELECT count(*) FROM `".$database."`.`".$table."`");
+				$this->log();
+					
 				$tablesList[$inc]['records'] = $records_num_result;
 			}
 

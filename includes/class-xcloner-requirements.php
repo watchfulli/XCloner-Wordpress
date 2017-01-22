@@ -127,6 +127,7 @@ class XCloner_Requirements
 		return $open_basedir;	
 	}
 	
+	/*
 	public function estimate_read_write_time()
 	{
 		$tmp_path = Xcloner_Settings::get_xcloner_tmp_path();
@@ -168,6 +169,7 @@ class XCloner_Requirements
 		
 		return $end_time;
 	}
+	*/
 	
 	public function get_free_disk_space()
 	{

@@ -139,6 +139,11 @@ class Xcloner {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-xcloner-admin.php';
 		
 		/**
+		 * The class responsible for debugging XCloner.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-xcloner-logger.php';
+		
+		/**
 		 * The class responsible for defining the admin settings area.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-xcloner-settings.php';

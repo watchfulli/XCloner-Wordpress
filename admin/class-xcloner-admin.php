@@ -166,6 +166,7 @@ class Xcloner_Admin {
             <li><a href="?page=xcloner_settings_page&tab=general_options" class="nav-tab col s12 m3 l2 <?php echo $active_tab == 'general_options' ? 'nav-tab-active' : ''; ?>"><?php echo __('General Options')?></a></li>
             <li><a href="?page=xcloner_settings_page&tab=mysql_options" class="nav-tab col s12 m3 l2 <?php echo $active_tab == 'mysql_options' ? 'nav-tab-active' : ''; ?>"><?php echo __('Mysql Options')?></a></li>
             <li><a href="?page=xcloner_settings_page&tab=system_options" class="nav-tab col s12 m3 l2 <?php echo $active_tab == 'system_options' ? 'nav-tab-active' : ''; ?>"><?php echo __('System Options')?></a></li>
+            <li><a href="?page=xcloner_settings_page&tab=cleanup_options" class="nav-tab col s12 m3 l2 <?php echo $active_tab == 'cleanup_options' ? 'nav-tab-active' : ''; ?>"><?php echo __('Cleanup Options')?></a></li>
             <li><a href="?page=xcloner_settings_page&tab=cron_options" class="nav-tab col s12 m3 l2 <?php echo $active_tab == 'cron_options' ? 'nav-tab-active' : ''; ?>"><?php echo __('Cron Options')?></a></li>
         </ul>
 
@@ -187,6 +188,10 @@ class Xcloner_Admin {
 					
 					settings_fields('xcloner_system_settings_group');
 					do_settings_sections('xcloner_system_settings_page');
+				}elseif( $active_tab == 'cleanup_options' ) {
+					
+					settings_fields('xcloner_cleanup_settings_group');
+					do_settings_sections('xcloner_cleanup_settings_page');
 				}else{
 
 					settings_fields('xcloner_cron_settings_group');

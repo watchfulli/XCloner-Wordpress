@@ -12,7 +12,10 @@
  * @subpackage Xcloner/admin/partials
  */
  
- $requirements = new XCloner_Requirements();
+ $requirements 			= new XCloner_Requirements();
+ $xcloner_file_system 	= new Xcloner_File_System();
+ 
+ $xcloner_file_system->backup_storage_cleanup();
 ?>
 
 <!-- This file should primarily consist of HTML with a little bit of PHP. -->
@@ -61,7 +64,7 @@
 				<li class="card-panel grey darken-1" >
 					<?php echo __('PHP open_basedir')?>: <?php echo $requirements->get_open_basedir();?>
 				</li>
-				<?php $data = $requirements->estimate_read_write_time();?>
+				<?php $data = $xcloner_file_system->estimate_read_write_time();?>
 				<li class="card-panel grey darken-1" >
 					<?php echo __('Reading Time 1MB Block')?>: <?php echo $data['reading_time'];?>
 				</li>

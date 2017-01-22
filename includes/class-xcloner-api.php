@@ -15,6 +15,7 @@ class Xcloner_Api{
 	protected $_file_system;
 	protected $exclude_files_by_default = array("administrator/backups", "wp-content/backups");
 	protected $form_params;
+	protected $logger;
 	
 	public function __construct()
 	{
@@ -22,6 +23,8 @@ class Xcloner_Api{
 		$this->xcloner_file_system 		= new Xcloner_File_System();
 		$this->xcloner_sanitization 	= new Xcloner_Sanitization();
 		$this->xcloner_requirements 	= new XCloner_Requirements();
+		
+		$this->logger = new XCloner_Logger("xcloner_api");
 		
 	}
 	
@@ -46,6 +49,7 @@ class Xcloner_Api{
 		}catch(Exception $e)
 		{
 			$this->send_response($e->getMessage());
+			$this->logger->error($e->getMessage());
 			
 		}
 		
@@ -71,7 +75,9 @@ class Xcloner_Api{
 		$return = $this->xcloner_file_system->start_file_recursion($init);
 		
 		$data["finished"] = !$return;
-		$data["status"] = $this->xcloner_file_system->get_scanned_files_num();
+		$data["total_files_num"] = $this->xcloner_file_system->get_scanned_files_num();
+		$data["last_logged_file"] = $this->xcloner_file_system->last_logged_file();
+		$data["total_files_size"] = number_format($this->xcloner_file_system->get_scanned_files_total_size()/(1024*1024), 2);
 		return $this->send_response($data);
 	}
 	
@@ -84,6 +90,7 @@ class Xcloner_Api{
 			foreach($params->backup_params as $param)
 			{
 				$this->form_params['system'][$param->name] = $this->xcloner_sanitization->sanitize_input_as_string($param->value);
+				$this->logger->info("Adding system param ".$param->value."\n", array('POST', 'system params'));
 			}
 		}
 		
@@ -94,6 +101,7 @@ class Xcloner_Api{
 			foreach($params->table_params as $param)
 			{
 				$this->form_params['database'][$param->parent][] = $this->xcloner_sanitization->sanitize_input_as_raw($param->id);
+				$this->logger->info("Adding database filter ".$param->parent.".".$param->id."\n", array('POST', 'database filter'));
 			}
 		}
 		
@@ -104,6 +112,18 @@ class Xcloner_Api{
 			{
 				$this->form_params['excluded_files'][] = $this->xcloner_sanitization->sanitize_input_as_relative_path($param->id);
 			}
+			
+			$unique_exclude_files = array();
+			
+			foreach($params->files_params as $key=>$param)
+			{
+				if(!in_array($param->parent, $this->form_params['excluded_files'])){
+				//$this->form_params['excluded_files'][] = $this->xcloner_sanitization->sanitize_input_as_relative_path($param->id);
+					$unique_exclude_files[] = $param->id;
+					$this->logger->info("Adding file filter ".$param->id."\n", array('POST', 'exclude files filter'));
+				}
+			}
+			$this->form_params['excluded_files'] = $unique_exclude_files;
 			
 		}
 		
@@ -133,24 +153,14 @@ class Xcloner_Api{
 						'icon' => plugin_dir_url(dirname(__FILE__))."/admin/assets/file-icon-root.png"
 						);
 		}
-		//else
-			//$list_directory = $this->xcloner_settings->get_xcloner_dir_path(substr($folder, 1, strlen($folder)));
-		
-			//$files = $this->xcloner_file_system->list_directory($list_directory);
 			
 			try{
-
-				#$adapter = new Local($this->xcloner_settings->get_xcloner_start_path(),'', 'SKIP_LINKS');
-				#$filesystem = new Filesystem($adapter, new Config([
-				#		'disable_asserts' => true,
-				#]));
-			
-				//$filesystem = $this->xcloner_file_system->get_fileystem_handler();
 				$files = $this->xcloner_file_system->list_directory($folder);
-
 			}catch(Exception $e){
 				
 				print $e->getMessage();
+				$this->logger->error($e->getMessage());
+
 				return;
 			}
 			
@@ -206,7 +216,12 @@ class Xcloner_Api{
 	
 		if($database == "#")
 		{
-			$return = $this->db_link->get_all_databases();
+			try{
+				$return = $this->db_link->get_all_databases();
+			}catch(Exception $e){
+				$this->logger->error($e->getMessage());
+			}
+			
 			foreach($return as $database)
 			{
 				if($xcloner_backup_only_wp_tables and $database['name'] != $this->xcloner_settings->get_db_database())
@@ -231,7 +246,11 @@ class Xcloner_Api{
 		
 		else{
 			
-			$return = $this->db_link->listTables($database, "", 1);
+			try{
+				$return = $this->db_link->listTables($database, "", 1);
+			}catch(Exception $e){
+				$this->logger->error($e->getMessage());
+			}
 			
 			foreach($return as $table)
 			{

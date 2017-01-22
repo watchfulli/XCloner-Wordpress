@@ -2,6 +2,13 @@
 
 class Xcloner_Settings
 {
+	private $logger_file = "xcloner_%s.log";
+	
+	
+	public function get_logger_filename()
+	{
+		return sprintf($this->logger_file, $this->get_server_unique_hash(5));
+	}
 	
 	public static function get_xcloner_start_path()
 	{
@@ -119,6 +126,16 @@ class Xcloner_Settings
 		return $data;
 	}
 	
+	public function get_server_unique_hash($strlen = 0)
+	{
+		$hash = md5(gethostname().__DIR__);
+		
+		if($strlen)
+			$hash = substr($hash, 0, $strlen);
+			
+		return $hash;
+	}
+	
 	public function settings_init()
 	{
 	    global $wpdb;
@@ -135,6 +152,10 @@ class Xcloner_Settings
 	    
 	    if( false == get_option( 'xcloner_system_settings_page' ) ) {  
 			add_option( 'xcloner_system_settings_page' );
+		} // end if
+		
+	    if( false == get_option( 'xcloner_cleanup_settings_page' ) ) {  
+			add_option( 'xcloner_cleanup_settings_page' );
 		} // end if
 	 
 	    
@@ -157,9 +178,17 @@ class Xcloner_Settings
 	    //SYSTEM section
 	    add_settings_section(
 	        'xcloner_system_settings_group',
-	        __(' '),
+	        __('These are advanced options recommended for developers!'),
 	        array($this, 'xcloner_settings_section_cb'),
 	        'xcloner_system_settings_page'
+	    );
+	    
+	    //CLEANUP section
+	    add_settings_section(
+	        'xcloner_cleanup_settings_group',
+	        __(' '),
+	        array($this, 'xcloner_settings_section_cb'),
+	        'xcloner_cleanup_settings_page'
 	    );
 	    
 		
@@ -216,7 +245,7 @@ class Xcloner_Settings
 				)
 	    );
 	    
-	    register_setting('xcloner_mysql_settings_group', 'xcloner_enable_log', array($this->xcloner_sanitization, "sanitize_input_as_int"));
+	    register_setting('xcloner_general_settings_group', 'xcloner_enable_log', array($this->xcloner_sanitization, "sanitize_input_as_int"));
 	    add_settings_field(
 	        'xcloner_enable_log',
 	        __('Enable XCloner Backup Log'),
@@ -224,7 +253,7 @@ class Xcloner_Settings
 	        'xcloner_settings_page',
 	        'xcloner_general_settings_group',
 	        array('xcloner_enable_log',
-				__('Enable the XCloner Backup log.')
+				__(sprintf('Enable the XCloner Backup log. You will find it stored unde the Backup Storage Location, file %s', $this->get_logger_filename()))
 				)
 		);	
 	 
@@ -346,9 +375,9 @@ class Xcloner_Settings
 	        'xcloner_system_settings_page',
 	        'xcloner_system_settings_group',
 	        array('xcloner_exclude_files_larger_than_mb',
-	         __('Use this option to automatically exclude files larger than a certain size in MB, or set to -1 to include all. Range 0-10000 MB'), 
+	         __('Use this option to automatically exclude files larger than a certain size in MB, or set to -1 to include all. Range 0-1000 MB'), 
 	         0,
-	         10000
+	         1000
 	         )
 	    );
 	    
@@ -365,7 +394,44 @@ class Xcloner_Settings
 	         10000
 	         )
 	    );
-	 
+		
+		//REGISTERING THE 'CLEANUP SECTION' FIELDS
+		register_setting('xcloner_cleanup_settings_group', 'xcloner_cleanup_retention_limit_days', array($this->xcloner_sanitization, "sanitize_input_as_int"));
+	    add_settings_field(
+	        'xcloner_cleanup_retention_limit_days',
+	        __('Cleanup by Date(days)'),
+	        array($this, 'do_form_number_field'),
+	        'xcloner_cleanup_settings_page',
+	        'xcloner_cleanup_settings_group',
+	        array('xcloner_cleanup_retention_limit_days',
+				__('Specify the maximum number of days a backup archive can be kept on the server. 0 disables this option')
+			)
+	    );
+	    
+		register_setting('xcloner_cleanup_settings_group', 'xcloner_cleanup_retention_limit_archives', array($this->xcloner_sanitization, "sanitize_input_as_int"));
+	    add_settings_field(
+	        'xcloner_cleanup_retention_limit_archives',
+	        __('Cleanup by Quantity'),
+	        array($this, 'do_form_number_field'),
+	        'xcloner_cleanup_settings_page',
+	        'xcloner_cleanup_settings_group',
+	        array('xcloner_cleanup_retention_limit_archives',
+				__('Specify the maximum number of backup archives to keep on the server. 0 disabled this option')
+			)
+	    );
+	    
+		register_setting('xcloner_cleanup_settings_group', 'xcloner_cleanup_capacity_limit', array($this->xcloner_sanitization, "sanitize_input_as_int"));
+	    add_settings_field(
+	        'xcloner_cleanup_capacity_limit',
+	        __('Cleanup by Capacity(MB)'),
+	        array($this, 'do_form_number_field'),
+	        'xcloner_cleanup_settings_page',
+	        'xcloner_cleanup_settings_group',
+	        array('xcloner_cleanup_capacity_limit',
+				__('Remove oldest backups if all created backups exceed the configured limit in Megabytes.')
+			)
+	    );
+		
 		//REGISTERING THE 'CRON SECTION' FIELDS
 		register_setting('xcloner_cron_settings_group', 'xcloner_cron_frequency');
 	    add_settings_field(
@@ -393,7 +459,7 @@ class Xcloner_Settings
 	    //echo '<p>WPOrg Section Introduction.</p>';
 	}
 	 
-	// field content cb
+	// text field content cb
 	public function do_form_text_field($params)
 	{
 		if(!isset($params['3']))
@@ -410,6 +476,33 @@ class Xcloner_Settings
 	    <div class="row">
 	        <div class="input-field col s10 m10 l6">
 	          <input class="validate" <?php echo ($disabled)?"disabled":""?> name="<?php echo $fieldname?>" id="<?php echo $fieldname?>" type="text" class="validate" value="<?php echo isset($value) ? esc_attr($value) : ''; ?>">
+	        </div>
+	        <div class="col s2 m2 ">
+				<a class="btn-floating tooltipped btn-small" data-position="right" data-delay="50" data-tooltip="<?php echo $label?>" data-tooltip-id=""><i class="material-icons">help_outline</i></a>
+	        </div>
+	    </div>
+		
+
+	    <?php
+	}
+	
+	// number field content cb
+	public function do_form_number_field($params)
+	{
+		if(!isset($params['3']))
+			$params[3] = 0;
+		if(!isset($params['2']))
+			$params[2] = 0;	
+			
+		list($fieldname, $label, $value, $disabled) = $params;
+		
+		if(!$value)
+			$value = get_option($fieldname);
+	    // output the field
+	    ?>
+	    <div class="row">
+	        <div class="input-field col s5 m5 l3">
+	          <input class="validate" <?php echo ($disabled)?"disabled":""?> name="<?php echo $fieldname?>" id="<?php echo $fieldname?>" type="number" class="validate" value="<?php echo isset($value) ? esc_attr($value) : ''; ?>">
 	        </div>
 	        <div class="col s2 m2 ">
 				<a class="btn-floating tooltipped btn-small" data-position="right" data-delay="50" data-tooltip="<?php echo $label?>" data-tooltip-id=""><i class="material-icons">help_outline</i></a>

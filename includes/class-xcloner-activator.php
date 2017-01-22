@@ -51,6 +51,12 @@ class Xcloner_Activator {
 			
 		if(!get_option('xcloner_size_limit_per_request'))
 			update_option('xcloner_size_limit_per_request', 50);
+			
+		if(!get_option('xcloner_cleanup_retention_limit_days'))
+			update_option('xcloner_cleanup_retention_limit_days', 60);
+			
+		if(!get_option('xcloner_cleanup_retention_limit_archives'))
+			update_option('xcloner_cleanup_retention_limit_archives', 100);
 
 	}
 

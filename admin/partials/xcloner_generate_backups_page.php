@@ -108,7 +108,13 @@ $tab = 1;
 					    <li class="file-system">
 						      <div class="collapsible-header">
 									<i class="material-icons">folder</i><?php echo __('Scanning The File System...')?>
-									<p class="right"><?php echo __(sprintf('Found %s files', '<span class="file-counter">0</span>'))?></p>
+									
+									<p class="right"><?php echo __(sprintf('Found %s files (%s)', '<span class="file-counter">0</span>', '<span class="file-size-total">0</span>MB'))?></p>
+
+									<div>
+										<p class="right"><span class="last-logged-file"></span></p>
+									</div>	
+									
 									<div class="progress">
 										<div class="indeterminate"></div>
 									</div>
