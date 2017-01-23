@@ -55,10 +55,6 @@ class XCloner_Database extends wpdb{
 		
 		if(!$this->recordsPerSession)
 			$this->recordsPerSession = 1;
-			
-		if(isset($data['dbCompatibility']))
-			$this->dbCompatibility			= $data['dbCompatibility'];
-		
 
 		$this->headers();
 		
@@ -180,11 +176,7 @@ class XCloner_Database extends wpdb{
 		
 		$this->set_charset($this->dbh, 'utf8');
 		//$this->log();
-		
-		if ($this->dbCompatibility){
-			$this->set_sql_mode($this->dbCompatibility);
-			$this->log();
-		}
+	
 
 	}
 
@@ -570,9 +562,7 @@ class XCloner_Database extends wpdb{
 		$return .= "# Host: " . $_SERVER['HTTP_HOST'] . "\n";
 		$return .= "# Generation Time: " . date("M j, Y \a\\t H:i") . "\n";
 		$return .= "# PHP Version: " . phpversion() . "\n";
-		if($this->dbCompatibility)
-			$return .= "# MYSQL Compatibility: ". $this->dbCompatibility . "\n";
-		$return .= "# MYSQL Charset: ". $this->charset . "\n";
+		$return .= "# Database Charset: ". $this->charset . "\n";
 		
 		$results = $this->get_results("SHOW VARIABLES LIKE \"%version%\";", ARRAY_N);
 		if(isset($results)){
