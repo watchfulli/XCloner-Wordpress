@@ -14,6 +14,7 @@ $tab = 1;
 	<?php endif?>
 	<li><a href="#files_options" class="nav-tab col s12 m3 l2 "><?php echo ++$tab.". ".__('Files Options')?></a></li>
 	<li><a href="#generate_backup" class="nav-tab col s12 m3 l2 "><?php echo ++$tab.". ".__('Generate Backup')?></a></li>
+	<li><a href="#schedule_backup" class="nav-tab col s12 m3 l2 "><?php echo ++$tab.". ".__('Schedule Backup')?></a></li>
 </ul>
 
 <form action="" method="POST" id="generate_backup_form">
@@ -105,11 +106,29 @@ $tab = 1;
 			<div class="row ">
 				<div class="col l6 s12">
 					<ul class="backup-status collapsible" data-collapsible="accordion">
+					    <?php if($xcloner_settings->get_enable_mysql_backup()):?>
+					    <li class="database-backup">
+						      <div class="collapsible-header">
+									<i class="material-icons">storage</i><?php echo __('Generating the Mysql Backup...')?>
+									
+									<p class="right"><?php echo __(sprintf('Found %s tables in %s databases (%s)', '<span class="table-counter">0</span>', '<span class="database-counter">0</span>', '<span data-processed="0" class="total-records">0</span> records'))?></p>
+									
+									<div>
+										<p class="right"><span class="last-logged-table"></span></p>
+									</div>	
+									
+									<div class="progress">
+										<div class="determinate" style="width:0%"></div>
+									</div>
+								</div>	
+						      <div class="collapsible-body status-body"><ul></ul></div>
+					    </li>
+					    <?php endif?>
 					    <li class="file-system">
 						      <div class="collapsible-header">
 									<i class="material-icons">folder</i><?php echo __('Scanning The File System...')?>
 									
-									<p class="right"><?php echo __(sprintf('Found %s files (%s)', '<span class="file-counter">0</span>', '<span class="file-size-total">0</span>MB'))?></p>
+									<p class="right"><?php echo __(sprintf('Found %s files (%s)', '<span class="file-counter">0</span>', '<span  class="file-size-total">0</span>MB'))?></p>
 
 									<div>
 										<p class="right"><span class="last-logged-file"></span></p>
@@ -121,18 +140,9 @@ $tab = 1;
 								</div>	
 						      <div class="collapsible-body status-body"></div>
 					    </li>
-					    <li class="mysql_backup">
+					    <li class="files-backup">
 						      <div class="collapsible-header">
-									<i class="material-icons">pan_tool</i><?php echo __('Generating the Mysql Backup...')?>
-									<div class="progress">
-										<div class="indeterminate"></div>
-									</div>
-								</div>	
-						      <div class="collapsible-body status-body"><p>loading status here</p></div>
-					    </li>
-					    <li class="files_backup">
-						      <div class="collapsible-header">
-									<i class="material-icons">pan_tool</i><?php echo __('Adding Files to Archive...')?>
+									<i class="material-icons">archive</i><?php echo __('Adding Files to Archive...')?>
 									<div class="progress">
 										<div class="indeterminate"></div>
 									</div>
@@ -148,21 +158,28 @@ $tab = 1;
 				</div>
 			</div>
 		</div>
+	
+		<div id="schedule_backup" class="tab-content">
+			<div class="row">
+				Schedule Backup Here
+			</div>
+		</div>	
 	</div>
 </form>
 
 <!-- Error Modal Structure -->
-  <div id="error_modal" class="modal">
-    <div class="modal-content">
-      <h4 class="title_line"><span class="title"></span></h4>
-      <!--<h5 class="title_line"><?php echo __('Message')?>: <span class="msg.old"></span></h5>-->
-	  <h5><?php echo __('Response Code')?>: <span class="status"></span></h5>
-	  <textarea  class="body" rows="5"></textarea>
-    </div>
-    <div class="modal-footer">
-      <a class=" modal-action modal-close waves-effect waves-green btn-flat  red darken-2"><?php echo __('Close')?></a>
-    </div>
-  </div>
+<div id="error_modal" class="modal">
+	<a title="Online Help" href="https://wordpress.org/support/plugin/xcloner-backup-and-restore" target="_blank"><i class="material-icons medium right">help</i></a>
+	<div class="modal-content">
+		<h4 class="title_line"><span class="title"></span></h4>
+		<!--<h5 class="title_line"><?php echo __('Message')?>: <span class="msg.old"></span></h5>-->
+		<h5><?php echo __('Response Code')?>: <span class="status"></span></h5>
+		<textarea  class="body" rows="5"></textarea>
+	</div>
+	<div class="modal-footer">
+		<a class=" modal-action modal-close waves-effect waves-green btn-flat  red darken-2"><?php echo __('Close')?></a>
+	</div>
+</div>
   
 <script>
 jQuery(function () { 

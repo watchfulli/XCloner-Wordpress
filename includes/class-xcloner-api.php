@@ -8,7 +8,7 @@ use League\Flysystem\Adapter\Local;
 
 class Xcloner_Api{
 
-	protected $db_link;
+	protected $xcloner_database;
 	protected $xcloner_settings;
 	protected $xcloner_file_system;
 	protected $xcloner_requirements;
@@ -53,9 +53,33 @@ class Xcloner_Api{
 			
 		}
 		
-		$this->db_link = $xcloner_db;
+		return $this->xcloner_database = $xcloner_db;
 		
 	
+	}
+	
+	public function backup_database()
+	{
+		$params = json_decode(stripslashes($_POST['data']));
+		
+		$init 	= (int)$_POST['init'];
+		
+		if($params === NULL)
+			 die( '{"status":false,"msg":"The post_data parameter must be valid JSON"}' );
+		
+		$this->process_params($params);
+			
+		$xcloner_database = $this->init_db();	
+		$return = $xcloner_database->start_database_recursion($this->form_params['database'], $this->form_params['extra'], $init);
+		
+		if(isset($return['error']) and $return['error'])
+			$data['finished'] = 1;
+		else	
+			$data['finished'] = $return['finished'];
+			
+		$data['extra'] = $return;
+		
+		return $this->send_response($data);
 	}
 	
 	public function scan_filesystem()
@@ -67,8 +91,6 @@ class Xcloner_Api{
 			 die( '{"status":false,"msg":"The post_data parameter must be valid JSON"}' );
 			 
 		$this->process_params($params);
-		
-		//print_r($this->form_params);
 		
 		$this->xcloner_file_system->set_excluded_files($this->form_params['excluded_files']);
 		
@@ -84,13 +106,26 @@ class Xcloner_Api{
 	private function process_params($params)
 	{
 		$this->form_params['system'] = array();
+		$this->form_params['extra'] = array();
+		$this->form_params['backup_params'] = array();
 		
 		if(isset($params->backup_params))
 		{
 			foreach($params->backup_params as $param)
 			{
 				$this->form_params['system'][$param->name] = $this->xcloner_sanitization->sanitize_input_as_string($param->value);
-				$this->logger->info("Adding system param ".$param->value."\n", array('POST', 'system params'));
+				$this->logger->debug("Adding system param ".$param->value."\n", array('POST', 'system params'));
+			}
+		}
+		
+		$this->form_params['database'] = array();
+		
+		if(isset($params->backup_params))
+		{
+			foreach($params->backup_params as $param)
+			{
+				$this->form_params['backup_params'][$param->name] = $this->xcloner_sanitization->sanitize_input_as_raw($param->value);
+				$this->logger->debug("Adding form parameter ".$param->name.".".$param->value."\n", array('POST', 'fields filter'));
 			}
 		}
 		
@@ -101,7 +136,7 @@ class Xcloner_Api{
 			foreach($params->table_params as $param)
 			{
 				$this->form_params['database'][$param->parent][] = $this->xcloner_sanitization->sanitize_input_as_raw($param->id);
-				$this->logger->info("Adding database filter ".$param->parent.".".$param->id."\n", array('POST', 'database filter'));
+				$this->logger->debug("Adding database filter ".$param->parent.".".$param->id."\n", array('POST', 'database filter'));
 			}
 		}
 		
@@ -120,13 +155,19 @@ class Xcloner_Api{
 				if(!in_array($param->parent, $this->form_params['excluded_files'])){
 				//$this->form_params['excluded_files'][] = $this->xcloner_sanitization->sanitize_input_as_relative_path($param->id);
 					$unique_exclude_files[] = $param->id;
-					$this->logger->info("Adding file filter ".$param->id."\n", array('POST', 'exclude files filter'));
+					$this->logger->debug("Adding file filter ".$param->id."\n", array('POST', 'exclude files filter'));
 				}
 			}
-			$this->form_params['excluded_files'] = $unique_exclude_files;
+			$this->form_params['excluded_files'] = (array)$unique_exclude_files;
 			
 		}
 		
+		if(isset($params->extra))
+		{
+			foreach($params->extra as $key=>$value)
+				$this->form_params['extra'][$key] = $this->xcloner_sanitization->sanitize_input_as_raw($value);
+		}
+			
 		return $this;
 	}
 	
@@ -217,7 +258,7 @@ class Xcloner_Api{
 		if($database == "#")
 		{
 			try{
-				$return = $this->db_link->get_all_databases();
+				$return = $this->xcloner_database->get_all_databases();
 			}catch(Exception $e){
 				$this->logger->error($e->getMessage());
 			}
@@ -230,7 +271,11 @@ class Xcloner_Api{
 				$state = array();
 				
 				if($database['name'] == $this->xcloner_settings->get_db_database())
-					$state = array('selected' => 'false', 'opened' => 'false');
+				{
+					$state['selected'] = true;
+					if($database['num_tables'] < 25)
+						$state['opened'] = true;
+				}
 					
 				$data[] = array(
 						'id' => $database['name'],
@@ -247,7 +292,7 @@ class Xcloner_Api{
 		else{
 			
 			try{
-				$return = $this->db_link->listTables($database, "", 1);
+				$return = $this->xcloner_database->list_tables($database, "", 1);
 			}catch(Exception $e){
 				$this->logger->error($e->getMessage());
 			}
@@ -260,7 +305,7 @@ class Xcloner_Api{
 					continue;
 				
 				if(isset($database['name']) and $database['name'] == $this->xcloner_settings->get_db_database())
-					$state = array('selected' => 'false');
+					$state = array('selected' => true);
 					
 				$data[] = array(
 						'id' => $table['name'],

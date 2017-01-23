@@ -6,21 +6,20 @@ use League\Flysystem\Adapter\Local;
 
 class Xcloner_File_System{
 	
-	protected $excluded_files 			= "";
-	protected $excluded_files_handler 	= "perm.txt";
-	protected $temp_dir_handler 		= ".dir";
-	protected $filesystem;
-	protected $tmp_filesystem;
-	protected $storage_filesystem;
-	protected $storage_filesystem_write;
-	protected $xcloner_settings_append;
+	private $excluded_files 			= "";
+	private $excluded_files_handler 	= "perm.txt";
+	private $temp_dir_handler 		= ".dir";
+	public  $filesystem;
+	public  $tmp_filesystem;
+	public  $storage_filesystem;
+	private $xcloner_settings_append;
 	private $logger;
 	
-	protected $files_counter;
-	protected $files_size;
-	protected $last_logged_file;
-	protected $folders_to_process_per_session = 25;
-	protected $backup_archive_extensions = array("zip", "tar", "tgz", "tar.gz", "gz");
+	private $files_counter;
+	private $files_size;
+	private $last_logged_file;
+	private $folders_to_process_per_session = 25;
+	private $backup_archive_extensions = array("zip", "tar", "tgz", "tar.gz", "gz");
 	
 	public function __construct()
 	{
@@ -49,7 +48,10 @@ class Xcloner_File_System{
 		$adapter = new Local($this->xcloner_settings->get_xcloner_store_path(),FILE_APPEND, 'SKIP_LINKS');
 		$this->storage_filesystem_append = new Filesystem($adapter, new Config([
 				'disable_asserts' => true,
-			]));	
+			]));
+		if($value = get_option('xcloner_directories_to_scan_per_request'))
+			$this->folders_to_process_per_session = $value;
+		//echo $this->folders_to_process_per_session;	
 	}
 	
 	public function start_file_recursion($init = 0)
@@ -128,6 +130,8 @@ class Xcloner_File_System{
 	
 	public function build_files_list($folder = "")
 	{
+		$this->logger->debug(sprintf(("Building the files system list")));
+		
 		//if we start with the root folder(empty value), we initializa the file system
 		if(!$folder){
 			
@@ -191,6 +195,8 @@ class Xcloner_File_System{
 	
 	public function backup_storage_cleanup()
 	{
+		$this->logger->debug(sprintf(("Cleaning the backup storage")));
+		
 		$_storage_size = 0;
 		$_backup_files_list = array();
 		
@@ -247,6 +253,8 @@ class Xcloner_File_System{
 	
 	public function estimate_reading_time($tmp_file)
 	{
+		$this->logger->debug(sprintf(("Estimating file system reading time")));
+		
 		$start_time = microtime();
 		
 		$data = $this->tmp_filesystem->read($tmp_file);
@@ -276,15 +284,24 @@ class Xcloner_File_System{
 	
 	private function is_excluded($file)
 	{
+		$this->logger->debug(sprintf(("Checking if %s is excluded"), $file['path']));
+		
 		if($xcloner_exclude_files_larger_than_mb = $this->xcloner_settings->get_xcloner_option('xcloner_exclude_files_larger_than_mb'))
 		{
 			if(isset($file['size']) and $file['size'] > $this->calc_to_bytes($xcloner_exclude_files_larger_than_mb))
 				return "> ".$xcloner_exclude_files_larger_than_mb."MB";
 		}
+		
 		foreach($this->excluded_files as $excluded_file_pattern)
 		{
-			if(strstr("$".$file['path'], "$".$excluded_file_pattern))
+			if($excluded_file_pattern == "/")
+				$needle = "$";
+			else
+				$needle = "$".$excluded_file_pattern;
+				
+			if(strstr("$".$file['path'], $needle)){
 				return $excluded_file_pattern;
+			}
 		}
 		
 		return false;
@@ -292,6 +309,8 @@ class Xcloner_File_System{
 	
 	private function store_file($file)
 	{
+		$this->logger->debug(sprintf("Storing %s in the backup list", $file['path']));
+		
 		if(!isset($file['size']))
 			$file['size'] = 0;
 		$line = $file['path']."|".$file['timestamp']."|".$file['size']."|".$file['visibility']."\n";
@@ -319,6 +338,8 @@ class Xcloner_File_System{
 	
 	private function scan_finished()
 	{
+		$this->logger->debug(sprintf(("File scan finished")));
+		
 		if($this->storage_filesystem_append->has($this->temp_dir_handler) && $this->storage_filesystem_append->getSize($this->temp_dir_handler))
 			return false;
 		

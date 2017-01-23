@@ -17,7 +17,13 @@ class Xcloner_Logger extends Logger{
 		
 		// create a log channel
 		parent::__construct($logger_name);
-		$this->pushHandler(new StreamHandler($logger_path, Logger::DEBUG));
+		
+		$debug_level = Logger::INFO;
+		
+		//if(WP_DEBUG)
+		//	$debug_level = Logger::DEBUG;
+		
+		$this->pushHandler(new StreamHandler($logger_path, $debug_level));
 		
 		
 		//$this->info("Starting logger");

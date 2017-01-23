@@ -94,14 +94,24 @@ span.shorten_string{
 	font-size: 14px;
 }
 
-#generate_backup .backup-status, #generate_backup ul.backup-status li{
+#generate_backup .backup-status, #generate_backup ul.backup-status > li{
 	display: none;
+}
+
+#generate_backup .status-body ul{
+	margin: 5px 10px;
+	max-height: 200px;
+    overflow-y: scroll;
 }
 
 #generate_backup .action-buttons .cancel, 
 #generate_backup .action-buttons .restart{
 	display: none;
 } 
+
+.modal-footer .modal-close.btn-flat{
+	color: #fff;
+}
 
 @media only screen and (min-width: 993px){
 	.dashboard .backup-ready{

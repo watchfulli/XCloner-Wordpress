@@ -88,6 +88,9 @@ function show_ajax_error(title, msg, json){
 	
 	//var json = jQuery.parseJSON( body )
 	
+	if(xcloner_backup !== undefined)
+		xcloner_backup.restart_backup();
+	
 	if(json.responseText)
 		msg = msg+": "+json.responseText;
 		

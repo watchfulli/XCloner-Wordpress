@@ -57,6 +57,9 @@ class Xcloner_Activator {
 			
 		if(!get_option('xcloner_cleanup_retention_limit_archives'))
 			update_option('xcloner_cleanup_retention_limit_archives', 100);
+			
+		if(!get_option('xcloner_directories_to_scan_per_request'))
+			update_option('xcloner_directories_to_scan_per_request', 25);
 
 	}
 

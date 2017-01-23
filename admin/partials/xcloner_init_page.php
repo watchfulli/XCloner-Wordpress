@@ -22,14 +22,15 @@
 <div class="row dashboard">
 	<div class="col s12 m12 l6">
 		<div>
-			<h5 class="center-align">Backup Ready</h5>
+			<h5 class="center-align"><?php echo __('Backup Ready', 'xcloner') ?></h5>
 		</div>
 	</div>
 	<div class="col s12 m12 l6">
 	  
 	  <div class="card blue-grey darken-1 z-depth-4 backup-ready">
 		<div class="card-content white-text">
-		  <span class="card-title"><?php echo __("Backup Ready Check")?></span>
+		  <a class="waves-effect waves-light btn right">Open Debugger</a>
+		  <span class="card-title"><?php echo __("System Check")?></span>
 		  <ul>
 				<li class="card-panel <?php echo ($requirements->check_xcloner_start_path(1)?"teal":"red")?> lighten-2" >
 					<?php echo __('Backup Start Location')?>: <span class="shorten_string "><?php echo $requirements->check_xcloner_start_path();?></span>

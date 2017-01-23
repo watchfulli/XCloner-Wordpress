@@ -39,7 +39,9 @@ class Xcloner_Settings
 	
 	public static function get_xcloner_tmp_path()
 	{
-		$path = sys_get_temp_dir();
+		$path = sys_get_temp_dir().DS.".xcloner";
+		if(!is_dir($path))
+			mkdir($path);
 		
 		return $path;
 	}
@@ -353,6 +355,20 @@ class Xcloner_Settings
 	         )
 	    );
 	    
+		register_setting('xcloner_system_settings_group', 'xcloner_directories_to_scan_per_request', array($this->xcloner_sanitization, "sanitize_input_as_int"));
+	    add_settings_field(
+	        'xcloner_directories_to_scan_per_request',
+	       __('Directories To Scan Per Request'),
+	        array($this, 'do_form_range_field'),
+	        'xcloner_system_settings_page',
+	        'xcloner_system_settings_group',
+	        array('xcloner_directories_to_scan_per_request',
+	         __('Use this option to set how many directories XCloner should scan at one time before doing another AJAX call'), 
+	         0,
+	         1000
+	         )
+	    );
+	    
 		register_setting('xcloner_system_settings_group', 'xcloner_database_records_per_request', array($this->xcloner_sanitization, "sanitize_input_as_int"));
 	    add_settings_field(
 	        'xcloner_database_records_per_request',
@@ -416,7 +432,7 @@ class Xcloner_Settings
 	        'xcloner_cleanup_settings_page',
 	        'xcloner_cleanup_settings_group',
 	        array('xcloner_cleanup_retention_limit_archives',
-				__('Specify the maximum number of backup archives to keep on the server. 0 disabled this option')
+				__('Specify the maximum number of backup archives to keep on the server. 0 disables this option')
 			)
 	    );
 	    
@@ -428,7 +444,7 @@ class Xcloner_Settings
 	        'xcloner_cleanup_settings_page',
 	        'xcloner_cleanup_settings_group',
 	        array('xcloner_cleanup_capacity_limit',
-				__('Remove oldest backups if all created backups exceed the configured limit in Megabytes.')
+				__('Remove oldest backups if all created backups exceed the configured limit in Megabytes. 0 disables this option')
 			)
 	    );
 		

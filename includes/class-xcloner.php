@@ -68,8 +68,10 @@ class Xcloner {
 	 *
 	 * @since    1.0.0
 	 */
-	public function init() {
-
+	public function init() 
+	{
+		register_shutdown_function(array($this, 'exception_handler'));
+		
 		$this->plugin_name = 'xcloner';
 		$this->version = '1.0.0';
 		
@@ -255,6 +257,28 @@ class Xcloner {
 
 	}
 	
+	public function exception_handler() {
+		
+		$logger = new XCloner_Logger("php_system");
+		$error = error_get_last();
+		
+		if($error['type'])
+			$logger->info($this->friendly_error_type ($error['type']).": ".var_export($error, true));
+	
+	}
+	
+	function friendly_error_type($type) {
+	    static $levels=null;
+	    if ($levels===null) {
+	        $levels=[];
+	        foreach (get_defined_constants() as $key=>$value) {
+	            if (strpos($key,'E_')!==0) {continue;}
+					$levels[$value]= $key; //substr($key,2);
+	        }
+	    }
+	    return (isset($levels[$type]) ? $levels[$type] : "Error #{$type}");
+	}
+		
 	private function define_ajax_hooks()
 	{
 		$plugin_public = new Xcloner_Public( $this->get_plugin_name(), $this->get_version() );
@@ -263,6 +287,7 @@ class Xcloner {
 		add_action( 'wp_ajax_get_database_tables_action'	, array($xcloner_api,'get_database_tables_action')  );
 		add_action( 'wp_ajax_get_file_system_action'		, array($xcloner_api,'get_file_system_action')  );
 		add_action( 'wp_ajax_scan_filesystem'		, array($xcloner_api,'scan_filesystem')  );
+		add_action( 'wp_ajax_backup_database'		, array($xcloner_api,'backup_database')  );
 		
 		
 		add_action( 'admin_notices', array($this, 'xcloner_error_admin_notices' ));
