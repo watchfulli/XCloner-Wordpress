@@ -34,7 +34,7 @@ class Xcloner_File_System{
 		$this->xcloner_settings 		= new Xcloner_Settings();
 		
 		$this->start_adapter = new Local($this->xcloner_settings->get_xcloner_start_path(),LOCK_EX, 'SKIP_LINKS');
-		$this->filesystem = new Filesystem($this->start_adapter, new Config([
+		$this->start_filesystem = new Filesystem($this->start_adapter, new Config([
 				'disable_asserts' => true,
 			]));
 					
@@ -61,9 +61,15 @@ class Xcloner_File_System{
 		//echo $this->folders_to_process_per_session;	
 	}
 	
+	public function get_start_adapter()
+	{
+		return $this->start_adapter;
+	}
+	
 	public function get_start_path_file_info($file)
 	{
-		return $this->getMetadataFull('start_adapter', $file);
+		//$info= $this->getMetadataFull('start_adapter', $file);
+		return $this->start_filesystem->normalizeFileInfo($info);
 	}
 	
 	public function get_storage_path_file_info($file)
@@ -165,7 +171,7 @@ class Xcloner_File_System{
 	
 	public function list_directory($path)
 	{
-		return $this->filesystem->listContents($path);
+		return $this->start_filesystem->listContents($path);
 	}
 	
 	public function build_files_list($folder = "")
@@ -179,12 +185,12 @@ class Xcloner_File_System{
 			
 		try{
 			
-			$files = $this->filesystem->listContents($folder);
+			$files = $this->start_filesystem->listContents($folder);
 			foreach($files as $file)
 			{
 				if(!$matching_pattern = $this->is_excluded($file)){
 					$this->logger->info(sprintf(__("Adding %s to the filesystem list"), $file['path']));
-					$file['visibility'] = $this->filesystem->getVisibility($file['path']);
+					$file['visibility'] = $this->start_filesystem->getVisibility($file['path']);
 					$this->store_file($file);
 					$this->files_counter++;
 					if(isset($file['size']))
@@ -399,7 +405,7 @@ class Xcloner_File_System{
 	
 	public function get_fileystem_handler()
 	{
-		return $this->filesystem;
+		return $this->start_filesystem;
 	}
 	
 	private function scan_finished()
