@@ -28,7 +28,7 @@ $tab = 1;
 					<label for="backup_name"><?php echo __('Backup Name')?></label>
 				</div>
 				<div class="hide-on-small-only m2">
-					<a class="btn-floating tooltipped btn-small" data-position="right" data-delay="50" data-tooltip="<?php echo __('The default backup name')?>" data-tooltip-id=""><i class="material-icons">help_outline</i></a>
+					<a class="btn-floating tooltipped btn-small" data-position="right" data-delay="50" data-tooltip="<?php echo __('The default backup name, supported tags [time], [hostname], [domain]')?>" data-tooltip-id=""><i class="material-icons">help_outline</i></a>
 				</div>
 		     </div>
 		     
@@ -143,6 +143,13 @@ $tab = 1;
 					    <li class="files-backup">
 						      <div class="collapsible-header">
 									<i class="material-icons">archive</i><?php echo __('Adding Files to Archive...')?>
+									
+									<p class="right"><?php echo __(sprintf('Found %s files (%s)', '<span class="file-counter">0</span>', '<span  class="file-size-total">0</span>MB'))?></p>
+
+									<div>
+										<p class="right"><span class="last-logged-file"></span></p>
+									</div>	
+									
 									<div class="progress">
 										<div class="indeterminate"></div>
 									</div>

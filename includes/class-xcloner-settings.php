@@ -49,9 +49,9 @@ class Xcloner_Settings
 	public static function get_backup_extension_name()
 	{
 		if(get_option('xcloner_backup_compression_level'))
-			$ext = "tar.gz";
+			$ext = ".tgz";
 		else
-			$ext = "tar";
+			$ext = ".tar";
 			
 		return $ext;	
 	}
@@ -69,7 +69,7 @@ class Xcloner_Settings
 		$data = parse_url(get_site_url());
 		$suffix = substr( md5(rand()), 0, 5);
 			
-		$backup_name = "backup_".$suffix."_".$data['host'].(isset($data['port'])?":".$data['port']:"").'-'.date("Y-m-d_H-i")."-".(self::get_enable_mysql_backup()?"sql":"nosql")/*.".".$this->get_backup_extension_name()*/;
+		$backup_name = "backup_".$suffix."_[hostname]".(isset($data['port'])?":".$data['port']:"")."-[time]-".(self::get_enable_mysql_backup()?"sql":"nosql")/*.".".$this->get_backup_extension_name()*/;
 		
 		return $backup_name;
 	}

@@ -91,8 +91,8 @@ function xcloner_display()
 function run_xcloner() 
 {
 	$plugin = new Xcloner();
-	$plugin->init();
 	$plugin->check_dependencies();
+	$plugin->init();
 	$plugin->run();
 
 }

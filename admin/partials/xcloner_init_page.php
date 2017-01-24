@@ -13,23 +13,60 @@
  */
  
  $requirements 			= new XCloner_Requirements();
+ $xcloner_settings 		= new Xcloner_Settings();
  $xcloner_file_system 	= new Xcloner_File_System();
+ $logger				= new Xcloner_Logger();
  
- $xcloner_file_system->backup_storage_cleanup();
+ $logger_content = $logger->getLastDebugLines();
+ 
+ if($requirements->check_backup_ready_status())
+	$xcloner_file_system->backup_storage_cleanup();
+
 ?>
 
+<?php if(!$requirements->check_backup_ready_status()):?>
+	<div id="setting-error-" class="error settings-error notice is-dismissible"> 
+		<p><strong>
+			<?php echo __('Backup system not ready, please check and fix the issues marked in red', 'xcloner') ?>
+			</strong>
+		</p><button type="button" class="notice-dismiss"><span class="screen-reader-text">Dismiss this notice.</span></button>
+	</div>
+	
+<?php endif ?>
+				
 <!-- This file should primarily consist of HTML with a little bit of PHP. -->
 <div class="row dashboard">
-	<div class="col s12 m12 l6">
+	<div class="col s12 m12 l7">
 		<div>
-			<h5 class="center-align"><?php echo __('Backup Ready', 'xcloner') ?></h5>
+			<h5 class="left-align">
+					<?php echo __('Backup Dashboard', 'xcloner') ?>
+			</h5>
+			
+			<?php if($xcloner_settings->get_xcloner_option('xcloner_enable_log')) :?>
+			<ul class="collapsible xcloner-debugger" data-collapsible="accordion">
+				<li class="active">
+					<div class="collapsible-header active"><i class="material-icons">bug_report</i>XCloner Debugger</div>
+					<div class="collapsible-body">
+						<div class="console" id="xcloner-console"><?php if($logger_content) echo implode("<br />\n", $logger_content); ?></div>
+					</div>
+				</li>
+			</ul>
+			<script>
+				jQuery(document).ready(function(){
+					var objDiv = document.getElementById("xcloner-console");
+					objDiv.scrollTop = objDiv.scrollHeight;
+					/*setInterval(function(){
+						getXclonerLog();
+					}, 2000);*/
+				})
+			</script>
+			<?php endif;?>
 		</div>
 	</div>
-	<div class="col s12 m12 l6">
+	<div class="col s12 m12 l5">
 	  
 	  <div class="card blue-grey darken-1 z-depth-4 backup-ready">
 		<div class="card-content white-text">
-		  <a class="waves-effect waves-light btn right">Open Debugger</a>
 		  <span class="card-title"><?php echo __("System Check")?></span>
 		  <ul>
 				<li class="card-panel <?php echo ($requirements->check_xcloner_start_path(1)?"teal":"red")?> lighten-2" >
@@ -65,12 +102,16 @@
 				<li class="card-panel grey darken-1" >
 					<?php echo __('PHP open_basedir')?>: <?php echo $requirements->get_open_basedir();?>
 				</li>
-				<?php $data = $xcloner_file_system->estimate_read_write_time();?>
+				<?php 
+				$data = array();
+				if($requirements->check_backup_ready_status())
+					$data = $xcloner_file_system->estimate_read_write_time();
+				?>
 				<li class="card-panel grey darken-1" >
-					<?php echo __('Reading Time 1MB Block')?>: <?php echo $data['reading_time'];?>
+					<?php echo __('Reading Time 1MB Block')?>: <?php echo (isset($data['reading_time'])?$data['reading_time']:__("unknown"));?>
 				</li>
 				<li class="card-panel grey darken-1" >
-					<?php echo __('Writing Time 1MB Block')?>: <?php echo $data['writing_time'];?>
+					<?php echo __('Writing Time 1MB Block')?>: <?php echo (isset($data['writing_time'])?$data['writing_time']:__("unknown"));?>
 				</li>
 				<li class="card-panel grey darken-1" >
 					<?php echo __('Free Disk Space')?>: <?php echo $requirements->get_free_disk_space();;?>

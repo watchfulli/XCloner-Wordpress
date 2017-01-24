@@ -58,8 +58,38 @@ class Xcloner_Api{
 	
 	}
 	
+	public function backup_files()
+	{
+		if (!current_user_can('manage_options')) {
+			die("Not allowed access here!");
+		}
+		
+		$params = json_decode(stripslashes($_POST['data']));
+		
+		$init 	= (int)$_POST['init'];
+		
+		if($params === NULL)
+			 die( '{"status":false,"msg":"The post_data parameter must be valid JSON"}' );
+			 
+		$this->process_params($params);
+		
+//		print_r($this->form_params);
+			
+		$archive_system = new Xcloner_Archive($this->form_params['backup_params']['backup_name']);
+		
+		$return = $archive_system->start_incremental_backup($this->form_params['backup_params'], $this->form_params['extra'], $init);
+		
+		$data['finished'] = 1;
+		
+		return $this->send_response($data);
+	}
+	
 	public function backup_database()
 	{
+		if (!current_user_can('manage_options')) {
+			die("Not allowed access here!");
+		}
+		
 		$params = json_decode(stripslashes($_POST['data']));
 		
 		$init 	= (int)$_POST['init'];
@@ -84,6 +114,10 @@ class Xcloner_Api{
 	
 	public function scan_filesystem()
 	{
+		if (!current_user_can('manage_options')) {
+			die("Not allowed access here!");
+		}
+		
 		$params = json_decode(stripslashes($_POST['data']));
 		$init 	= (int)$_POST['init'];
 		
@@ -105,18 +139,18 @@ class Xcloner_Api{
 	
 	private function process_params($params)
 	{
-		$this->form_params['system'] = array();
+		#$this->form_params['system'] = array();
 		$this->form_params['extra'] = array();
 		$this->form_params['backup_params'] = array();
 		
-		if(isset($params->backup_params))
+		/*if(isset($params->backup_params))
 		{
 			foreach($params->backup_params as $param)
 			{
 				$this->form_params['system'][$param->name] = $this->xcloner_sanitization->sanitize_input_as_string($param->value);
 				$this->logger->debug("Adding system param ".$param->value."\n", array('POST', 'system params'));
 			}
-		}
+		}*/
 		
 		$this->form_params['database'] = array();
 		

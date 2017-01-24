@@ -415,9 +415,38 @@ class Tar extends Archive
         if ($written === false) {
             throw new ArchiveIOException('Failed to write to archive stream');
         }
+
         return $written;
     }
+	
+	    public function openForAppend($file = '')
+    {
+        $this->file   = $file;
+        $this->memory = '';
+        $this->fh     = 0;
 
+        if ($this->file) {
+            // determine compression
+            if ($this->comptype == Archive::COMPRESS_AUTO) {
+                $this->setCompression($this->complevel, $this->filetype($file));
+            }
+
+            if ($this->comptype === Archive::COMPRESS_GZIP) {
+                $this->fh = @gzopen($this->file, 'ab'.$this->complevel);
+            } elseif ($this->comptype === Archive::COMPRESS_BZIP) {
+                $this->fh = @bzopen($this->file, 'a');
+            } else {
+                $this->fh = @fopen($this->file, 'ab');
+            }
+
+            if (!$this->fh) {
+                throw new ArchiveIOException('Could not open file for writing: '.$this->file);
+            }
+        }
+        $this->writeaccess = true;
+        $this->closed      = false;
+    }
+    
     /**
      * Skip forward in the open file pointer
      *

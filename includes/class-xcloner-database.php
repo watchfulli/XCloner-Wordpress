@@ -340,8 +340,6 @@ class XCloner_Database extends wpdb{
 		$return['finished'] = 0;
 		$lines = array();
 		
-		$this->log(sprintf(__("Starting new incremental backup process at line %s"), $startAtLine));
-		
 		if($this->fs->tmp_filesystem->has($this->TEMP_DBPROCESS_FILE))
 			$lines = array_filter(explode("\n",$this->fs->tmp_filesystem->read($this->TEMP_DBPROCESS_FILE)));
 	
@@ -360,6 +358,8 @@ class XCloner_Database extends wpdb{
 						}
 	
 						$dumpfile = $tableInfo[2];
+						
+						$this->log(sprintf(__("Starting new backup dump to file %s"), $dumpfile));
 						
 						$this->data_headers($dumpfile, $tableInfo[1]);
 						$dumpfile = $tableInfo[2];

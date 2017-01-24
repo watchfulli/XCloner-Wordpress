@@ -166,6 +166,11 @@ class Xcloner {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-xcloner-requirements.php';
 		
 		/**
+		 * The class responsible for XCloner backup archive creation.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-xcloner-archive.php';
+		
+		/**
 		 * The class responsible for XCloner API requests.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-xcloner-api.php';
@@ -262,8 +267,10 @@ class Xcloner {
 		$logger = new XCloner_Logger("php_system");
 		$error = error_get_last();
 		
-		if($error['type'])
+		if($error['type'] and $logger)
+		{
 			$logger->info($this->friendly_error_type ($error['type']).": ".var_export($error, true));
+		}
 	
 	}
 	
@@ -288,6 +295,7 @@ class Xcloner {
 		add_action( 'wp_ajax_get_file_system_action'		, array($xcloner_api,'get_file_system_action')  );
 		add_action( 'wp_ajax_scan_filesystem'		, array($xcloner_api,'scan_filesystem')  );
 		add_action( 'wp_ajax_backup_database'		, array($xcloner_api,'backup_database')  );
+		add_action( 'wp_ajax_backup_files'		, array($xcloner_api,'backup_files')  );
 		
 		
 		add_action( 'admin_notices', array($this, 'xcloner_error_admin_notices' ));

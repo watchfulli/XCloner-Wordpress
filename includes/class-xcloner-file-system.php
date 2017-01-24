@@ -15,24 +15,31 @@ class Xcloner_File_System{
 	private $xcloner_settings_append;
 	private $logger;
 	
+	private $start_adapter;
+	private $tmp_adapter;
+	private $storage_adapter;
+	
 	private $files_counter;
 	private $files_size;
 	private $last_logged_file;
 	private $folders_to_process_per_session = 25;
 	private $backup_archive_extensions = array("zip", "tar", "tgz", "tar.gz", "gz");
+	private $backup_name_tags = array('[time]', '[hostname]', '[domain]');
 	
 	public function __construct()
 	{
 		$this->logger = new XCloner_Logger('xcloner_file_system');
-		
+		$this->xcloner_requirements = new Xcloner_Requirements();
+
 		$this->xcloner_settings 		= new Xcloner_Settings();
-		$adapter = new Local($this->xcloner_settings->get_xcloner_start_path(),LOCK_EX, 'SKIP_LINKS');
-		$this->filesystem = new Filesystem($adapter, new Config([
+		
+		$this->start_adapter = new Local($this->xcloner_settings->get_xcloner_start_path(),LOCK_EX, 'SKIP_LINKS');
+		$this->filesystem = new Filesystem($this->start_adapter, new Config([
 				'disable_asserts' => true,
 			]));
 					
-		$adapter = new Local($this->xcloner_settings->get_xcloner_tmp_path(),LOCK_EX, 'SKIP_LINKS');
-		$this->tmp_filesystem = new Filesystem($adapter, new Config([
+		$this->tmp_adapter = new Local($this->xcloner_settings->get_xcloner_tmp_path(),LOCK_EX, 'SKIP_LINKS');
+		$this->tmp_filesystem = new Filesystem($this->tmp_adapter, new Config([
 				'disable_asserts' => true,
 			]));
 		$adapter = new Local($this->xcloner_settings->get_xcloner_tmp_path(),LOCK_EX|FILE_APPEND, 'SKIP_LINKS');
@@ -45,14 +52,47 @@ class Xcloner_File_System{
 				'disable_asserts' => true,
 			]));	
 		
-		$adapter = new Local($this->xcloner_settings->get_xcloner_store_path(),FILE_APPEND, 'SKIP_LINKS');
-		$this->storage_filesystem_append = new Filesystem($adapter, new Config([
+		$this->storage_adapter = new Local($this->xcloner_settings->get_xcloner_store_path(),FILE_APPEND, 'SKIP_LINKS');
+		$this->storage_filesystem_append = new Filesystem($this->storage_adapter, new Config([
 				'disable_asserts' => true,
 			]));
 		if($value = get_option('xcloner_directories_to_scan_per_request'))
 			$this->folders_to_process_per_session = $value;
 		//echo $this->folders_to_process_per_session;	
 	}
+	
+	public function get_start_path_file_info($file)
+	{
+		return $this->getMetadataFull('start_adapter', $file);
+	}
+	
+	public function get_storage_path_file_info($file)
+	{
+		return $this->getMetadataFull('storage_adapter', $file);
+	}
+	
+	public function get_excluded_files_handler()
+	{
+		$path = $this->excluded_files_handler;
+		$spl_info = $this->getMetadataFull('storage_adapter', $path);
+		
+		return $spl_info;
+		
+	}
+		
+	public function get_temp_dir_handler()
+	{
+		return $this->temp_dir_handler;
+	}
+	
+	public function getMetadataFull($adapter = "storage_adapter" , $path)
+    {
+        $location = $this->$adapter->applyPathPrefix($path);
+        $spl_info = new SplFileInfo($location);
+        
+        return ($spl_info);
+    }
+
 	
 	public function start_file_recursion($init = 0)
 	{
@@ -195,7 +235,8 @@ class Xcloner_File_System{
 	
 	public function backup_storage_cleanup()
 	{
-		$this->logger->debug(sprintf(("Cleaning the backup storage")));
+		if($this->logger)
+			$this->logger->debug(sprintf(("Cleaning the backup storage")));
 		
 		$_storage_size = 0;
 		$_backup_files_list = array();
@@ -263,6 +304,31 @@ class Xcloner_File_System{
 		
 		return $end_time;
 	
+	}
+	
+	public function process_backup_name($name = "", $max_length=100)
+	{
+		if(!$name)
+			$name = $this->xcloner_settings->get_default_backup_name();
+		
+		foreach($this->backup_name_tags as $tag)
+		{
+			if($tag == '[time]')
+				$name = str_replace($tag, date("Y-m-d_H-i"),$name);
+			elseif($tag == '[hostname]')
+				$name = str_replace($tag, gethostname() ,$name);	
+			elseif($tag == '[domain]')
+			{
+				$domain = parse_url(admin_url(), PHP_URL_HOST);
+				$name = str_replace($tag, $domain ,$name);	
+			}
+		}
+		
+		if($max_length)
+			$name = substr($name, 0, $max_length);
+			
+		$extension = $this->xcloner_settings->get_backup_extension_name();	
+		return $name.$extension;	
 	}
 	
 	private function sort_by( &$array, $field, $direction = 'asc')
