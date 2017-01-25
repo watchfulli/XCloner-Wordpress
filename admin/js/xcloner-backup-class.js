@@ -187,6 +187,12 @@ class Xcloner_Backup{
 		if(json.extra.backup_archive_name !== undefined && json.extra.backup_init)
 			jQuery(elem).find(".status-body .backup-name").prepend(jQuery("<li id='"+json.extra.backup_archive_name+"'>").text(json.extra.backup_archive_name));
 		
+		if(json.extra.lines_total)
+		{
+			var percent = 100*parseInt(json.extra.start_at_line)/parseInt(json.extra.lines_total);
+			jQuery(elem).find('.progress .determinate').css('width', percent+'%');
+		}
+		
 		if(!json.finished && !this.cancel){
 			
 			this.do_ajax(elem, action);

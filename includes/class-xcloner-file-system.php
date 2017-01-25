@@ -7,6 +7,7 @@ use League\Flysystem\Adapter\Local;
 class Xcloner_File_System{
 	
 	private $excluded_files 			= "";
+	private $excluded_files_static		= array("administrator/backups", "wp-content/backups");
 	private $included_files_handler 	= "perm.txt";
 	private $temp_dir_handler 		= ".dir";
 	public  $filesystem;
@@ -165,7 +166,9 @@ class Xcloner_File_System{
 	
 	public function set_excluded_files($excluded_files)
 	{
-		$this->excluded_files = $excluded_files;
+		$this->excluded_files = array_merge($excluded_files, $this->excluded_files_static);
+		
+		//print_r($this->excluded_files);exit;
 		return $this;
 	}
 	
