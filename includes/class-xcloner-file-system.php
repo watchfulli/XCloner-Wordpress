@@ -7,7 +7,7 @@ use League\Flysystem\Adapter\Local;
 class Xcloner_File_System{
 	
 	private $excluded_files 			= "";
-	private $excluded_files_handler 	= "perm.txt";
+	private $included_files_handler 	= "perm.txt";
 	private $temp_dir_handler 		= ".dir";
 	public  $filesystem;
 	public  $tmp_filesystem;
@@ -77,9 +77,9 @@ class Xcloner_File_System{
 		return $this->getMetadataFull('storage_adapter', $file);
 	}
 	
-	public function get_excluded_files_handler()
+	public function get_included_files_handler()
 	{
-		$path = $this->excluded_files_handler;
+		$path = $this->included_files_handler;
 		$spl_info = $this->getMetadataFull('storage_adapter', $path);
 		
 		return $spl_info;
@@ -141,8 +141,8 @@ class Xcloner_File_System{
 		if(!$this->storage_filesystem->has("index.html"))	
 			$this->storage_filesystem->write("index.html","");
 		
-		if($this->storage_filesystem->has($this->excluded_files_handler))
-			$this->storage_filesystem->delete($this->excluded_files_handler);
+		if($this->storage_filesystem->has($this->included_files_handler))
+			$this->storage_filesystem->delete($this->included_files_handler);
 		
 		if($this->storage_filesystem->has($this->temp_dir_handler))	
 			$this->storage_filesystem->delete($this->temp_dir_handler);
@@ -333,8 +333,7 @@ class Xcloner_File_System{
 		if($max_length)
 			$name = substr($name, 0, $max_length);
 			
-		$extension = $this->xcloner_settings->get_backup_extension_name();	
-		return $name.$extension;	
+		return $name;	
 	}
 	
 	private function sort_by( &$array, $field, $direction = 'asc')
@@ -389,7 +388,7 @@ class Xcloner_File_System{
 		
 		$this->last_logged_file = $file['path'];
 		try{
-			$this->storage_filesystem_append->write($this->excluded_files_handler, $line);
+			$this->storage_filesystem_append->write($this->included_files_handler, $line);
 		}catch(Exception $e){
 			$this->logger->error($e->getMessage());	
 		}

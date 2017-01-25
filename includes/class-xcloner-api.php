@@ -73,13 +73,13 @@ class Xcloner_Api{
 			 
 		$this->process_params($params);
 		
-//		print_r($this->form_params);
-			
-		$archive_system = new Xcloner_Archive($this->form_params['backup_params']['backup_name']);
+		$return['finished'] = 1;
+
+		$archive_system = new Xcloner_Archive();
 		
 		$return = $archive_system->start_incremental_backup($this->form_params['backup_params'], $this->form_params['extra'], $init);
 		
-		$data['finished'] = 1;
+		$data = $return;
 		
 		return $this->send_response($data);
 	}

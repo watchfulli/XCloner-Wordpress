@@ -104,7 +104,7 @@ $tab = 1;
 		</div>
 		<div id="generate_backup" class="tab-content">
 			<div class="row ">
-				<div class="col l6 s12">
+				<div class="col l8 s12">
 					<ul class="backup-status collapsible" data-collapsible="accordion">
 					    <?php if($xcloner_settings->get_enable_mysql_backup()):?>
 					    <li class="database-backup">
@@ -144,21 +144,24 @@ $tab = 1;
 						      <div class="collapsible-header">
 									<i class="material-icons">archive</i><?php echo __('Adding Files to Archive...')?>
 									
-									<p class="right"><?php echo __(sprintf('Found %s files (%s)', '<span class="file-counter">0</span>', '<span  class="file-size-total">0</span>MB'))?></p>
+									<p class="right"><?php echo __(sprintf('Adding %s files (%s)', '<span class="file-counter">0</span>', '<span  data-processed="0" class="file-size-total">0</span>MB'))?></p>
 
 									<div>
 										<p class="right"><span class="last-logged-file"></span></p>
 									</div>	
 									
 									<div class="progress">
-										<div class="indeterminate"></div>
+										<div class="determinate" style="width:0%"></div>
 									</div>
 								</div>	
-						      <div class="collapsible-body status-body"><p>loading status here</p></div>
+						      <div class="collapsible-body status-body">
+								  <h2><?php echo __("Backup Parts")?>: </h2>
+									<ul class="backup-name"></ul>
+							  </div>
 					    </li>
 				  </ul>
 				 </div> 
-				 <div class="col s12 l6 action-buttons">
+				 <div class="col s12 l4 action-buttons">
 					<a class="waves-effect waves-light btn-large green darken-1 start" onclick="xcloner_backup.start_backup()">Start Backup<i class="material-icons left">forward</i></a>
 					<a class="waves-effect waves-light btn-large green darken-1 restart" onclick="xcloner_backup.start_backup()">Restart Backup<i class="material-icons left">cached</i></a>
 					<a class="waves-effect waves-light btn-large red darken-1 cancel" onclick="xcloner_backup.cancel_backup()">Cancel Backup<i class="material-icons left">cancel</i></a>

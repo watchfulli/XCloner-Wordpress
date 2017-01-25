@@ -419,8 +419,64 @@ class Tar extends Archive
         return $written;
     }
 	
-	    public function openForAppend($file = '')
+	public function appendFileData($file, $fileinfo = '', $start = 0, $limit = 0)
     {
+		$end = $start+($limit*512);
+		
+		//check to see if we are at the begining of writing the file
+		if(!$start)
+		{
+	        if (is_string($fileinfo)) {
+				$fileinfo = FileInfo::fromPath($file, $fileinfo);
+	        }
+		}
+		
+        if ($this->closed) {
+            throw new ArchiveIOException('Archive has been closed, files can no longer be added');
+        }
+
+        $fp = fopen($file, 'rb');
+        
+        fseek($fp, $start);
+        
+        if (!$fp) {
+            throw new ArchiveIOException('Could not open file for reading: '.$file);
+        }
+
+        // create file header
+		if(!$start)
+			$this->writeFileHeader($fileinfo);
+		
+		$bytes = 0;
+        // write data
+        while ($end >=ftell($fp) and !feof($fp) ) {
+            $data = fread($fp, 512);
+            if ($data === false) {
+                break;
+            }
+            if ($data === '') {
+                break;
+            }
+            $packed = pack("a512", $data);
+            $bytes += $this->writebytes($packed);
+        }
+        
+        
+        
+        //if we are not at the end of file, we return the current position for incremental writing
+        if(!feof($fp))
+			$last_position = ftell($fp);
+		else
+			$last_position = -1;
+	
+        fclose($fp);
+        
+        return $last_position;
+    }
+    
+	public function openForAppend($file = '')
+    {
+
         $this->file   = $file;
         $this->memory = '';
         $this->fh     = 0;
@@ -445,6 +501,7 @@ class Tar extends Archive
         }
         $this->writeaccess = true;
         $this->closed      = false;
+        
     }
     
     /**

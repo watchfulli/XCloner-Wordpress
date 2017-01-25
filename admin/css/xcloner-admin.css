@@ -107,7 +107,7 @@ span.shorten_string{
 #generate_backup .status-body ul{
 	margin: 5px 10px;
 	max-height: 200px;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 #generate_backup .action-buttons .cancel, 
@@ -117,6 +117,10 @@ span.shorten_string{
 
 .modal-footer .modal-close.btn-flat{
 	color: #fff;
+}
+
+.collapsible-body{
+	padding: 0px 10px;
 }
 
 @media only screen and (min-width: 993px){

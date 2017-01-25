@@ -46,6 +46,14 @@ class Xcloner_Settings
 		return $path;
 	}
 	
+	public static function get_enable_mysql_backup()
+	{
+		if(get_option('xcloner_enable_mysql_backup'))
+			return true;
+		
+		return false;	
+	}
+	
 	public static function get_backup_extension_name()
 	{
 		if(get_option('xcloner_backup_compression_level'))
@@ -56,20 +64,12 @@ class Xcloner_Settings
 		return $ext;	
 	}
 	
-	public static function get_enable_mysql_backup()
-	{
-		if(get_option('xcloner_enable_mysql_backup'))
-			return true;
-		
-		return false;	
-	}
-	
 	public static function get_default_backup_name()
 	{
 		$data = parse_url(get_site_url());
 		$suffix = substr( md5(rand()), 0, 5);
 			
-		$backup_name = "backup_".$suffix."_[hostname]".(isset($data['port'])?":".$data['port']:"")."-[time]-".(self::get_enable_mysql_backup()?"sql":"nosql")/*.".".$this->get_backup_extension_name()*/;
+		$backup_name = "backup_[hostname]".(isset($data['port'])?":".$data['port']:"")."-[time]-".$suffix."-".(self::get_enable_mysql_backup()?"sql":"nosql")/*.".".$this->get_backup_extension_name()*/;
 		
 		return $backup_name;
 	}
@@ -327,7 +327,7 @@ class Xcloner_Settings
 	    );
 	    
 	    //REGISTERING THE 'SYSTEM SECTION' FIELDS
-	    register_setting('xcloner_system_settings_group', 'xcloner_size_per_request_limit', array($this->xcloner_sanitization, "sanitize_input_as_int"));
+	    register_setting('xcloner_system_settings_group', 'xcloner_size_limit_per_request', array($this->xcloner_sanitization, "sanitize_input_as_int"));
 	    add_settings_field(
 	        'xcloner_size_limit_per_request',
 	       __('Data Size Limit Per Request'),
