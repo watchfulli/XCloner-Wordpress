@@ -143,9 +143,15 @@ $tab = 1;
 									</div>
 								</div>	
 						      <div class="collapsible-body status-body">
-								  <ul class="logged-databases"></ul>
-								  <ul class="logged-tables"></ul>
-								</div>
+									<div class="row">
+										<div class="col l7 s12">
+											<ul class="logged-tables"></ul>
+										</div>
+										<div class="col l5 s12">
+											<ul class="logged-databases right"></ul>
+										</div>
+									</div>
+							</div>
 					    </li>
 					    <?php endif?>
 					    <li class="files-backup">

@@ -6,6 +6,7 @@ class Xcloner_Backup{
 		this.params;
 		this.generate_hash = false;
 		this.last_dumpfile = "";
+		this.last_backup_file = ""
 	}
 	
 	get_form_params()
@@ -77,10 +78,10 @@ class Xcloner_Backup{
 		}
 		
 		if(json.extra.dumpfile !== undefined){
-			var db_text = ("writing data to <b>"+json.extra.dumpfile+" ("+this.getSize(json.extra.dumpsize, 1024)+" KB)</b>");
+			var db_text = ("backup file: <b>"+json.extra.dumpfile+" ("+this.getSize(json.extra.dumpsize, 1024)+" KB)</b>");
 			
 			if(!jQuery(this.last_dumpfile).hasClass(json.extra.dumpfile)){
-				this.last_dumpfile = (jQuery("<li>").addClass(json.extra.dumpfile).html(db_text)).appendTo("ul.logged-databases");
+				this.last_dumpfile = (jQuery("<li>").addClass(json.extra.dumpfile).html(db_text)).prependTo("ul.logged-databases");
 			}
 			else{	
 				jQuery(this.last_dumpfile).html(db_text)
@@ -204,8 +205,25 @@ class Xcloner_Backup{
 			jQuery(elem).find(".last-logged-file").text(json.extra.processed_file+" ("+this.getSize(json.extra.processed_file_size, 1024)+" KB)");	
 		}
 		
-		if(json.extra.backup_archive_name !== undefined && json.extra.backup_init)
-			jQuery(elem).find(".status-body .backup-name").prepend(jQuery("<li id='"+json.extra.backup_archive_name+"'>").text(json.extra.backup_archive_name));
+		/*if(json.extra.backup_archive_name !== undefined && json.extra.backup_init)
+		{
+			var backup_text = json.extra.backup_archive_name+" ("+this.getSize(json.extra.backup_size)+") MB");
+			(jQuery("<li id='"+json.extra.backup_archive_name+"'>").text(backup_text).prepentTo(jQuery(elem).find(".status-body .backup-name"));
+		}*/
+		
+		if(json.extra.processed_file !== undefined){
+			//var db_text = ("writing data to <b>"+json.extra.dumpfile+" ("+this.getSize(json.extra.dumpsize, 1024)+" KB)</b>");
+			var backup_text = json.extra.backup_archive_name+" ("+this.getSize(json.extra.backup_size)+") MB";
+			
+			if(!jQuery(this.last_backup_file).hasClass(json.extra.backup_archive_name)){
+				this.last_backup_file = (jQuery("<li>").addClass(json.extra.backup_archive_name).html(backup_text)).prependTo(jQuery(elem).find(".status-body .backup-name"));
+			}
+			else{	
+				jQuery(this.last_backup_file).html(backup_text)
+			}
+			
+		}
+		
 		
 		if(json.extra.lines_total)
 		{
