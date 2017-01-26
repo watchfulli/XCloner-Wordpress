@@ -29,7 +29,6 @@ class Xcloner_File_System{
 	
 	public function __construct($hash = "")
 	{
-	
 		$this->logger = new XCloner_Logger('xcloner_file_system');
 		$this->xcloner_requirements = new Xcloner_Requirements();
 
@@ -157,26 +156,29 @@ class Xcloner_File_System{
 			$this->build_files_list();
 		}
 		
-		//adding included dump file to the included files list
-		if($this->get_tmp_filesystem()->has($this->get_included_files_handler()))
-		{
-			$metadata_dumpfile = $this->get_tmp_filesystem()->getMetadata($this->get_included_files_handler());
-			$this->store_file($metadata_dumpfile, 'tmp_filesystem');
-			$this->files_counter++;
-		}
-		
-		//adding a default index.html to the temp xcloner folder
-		if(!$this->get_tmp_filesystem()->has("index.html"))
-		{
-			$this->storage_filesystem->write("index.html","");
-		}
-		
 		$metadata_dumpfile = $this->get_tmp_filesystem()->getMetadata("index.html");
 		$this->store_file($metadata_dumpfile, 'tmp_filesystem');
 		$this->files_counter++;
 		
 		if($this->scan_finished())
+		{
+			//adding included dump file to the included files list
+			if($this->get_tmp_filesystem()->has($this->get_included_files_handler()))
+			{
+				$metadata_dumpfile = $this->get_tmp_filesystem()->getMetadata($this->get_included_files_handler());
+				$this->store_file($metadata_dumpfile, 'tmp_filesystem');
+				$this->files_counter++;
+			}
+		
+			//adding a default index.html to the temp xcloner folder
+			if(!$this->get_tmp_filesystem()->has("index.html"))
+			{
+				$this->storage_filesystem->write("index.html","");
+			}
+		
 			return false;
+		}	
+	
 		
 		return true;	
 	}

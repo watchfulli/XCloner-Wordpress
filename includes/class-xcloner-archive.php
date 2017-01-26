@@ -61,6 +61,8 @@ class Xcloner_Archive extends Tar
 		
 		$archive_info = $this->filesystem->get_storage_path_file_info($this->get_archive_name());
 		
+		
+		
 		if($init)
 		{
 			$this->logger->info(sprintf(__("Initializing the backup archive %s"), $this->get_archive_name()));
@@ -77,6 +79,7 @@ class Xcloner_Archive extends Tar
 			$this->backup_archive->openForAppend($archive_info->getPath().DS.$archive_info->getFilename());
 			
 			$return['extra']['backup_init'] = 0;
+			
 		}
 		
 		$return['extra']['backup_archive_name'] = $this->get_archive_name();
@@ -91,6 +94,8 @@ class Xcloner_Archive extends Tar
 		
 		if(!$this->filesystem->get_tmp_filesystem()->has($this->filesystem->get_included_files_handler()))
 		{
+			$this->logger->error(sprintf("Missing the includes file handler %s, aborting...", $this->filesystem->get_included_files_handler()));
+			
 			$return['finished'] = 1;
 			return $return;
 		}
@@ -200,12 +205,12 @@ class Xcloner_Archive extends Tar
 		}
 		
 		//close the backup archive by adding 2*512 blocks of zero bytes
-		$this->logger("Closing the backup archive with 2*512 zero bytes blocks.");
+		$this->logger->info("Closing the backup archive with 2*512 zero bytes blocks.");
 		$this->backup_archive->close();
 		
 		//delete the temporary folder
-		$this->logger("Deleting the temporary storage folder");
-		$this->filesystem->get_filesystem("tmp_filesystem")->delete("/");
+		$this->logger->info(sprintf("Deleting the temporary storage folder %s", $this->xcloner_settings->get_xcloner_tmp_path()));
+		@rmdir($this->xcloner_settings->get_xcloner_tmp_path());
 		
 		$return['extra']['start_at_line'] = $extra_params['start_at_line']-1;
 		$return['extra']['processed_file'] = $file_info['path'];
