@@ -73,14 +73,14 @@ class Xcloner_Backup{
 			jQuery(elem).find('.progress .determinate').css('width', percent+'%');
 			
 			jQuery(elem).find(".total-records").attr('data-processed', records);
-			jQuery(elem).find(".status-body ul").prepend(jQuery("<li>").text(json.extra.databaseName+"."+json.extra.tableName+" ("+json.extra.processedRecords+" records)"));
+			jQuery(elem).find(".status-body ul.logged-tables").prepend(jQuery("<li>").text(json.extra.databaseName+"."+json.extra.tableName+" ("+json.extra.processedRecords+" records)"));
 		}
 		
 		if(json.extra.dumpfile !== undefined){
-			var db_text = (json.extra.dumpfile+" <b>("+this.getSize(json.extra.dumpsize, 1024)+" KB)</b>");
+			var db_text = ("writing data to <b>"+json.extra.dumpfile+" ("+this.getSize(json.extra.dumpsize, 1024)+" KB)</b>");
 			
 			if(!jQuery(this.last_dumpfile).hasClass(json.extra.dumpfile)){
-				this.last_dumpfile = (jQuery("<li>").addClass(json.extra.dumpfile).html(db_text)).appendTo(".logged-databases");
+				this.last_dumpfile = (jQuery("<li>").addClass(json.extra.dumpfile).html(db_text)).appendTo("ul.logged-databases");
 			}
 			else{	
 				jQuery(this.last_dumpfile).html(db_text)

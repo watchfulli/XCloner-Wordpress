@@ -133,9 +133,6 @@ $tab = 1;
 									<i class="material-icons">storage</i><?php echo __('Generating the Mysql Backup...')?>
 									
 									<p class="right"><?php echo __(sprintf('Found %s tables in %s databases (%s)', '<span class="table-counter">0</span>', '<span class="database-counter">0</span>', '<span data-processed="0" class="total-records">0</span> records'))?></p>
-									<ul class="logged-databases">
-									
-									</ul>
 									
 									<div>
 										<p class="right"><span class="last-logged-table"></span></p>
@@ -145,7 +142,10 @@ $tab = 1;
 										<div class="determinate" style="width:0%"></div>
 									</div>
 								</div>	
-						      <div class="collapsible-body status-body"><ul></ul></div>
+						      <div class="collapsible-body status-body">
+								  <ul class="logged-databases"></ul>
+								  <ul class="logged-tables"></ul>
+								</div>
 					    </li>
 					    <?php endif?>
 					    <li class="files-backup">
