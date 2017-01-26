@@ -126,6 +126,12 @@ class Xcloner_Admin {
 		
 	}
 	
+	public function xcloner_debugger_page()
+	{
+		require_once("partials/xcloner_console_page.php");
+		
+	}
+	
 	public function xcloner_generate_backups_page()
 	{
 		$requirements 			= new XCloner_Requirements();

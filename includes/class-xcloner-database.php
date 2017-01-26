@@ -38,6 +38,25 @@ class XCloner_Database extends wpdb{
 	private   $TEMP_DBPROCESS_FILE = ".database";
 	private   $TEMP_DUMP_FILE = "database-backup.sql";
 	
+	public function __construct($hash="", $wp_user="", $wp_pass="", $wp_db="", $wp_host="")
+	{
+		$this->logger 					= new XCloner_Logger("xcloner_database");
+		$this->xcloner_settings 		= new Xcloner_Settings($hash);
+		$this->fs 						= new Xcloner_File_System($hash);
+		
+		if(isset($data['recordsPerSession']))
+			$this->recordsPerSession		= $this->xcloner_settings->get_xcloner_option('xcloner_database_records_per_request');
+		
+		if(!$this->recordsPerSession)
+			$this->recordsPerSession = 1;
+		
+		$wp_host 	= $this->xcloner_settings->get_db_hostname();
+		$wp_user 	= $this->xcloner_settings->get_db_username();
+		$wp_pass 	= $this->xcloner_settings->get_db_password();
+		$wp_db 		= $this->xcloner_settings->get_db_database();
+
+		parent::__construct($wp_user, $wp_pass, $wp_db, $wp_host);
+	}
 	/*
 	 * Initialize the database connection
 	 *
@@ -47,26 +66,13 @@ class XCloner_Database extends wpdb{
 	 */
 	public function init($data, $start = 0)
 	{
-		$this->logger = new XCloner_Logger("xcloner_database");
-		$this->xcloner_settings 		= new Xcloner_Settings();
+		if($start and $this->fs->get_tmp_filesystem()->has($this->TEMP_DBPROCESS_FILE)){
+				$this->fs->get_tmp_filesystem()->delete($this->TEMP_DBPROCESS_FILE);
+		}
 		
-		if(isset($data['recordsPerSession']))
-			$this->recordsPerSession		= $this->xcloner_settings->get_xcloner_option('xcloner_database_records_per_request');
-		
-		if(!$this->recordsPerSession)
-			$this->recordsPerSession = 1;
-
 		$this->headers();
 		
 		$this->suppress_errors = true;
-		
-		$this->fs = new Xcloner_File_System();
-		
-		
-		if($start and $this->fs->tmp_filesystem->has($this->TEMP_DBPROCESS_FILE)){
-				$this->fs->tmp_filesystem->delete($this->TEMP_DBPROCESS_FILE);
-		}
-
 	}
 	
 	public function start_database_recursion($params, $extra_params, $init = 0)
@@ -91,12 +97,17 @@ class XCloner_Database extends wpdb{
 		
 		if($init)
 		{
+			$db_count = 0;
+			
 			if(isset($params['#']))
+			{
 				foreach($params['#'] as $database)
 				{
 					if(!isset($params[$database]) or !is_array($params[$database]))
 						$params[$database] = array();
 				}
+				$db_count = -1;
+			}
 			
 			if(isset($params))
 				foreach($params as $database=>$tables)
@@ -108,9 +119,9 @@ class XCloner_Database extends wpdb{
 						$return['stats']['total_records'] 	+= $stats['total_records'];
 					}
 				}
-			
+
 			if(sizeof($params))
-				$return['stats']['database_count'] = sizeof($params)-1;
+				$return['stats']['database_count'] = sizeof($params)+$db_count;
 			else	
 				$return['stats']['database_count'] = 0;
 				
@@ -286,20 +297,20 @@ class XCloner_Database extends wpdb{
 			$dumpfile = $this->TEMP_DUMP_FILE;
 		
 		$line = sprintf("###newdump###\t%s\t%s\n", $dbname, $dumpfile);
-		$this->fs->tmp_filesystem_append->write($this->TEMP_DBPROCESS_FILE, $line);
+		$this->fs->get_tmp_filesystem_append()->write($this->TEMP_DBPROCESS_FILE, $line);
 			
 		// write this to the class and write to $TEMP_DBPROCESS_FILE file as database.table records
 		foreach($tables as $key=>$table) 
 		if($table!= "" and !$tables[$key]['excluded']){
 
 			$line = sprintf("`%s`.`%s`\t%s\t%s\n", $dbname, $tables[$key]['name'], $tables[$key]['records'], $tables[$key]['excluded']);
-			$this->fs->tmp_filesystem_append->write($this->TEMP_DBPROCESS_FILE, $line);
+			$this->fs->get_tmp_filesystem_append()->write($this->TEMP_DBPROCESS_FILE, $line);
 			$return['tables_count']++;
 			$return['total_records'] += $tables[$key]['records'];
 		}
 
 		$line = sprintf("###enddump###\t%s\t%s\n", $dbname, $dumpfile);
-		$this->fs->tmp_filesystem_append->write($this->TEMP_DBPROCESS_FILE, $line);
+		$this->fs->get_tmp_filesystem_append()->write($this->TEMP_DBPROCESS_FILE, $line);
 		
 		return $return;
 	}
@@ -340,8 +351,8 @@ class XCloner_Database extends wpdb{
 		$return['finished'] = 0;
 		$lines = array();
 		
-		if($this->fs->tmp_filesystem->has($this->TEMP_DBPROCESS_FILE))
-			$lines = array_filter(explode("\n",$this->fs->tmp_filesystem->read($this->TEMP_DBPROCESS_FILE)));
+		if($this->fs->get_tmp_filesystem()->has($this->TEMP_DBPROCESS_FILE))
+			$lines = array_filter(explode("\n",$this->fs->get_tmp_filesystem()->read($this->TEMP_DBPROCESS_FILE)));
 	
 		foreach ($lines as $buffer){
 			
@@ -408,6 +419,7 @@ class XCloner_Database extends wpdb{
 						$return['startAtLine']		= $startAtLine;
 						$return['startAtRecord']	= $startAtRecord;
 						$return['dumpfile']			= $dumpfile;
+						$return['dumpsize']			= $this->fs->get_tmp_filesystem_append()->getSize($dumpfile);
 
 						return $return;
 						break;
@@ -426,12 +438,13 @@ class XCloner_Database extends wpdb{
 		if($dumpfile != ""){
 			// we finished a previous one and write the footers
 			$return['dumpsize'] = $this->data_footers($dumpfile);
+			$return['dumpfile'] = ($dumpfile);
 		}
 		$return['finished'] = 1;
 		$return['startAtLine']	= $startAtLine;
 		
-		if($this->fs->tmp_filesystem->has($this->TEMP_DBPROCESS_FILE))
-			$this->fs->tmp_filesystem->delete($this->TEMP_DBPROCESS_FILE);
+		if($this->fs->get_tmp_filesystem()->has($this->TEMP_DBPROCESS_FILE))
+			$this->fs->get_tmp_filesystem()->delete($this->TEMP_DBPROCESS_FILE);
 		
 		$this->logger->debug(sprintf(("Database backup finished!")));
 		
@@ -472,7 +485,7 @@ class XCloner_Database extends wpdb{
 		if($result){
 			while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
 					
-					$this->fs->storage_filesystem_append->write($dumpfile, "INSERT INTO `$tableName` VALUES (");
+					$this->fs->get_tmp_filesystem_append()->write($dumpfile, "INSERT INTO `$tableName` VALUES (");
 					$arr = $row;
 					$buffer = "";
 					$this->countRecords++;
@@ -482,7 +495,7 @@ class XCloner_Database extends wpdb{
 						$buffer .= "'".$value."', ";
 					}
 					$buffer = rtrim($buffer, ', ') . ");\n";
-					$this->fs->storage_filesystem_append->write($dumpfile, $buffer);
+					$this->fs->get_tmp_filesystem_append()->write($dumpfile, $buffer);
 					unset($buffer);
 					
 					$records++;
@@ -501,24 +514,24 @@ class XCloner_Database extends wpdb{
 		$this->log(sprintf(__("Dumping the structure for %s.%s table"), $databaseName, $tableName));
 		
 		$line = ("\n#\n# Table structure for table `$tableName`\n#\n\n");
-		$this->fs->storage_filesystem_append->write($dumpfile, $line);
+		$this->fs->get_tmp_filesystem_append()->write($dumpfile, $line);
 
         if ($this->dbDropSyntax)
         {
 			$line = ("\nDROP table IF EXISTS `$tableName`;\n");
-			$this->fs->storage_filesystem_append->write($dumpfile, $line);
+			$this->fs->get_tmp_filesystem_append()->write($dumpfile, $line);
 		}
 
 		$result = mysqli_query($this->dbh,"SHOW CREATE table `$databaseName`.`$tableName`;");
 		if($result){
 			$row = mysqli_fetch_row( $result);
 			$line = ($row[1].";\n");
-			$this->fs->storage_filesystem_append->write($dumpfile, $line);
+			$this->fs->get_tmp_filesystem_append()->write($dumpfile, $line);
 		}
 
 		$line = ( "\n#\n# End Structure for table `$tableName`\n#\n\n");
 		$line .=("#\n# Dumping data for table `$tableName`\n#\n\n");
-		$this->fs->storage_filesystem_append->write($dumpfile, $line);
+		$this->fs->get_tmp_filesystem_append()->write($dumpfile, $line);
 		
 		return;
 
@@ -528,8 +541,14 @@ class XCloner_Database extends wpdb{
 	{
 		$this->logger->debug(sprintf(("Writing dump footers in file"), $dumpfile));
 		// we finished the dump file, not return the size of it
-		$this->fs->storage_filesystem_append->write($dumpfile, "\n#\n# Finished at: ".date("M j, Y \a\\t H:i")."\n#");
-		$size = $this->fs->storage_filesystem_append->getSize($dumpfile);
+		$this->fs->get_tmp_filesystem_append()->write($dumpfile, "\n#\n# Finished at: ".date("M j, Y \a\\t H:i")."\n#");
+		$size = $this->fs->get_tmp_filesystem_append()->getSize($dumpfile);
+		
+		$metadata_dumpfile = $this->fs->get_tmp_filesystem()->getMetadata($dumpfile);
+		
+		//adding dump file to the included files list
+		$this->fs->store_file($metadata_dumpfile, 'tmp_filesystem');
+		
 		return $size;
 
 	}
@@ -586,7 +605,7 @@ class XCloner_Database extends wpdb{
 		
 		$this->log(sprintf(__("Writing %s database dump headers"), $database));
 		
-		$return = $this->fs->storage_filesystem->write($file, $return);
+		$return = $this->fs->get_tmp_filesystem()->write($file, $return);
 		return $return['size'];
 
 	}

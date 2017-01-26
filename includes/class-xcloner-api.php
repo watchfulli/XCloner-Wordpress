@@ -8,28 +8,41 @@ use League\Flysystem\Adapter\Local;
 
 class Xcloner_Api{
 
-	protected $xcloner_database;
-	protected $xcloner_settings;
-	protected $xcloner_file_system;
-	protected $xcloner_requirements;
-	protected $_file_system;
-	protected $exclude_files_by_default = array("administrator/backups", "wp-content/backups");
-	protected $form_params;
-	protected $logger;
+	private $xcloner_database;
+	private $xcloner_settings;
+	private $xcloner_file_system;
+	private $xcloner_requirements;
+	private $_file_system;
+	private $archive_system;
+	//protected $exclude_files_by_default = array("administrator/backups", "wp-content/backups");
+	private $form_params;
+	private $logger;
 	
 	public function __construct()
 	{
 		$this->xcloner_settings 		= new Xcloner_Settings();
-		$this->xcloner_file_system 		= new Xcloner_File_System();
+		
+		//generating the hash suffix for tmp xcloner store folder
+		if(isset($_POST['hash'])){
+			if($_POST['hash'] == "generate_hash")
+				$this->xcloner_settings->generate_new_hash();
+			else
+				$this->xcloner_settings->set_hash($_POST['hash']);
+		}
+		
+		$this->xcloner_file_system 		= new Xcloner_File_System($this->xcloner_settings->get_hash());
 		$this->xcloner_sanitization 	= new Xcloner_Sanitization();
 		$this->xcloner_requirements 	= new XCloner_Requirements();
-		
-		$this->logger = new XCloner_Logger("xcloner_api");
+		$this->archive_system 			= new Xcloner_Archive($this->xcloner_settings->get_hash());
+		$this->xcloner_database 		= new XCloner_Database($this->xcloner_settings->get_hash());
+		$this->logger 					= new XCloner_Logger("xcloner_api");
 		
 	}
 	
 	public function init_db()
 	{
+		return;
+		
 		
 		$data['dbHostname'] = $this->xcloner_settings->get_db_hostname();
 		$data['dbUsername'] = $this->xcloner_settings->get_db_username();
@@ -43,8 +56,8 @@ class Xcloner_Api{
 		
 		try
 		{
-			$xcloner_db = new XCloner_Database($data['dbUsername'], $data['dbPassword'], $data['dbDatabase'], $data['dbHostname']);
-			$xcloner_db->init($data);
+			//$xcloner_db = new XCloner_Database($data['dbUsername'], $data['dbPassword'], $data['dbDatabase'], $data['dbHostname']);
+			$this->xcloner_database->init($data);
 
 		}catch(Exception $e)
 		{
@@ -53,7 +66,7 @@ class Xcloner_Api{
 			
 		}
 		
-		return $this->xcloner_database = $xcloner_db;
+		return $this->xcloner_database;
 		
 	
 	}
@@ -75,13 +88,11 @@ class Xcloner_Api{
 		
 		$return['finished'] = 1;
 
-		$archive_system = new Xcloner_Archive();
-		
-		$return = $archive_system->start_incremental_backup($this->form_params['backup_params'], $this->form_params['extra'], $init);
+		$return = $this->archive_system->start_incremental_backup($this->form_params['backup_params'], $this->form_params['extra'], $init);
 		
 		$data = $return;
 		
-		return $this->send_response($data);
+		return $this->send_response($data, $hash = 1);
 	}
 	
 	public function backup_database()
@@ -99,8 +110,8 @@ class Xcloner_Api{
 		
 		$this->process_params($params);
 			
-		$xcloner_database = $this->init_db();	
-		$return = $xcloner_database->start_database_recursion($this->form_params['database'], $this->form_params['extra'], $init);
+		//$xcloner_database = $this->init_db();	
+		$return = $this->xcloner_database->start_database_recursion($this->form_params['database'], $this->form_params['extra'], $init);
 		
 		if(isset($return['error']) and $return['error'])
 			$data['finished'] = 1;
@@ -109,7 +120,7 @@ class Xcloner_Api{
 			
 		$data['extra'] = $return;
 		
-		return $this->send_response($data);
+		return $this->send_response($data, $hash = 1);
 	}
 	
 	public function scan_filesystem()
@@ -124,7 +135,7 @@ class Xcloner_Api{
 		if($params === NULL)
 			 die( '{"status":false,"msg":"The post_data parameter must be valid JSON"}' );
 			 
-		$this->process_params($params);
+		$hash = $this->process_params($params);
 		
 		$this->xcloner_file_system->set_excluded_files($this->form_params['excluded_files']);
 		
@@ -134,23 +145,17 @@ class Xcloner_Api{
 		$data["total_files_num"] = $this->xcloner_file_system->get_scanned_files_num();
 		$data["last_logged_file"] = $this->xcloner_file_system->last_logged_file();
 		$data["total_files_size"] = number_format($this->xcloner_file_system->get_scanned_files_total_size()/(1024*1024), 2);
-		return $this->send_response($data);
+		
+		return $this->send_response($data, $hash = 1);
 	}
 	
 	private function process_params($params)
 	{
-		#$this->form_params['system'] = array();
+		if(isset($params->hash))
+			$this->xcloner_settings->set_hash($params->hash);
+			
 		$this->form_params['extra'] = array();
 		$this->form_params['backup_params'] = array();
-		
-		/*if(isset($params->backup_params))
-		{
-			foreach($params->backup_params as $param)
-			{
-				$this->form_params['system'][$param->name] = $this->xcloner_sanitization->sanitize_input_as_string($param->value);
-				$this->logger->debug("Adding system param ".$param->value."\n", array('POST', 'system params'));
-			}
-		}*/
 		
 		$this->form_params['database'] = array();
 		
@@ -174,7 +179,7 @@ class Xcloner_Api{
 			}
 		}
 		
-		$this->form_params['excluded_files'] =  $this->exclude_files_by_default;
+		$this->form_params['excluded_files'] =  array();
 		if(isset($params->files_params))
 		{
 			foreach($params->files_params as $param)
@@ -196,13 +201,15 @@ class Xcloner_Api{
 			
 		}
 		
+		//$this->form_params['excluded_files'] =  array_merge($this->form_params['excluded_files'], $this->exclude_files_by_default);
+		
 		if(isset($params->extra))
 		{
 			foreach($params->extra as $key=>$value)
 				$this->form_params['extra'][$key] = $this->xcloner_sanitization->sanitize_input_as_raw($value);
 		}
 			
-		return $this;
+		return $this->xcloner_settings->get_hash();
 	}
 	
 	public function get_file_system_action()
@@ -256,7 +263,7 @@ class Xcloner_Api{
 				else
 					 $text .= " (". $this->xcloner_requirements->file_format_size($file['size']).")";
 				
-				if(in_array($file['path'], $this->exclude_files_by_default))
+				if(in_array($file['path'], $this->xcloner_file_system->get_excluded_files()))
 					$selected = true;
 				else
 					$selected = false;
@@ -272,7 +279,7 @@ class Xcloner_Api{
 			}
 		
 		
-		return $this->send_response($data);
+		return $this->send_response($data, 0);
 	}
 	
 	public function get_database_tables_action()
@@ -281,7 +288,7 @@ class Xcloner_Api{
 			die("Not allowed access here!");
 		}
 		
-		$this->init_db();
+		//$this->init_db();
 		
 		$database = $this->xcloner_sanitization->sanitize_input_as_raw($_POST['id']);
 		
@@ -352,11 +359,16 @@ class Xcloner_Api{
 			}
 		}
 		
-		return $this->send_response($data);
+		return $this->send_response($data, 0);
 	}
 	
-	private function send_response($data)
+	private function send_response($data, $attach_hash = 1)
 	{
+		if($attach_hash and null !== $this->xcloner_settings->get_hash())
+		{
+			$data['hash'] = $this->xcloner_settings->get_hash();
+		}
+			
 		if( ob_get_length() )
 			ob_clean();
 		wp_send_json($data);

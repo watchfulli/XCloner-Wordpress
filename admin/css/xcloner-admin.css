@@ -86,10 +86,10 @@ span.shorten_string{
 	font-size: 1rem;
 }
 
-.dashboard .xcloner-debugger .console{
-	height: 350px;
-	overflow: scroll;
-    white-space: nowrap;
+.xcloner-debugger .console{
+	height: 450px;
+	min-height: 300px;
+	overflow: auto;
 }
 
 #error_modal textarea{

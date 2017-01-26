@@ -3,14 +3,20 @@
 class Xcloner_Settings
 {
 	private $logger_file = "xcloner_%s.log";
+	private $hash ;
 	
+	public function __construct($hash = "")
+	{
+		if(isset($hash))
+			$this->set_hash($hash);
+	}
 	
 	public function get_logger_filename()
 	{
 		return sprintf($this->logger_file, $this->get_server_unique_hash(5));
 	}
 	
-	public static function get_xcloner_start_path()
+	public function get_xcloner_start_path()
 	{
 		if(!get_option('xcloner_start_path'))
 			$path = realpath(ABSPATH);
@@ -20,14 +26,14 @@ class Xcloner_Settings
 		return $path;
 	}
 	
-	public static function get_xcloner_dir_path($dir)
+	public function get_xcloner_dir_path($dir)
 	{
 		$path = self::get_xcloner_start_path().DS.$dir;
 		
 		return $path;
 	}
 	
-	public static function get_xcloner_store_path()
+	public function get_xcloner_store_path()
 	{
 		if(!get_option('xcloner_store_path'))
 			$path = realpath(XCLONER_STORAGE_PATH);
@@ -37,16 +43,16 @@ class Xcloner_Settings
 		return $path;
 	}
 	
-	public static function get_xcloner_tmp_path()
+	public function get_xcloner_tmp_path()
 	{
-		$path = sys_get_temp_dir().DS.".xcloner";
+		$path = sys_get_temp_dir().DS.".xcloner".$this->get_hash();
 		if(!is_dir($path))
 			mkdir($path);
 		
 		return $path;
 	}
 	
-	public static function get_enable_mysql_backup()
+	public function get_enable_mysql_backup()
 	{
 		if(get_option('xcloner_enable_mysql_backup'))
 			return true;
@@ -54,27 +60,52 @@ class Xcloner_Settings
 		return false;	
 	}
 	
-	public static function get_backup_extension_name()
+	public function get_backup_extension_name()
 	{
 		if(get_option('xcloner_backup_compression_level'))
 			$ext = ".tgz";
 		else
 			$ext = ".tar";
 			
-		return $ext;	
+		return ($this->get_hash()).$ext;	
 	}
 	
-	public static function get_default_backup_name()
+	public function get_hash()
+	{
+		if(!$this->hash){
+			$this->set_hash();
+		}
+		
+		//echo $this->hash;	
+		return $this->hash;
+	}
+	
+	public function generate_new_hash()
+	{
+		$hash = "-".md5(rand());
+		
+		$this->set_hash(substr( $hash, 0, 6));
+		
+		return $this;
+	}
+	
+	public function set_hash($hash = "")
+	{
+		$this->hash = substr( $hash, 0, 6);
+		
+		return $this;
+	}
+	
+	public function get_default_backup_name()
 	{
 		$data = parse_url(get_site_url());
-		$suffix = substr( md5(rand()), 0, 5);
 			
-		$backup_name = "backup_[hostname]".(isset($data['port'])?":".$data['port']:"")."-[time]-".$suffix."-".(self::get_enable_mysql_backup()?"sql":"nosql")/*.".".$this->get_backup_extension_name()*/;
+		$backup_name = "backup_[hostname]".(isset($data['port'])?":".$data['port']:"")."-[time]-".($this->get_enable_mysql_backup()?"sql":"nosql");
 		
 		return $backup_name;
 	}
 	
-	public static function get_db_hostname()
+	public function get_db_hostname()
 	{
 		global $wpdb;
 		
@@ -84,7 +115,7 @@ class Xcloner_Settings
 		return $data;
 	}
 	
-	public static function get_db_username()
+	public function get_db_username()
 	{
 		global $wpdb;
 		
@@ -94,7 +125,7 @@ class Xcloner_Settings
 		return $data;
 	}
 	
-	public static function get_db_password()
+	public function get_db_password()
 	{
 		global $wpdb;
 		
@@ -104,7 +135,7 @@ class Xcloner_Settings
 		return $data;
 	}
 	
-	public static function get_db_database()
+	public function get_db_database()
 	{
 		global $wpdb;
 		
@@ -114,14 +145,14 @@ class Xcloner_Settings
 		return $data;
 	}
 	
-	public static function get_table_prefix()
+	public function get_table_prefix()
 	{
 		global $wpdb;
 		
 		return $wpdb->prefix;
 	}
 	
-	public static function get_xcloner_option($option)
+	public function get_xcloner_option($option)
 	{
 		$data = get_option($option);
 		

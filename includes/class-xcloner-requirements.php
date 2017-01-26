@@ -6,6 +6,11 @@ class XCloner_Requirements
 	var $min_php_version 	= "5.3.0";
 	var $safe_mode			= "Off";
 	
+	public function __construct()
+	{
+		$this->xcloner_settings 		= new Xcloner_Settings();
+	}
+	
 	public function check_backup_ready_status()
 	{
 		if(!$this->check_min_php_version(1))
@@ -65,7 +70,7 @@ class XCloner_Requirements
 	
 	public function check_xcloner_start_path($return_bool=0)
 	{
-		$path = Xcloner_Settings::get_xcloner_start_path();
+		$path = $this->xcloner_settings->get_xcloner_start_path();
 		
 		if($return_bool)
 		{
@@ -80,7 +85,7 @@ class XCloner_Requirements
 	
 	public function check_xcloner_tmp_path($return_bool=0)
 	{
-		$path = Xcloner_Settings::get_xcloner_tmp_path();
+		$path = $this->xcloner_settings->get_xcloner_tmp_path();
 		
 		if($return_bool)
 		{
@@ -95,7 +100,7 @@ class XCloner_Requirements
 	
 	public function check_xcloner_store_path($return_bool=0)
 	{
-		$path = Xcloner_Settings::get_xcloner_store_path();
+		$path = $this->xcloner_settings->get_xcloner_store_path();
 		
 		if($return_bool)
 		{
@@ -130,7 +135,7 @@ class XCloner_Requirements
 	/*
 	public function estimate_read_write_time()
 	{
-		$tmp_path = Xcloner_Settings::get_xcloner_tmp_path();
+		$tmp_path = $this->xcloner_settings->get_xcloner_tmp_path();
 		$tmp_file = tempnam(sys_get_temp_dir(), 'prefix');
 		
 		$start_time = microtime();
@@ -173,7 +178,7 @@ class XCloner_Requirements
 	
 	public function get_free_disk_space()
 	{
-			return $this->file_format_size(disk_free_space(Xcloner_Settings::get_xcloner_store_path()));
+			return $this->file_format_size(disk_free_space($this->xcloner_settings->get_xcloner_store_path()));
 	}
 	
 	public function file_format_size($bytes, $decimals = 2) {

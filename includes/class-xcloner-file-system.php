@@ -7,9 +7,9 @@ use League\Flysystem\Adapter\Local;
 class Xcloner_File_System{
 	
 	private $excluded_files 			= "";
-	private $excluded_files_static		= array("administrator/backups", "wp-content/backups");
-	private $included_files_handler 	= "perm.txt";
-	private $temp_dir_handler 		= ".dir";
+	private $excluded_files_by_default	= array("administrator/backups", "wp-content/backups");
+	private $included_files_handler 	= "backup_files.csv";
+	private $temp_dir_handler 			= ".dir";
 	public  $filesystem;
 	public  $tmp_filesystem;
 	public  $storage_filesystem;
@@ -27,12 +27,13 @@ class Xcloner_File_System{
 	private $backup_archive_extensions = array("zip", "tar", "tgz", "tar.gz", "gz");
 	private $backup_name_tags = array('[time]', '[hostname]', '[domain]');
 	
-	public function __construct()
+	public function __construct($hash = "")
 	{
+	
 		$this->logger = new XCloner_Logger('xcloner_file_system');
 		$this->xcloner_requirements = new Xcloner_Requirements();
 
-		$this->xcloner_settings 		= new Xcloner_Settings();
+		$this->xcloner_settings 		= new Xcloner_Settings($hash);
 		
 		$this->start_adapter = new Local($this->xcloner_settings->get_xcloner_start_path(),LOCK_EX, 'SKIP_LINKS');
 		$this->start_filesystem = new Filesystem($this->start_adapter, new Config([
@@ -62,6 +63,31 @@ class Xcloner_File_System{
 		//echo $this->folders_to_process_per_session;	
 	}
 	
+	public function set_hash($hash)
+	{
+		$this->xcloner_settings->set_hash($hash);
+	}
+	
+	public function get_hash($hash)
+	{
+		$this->xcloner_settings->get_hash();
+	}
+	
+	public function get_tmp_filesystem()
+	{
+		return $this->tmp_filesystem;
+	}
+	
+	public function get_tmp_filesystem_adapter()
+	{
+		return $this->tmp_adapter;
+	}
+	
+	public function get_tmp_filesystem_append()
+	{
+		return $this->tmp_filesystem_append;
+	}
+	
 	public function get_start_adapter()
 	{
 		return $this->start_adapter;
@@ -78,11 +104,13 @@ class Xcloner_File_System{
 		return $this->getMetadataFull('storage_adapter', $file);
 	}
 	
-	public function get_included_files_handler()
+	public function get_included_files_handler($metadata  = 0)
 	{
 		$path = $this->included_files_handler;
-		$spl_info = $this->getMetadataFull('storage_adapter', $path);
+		if(!$metadata)
+			return $path;
 		
+		$spl_info = $this->getMetadataFull('tmp_adapter', $path);
 		return $spl_info;
 		
 	}
@@ -109,11 +137,11 @@ class Xcloner_File_System{
 			$this->do_system_init();
 		}
 		
-		if($this->storage_filesystem->has($this->temp_dir_handler)){
+		if($this->tmp_filesystem->has($this->get_temp_dir_handler())){
 		//.dir exists, we presume we have files to iterate	
-			$content = $this->storage_filesystem->read($this->temp_dir_handler);
+			$content = $this->tmp_filesystem->read($this->get_temp_dir_handler());
 			$files = array_filter(explode("\n", $content));
-			$this->storage_filesystem->delete($this->temp_dir_handler);
+			$this->tmp_filesystem->delete($this->get_temp_dir_handler());
 			
 			$counter = 0;
 			foreach($files as $file)
@@ -122,16 +150,34 @@ class Xcloner_File_System{
 					$this->build_files_list($file);
 					$counter++;
 				}else{
-					$this->storage_filesystem_append->write($this->temp_dir_handler, $file."\n");
+					$this->tmp_filesystem_append->write($this->get_temp_dir_handler(), $file."\n");
 				}
 			}
 		}else{
 			$this->build_files_list();
 		}
 		
+		//adding included dump file to the included files list
+		if($this->get_tmp_filesystem()->has($this->get_included_files_handler()))
+		{
+			$metadata_dumpfile = $this->get_tmp_filesystem()->getMetadata($this->get_included_files_handler());
+			$this->store_file($metadata_dumpfile, 'tmp_filesystem');
+			$this->files_counter++;
+		}
+		
+		//adding a default index.html to the temp xcloner folder
+		if(!$this->get_tmp_filesystem()->has("index.html"))
+		{
+			$this->storage_filesystem->write("index.html","");
+		}
+		
+		$metadata_dumpfile = $this->get_tmp_filesystem()->getMetadata("index.html");
+		$this->store_file($metadata_dumpfile, 'tmp_filesystem');
+		$this->files_counter++;
+		
 		if($this->scan_finished())
 			return false;
-			
+		
 		return true;	
 	}
 	
@@ -142,11 +188,14 @@ class Xcloner_File_System{
 		if(!$this->storage_filesystem->has("index.html"))	
 			$this->storage_filesystem->write("index.html","");
 		
-		if($this->storage_filesystem->has($this->included_files_handler))
-			$this->storage_filesystem->delete($this->included_files_handler);
+		if(!$this->tmp_filesystem->has("index.html"))	
+			$this->tmp_filesystem->write("index.html","");
+			
+		if($this->tmp_filesystem->has($this->get_included_files_handler()))
+			$this->tmp_filesystem->delete($this->get_included_files_handler());
 		
-		if($this->storage_filesystem->has($this->temp_dir_handler))	
-			$this->storage_filesystem->delete($this->temp_dir_handler);
+		if($this->tmp_filesystem->has($this->get_temp_dir_handler()))	
+			$this->tmp_filesystem->delete($this->get_temp_dir_handler());
 	}
 	
 	public function get_scanned_files_num()
@@ -166,10 +215,14 @@ class Xcloner_File_System{
 	
 	public function set_excluded_files($excluded_files)
 	{
-		$this->excluded_files = array_merge($excluded_files, $this->excluded_files_static);
+		$this->excluded_files = array_merge($excluded_files, $this->excluded_files_by_default);
 		
-		//print_r($this->excluded_files);exit;
 		return $this;
+	}
+	
+	public function get_excluded_files()
+	{
+		return $this->excluded_files_by_default;
 	}
 	
 	public function list_directory($path)
@@ -381,24 +434,30 @@ class Xcloner_File_System{
 		return false;
 	}
 	
-	private function store_file($file)
+	public function store_file($file, $storage = 'start_filesystem')
 	{
 		$this->logger->debug(sprintf("Storing %s in the backup list", $file['path']));
 		
 		if(!isset($file['size']))
 			$file['size'] = 0;
-		$line = $file['path']."|".$file['timestamp']."|".$file['size']."|".$file['visibility']."\n";
+		if(!isset($file['visibility']))	
+			$file['visibility'] = "private";
+			
+		$line = '"'.$file['path'].'","'.$file['timestamp'].'","'.$file['size'].'","'.$file['visibility'].'","'.$storage.'"'.PHP_EOL;
 		
 		$this->last_logged_file = $file['path'];
+		
 		try{
-			$this->storage_filesystem_append->write($this->included_files_handler, $line);
+			$this->tmp_filesystem_append->write($this->get_included_files_handler(), $line);
+		
 		}catch(Exception $e){
+		
 			$this->logger->error($e->getMessage());	
 		}
 		
 		if($file['type'] == "dir"){
 			try{
-				$this->storage_filesystem_append->write($this->temp_dir_handler, $file['path']."\n");
+				$this->tmp_filesystem_append->write($this->get_temp_dir_handler(), $file['path']."\n");
 			}catch(Exception $e){
 				$this->logger->error($e->getMessage());	
 			}
@@ -407,18 +466,38 @@ class Xcloner_File_System{
 	
 	public function get_fileystem_handler()
 	{
-		return $this->start_filesystem;
+		return $this;
+	}
+	
+	public function get_filesystem($system)
+	{
+		if($system == "tmp_filesystem")
+			return $this->tmp_filesystem;
+		elseif($system == "storage_filesystem")
+			return $this->storage_filesystem;
+		else
+			return $this->start_filesystem;	
+	}
+	
+	public function get_adapter($system)
+	{
+		if($system == "tmp_filesystem")
+			return $this->tmp_adapter;
+		elseif($system == "storage_filesystem")
+			return $this->storage_adapter;
+		else
+			return $this->start_adapter;	
 	}
 	
 	private function scan_finished()
 	{
 		$this->logger->debug(sprintf(("File scan finished")));
 		
-		if($this->storage_filesystem_append->has($this->temp_dir_handler) && $this->storage_filesystem_append->getSize($this->temp_dir_handler))
+		if($this->tmp_filesystem_append->has($this->get_temp_dir_handler()) && $this->tmp_filesystem_append->getSize($this->get_temp_dir_handler()))
 			return false;
 		
-		if($this->storage_filesystem->has($this->temp_dir_handler))
-			$this->storage_filesystem->delete($this->temp_dir_handler);
+		if($this->tmp_filesystem->has($this->get_temp_dir_handler()))
+			$this->tmp_filesystem->delete($this->get_temp_dir_handler());
 		
 		return true;
 	}

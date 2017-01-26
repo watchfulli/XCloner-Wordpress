@@ -4,6 +4,8 @@ class Xcloner_Backup{
 	{
 		this.cancel = 0;
 		this.params;
+		this.generate_hash = false;
+		this.last_dumpfile = "";
 	}
 	
 	get_form_params()
@@ -74,21 +76,37 @@ class Xcloner_Backup{
 			jQuery(elem).find(".status-body ul").prepend(jQuery("<li>").text(json.extra.databaseName+"."+json.extra.tableName+" ("+json.extra.processedRecords+" records)"));
 		}
 		
+		if(json.extra.dumpfile !== undefined){
+			var db_text = (json.extra.dumpfile+" <b>("+this.getSize(json.extra.dumpsize, 1024)+" KB)</b>");
+			
+			if(!jQuery(this.last_dumpfile).hasClass(json.extra.dumpfile)){
+				this.last_dumpfile = (jQuery("<li>").addClass(json.extra.dumpfile).html(db_text)).appendTo(".logged-databases");
+			}
+			else{	
+				jQuery(this.last_dumpfile).html(db_text)
+			}
+			
+		}
+			
 		if(!json.finished && !this.cancel){
 			
 			this.do_ajax(elem, action);
 			return false;
 		}
 		
+		
+
 		jQuery(elem).find(".last-logged-table").text('done');
-		this.do_scan_filesystem();
+		jQuery(elem).find('.progress .determinate').css('width', '100%');
+		
+		this.do_backup_files();
 		
 	}
 	
 	do_backup_database()
 	{
 		if(!jQuery('#jstree_database_container').length){
-			this.do_scan_filesystem();
+			this.do_backup_files();
 			return;
 		}
 			
@@ -103,6 +121,8 @@ class Xcloner_Backup{
 		jQuery(elem).find(".total-records").attr('data-processed', 0);
 		jQuery(elem).find(".table-counter").text(0);
 		jQuery(elem).find(".database-counter").text(0);
+		
+		this.last_dumpfile = 0;
 		
 		jQuery(elem).find('.progress .determinate').css('width', '0%');
 		
@@ -134,7 +154,7 @@ class Xcloner_Backup{
 		jQuery(".file-system .last-logged-file").text('done');
 		
 		//this.do_backup_database();
-		this.do_backup_files();
+		this.do_backup_database();
 		
 	}
 	do_scan_filesystem()
@@ -212,6 +232,7 @@ class Xcloner_Backup{
 		var elem = "#generate_backup ul.backup-status li.files-backup";
 		jQuery(elem).show();
 		jQuery(elem+' .status-body').show();
+		jQuery(elem).find('.collapsible-header').trigger('click');
 		
 		jQuery(elem).find(".file-size-total").text(0);
 		jQuery(elem).find(".file-size-total").attr('data-processed', 0);
@@ -240,6 +261,7 @@ class Xcloner_Backup{
 	
 	start_backup()
 	{		
+			this.generate_hash = true;
 			this.cancel =  false;
 			jQuery('#generate_backup .action-buttons a').hide();
 			jQuery('#generate_backup .action-buttons .cancel').css('display', 'inline-block');
@@ -248,12 +270,18 @@ class Xcloner_Backup{
 			
 			this.params = this.get_form_params();
 			
-			this.do_backup_database();
+			this.do_scan_filesystem();
 			
 	}
 	
 	do_ajax(elem, action, init = 0)
 	{
+		var hash = '';
+		if(this.params.hash !==undefined)
+			hash = this.params.hash;
+		else if(this.generate_hash)
+			hash = 'generate_hash';
+			
 		var callback = 'do_'+action+'_callback';
 		var data = JSON.stringify(this.params);
 		var $this = this;
@@ -262,12 +290,16 @@ class Xcloner_Backup{
 			url: ajaxurl,
 			dataType: 'json',
 			type: 'POST',
-			data: {'action': action, 'data': data, 'init': init},
+			data: {'action': action, 'data': data, 'init': init, 'hash': hash},
 			error: function(err) {
 				show_ajax_error("Communication Error", "", err)
 				//console.log(err);
 				}
 			}).done(function(json) {
+				if(json.hash){
+					$this.params.hash = json.hash;
+					//console.log(json.hash);
+				}
 				$this[callback](elem, action, json)
 				
 			});

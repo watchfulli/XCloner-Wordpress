@@ -104,26 +104,13 @@ $tab = 1;
 		</div>
 		<div id="generate_backup" class="tab-content">
 			<div class="row ">
+				 <div class="col s12 l8 center action-buttons">
+					<a class="waves-effect waves-light btn-large green darken-1 start" onclick="xcloner_backup.start_backup()">Start Backup<i class="material-icons left">forward</i></a>
+					<a class="waves-effect waves-light btn-large green darken-1 restart" onclick="xcloner_backup.start_backup()">Restart Backup<i class="material-icons left">cached</i></a>
+					<a class="waves-effect waves-light btn-large red darken-1 cancel" onclick="xcloner_backup.cancel_backup()">Cancel Backup<i class="material-icons left">cancel</i></a>
+				</div>
 				<div class="col l8 s12">
 					<ul class="backup-status collapsible" data-collapsible="accordion">
-					    <?php if($xcloner_settings->get_enable_mysql_backup()):?>
-					    <li class="database-backup">
-						      <div class="collapsible-header">
-									<i class="material-icons">storage</i><?php echo __('Generating the Mysql Backup...')?>
-									
-									<p class="right"><?php echo __(sprintf('Found %s tables in %s databases (%s)', '<span class="table-counter">0</span>', '<span class="database-counter">0</span>', '<span data-processed="0" class="total-records">0</span> records'))?></p>
-									
-									<div>
-										<p class="right"><span class="last-logged-table"></span></p>
-									</div>	
-									
-									<div class="progress">
-										<div class="determinate" style="width:0%"></div>
-									</div>
-								</div>	
-						      <div class="collapsible-body status-body"><ul></ul></div>
-					    </li>
-					    <?php endif?>
 					    <li class="file-system">
 						      <div class="collapsible-header">
 									<i class="material-icons">folder</i><?php echo __('Scanning The File System...')?>
@@ -140,6 +127,27 @@ $tab = 1;
 								</div>	
 						      <div class="collapsible-body status-body"></div>
 					    </li>
+					    <?php if($xcloner_settings->get_enable_mysql_backup()):?>
+					    <li class="database-backup">
+						      <div class="collapsible-header">
+									<i class="material-icons">storage</i><?php echo __('Generating the Mysql Backup...')?>
+									
+									<p class="right"><?php echo __(sprintf('Found %s tables in %s databases (%s)', '<span class="table-counter">0</span>', '<span class="database-counter">0</span>', '<span data-processed="0" class="total-records">0</span> records'))?></p>
+									<ul class="logged-databases">
+									
+									</ul>
+									
+									<div>
+										<p class="right"><span class="last-logged-table"></span></p>
+									</div>	
+									
+									<div class="progress">
+										<div class="determinate" style="width:0%"></div>
+									</div>
+								</div>	
+						      <div class="collapsible-body status-body"><ul></ul></div>
+					    </li>
+					    <?php endif?>
 					    <li class="files-backup">
 						      <div class="collapsible-header">
 									<i class="material-icons">archive</i><?php echo __('Adding Files to Archive...')?>
@@ -161,17 +169,22 @@ $tab = 1;
 					    </li>
 				  </ul>
 				 </div> 
-				 <div class="col s12 l4 action-buttons">
-					<a class="waves-effect waves-light btn-large green darken-1 start" onclick="xcloner_backup.start_backup()">Start Backup<i class="material-icons left">forward</i></a>
-					<a class="waves-effect waves-light btn-large green darken-1 restart" onclick="xcloner_backup.start_backup()">Restart Backup<i class="material-icons left">cached</i></a>
-					<a class="waves-effect waves-light btn-large red darken-1 cancel" onclick="xcloner_backup.cancel_backup()">Cancel Backup<i class="material-icons left">cancel</i></a>
-				</div>
+				
 			</div>
 		</div>
-	
+		
 		<div id="schedule_backup" class="tab-content">
 			<div class="row">
-				Schedule Backup Here
+				 <div class="input-field inline col s12 m10 l6">
+					  <input type="datetime-local" id="datepicker" class="datepicker">
+					  <label for="datepicker"><?php echo __('Schedule Backup To Start At:')?></label>
+				</div>
+			</div>
+			<div class="row">
+				 <div class="input-field inline col s12 m10 l6">
+					  <input type="text" id="datepicker" class="datepicker">
+					  <label for="datepicker">Backup Name</label>
+				</div>
 			</div>
 		</div>	
 	</div>

@@ -14,11 +14,11 @@ class Xcloner_Archive extends Tar
 	
 	private $archive_name;
 	
-	public function __construct($archive_name = "")
+	public function __construct($hash = "", $archive_name = "")
 	{
-		$this->filesystem 		= new Xcloner_File_System();
+		$this->filesystem 		= new Xcloner_File_System($hash);
 		$this->logger 			= new XCloner_Logger('xcloner_archive');
-		$this->xcloner_settings = new Xcloner_Settings();
+		$this->xcloner_settings = new Xcloner_Settings($hash);
 		
 		if($value = $this->xcloner_settings->get_xcloner_option('xcloner_size_limit_per_request'))
 			$this->file_size_per_request_limit = $value*1024*1024; //MB
@@ -29,7 +29,7 @@ class Xcloner_Archive extends Tar
 		if($value = get_option('xcloner_backup_compression_level'))
 			$this->compression_level = $value;
 			
-		if($archive_name)
+		if(isset($archive_name))
 			$this->set_archive_name($archive_name);
 	}
 	
@@ -88,9 +88,15 @@ class Xcloner_Archive extends Tar
 		
 		if(!isset($extra_params['start_at_byte']))
 			$extra_params['start_at_byte'] = 0;
+		
+		if(!$this->filesystem->get_tmp_filesystem()->has($this->filesystem->get_included_files_handler()))
+		{
+			$return['finished'] = 1;
+			return $return;
+		}
 			
-		$included_files_handler = $this->filesystem->get_included_files_handler();	
-				
+		$included_files_handler = $this->filesystem->get_included_files_handler(1);	
+		
 		$file = new SplFileObject($included_files_handler);
 		
 		$file->seek(PHP_INT_MAX);
@@ -109,25 +115,37 @@ class Xcloner_Archive extends Tar
 		//$this->file_size_per_request_limit = 1024*1024;
 		$byte_limit = 0;
 		
-		while(!$file->eof() and $counter<$this->files_to_process_per_request)
+		while(!$file->eof() and $counter<=$this->files_to_process_per_request)
 		{
-			$line = explode("|",$file->current());
-			
+			//$line = explode("|",$file->current());
+			$line = str_getcsv($file->current());
+
 			$relative_path = $line[0];
 			
-			if(!$this->filesystem->start_filesystem->has($relative_path))
+			$start_filesystem = "start_filesystem";
+			
+			if(isset($line[4])){
+				$start_filesystem = $line[4];
+			}
+			
+			$adapter = $this->filesystem->get_adapter($start_filesystem);
+			
+			if(!$this->filesystem->get_filesystem($start_filesystem)->has($relative_path))
 			{
 				$extra_params['start_at_line']++;
 				$file->next();
 				continue;
 			}
 			
-			$file_info = $this->filesystem->start_filesystem->getMetadata($relative_path);
+			$file_info = $this->filesystem->get_filesystem($start_filesystem)->getMetadata($relative_path);
 			
 			//echo "Processing ".$file_info['path']."(".$file_info['size'].")";
 			
 			if(!isset($file_info['size']))
 				$file_info['size'] = 0;
+			
+			if($start_filesystem == "tmp_filesystem")	
+				$file_info['archive_prefix_path'] = "xcloner".$this->xcloner_settings->get_hash();
 			
 			$byte_limit = (int)$this->file_size_per_request_limit/512;
 			
@@ -138,7 +156,7 @@ class Xcloner_Archive extends Tar
 						
 			//echo sprintf("\n%s out of %s - %s start_at_byte(%s) ", $this->processed_size_bytes, $this->file_size_per_request_limit, $file_info['path'], $start_byte);
 			
-			list($bytes_wrote, $last_position) = $this->add_file_to_archive( $file_info, $start_byte, $byte_limit, $append);
+			list($bytes_wrote, $last_position) = $this->add_file_to_archive( $file_info, $start_byte, $byte_limit, $append, $adapter);
 			$this->processed_size_bytes += $bytes_wrote;
 			
 			//echo" - processed ".$this->processed_size_bytes." bytes ".$this->file_size_per_request_limit." last_position:".$last_position." \n";
@@ -182,28 +200,33 @@ class Xcloner_Archive extends Tar
 		return $return;
 	}
 	
-	public function add_file_to_archive($file_info, $start_at_byte, $byte_limit = 0, $append)
+	public function add_file_to_archive($file_info, $start_at_byte, $byte_limit = 0, $append, $start_adapter)
 	{
 		if(!$file_info['path'])
 			return;
+		
+		if(isset($file_info['archive_prefix_path']))	
+			$file_info['target_path'] = $file_info['archive_prefix_path']."/".$file_info['path'];
+		else
+			$file_info['target_path'] = $file_info['path'];
 			
 		$last_position = $start_at_byte;
 		
-		$start_adapter = $this->filesystem->get_start_adapter();
+		//$start_adapter = $this->filesystem->get_start_adapter();
 
 		if(!$append){
 			$bytes_wrote = $file_info['size'];
-			$this->logger->info(sprintf("Adding %s bytes of file %s to archive %s ", $bytes_wrote, $file_info['path'], $this->get_archive_name()));
-			$this->backup_archive->addFile($start_adapter->applyPathPrefix($file_info['path']), $file_info['path']);
+			$this->logger->info(sprintf("Adding %s bytes of file %s to archive %s ", $bytes_wrote, $file_info['target_path'], $this->get_archive_name()));
+			$this->backup_archive->addFile($start_adapter->applyPathPrefix($file_info['path']), $file_info['target_path']);
 		}
 		else{	
-			$last_position = $this->backup_archive->appendFileData($start_adapter->applyPathPrefix($file_info['path']), $file_info['path'], $start_at_byte, $byte_limit);
+			$last_position = $this->backup_archive->appendFileData($start_adapter->applyPathPrefix($file_info['path']), $file_info['target_path'], $start_at_byte, $byte_limit);
 			if($last_position == -1)
 				$bytes_wrote = $file_info['size'] - $start_at_byte;
 			else
 				$bytes_wrote = $last_position - $start_at_byte;
 			
-			$this->logger->info(sprintf("Appending %s bytes of file %s to archive %s ", $bytes_wrote, $file_info['path'], $this->get_archive_name()));
+			$this->logger->info(sprintf("Appending %s bytes of file %s to archive %s ", $bytes_wrote, $file_info['target_path'], $this->get_archive_name()));
 			
 		}
 		
