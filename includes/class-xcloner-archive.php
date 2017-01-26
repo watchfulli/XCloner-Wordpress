@@ -168,6 +168,13 @@ class Xcloner_Archive extends Tar
 				$start_byte = $last_position;
 			}
 			else{	
+				
+				//remove the tmp files
+				if($start_filesystem == "tmp_filesystem"){
+					$this->logger->info(sprintf("Deleting temporary file %s from the system", $file_info['path']));
+					$this->filesystem->get_filesystem($start_filesystem)->delete($file_info['path']);
+				}
+					
 				$extra_params['start_at_line']++;
 				$file->next();
 				$start_byte = 0;
@@ -191,6 +198,14 @@ class Xcloner_Archive extends Tar
 			$return['extra']['start_at_byte'] = $last_position;
 			return $return;
 		}
+		
+		//close the backup archive by adding 2*512 blocks of zero bytes
+		$this->logger("Closing the backup archive with 2*512 zero bytes blocks.");
+		$this->backup_archive->close();
+		
+		//delete the temporary folder
+		$this->logger("Deleting the temporary storage folder");
+		$this->filesystem->get_filesystem("tmp_filesystem")->delete("/");
 		
 		$return['extra']['start_at_line'] = $extra_params['start_at_line']-1;
 		$return['extra']['processed_file'] = $file_info['path'];
