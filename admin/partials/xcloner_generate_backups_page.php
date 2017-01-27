@@ -169,8 +169,47 @@ $tab = 1;
 									</div>
 								</div>	
 						      <div class="collapsible-body status-body">
-								  <h2><?php echo __("Backup Parts")?>: </h2>
-									<ul class="backup-name"></ul>
+									<div class="row">
+										<div class="col l3 s12">
+											<h2><?php echo __("Backup Parts")?>: </h2>
+										</div>	
+										<div class="col l9 s12">
+											<ul class="backup-name"></ul>
+										</div>	
+									</div>
+							  </div>
+					    </li>
+					    <li class="backup-done">
+						      <div class="collapsible-header">
+									<i class="material-icons">done</i><?php echo __('Backup Done')?>
+									
+									<p class="right">
+										<?php echo __(sprintf('Would you like to transfer it to an external location?'))?>
+									</p>
+
+									<div>
+										<p class="right"><span class="last-logged-file"></span></p>
+									</div>	
+									
+									<div class="progress">
+										<div class="determinate" style="width:0%"></div>
+									</div>
+								</div>	
+						      <div class="collapsible-body status-body">
+									<div class="row">
+										<div class="col l3 m6 s12">
+											<a class="waves-effect waves-light btn-large">SFTP</a>
+										</div>	
+										<div class="col l3 m6 s12">
+											<a class="waves-effect waves-light btn-large">FTP</a>
+										</div>	
+										<div class="col l3 m6 s12">
+											<a class="waves-effect waves-light btn-large">Amazon S3</a>
+										</div>	
+										<div class="col l3 m6 s12">
+											<a class="waves-effect waves-light btn-large">Google Drive</a>
+										</div>	
+									</div>
 							  </div>
 					    </li>
 				  </ul>

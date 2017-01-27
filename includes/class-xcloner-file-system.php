@@ -57,6 +57,7 @@ class Xcloner_File_System{
 		$this->storage_filesystem_append = new Filesystem($this->storage_adapter, new Config([
 				'disable_asserts' => true,
 			]));
+			
 		if($value = get_option('xcloner_directories_to_scan_per_request'))
 			$this->folders_to_process_per_session = $value;
 		//echo $this->folders_to_process_per_session;	
@@ -75,6 +76,11 @@ class Xcloner_File_System{
 	public function get_tmp_filesystem()
 	{
 		return $this->tmp_filesystem;
+	}
+	
+	public function get_storage_filesystem()
+	{
+		return $this->storage_filesystem;
 	}
 	
 	public function get_tmp_filesystem_adapter()
@@ -471,9 +477,13 @@ class Xcloner_File_System{
 		return $this;
 	}
 	
-	public function get_filesystem($system)
+	public function get_filesystem($system = "")
 	{
-		if($system == "tmp_filesystem")
+		if($system == "storage_filesystem_append")
+			return $this->storage_filesystem_append;
+		elseif($system == "tmp_filesystem_append")
+			return $this->tmp_filesystem_append;
+		elseif($system == "tmp_filesystem")
 			return $this->tmp_filesystem;
 		elseif($system == "storage_filesystem")
 			return $this->storage_filesystem;

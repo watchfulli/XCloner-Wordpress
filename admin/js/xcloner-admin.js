@@ -21,12 +21,16 @@
 				jQuery(this).find('a').addClass("nav-tab-active");
 				jQuery(".nav-tab-wrapper-content .tab-content").removeClass('active');
 				jQuery(".nav-tab-wrapper-content "+jQuery(this).find('a').attr('href')).addClass('active');
+				
 				e.preventDefault();
+				
+				location.hash = jQuery(this).find('a').attr('href')+"_hash";
+				
 		})
 	
 		var hash = window.location.hash;
 		if(hash){
-			next_tab(hash);
+			next_tab(hash.replace("_hash",""));
 		}
 	})
 	

@@ -147,7 +147,7 @@ class XCloner_Database extends wpdb{
 			$this->logger->info( $message, array(""));
 		}else{	
 			if($this->last_query)
-				$this->logger->info( $this->last_query, array(""));
+				$this->logger->debug( $this->last_query, array(""));
 			if($this->last_error)
 				$this->logger->error( $this->last_error, array(""));
 		}

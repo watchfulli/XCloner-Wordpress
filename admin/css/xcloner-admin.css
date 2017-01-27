@@ -104,10 +104,19 @@ span.shorten_string{
 	display: none;
 }
 
+#generate_backup .status-body ul.backup-name li, #generate_backup ul.logged-databases  li{
+	font-weight: bold;
+}
+
+#generate_backup .backup-done .collapsible-body {
+	margin-top: 1.83rem;
+}
+
 #generate_backup .status-body ul{
 	margin: 5px 10px;
 	max-height: 200px;
     overflow-y: auto;
+	margin-top: 1.78rem;
 }
 
 #generate_backup .action-buttons .cancel, 

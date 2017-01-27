@@ -7,6 +7,8 @@ class Xcloner_Backup{
 		this.generate_hash = false;
 		this.last_dumpfile = "";
 		this.last_backup_file = ""
+		this.backup_part = 0
+		this.backup_size_total = 0;
 	}
 	
 	get_form_params()
@@ -78,7 +80,7 @@ class Xcloner_Backup{
 		}
 		
 		if(json.extra.dumpfile !== undefined){
-			var db_text = ("backup file: <b>"+json.extra.dumpfile+" ("+this.getSize(json.extra.dumpsize, 1024)+" KB)</b>");
+			var db_text = (json.extra.dumpfile+" ("+this.getSize(json.extra.dumpsize, 1024)+" KB)");
 			
 			if(!jQuery(this.last_dumpfile).hasClass(json.extra.dumpfile)){
 				this.last_dumpfile = (jQuery("<li>").addClass(json.extra.dumpfile).html(db_text)).prependTo("ul.logged-databases");
@@ -192,10 +194,9 @@ class Xcloner_Backup{
 				jQuery(elem).find(".file-counter").text(parseInt(json.extra.start_at_line));
 			
 			if(json.extra.start_at_line !== undefined){
-				var prev_backup_size = parseInt(jQuery(elem).find(".file-size-total").attr('data-processed'));
-				jQuery(elem).find(".file-size-total").text( this.getSize(parseInt(json.extra.backup_size)));
-				var backup_size = parseInt(json.extra.backup_size);
-				jQuery(elem).find(".file-size-total").attr('data-processed', backup_size);
+				//var prev_backup_size = parseInt(jQuery(elem).find(".file-size-total").attr('data-processed'));
+				jQuery(elem).find(".file-size-total").text(  this.getSize(this.backup_size_total+parseInt(json.extra.backup_size)));
+				//var backup_size = parseInt(json.extra.backup_size);
 			}
 				
 		}
@@ -205,22 +206,21 @@ class Xcloner_Backup{
 			jQuery(elem).find(".last-logged-file").text(json.extra.processed_file+" ("+this.getSize(json.extra.processed_file_size, 1024)+" KB)");	
 		}
 		
-		/*if(json.extra.backup_archive_name !== undefined && json.extra.backup_init)
-		{
-			var backup_text = json.extra.backup_archive_name+" ("+this.getSize(json.extra.backup_size)+") MB");
-			(jQuery("<li id='"+json.extra.backup_archive_name+"'>").text(backup_text).prepentTo(jQuery(elem).find(".status-body .backup-name"));
-		}*/
-		
 		if(json.extra.processed_file !== undefined){
-			//var db_text = ("writing data to <b>"+json.extra.dumpfile+" ("+this.getSize(json.extra.dumpsize, 1024)+" KB)</b>");
-			var backup_text = json.extra.backup_archive_name+" ("+this.getSize(json.extra.backup_size)+") MB";
+			
+			var backup_text = json.extra.backup_archive_name_full+" ("+this.getSize(json.extra.backup_size)+") MB";
+			
+			if(this.backup_part != json.extra.backup_part)
+			{
+				this.backup_part = json.extra.backup_part;
+				this.backup_size_total = this.backup_size_total+json.extra.backup_size;
+			}	
 			
 			if(!jQuery(this.last_backup_file).hasClass(json.extra.backup_archive_name)){
 				this.last_backup_file = (jQuery("<li>").addClass(json.extra.backup_archive_name).html(backup_text)).prependTo(jQuery(elem).find(".status-body .backup-name"));
 			}
-			else{	
-				jQuery(this.last_backup_file).html(backup_text)
-			}
+			
+			jQuery(this.last_backup_file).html(backup_text)
 			
 		}
 		
@@ -240,6 +240,7 @@ class Xcloner_Backup{
 		jQuery(elem).find(".last-logged-file").text('done');
 		
 		this.restart_backup();
+		this.do_backup_done()
 	}
 	
 	do_backup_files()
@@ -262,6 +263,15 @@ class Xcloner_Backup{
 		this.do_ajax(elem, 'backup_files', 1);
 	}
 	
+	do_backup_done()
+	{
+		var elem = "#generate_backup ul.backup-status li.backup-done";
+		jQuery(elem).show();
+		jQuery(elem+' .status-body').show();
+		jQuery(elem).find('.collapsible-header').trigger('click');
+			
+	}
+	
 	cancel_backup()
 	{
 		this.cancel =  true;
@@ -281,6 +291,10 @@ class Xcloner_Backup{
 	{		
 			this.generate_hash = true;
 			this.cancel =  false;
+			this.backup_size_total = 0;
+			this.last_backup_file = "";
+			this.backup_part = 0;
+			jQuery('#generate_backup ul.backup-name li').remove();
 			jQuery('#generate_backup .action-buttons a').hide();
 			jQuery('#generate_backup .action-buttons .cancel').css('display', 'inline-block');
 			jQuery('#generate_backup ul.backup-status li').hide();

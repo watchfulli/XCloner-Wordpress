@@ -11,6 +11,7 @@ class Xcloner_Archive extends Tar
 	private $file_size_per_request_limit 	= 1*1024*1024; //1MB
 	private $files_to_process_per_request 	= 100; //block of 512 bytes
 	private $compression_level 				= 0; //0-9 , 0 uncompressed
+	private $xcloner_split_backup_limit		= 2048; //2048MB
 	
 	private $archive_name;
 	
@@ -28,16 +29,36 @@ class Xcloner_Archive extends Tar
 		
 		if($value = get_option('xcloner_backup_compression_level'))
 			$this->compression_level = $value;
+		
+		if($value = get_option('xcloner_split_backup_limit'))
+			$this->xcloner_split_backup_limit = $value;
+		
+		$this->xcloner_split_backup_limit = $this->xcloner_split_backup_limit * 1024*1024; //transform to bytes
 			
 		if(isset($archive_name))
 			$this->set_archive_name($archive_name);
 	}
 	
-	public function set_archive_name($name = "", $skip_extension = 0)
+	public function rename_archive($old_name, $new_name)
+	{
+		$this->logger->info(sprintf("Renaming backup archive %s to %s", $old_name, $new_name));
+		$storage_filesystem = $this->filesystem->get_storage_filesystem();
+		$storage_filesystem->rename($old_name, $new_name);
+	}
+	
+	public function set_archive_name($name = "", $part = 0)
 	{
 		$this->archive_name = $this->filesystem->process_backup_name($name);
-		if(!$skip_extension)
-			$this->archive_name = $this->archive_name.$this->xcloner_settings->get_backup_extension_name();
+		
+		if(isset($part) and $part)
+		{
+			$new_name =  preg_replace('/-part(\d*)/', "-part".$part, $this->archive_name);
+			if(!stristr($new_name, "-part"))
+				$new_name = $this->archive_name . "-part".$part;
+			
+			$this->archive_name = $new_name;	
+		}
+
 		return $this;
 	}
 	
@@ -46,10 +67,26 @@ class Xcloner_Archive extends Tar
 		return $this->archive_name;
 	}
 	
+	public function get_archive_name_multipart()
+	{
+		$new_name =  preg_replace('/-part(\d*)/', "", $this->archive_name);
+		return $new_name."-multipart.csv";
+	}
+	
+	public function get_archive_name_with_extension()
+	{
+		return $this->archive_name.$this->xcloner_settings->get_backup_extension_name();
+	}
+	
 	public function start_incremental_backup($backup_params, $extra_params, $init)
 	{
+		if(!isset($extra_params['backup_part']))
+			$extra_params['backup_part'] = 0;
+		
+		$return['extra']['backup_part'] = $extra_params['backup_part'];
+					
 		if(isset( $extra_params['backup_archive_name']))
-			$this->set_archive_name($extra_params['backup_archive_name'], 1);
+			$this->set_archive_name($extra_params['backup_archive_name'], $return['extra']['backup_part']);
 		else
 			$this->set_archive_name($backup_params['backup_name']);
 			
@@ -59,9 +96,7 @@ class Xcloner_Archive extends Tar
 		$this->backup_archive = new Tar();
 		$this->backup_archive->setCompression($this->compression_level);
 		
-		$archive_info = $this->filesystem->get_storage_path_file_info($this->get_archive_name());
-		
-		
+		$archive_info = $this->filesystem->get_storage_path_file_info($this->get_archive_name_with_extension());
 		
 		if($init)
 		{
@@ -83,8 +118,7 @@ class Xcloner_Archive extends Tar
 		}
 		
 		$return['extra']['backup_archive_name'] = $this->get_archive_name();
-		
-		//$this->backup_archive->openForAppend($archive_info->getPath().DS.$archive_info->getFilename());
+		$return['extra']['backup_archive_name_full'] = $this->get_archive_name_with_extension();
 		
 		if(!isset($extra_params['start_at_line']))
 			$extra_params['start_at_line'] = 0;
@@ -122,7 +156,6 @@ class Xcloner_Archive extends Tar
 		
 		while(!$file->eof() and $counter<=$this->files_to_process_per_request)
 		{
-			//$line = explode("|",$file->current());
 			$line = str_getcsv($file->current());
 
 			$relative_path = $line[0];
@@ -159,7 +192,32 @@ class Xcloner_Archive extends Tar
 			if($file_info['size'] > $byte_limit*512 or $start_byte)
 				$append = 1;
 						
-			//echo sprintf("\n%s out of %s - %s start_at_byte(%s) ", $this->processed_size_bytes, $this->file_size_per_request_limit, $file_info['path'], $start_byte);
+			if(!isset($return['extra']['backup_size']))
+				$return['extra']['backup_size'] =0;
+			
+			$return['extra']['backup_size'] = $archive_info->getSize();
+			
+			$estimated_new_size = $return['extra']['backup_size'] + $file_info['size'];
+			
+			//we create a new backup part if we reach the Split Achive Limit
+			if($this->xcloner_split_backup_limit and ($estimated_new_size > $this->xcloner_split_backup_limit) and (!$start_byte))
+			{
+				$this->logger->info(sprintf("Backup size limit %s bytes reached, file add estimate %s, attempt to create a new archive ",$this->xcloner_split_backup_limit, $estimated_new_size));
+				list($archive_info, $return['extra']['backup_part']) = $this->create_new_backup_part($return['extra']['backup_part']);
+				
+				if($file_info['size'] > $this->xcloner_split_backup_limit)
+				{
+					$this->logger->info(sprintf("Excluding %s file as it's size(%s) is bigger than the backup split limit of %s and it won't fit a single backup file",$file_info['path'], $file_info['size'], $this->xcloner_split_backup_limit));
+					$extra_params['start_at_line']++;
+				}
+				
+				$return['extra']['start_at_line'] = $extra_params['start_at_line'];
+				$return['extra']['start_at_byte'] = 0;
+				
+				$return['finished'] = 0;
+				
+				return $return;
+			}
 			
 			list($bytes_wrote, $last_position) = $this->add_file_to_archive( $file_info, $start_byte, $byte_limit, $append, $adapter);
 			$this->processed_size_bytes += $bytes_wrote;
@@ -192,6 +250,7 @@ class Xcloner_Archive extends Tar
 				$return['finished'] = 0;
 				$return['extra']['start_at_line'] = $extra_params['start_at_line'];
 				$return['extra']['start_at_byte'] = $last_position;
+				$this->logger->info(sprintf("Reached the maximum %s request limit, returning response", $this->file_size_per_request_limit));
 				return $return;
 			}
 		}
@@ -201,16 +260,21 @@ class Xcloner_Archive extends Tar
 			$return['finished'] = 0;
 			$return['extra']['start_at_line'] = $extra_params['start_at_line'];
 			$return['extra']['start_at_byte'] = $last_position;
+			$this->logger->info(sprintf("We have reached the maximum files to process per request limit of %s, returning response", $this->files_to_process_per_request));
+
 			return $return;
 		}
 		
 		//close the backup archive by adding 2*512 blocks of zero bytes
-		$this->logger->info("Closing the backup archive with 2*512 zero bytes blocks.");
+		$this->logger->info(sprintf("Closing the backup archive %s with 2*512 zero bytes blocks.", $this->get_archive_name_with_extension()));
 		$this->backup_archive->close();
 		
 		//delete the temporary folder
 		$this->logger->info(sprintf("Deleting the temporary storage folder %s", $this->xcloner_settings->get_xcloner_tmp_path()));
 		@rmdir($this->xcloner_settings->get_xcloner_tmp_path());
+		
+		if($return['extra']['backup_part'])
+			$this->write_multipart_file($this->get_archive_name_with_extension());
 		
 		$return['extra']['start_at_line'] = $extra_params['start_at_line']-1;
 		$return['extra']['processed_file'] = $file_info['path'];
@@ -218,6 +282,52 @@ class Xcloner_Archive extends Tar
 		$return['extra']['backup_size'] = $archive_info->getSize();
 		$return['finished'] = 1;
 		return $return;
+	}
+	
+	private function write_multipart_file($path)
+	{
+		$path = $this->get_archive_name_with_extension();
+		
+		$file = $this->filesystem->get_filesystem("storage_filesystem_append")->getMetadata($path);
+		//print_r($file_info);
+		$line = '"'.$file['path'].'","'.$file['timestamp'].'","'.$file['size'].PHP_EOL;
+
+		
+		$this->filesystem->get_filesystem("storage_filesystem_append")
+						->write($this->get_archive_name_multipart(), $line);
+	}
+	
+	private function create_new_backup_part($part = 0)
+	{
+		//close the backup archive by adding 2*512 blocks of zero bytes
+		$this->logger->info(sprintf("Closing the backup archive %s with 2*512 zero bytes blocks.", $this->get_archive_name_with_extension()));
+		$this->backup_archive->close();		
+		
+		if(!$part)
+		{
+			$old_name = $this->get_archive_name_with_extension();
+			$this->set_archive_name($this->get_archive_name(), ++$part);
+			$this->rename_archive($old_name, $this->get_archive_name_with_extension());
+			
+			$this->write_multipart_file($this->get_archive_name_with_extension());
+			
+		}else
+		{
+			$this->logger->info(sprintf("Creating new multipart info file %s",$this->get_archive_name_with_extension()));
+			$this->write_multipart_file($this->get_archive_name_with_extension());
+		}
+				
+		$this->set_archive_name($this->get_archive_name(), ++$part);		
+		
+		$this->logger->info(sprintf("Creating new backup archive part %s", $this->get_archive_name_with_extension()));
+
+		$this->backup_archive = new Tar();
+		$this->backup_archive->setCompression($this->compression_level);
+		$archive_info = $this->filesystem->get_storage_path_file_info($this->get_archive_name_with_extension());
+		$this->backup_archive->create($archive_info->getPath().DS.$archive_info->getFilename());
+		
+		return array($archive_info, $part);
+		
 	}
 	
 	public function add_file_to_archive($file_info, $start_at_byte, $byte_limit = 0, $append, $start_adapter)
@@ -246,7 +356,7 @@ class Xcloner_Archive extends Tar
 			else
 				$bytes_wrote = $last_position - $start_at_byte;
 			
-			$this->logger->info(sprintf("Appending %s bytes of file %s to archive %s ", $bytes_wrote, $file_info['target_path'], $this->get_archive_name()));
+			$this->logger->info(sprintf("Appending %s bytes, starting position %s, of file %s to archive %s ", $bytes_wrote, $start_at_byte, $file_info['target_path'], $this->get_archive_name()));
 			
 		}
 		
