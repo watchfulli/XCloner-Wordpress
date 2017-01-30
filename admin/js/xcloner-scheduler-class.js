@@ -52,26 +52,38 @@ jQuery(document).ready(function(){
 		
 		create_modal(response)
 		{
-			
 			this.edit_modal.find("#schedule_id").text(response.id)
 			this.edit_modal.find("#schedule_id").text(response.id)
 			this.edit_modal.find("#schedule_id_hidden").val(response.id)
 			this.edit_modal.find("#schedule_name").val(response.name)
+			this.edit_modal.find("#backup_name").val(response.backup_params.backup_name)
+			this.edit_modal.find("#email_notification").val(response.backup_params.email_notification)
 			this.edit_modal.find('#schedule_frequency>option[value="' + response.recurrence + '"]').prop('selected', true);
-			this.edit_modal.find("#start_at").val(response.start_at)
-			this.edit_modal.find("#params").val(response.params)
-
-			this.edit_modal.modal('open');
+			this.edit_modal.find("#schedule_start_date").val(response.start_at)
+			this.edit_modal.find("#table_params").val(response.table_params)
+			this.edit_modal.find("#excluded_files").val(response.excluded_files)
 			
 			jQuery('select').material_select();
+			
+			Materialize.updateTextFields();
+			
+			this.edit_modal.modal('open');
 		}
-		save_schedule(form)
+		
+		save_schedule(form, dataTable)
 		{
-			if(!this.IsJsonString(jQuery("#params").val()))
+			if(!this.IsJsonString(jQuery("#table_params").val()) )
 			{
-				alert("Params field is not a valid json data!");
+				alert("Database field is not a valid json data!");
 				return false;
 			}
+			
+			if(!this.IsJsonString(jQuery("#excluded_files").val()) )
+			{
+				alert("Exclude files field is not a valid json data!");
+				return false;
+			}
+			
 			var data = jQuery(form).serialize();
 			var $this = this
 			
@@ -93,6 +105,8 @@ jQuery(document).ready(function(){
 				}
 				
 				$this.edit_modal.modal('close');
+				//location.reload();
+				dataTable.ajax.reload();
 				
 			});
 			
@@ -110,38 +124,57 @@ jQuery(document).ready(function(){
 	//end class
 	}
 	
-
-	
 	
 	var xcloner_scheduler = new Xcloner_Scheduler();
-	
 	
 	jQuery("select[required]").css({display: "block", height: 0, padding: 0, width: 0, position: 'absolute'});
 	
     dataTable = jQuery('#scheduled_backups').DataTable( {
 		'responsive': true,
 		'bFilter': false,
-		"order": [[ 2, "desc" ]],
+		"order": [[ 3, "desc" ]],
 		buttons: [
 			'selectAll',
 			'selectNone'
+		],
+		columnDefs: [
+			{ targets: 'no-sort', orderable: false }
 		],
 		language: {
 	        buttons: {
 	            selectAll: "Select all items",
 	            selectNone: "Select none"
 	        }
-	    }
+	    },
+	    "ajax": ajaxurl+"?action=get_scheduler_list",
+	    "fnDrawCallback": function( oSettings ) {
+			jQuery("#scheduled_backups").find(".edit").each(function(){
+				jQuery(this).on("click", function(){
+					var hash = jQuery(this).attr('href');
+					var id = hash.substr(1)
+					var data = xcloner_scheduler.get_schedule_by_id(id);
+				})
+			})
+			
+			jQuery("#scheduled_backups").find(".delete").each(function(){
+				jQuery(this).on("click", function(){
+					var hash = jQuery(this).attr('href');
+					var id = hash.substr(1)
+					var data = xcloner_scheduler.delete_schedule_by_id(id, (this), dataTable);
+				})
+			})
+			
+		}
 	});
 	
 	jQuery("#save_schedule").on("submit", function(){
 
-		xcloner_scheduler.save_schedule(jQuery(this))
+		xcloner_scheduler.save_schedule(jQuery(this), dataTable)
 		
 		return false;
 	})
 	
-	jQuery("#scheduled_backups .edit").on("click", function(){
+	/*jQuery("#scheduled_backups .edit").on("click", function(){
 		var hash = jQuery(this).attr('href');
 		var id = hash.substr(1)
 		var data = xcloner_scheduler.get_schedule_by_id(id);
@@ -153,6 +186,6 @@ jQuery(document).ready(function(){
 		var data = xcloner_scheduler.delete_schedule_by_id(id, (this), dataTable);
 		
 		
-	})
+	})*/
 
 });

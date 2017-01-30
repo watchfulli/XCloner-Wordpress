@@ -1,34 +1,38 @@
 <?php
 $xcloner_scheduler = new Xcloner_Scheduler();
 
-$scheduled_backups = $xcloner_scheduler->get_scheduler_list();
+//$scheduled_backups = $xcloner_scheduler->get_scheduler_list();
 
 ?>
+
+<script>
+		//var xcloner_scheduler = new Xcloner_Scheduler();
+</script>
 <h1><?= esc_html(get_admin_page_title()); ?></h1>
 
 <div class="row">
 <table id="scheduled_backups" class="col s12 display" cellspacing="0" width="100%">
         <thead>
             <tr>
-                <th><?php echo __('ID #', 'xcloner')?></th>
+                <th><?php echo __('ID', 'xcloner')?></th>
                 <th><?php echo __('Schedule Name', 'xcloner')?></th>
-                <th><?php echo __('Start Time', 'xcloner')?></th>
                 <th><?php echo __('Recurrence', 'xcloner')?></th>
-                <th><?php echo __('Action', 'xcloner')?></th>
+                <th><?php echo __('Start Time', 'xcloner')?></th>
+                <th class="no-sort"><?php echo __('Action', 'xcloner')?></th>
             </tr>
         </thead>
         <tfoot>
             <tr>
-				<th><?php echo __('ID #', 'xcloner')?></th>
+				<th><?php echo __('ID', 'xcloner')?></th>
                 <th><?php echo __('Schedule Name', 'xcloner')?></th>
-                <th><?php echo __('Start Time', 'xcloner')?></th>
                 <th><?php echo __('Recurrence', 'xcloner')?></th>
+                <th><?php echo __('Start Time', 'xcloner')?></th>
                 <th><?php echo __('Action', 'xcloner')?></th>
             </tr>
         </tfoot>
         <tbody>
         <?php
-        if(is_array($scheduled_backups))
+        /*if(is_array($scheduled_backups))
         {
 			foreach($scheduled_backups as $schedule)
 			{
@@ -42,7 +46,7 @@ $scheduled_backups = $xcloner_scheduler->get_scheduler_list();
 			</tr>
 			<?php
 			}
-		}
+		}*/
         ?>
         </tbody>    
 </table>       
@@ -58,36 +62,69 @@ $scheduled_backups = $xcloner_scheduler->get_scheduler_list();
       <h4>Edit Schedule #<span id="schedule_id"></span></h4>
       <p>&nbsp;<p>
 	  <p>	
-		<div class="row">
-			<div class="input-field col s12 l12">
-				<input placeholder="" name="schedule_name" id="schedule_name" type="text" required value="">
-				<label for="schedule_name">Schedule Name</label>
-			</div>
-		</div>
+		  
+		<ul class="nav-tab-wrapper content row"> 
+			<li> <a href="#scheduler_settings" class="nav-tab col s12 m6 nav-tab-active">Scheduler Settings</a></li>
+			<li> <a href="#advanced_scheduler_settings" class="nav-tab col s12 m6">Advanced</a></li>
+		</ul>
 		
-		<div class="row">
-			<div class="input-field col s12 l6">
-				<input placeholder="" name="start_at" id="start_at" type="text" required value="">
-				<label for="start_at">Schedule Start At:</label>
+		<div class="nav-tab-wrapper-content">
+			<div id="scheduler_settings" class="tab-content active">
+				<div class="row">
+					<div class="input-field col s12 l12">
+						<input placeholder="" name="schedule_name" id="schedule_name" type="text" required value="">
+						<label for="schedule_name">Schedule Name</label>
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class="input-field col s12 l6">
+						<input placeholder="" name="schedule_start_date" id="schedule_start_date" type="text" required value="">
+						<label for="schedule_start_date">Schedule Start At:</label>
+					</div>
+				
+					<div class="input-field col s12 l6">
+						<select name="schedule_frequency" id="schedule_frequency" class="validate" required>
+							<option value="" disabled selected><?php echo __('Recurrence Schedule', 'xcloner') ?></option>
+							<option value="one_time">One time</option>
+							<option value="hourly">Hourly</option>
+							<option value="daily">Daily</option>
+							<option value="weekly">Weekly</option>
+							<option value="monthly">Monthly</option>
+						</select>
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class="input-field col s12 l12">
+						<input placeholder="" name="email_notification" id="email_notification" type="text" required value="">
+						<label for="email_notification">Email Notification</label>
+					</div>
+				</div>
 			</div>
-		
-			<div class="input-field col s12 l6">
-				<select name="schedule_frequency" id="schedule_frequency" class="validate" required>
-					<option value="" disabled selected><?php echo __('Recurrence Schedule', 'xcloner') ?></option>
-					<option value="one_time">One time</option>
-					<option value="hourly">Hourly</option>
-					<option value="daily">Daily</option>
-					<option value="weekly">Weekly</option>
-					<option value="monthly">Monthly</option>
-				</select>
-			</div>
-		</div>
-		
-		<div class="row">	
-			<div class="input-field col s12 l12">
-				<textarea id="params" name="data" class="materialize-textarea" rows="15"></textarea>
-				<label for="params">Schedule Params</label>
-			</div>
+			
+			<div id="advanced_scheduler_settings" class="tab-content">
+				<div class="row">
+					<div class="input-field col s12 l12">
+						<input placeholder="" name="backup_name" id="backup_name" type="text" required value="">
+						<label for="backup_name">Backup Name</label>
+					</div>
+				</div>
+				
+				<div class="row">	
+					<div class="input-field col s12 l12">
+						<textarea id="table_params" name="table_params" class="materialize-textarea" rows="15"></textarea>
+						<label for="table_params" class="active">Included Database Data</label>
+					</div>
+				</div>
+				
+				<div class="row">	
+					<div class="input-field col s12 l12">
+						<textarea id="excluded_files" name="excluded_files" class="materialize-textarea" rows="15"></textarea>
+						<label for="excluded_files" class="active">Exclude Files</label>
+					</div>
+				</div>
+			</div>	
 		</div>
 		
 		<div class="row">
@@ -102,10 +139,3 @@ $scheduled_backups = $xcloner_scheduler->get_scheduler_list();
     </form>
 </div>
 
-<script>
-jQuery(document).ready(function() {
-	
-	
-		
-} );
-</script>

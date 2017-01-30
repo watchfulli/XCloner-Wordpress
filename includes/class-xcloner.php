@@ -303,6 +303,7 @@ class Xcloner {
 		add_action( 'wp_ajax_backup_files'		, array($xcloner_api,'backup_files')  );
 		add_action( 'wp_ajax_save_schedule'		, array($xcloner_api,'save_schedule')  );
 		add_action( 'wp_ajax_get_schedule_by_id'		, array($xcloner_api,'get_schedule_by_id')  );
+		add_action( 'wp_ajax_get_scheduler_list'		, array($xcloner_api,'get_scheduler_list')  );
 		add_action( 'wp_ajax_delete_schedule_by_id'		, array($xcloner_api,'delete_schedule_by_id')  );
 		
 		

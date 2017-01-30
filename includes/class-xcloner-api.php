@@ -83,26 +83,35 @@ class Xcloner_Api{
 			die("Not allowed access here!");
 		}
 		
-		
+		$params = array();
 		$schedule = array();
 		
-		$params = json_decode(stripslashes($_POST['data']));
+		if(isset($_POST['data']))
+			$params = json_decode(stripslashes($_POST['data']));
 		
 		$this->process_params($params);
 		
+		
 		if(isset($_POST['id']))
 		{
-			//print_r($_POST); exit;
-			$this->form_params['backup_params']['schedule_name'] = $_POST['schedule_name'];
-			$this->form_params['backup_params']['start_at'] = $_POST['start_at'];
-			$this->form_params['backup_params']['recurrence'] = $_POST['schedule_frequency'];
-			$this->form_params['backup_params']['params'] = $_POST['data'];
 			
-			$params = json_decode(stripslashes($this->form_params['backup_params']['params']));
-		}
+			$this->form_params['backup_params']['backup_name'] = $this->xcloner_sanitization->sanitize_input_as_string($_POST['backup_name']);
+			$this->form_params['backup_params']['email_notification'] = $this->xcloner_sanitization->sanitize_input_as_string($_POST['email_notification']);
+			$this->form_params['backup_params']['schedule_name'] = $this->xcloner_sanitization->sanitize_input_as_string($_POST['schedule_name']);
+			$this->form_params['backup_params']['start_at'] = strtotime($_POST['schedule_start_date']);
+			$this->form_params['backup_params']['schedule_frequency'] = $this->xcloner_sanitization->sanitize_input_as_string($_POST['schedule_frequency']);
+			$this->form_params['database'] = json_decode(stripslashes($this->xcloner_sanitization->sanitize_input_as_raw($_POST['table_params'])));
+			$this->form_params['excluded_files'] = json_decode(stripslashes($this->xcloner_sanitization->sanitize_input_as_raw($_POST['excluded_files'])));
+			
+			$schedule['start_at'] = $this->form_params['backup_params']['start_at'] ;
+			
+			//$params = json_decode(stripslashes($this->form_params['backup_params']['params']));
+		}else{
 		
 		$schedule['start_at'] = strtotime($this->form_params['backup_params']['schedule_start_date'] .
 								" ".$this->form_params['backup_params']['schedule_start_time']);
+		}
+		
 		if(!$schedule['start_at'])						
 			$schedule['start_at'] = time();
 		
@@ -110,14 +119,16 @@ class Xcloner_Api{
 		
 		$schedule['name'] = $this->form_params['backup_params']['schedule_name'];
 		$schedule['recurrence'] = $this->form_params['backup_params']['schedule_frequency'];
-		$schedule['params'] = json_encode($params);
 		
-		//print_r($schedule);exit;
+		$schedule['params'] = json_encode($this->form_params);
+		
+		#print_r($_POST);
+		#print_r($this->form_params);exit;
 		
 		if(!isset($_POST['id']))
 		{
 			$insert = $wpdb->insert( 
-				$wpdb_prefix.'wp_xcloner_scheduler', 
+				$wpdb->prefix.'xcloner_scheduler', 
 				$schedule, 
 				array( 
 					'%s', 
@@ -126,7 +137,7 @@ class Xcloner_Api{
 			);
 		}else		{
 			$insert = $wpdb->update( 
-				$wpdb_prefix.'wp_xcloner_scheduler', 
+				$wpdb->prefix.'xcloner_scheduler', 
 				$schedule, 
 				array( 'id' => $_POST['id'] ), 
 				array( 
@@ -365,8 +376,6 @@ class Xcloner_Api{
 			die("Not allowed access here!");
 		}
 		
-		//$this->init_db();
-		
 		$database = $this->xcloner_sanitization->sanitize_input_as_raw($_POST['id']);
 		
 		$data = array();
@@ -392,7 +401,7 @@ class Xcloner_Api{
 				{
 					$state['selected'] = true;
 					if($database['num_tables'] < 25)
-						$state['opened'] = true;
+						$state['opened'] = false;
 				}
 					
 				$data[] = array(
@@ -448,11 +457,25 @@ class Xcloner_Api{
 		return $this->send_response($data);
 	}
 	
+	public function get_scheduler_list()
+	{
+		$scheduler = new Xcloner_Scheduler();
+		$data  = $scheduler->get_scheduler_list();
+		
+		foreach($data as $res)
+		{
+			$action = "<a href=\"#".$res->id."\" class=\"edit\"> Edit </a>| <a href=\"#".$res->id."\" class=\"delete\">Delete</a>";
+			$return['data'][] = array($res->id, $res->name, $res->recurrence,$res->start_at,$action);
+		}
+		
+		return $this->send_response($return, 0);
+	}
+	
 	public function delete_schedule_by_id()
 	{
 		$schedule_id = $this->xcloner_sanitization->sanitize_input_as_int($_GET['id']);
 		$scheduler = new Xcloner_Scheduler();
-		$data  = $scheduler->delete_schedule_by_id($schedule_id);
+		$data['finished']  = $scheduler->delete_schedule_by_id($schedule_id);
 		
 		return $this->send_response($data);
 	}
