@@ -20,6 +20,10 @@ class Xcloner_Api{
 	
 	public function __construct()
 	{
+		global $wpdb;
+		
+		$wpdb->show_errors		= false;
+		
 		$this->xcloner_settings 		= new Xcloner_Settings();
 		
 		//generating the hash suffix for tmp xcloner store folder
@@ -69,6 +73,79 @@ class Xcloner_Api{
 		return $this->xcloner_database;
 		
 	
+	}
+	
+	public function save_schedule()
+	{
+		global $wpdb; 
+		
+		if (!current_user_can('manage_options')) {
+			die("Not allowed access here!");
+		}
+		
+		
+		$schedule = array();
+		
+		$params = json_decode(stripslashes($_POST['data']));
+		
+		$this->process_params($params);
+		
+		if(isset($_POST['id']))
+		{
+			//print_r($_POST); exit;
+			$this->form_params['backup_params']['schedule_name'] = $_POST['schedule_name'];
+			$this->form_params['backup_params']['start_at'] = $_POST['start_at'];
+			$this->form_params['backup_params']['recurrence'] = $_POST['schedule_frequency'];
+			$this->form_params['backup_params']['params'] = $_POST['data'];
+			
+			$params = json_decode(stripslashes($this->form_params['backup_params']['params']));
+		}
+		
+		$schedule['start_at'] = strtotime($this->form_params['backup_params']['schedule_start_date'] .
+								" ".$this->form_params['backup_params']['schedule_start_time']);
+		if(!$schedule['start_at'])						
+			$schedule['start_at'] = time();
+		
+		$schedule['start_at'] = date('Y-m-d H:i:s', $schedule['start_at']);	
+		
+		$schedule['name'] = $this->form_params['backup_params']['schedule_name'];
+		$schedule['recurrence'] = $this->form_params['backup_params']['schedule_frequency'];
+		$schedule['params'] = json_encode($params);
+		
+		//print_r($schedule);exit;
+		
+		if(!isset($_POST['id']))
+		{
+			$insert = $wpdb->insert( 
+				$wpdb_prefix.'wp_xcloner_scheduler', 
+				$schedule, 
+				array( 
+					'%s', 
+					'%s' 
+				) 
+			);
+		}else		{
+			$insert = $wpdb->update( 
+				$wpdb_prefix.'wp_xcloner_scheduler', 
+				$schedule, 
+				array( 'id' => $_POST['id'] ), 
+				array( 
+					'%s', 
+					'%s' 
+				) 
+			);
+		}
+		
+		//echo $wpdb->last_query;
+		if( $wpdb->last_error ) {
+            $response['error'] = 1;
+            $response['error_message'] = $wpdb->last_error/*."--".$wpdb->last_query*/;
+            
+        }
+        
+		$response['finished'] = 1;
+		
+		$this->send_response($response);
 	}
 	
 	public function backup_files()
@@ -163,7 +240,7 @@ class Xcloner_Api{
 		{
 			foreach($params->backup_params as $param)
 			{
-				$this->form_params['backup_params'][$param->name] = $this->xcloner_sanitization->sanitize_input_as_raw($param->value);
+				$this->form_params['backup_params'][$param->name] = $this->xcloner_sanitization->sanitize_input_as_string($param->value);
 				$this->logger->debug("Adding form parameter ".$param->name.".".$param->value."\n", array('POST', 'fields filter'));
 			}
 		}
@@ -360,6 +437,24 @@ class Xcloner_Api{
 		}
 		
 		return $this->send_response($data, 0);
+	}
+	
+	public function get_schedule_by_id()
+	{
+		$schedule_id = $this->xcloner_sanitization->sanitize_input_as_int($_GET['id']);
+		$scheduler = new Xcloner_Scheduler();
+		$data  = $scheduler->get_schedule_by_id($schedule_id);
+		
+		return $this->send_response($data);
+	}
+	
+	public function delete_schedule_by_id()
+	{
+		$schedule_id = $this->xcloner_sanitization->sanitize_input_as_int($_GET['id']);
+		$scheduler = new Xcloner_Scheduler();
+		$data  = $scheduler->delete_schedule_by_id($schedule_id);
+		
+		return $this->send_response($data);
 	}
 	
 	private function send_response($data, $attach_hash = 1)

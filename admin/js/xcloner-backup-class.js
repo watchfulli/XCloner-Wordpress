@@ -272,6 +272,11 @@ class Xcloner_Backup{
 			
 	}
 	
+	do_save_schedule_callback(elem, action, json)
+	{
+		jQuery("#schedule_backup_success").show();
+	}
+	
 	cancel_backup()
 	{
 		this.cancel =  true;
@@ -297,7 +302,7 @@ class Xcloner_Backup{
 			jQuery('#generate_backup ul.backup-name li').remove();
 			jQuery('#generate_backup .action-buttons a').hide();
 			jQuery('#generate_backup .action-buttons .cancel').css('display', 'inline-block');
-			jQuery('#generate_backup ul.backup-status li').hide();
+			jQuery('#generate_backup ul.backup-status > li').hide();
 			jQuery('#generate_backup .backup-status').show();
 			
 			this.params = this.get_form_params();
@@ -332,6 +337,11 @@ class Xcloner_Backup{
 					$this.params.hash = json.hash;
 					//console.log(json.hash);
 				}
+				if(json.error !== undefined){
+					show_ajax_error("Communication Error", "", json.error_message);
+					return;
+				}
+				
 				$this[callback](elem, action, json)
 				
 			});

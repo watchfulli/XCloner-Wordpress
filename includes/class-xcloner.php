@@ -179,6 +179,11 @@ class Xcloner {
 		 * The class responsible for the XCloner File System methods.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-xcloner-file-system.php';
+		
+		/**
+		 * The class responsible for the XCloner Scheduler methods.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-xcloner-scheduler.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the public-facing
@@ -296,6 +301,10 @@ class Xcloner {
 		add_action( 'wp_ajax_scan_filesystem'		, array($xcloner_api,'scan_filesystem')  );
 		add_action( 'wp_ajax_backup_database'		, array($xcloner_api,'backup_database')  );
 		add_action( 'wp_ajax_backup_files'		, array($xcloner_api,'backup_files')  );
+		add_action( 'wp_ajax_save_schedule'		, array($xcloner_api,'save_schedule')  );
+		add_action( 'wp_ajax_get_schedule_by_id'		, array($xcloner_api,'get_schedule_by_id')  );
+		add_action( 'wp_ajax_delete_schedule_by_id'		, array($xcloner_api,'delete_schedule_by_id')  );
+		
 		
 		
 		add_action( 'admin_notices', array($this, 'xcloner_error_admin_notices' ));

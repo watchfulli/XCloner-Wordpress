@@ -105,8 +105,8 @@ $tab = 1;
 		<div id="generate_backup" class="tab-content">
 			<div class="row ">
 				 <div class="col s12 l8 center action-buttons">
-					<a class="waves-effect waves-light btn-large green darken-1 start" onclick="xcloner_backup.start_backup()">Start Backup<i class="material-icons left">forward</i></a>
-					<a class="waves-effect waves-light btn-large green darken-1 restart" onclick="xcloner_backup.start_backup()">Restart Backup<i class="material-icons left">cached</i></a>
+					<a class="waves-effect waves-light btn-large teal darken-1 start" onclick="xcloner_backup.start_backup()">Start Backup<i class="material-icons left">forward</i></a>
+					<a class="waves-effect waves-light btn-large teal darken-1 restart" onclick="xcloner_backup.start_backup()">Restart Backup<i class="material-icons left">cached</i></a>
 					<a class="waves-effect waves-light btn-large red darken-1 cancel" onclick="xcloner_backup.cancel_backup()">Cancel Backup<i class="material-icons left">cancel</i></a>
 				</div>
 				<div class="col l8 s12">
@@ -184,7 +184,7 @@ $tab = 1;
 									<i class="material-icons">done</i><?php echo __('Backup Done')?>
 									
 									<p class="right">
-										<?php echo __(sprintf('Would you like to transfer it to an external location?'))?>
+										 
 									</p>
 
 									<div>
@@ -195,20 +195,17 @@ $tab = 1;
 										<div class="determinate" style="width:0%"></div>
 									</div>
 								</div>	
-						      <div class="collapsible-body status-body">
+						      <div class="collapsible-body">
 									<div class="row">
-										<div class="col l3 m6 s12">
-											<a class="waves-effect waves-light btn-large">SFTP</a>
-										</div>	
-										<div class="col l3 m6 s12">
-											<a class="waves-effect waves-light btn-large">FTP</a>
-										</div>	
-										<div class="col l3 m6 s12">
-											<a class="waves-effect waves-light btn-large">Amazon S3</a>
-										</div>	
-										<div class="col l3 m6 s12">
-											<a class="waves-effect waves-light btn-large">Google Drive</a>
-										</div>	
+										<div class="input-field col s12 m6">
+										    <select class="">
+										      <option disabled value="" selected>Send backup to</option>
+										      <option value="" data-icon2="images/sample-1.jpg" class="circle">Ftp Server</option>
+										      <option value="" data-icon2="images/office.jpg" class="circle">Dropbox</option>
+										      <option value="" data-icon2="images/yuna.jpg" class="circle">Amazon S3</option>
+										    </select>
+										    <label>Images in select</label>
+										  </div>
 									</div>
 							  </div>
 					    </li>
@@ -219,16 +216,55 @@ $tab = 1;
 		</div>
 		
 		<div id="schedule_backup" class="tab-content">
+			
 			<div class="row">
-				 <div class="input-field inline col s12 m10 l6">
-					  <input type="datetime-local" id="datepicker" class="datepicker">
-					  <label for="datepicker"><?php echo __('Schedule Backup To Start At:')?></label>
+				<div id="schedule_backup_success" class="col s12 l6 updated settings-error notice is-dismissible"> 
+					<p><strong><?php echo __('Schedule Saved', 'xcloner')?></strong></p>
+					<button type="button" class="notice-dismiss"><span class="screen-reader-text"><?php echo __('(Dismiss this notice.')?></span></button>
+				</div>
+			</div>
+			
+			<div class="row server-time">
+				<div class="col s12 m10 l6 teal lighten-1">
+					<h2><?php echo __('Current Server Time', 'xcloner')?>: <span class="right"><?php echo date("Y/m/d H:i")?></span></h2>
 				</div>
 			</div>
 			<div class="row">
+				 <div class="input-field inline col s12 m6 l4">
+					  <input type="datetime-local" id="datepicker" class="datepicker" name="schedule_start_date" >
+					  <label for="datepicker"><?php echo __('Schedule Backup To Start At:')?></label>
+				</div>
+				 <div class="input-field inline col s12 m4 l2">
+					  <input id="timepicker_ampm_dark" class="timepicker" type="time" name="schedule_start_time">
+					  <label for="timepicker_ampm_dark"><?php echo __('Time:')?></label>
+				</div>
+			</div>
+			
+			<div class="row">
+				<div class="input-field col s12 m10 l6">
+					<select name="schedule_frequency" id="schedule_frequency" class="validate" required>
+						<option value="" disabled selected><?php echo __('Please Select The Recurrence Schedule', 'xcloner') ?></option>
+						<option value="one_time">One time</option>
+						<option value="hourly">Hourly</option>
+						<option value="daily">Daily</option>
+						<option value="weekly">Weekly</option>
+						<option value="monthly">Monthly</option>
+						</select>
+						<label>Frequency To Run</label>
+				</div>
+			</div>	
+			
+			<div class="row">
 				 <div class="input-field inline col s12 m10 l6">
-					  <input type="text" id="datepicker" class="datepicker">
-					  <label for="datepicker">Backup Name</label>
+					  <input type="text" id="schedule_name" class="" name="schedule_name" required>
+					  <label for="schedule_name">Schedule Name</label>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col s12 m10 l6">
+					<button class="right btn waves-effect waves-light" type="submit" name="action">Submit
+						<i class="material-icons right">send</i>
+					</button>
 				</div>
 			</div>
 		</div>	
@@ -251,6 +287,30 @@ $tab = 1;
   
 <script>
 jQuery(function () { 
+	
+	jQuery('select').material_select();
+	jQuery("select[required]").css({display: "block", height: 0, padding: 0, width: 0, position: 'absolute'});
+
+	
+	
+	jQuery('.timepicker').pickatime({
+	    default: 'now',
+	    min: [7,30],
+	    twelvehour: false, // change to 12 hour AM/PM clock from 24 hour
+	    donetext: 'OK',
+		autoclose: false,
+		vibrate: true // vibrate the device when dragging clock hand
+	});
+
+	var date_picker = jQuery('.datepicker').pickadate({
+		format: 'd mmmm yyyy',
+		selectMonths: true, // Creates a dropdown to control month
+		selectYears: 15, // Creates a dropdown of 15 years to control year
+		min: +0.1,
+		onSet: function() {
+			this.close();
+		}
+	});
 	
 	<?php if($xcloner_settings->get_enable_mysql_backup()):?>
 	jQuery('#jstree_database_container').jstree({

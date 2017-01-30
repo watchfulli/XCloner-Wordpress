@@ -112,7 +112,7 @@ span.shorten_string{
 	margin-top: 1.83rem;
 }
 
-#generate_backup .status-body ul{
+#generate_backup .status-body > ul{
 	margin: 5px 10px;
 	max-height: 200px;
     overflow-y: auto;
@@ -130,6 +130,35 @@ span.shorten_string{
 
 .collapsible-body{
 	padding: 0px 10px;
+}
+
+.select-wrapper+label {
+    font-size: 1rem;
+}
+
+#schedule_backup .server-time h2{
+	color: #fff;
+}
+
+#schedule_backup_success{
+	display: none;
+}
+
+#scheduled_backups_wrapper .dataTables_length{
+	display: none;
+}
+
+table#scheduled_backups{
+	font-size: 16px;
+}
+
+#scheduled_backups td, #scheduled_backups th{
+	padding-top: 8px !important;
+}
+
+textarea.materialize-textarea{
+	overflow: auto;
+	resize: auto;
 }
 
 @media only screen and (min-width: 993px){

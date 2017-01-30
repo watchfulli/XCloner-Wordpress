@@ -77,6 +77,9 @@ class Xcloner_Admin {
 		 */
 		
 		wp_enqueue_style( $this->plugin_name."_materialize", plugin_dir_url( __FILE__ ) . 'css/materialize.min.css', array(), $this->version, 'all' );
+		wp_enqueue_style( $this->plugin_name."_materialize.clockpicker", plugin_dir_url( __FILE__ ) . 'css/materialize.clockpicker.css', array(), $this->version, 'all' );
+		wp_enqueue_style( $this->plugin_name."_jquery.datatables", plugin_dir_url( __FILE__ ) . 'css/jquery.dataTables.min.css', array(), $this->version, 'all' );
+		wp_enqueue_style( $this->plugin_name."_jquery.datatables.responsive", plugin_dir_url( __FILE__ ) . 'css/responsive.dataTables.css', array(), $this->version, 'all' );
 		wp_enqueue_style( $this->plugin_name."_jstree", dirname(plugin_dir_url( __FILE__ )) . '/vendor/vakata/jstree/dist/themes/default/style.min.css', array(), '3.3', 'all' );
 		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/xcloner-admin.css', array(), $this->version, 'all' );
 
@@ -105,9 +108,14 @@ class Xcloner_Admin {
 		 */
 
 		wp_enqueue_script( $this->plugin_name."_materialize", plugin_dir_url( __FILE__ ) . 'js/materialize.min.js', array( 'jquery' ), $this->version, false );
+		wp_enqueue_script( $this->plugin_name."_materialize.clockpicker", plugin_dir_url( __FILE__ ) . 'js/materialize.clockpicker.js', array( 'jquery' ), $this->version, false );
+		wp_enqueue_script( $this->plugin_name."_jquery.datatables", plugin_dir_url( __FILE__ ) . 'js/jquery.dataTables.min.js', array( 'jquery' ), $this->version, false );
+		wp_enqueue_script( $this->plugin_name."_jquery.datatables.respnsive", plugin_dir_url( __FILE__ ) . 'js/dataTables.responsive.js', array( 'jquery' ), $this->version, false );
 		wp_enqueue_script( $this->plugin_name."_vakata", dirname(plugin_dir_url( __FILE__ )) . '/vendor/vakata/jstree/dist/jstree.min.js', array( 'jquery' ), '3.3', false );
 		wp_enqueue_script( $this->plugin_name."_xcloner-backup-class", plugin_dir_url( __FILE__ ) . 'js/xcloner-backup-class.js', array( 'jquery' ), $this->version, false );
+		wp_enqueue_script( $this->plugin_name."_xcloner-scheduler-class", plugin_dir_url( __FILE__ ) . 'js/xcloner-scheduler-class.js', array( 'jquery' ), $this->version, false );
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/xcloner-admin.js', array( 'jquery' ), $this->version, false );
+		
 
 	}
 	
@@ -123,6 +131,12 @@ class Xcloner_Admin {
 	public function xcloner_init_page()
 	{
 		require_once("partials/xcloner_init_page.php");
+		
+	}
+	
+	public function xcloner_scheduled_backups_page()
+	{
+		require_once("partials/xcloner_scheduled_backups_page.php");
 		
 	}
 	
