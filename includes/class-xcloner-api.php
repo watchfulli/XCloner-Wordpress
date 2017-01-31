@@ -83,6 +83,7 @@ class Xcloner_Api{
 			die("Not allowed access here!");
 		}
 		
+		$scheduler = new Xcloner_Scheduler();
 		$params = array();
 		$schedule = array();
 		
@@ -105,10 +106,16 @@ class Xcloner_Api{
 			
 			$schedule['start_at'] = $this->form_params['backup_params']['start_at'] ;
 			
+			if(!isset($_POST['status']))
+				$schedule['status'] = 0;
+			else	
+				$schedule['status'] = $this->xcloner_sanitization->sanitize_input_as_int($_POST['status']);
+				
 			//$params = json_decode(stripslashes($this->form_params['backup_params']['params']));
 		}else{
 		
-		$schedule['start_at'] = strtotime($this->form_params['backup_params']['schedule_start_date'] .
+			$schedule['status'] = 1;
+			$schedule['start_at'] = strtotime($this->form_params['backup_params']['schedule_start_date'] .
 								" ".$this->form_params['backup_params']['schedule_start_time']);
 		}
 		
@@ -123,7 +130,7 @@ class Xcloner_Api{
 		$schedule['params'] = json_encode($this->form_params);
 		
 		#print_r($_POST);
-		#print_r($this->form_params);exit;
+		//print_r($schedule);exit;
 		
 		if(!isset($_POST['id']))
 		{
@@ -146,14 +153,16 @@ class Xcloner_Api{
 				) 
 			);
 		}
-		
-		//echo $wpdb->last_query;
+		if(isset($_POST['id']))
+			$scheduler->update_cron_hook($_POST['id']);
+			
 		if( $wpdb->last_error ) {
             $response['error'] = 1;
             $response['error_message'] = $wpdb->last_error/*."--".$wpdb->last_query*/;
             
         }
         
+        $scheduler->update_wp_cron_hooks();
 		$response['finished'] = 1;
 		
 		$this->send_response($response);
@@ -464,8 +473,33 @@ class Xcloner_Api{
 		
 		foreach($data as $res)
 		{
-			$action = "<a href=\"#".$res->id."\" class=\"edit\"> Edit </a>| <a href=\"#".$res->id."\" class=\"delete\">Delete</a>";
-			$return['data'][] = array($res->id, $res->name, $res->recurrence,$res->start_at,$action);
+			$action = "<a href=\"#".$res->id."\" class=\"edit\" title='Edit'> <i class=\"material-icons \">edit</i></a> 
+					<a href=\"#".$res->id."\" class=\"delete\" title='Delete'><i class=\"material-icons  \">delete</i></a>";
+			if($res->status)
+				$status = '<i class="material-icons active status">timer</i>';
+			else
+				$status = '<i class="material-icons status inactive">timer_off</i>';
+				
+			$next_run_time = wp_next_scheduled('xcloner_scheduler_'.$res->id, array($res->id));
+				
+			$next_run = date("d M, Y H:i", $next_run_time);	
+			
+			if(!$next_run_time >= time())
+				$next_run = " ";
+			
+			if(trim($next_run))
+			{
+				$date_text = $next_run;
+				
+				if($next_run_time >= time())
+					$next_run = "in ".human_time_diff($next_run_time, time());
+				else
+					$next_run = __("executed", "xcloner");
+				
+				$next_run .=" ($date_text)";	
+			}
+				
+			$return['data'][] = array($res->id, $res->name, $res->recurrence,/*$res->start_at,*/ $next_run, $status, $action);
 		}
 		
 		return $this->send_response($return, 0);

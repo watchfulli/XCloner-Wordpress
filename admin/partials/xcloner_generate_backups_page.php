@@ -243,8 +243,8 @@ $tab = 1;
 			<div class="row">
 				<div class="input-field col s12 m10 l6">
 					<select name="schedule_frequency" id="schedule_frequency" class="validate" required>
-						<option value="" disabled selected><?php echo __('Please Select The Recurrence Schedule', 'xcloner') ?></option>
-						<option value="one_time">One time</option>
+						<option value="" disabled selected><?php echo __('--Please Select--', 'xcloner') ?></option>
+						<option value="single">Don't Repeat</option>
 						<option value="hourly">Hourly</option>
 						<option value="daily">Daily</option>
 						<option value="weekly">Weekly</option>
@@ -308,7 +308,7 @@ jQuery(function () {
 		selectYears: 15, // Creates a dropdown of 15 years to control year
 		min: +0.1,
 		onSet: function() {
-			this.close();
+			//this.close();
 		}
 	});
 	

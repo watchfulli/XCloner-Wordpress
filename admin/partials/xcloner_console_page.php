@@ -1,9 +1,13 @@
 <?php
 
- $xcloner_settings 		= new Xcloner_Settings();
- $logger				= new Xcloner_Logger();
- 
- $logger_content = $logger->getLastDebugLines();
+$xcloner_settings 		= new Xcloner_Settings();
+$logger				= new Xcloner_Logger();
+
+
+$xcloner_scheduler = new Xcloner_Scheduler();
+$xcloner_scheduler->xcloner_scheduler_callback(72);
+
+$logger_content = $logger->getLastDebugLines();
 
 ?>
 <div class="col s12 ">

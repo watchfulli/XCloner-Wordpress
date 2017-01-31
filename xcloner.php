@@ -100,14 +100,3 @@ function run_xcloner()
 
 run_xcloner();
 
-
-add_action('example_action', 'example', 1, 3);
-$args = array ( 2, 1, 3 );
-wp_schedule_single_event(time()+100, 'example_action', $args);
-
-function example($a, $b, $c)
-{
-	echo $a.$b.$c;
-}
-
-

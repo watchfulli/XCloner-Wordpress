@@ -346,7 +346,7 @@ class Xcloner_Archive extends Tar
 
 		if(!$append){
 			$bytes_wrote = $file_info['size'];
-			$this->logger->info(sprintf("Adding %s bytes of file %s to archive %s ", $bytes_wrote, $file_info['target_path'], $this->get_archive_name()));
+			$this->logger->info(sprintf("Adding %s bytes of file %s to archive %s ", $bytes_wrote, $file_info['target_path'], $this->get_archive_name_with_extension()));
 			$this->backup_archive->addFile($start_adapter->applyPathPrefix($file_info['path']), $file_info['target_path']);
 		}
 		else{	

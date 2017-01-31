@@ -156,9 +156,27 @@ table#scheduled_backups{
 	padding-top: 8px !important;
 }
 
+#scheduled_backups i.status{
+	color: #fff;
+}
+
+.site-backup_page_xcloner_scheduled_backups_page #server_time h2 {
+    color: #fff;
+    margin: 9px 0px;
+    padding: 10px 10px 5px 10px;
+}
+
 textarea.materialize-textarea{
 	overflow: auto;
 	resize: auto;
+}
+
+#scheduled_backups .edit, #scheduled_backups .status.active, #scheduled_backups .delete{
+	color: #4db6ac;
+}
+
+#scheduled_backups .status.inactive{
+	color: #d32f2f ;
 }
 
 @media only screen and (min-width: 993px){

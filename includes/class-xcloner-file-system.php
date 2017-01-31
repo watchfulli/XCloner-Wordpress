@@ -185,7 +185,6 @@ class Xcloner_File_System{
 			return false;
 		}	
 	
-		
 		return true;	
 	}
 	
@@ -221,11 +220,14 @@ class Xcloner_File_System{
 		return $this->last_logged_file;
 	}
 	
-	public function set_excluded_files($excluded_files)
+	public function set_excluded_files($excluded_files = array())
 	{
+		if(!is_array($excluded_files))
+			$excluded_files = array();
+			
 		$this->excluded_files = array_merge($excluded_files, $this->excluded_files_by_default);
 		
-		return $this;
+		return $this->excluded_files;
 	}
 	
 	public function get_excluded_files()
@@ -427,6 +429,7 @@ class Xcloner_File_System{
 				return "> ".$xcloner_exclude_files_larger_than_mb."MB";
 		}
 		
+		if(is_array($this->excluded_files))
 		foreach($this->excluded_files as $excluded_file_pattern)
 		{
 			if($excluded_file_pattern == "/")
@@ -503,14 +506,14 @@ class Xcloner_File_System{
 	
 	private function scan_finished()
 	{
-		$this->logger->debug(sprintf(("File scan finished")));
-		
 		if($this->tmp_filesystem_append->has($this->get_temp_dir_handler()) && $this->tmp_filesystem_append->getSize($this->get_temp_dir_handler()))
 			return false;
 		
 		if($this->tmp_filesystem->has($this->get_temp_dir_handler()))
 			$this->tmp_filesystem->delete($this->get_temp_dir_handler());
 		
+		$this->logger->debug(sprintf(("File scan finished")));
+			
 		return true;
 	}
 	

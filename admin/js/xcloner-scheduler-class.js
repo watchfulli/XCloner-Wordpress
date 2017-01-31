@@ -53,12 +53,19 @@ jQuery(document).ready(function(){
 		create_modal(response)
 		{
 			this.edit_modal.find("#schedule_id").text(response.id)
+			
+			if(response.status == 1)
+				this.edit_modal.find("#status").attr("checked", "checked");
+			else	
+				this.edit_modal.find("#status").removeAttr("checked");
+				
 			this.edit_modal.find("#schedule_id").text(response.id)
 			this.edit_modal.find("#schedule_id_hidden").val(response.id)
 			this.edit_modal.find("#schedule_name").val(response.name)
 			this.edit_modal.find("#backup_name").val(response.backup_params.backup_name)
 			this.edit_modal.find("#email_notification").val(response.backup_params.email_notification)
 			this.edit_modal.find('#schedule_frequency>option[value="' + response.recurrence + '"]').prop('selected', true);
+			//var date = new Date(response.start_at);
 			this.edit_modal.find("#schedule_start_date").val(response.start_at)
 			this.edit_modal.find("#table_params").val(response.table_params)
 			this.edit_modal.find("#excluded_files").val(response.excluded_files)
@@ -173,6 +180,25 @@ jQuery(document).ready(function(){
 		
 		return false;
 	})
+	
+	jQuery('.timepicker').pickatime({
+	    default: 'now',
+	    min: [7,30],
+	    twelvehour: false, // change to 12 hour AM/PM clock from 24 hour
+	    donetext: 'OK',
+		autoclose: false,
+		vibrate: true // vibrate the device when dragging clock hand
+	});
+
+	var date_picker = jQuery('.datepicker').pickadate({
+		format: 'd mmmm yyyy',
+		selectMonths: true, // Creates a dropdown to control month
+		selectYears: 15, // Creates a dropdown of 15 years to control year
+		min: +0.1,
+		onSet: function() {
+			//this.close();
+		}
+	});
 	
 	/*jQuery("#scheduled_backups .edit").on("click", function(){
 		var hash = jQuery(this).attr('href');

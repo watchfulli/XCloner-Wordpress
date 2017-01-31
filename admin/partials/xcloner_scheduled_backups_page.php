@@ -1,8 +1,6 @@
 <?php
 $xcloner_scheduler = new Xcloner_Scheduler();
 
-//$scheduled_backups = $xcloner_scheduler->get_scheduler_list();
-
 ?>
 
 <script>
@@ -17,7 +15,9 @@ $xcloner_scheduler = new Xcloner_Scheduler();
                 <th><?php echo __('ID', 'xcloner')?></th>
                 <th><?php echo __('Schedule Name', 'xcloner')?></th>
                 <th><?php echo __('Recurrence', 'xcloner')?></th>
-                <th><?php echo __('Start Time', 'xcloner')?></th>
+                <!--<th><?php echo __('Start Time', 'xcloner')?></th>-->
+                <th><?php echo __('Next Execution', 'xcloner')?></th>
+                <th><?php echo __('Status', 'xcloner')?></th>
                 <th class="no-sort"><?php echo __('Action', 'xcloner')?></th>
             </tr>
         </thead>
@@ -26,7 +26,9 @@ $xcloner_scheduler = new Xcloner_Scheduler();
 				<th><?php echo __('ID', 'xcloner')?></th>
                 <th><?php echo __('Schedule Name', 'xcloner')?></th>
                 <th><?php echo __('Recurrence', 'xcloner')?></th>
-                <th><?php echo __('Start Time', 'xcloner')?></th>
+                <!--<th><?php echo __('Start Time', 'xcloner')?></th>-->
+                <th><?php echo __('Next Execution', 'xcloner')?></th>
+                <th><?php echo __('Status', 'xcloner')?></th>
                 <th><?php echo __('Action', 'xcloner')?></th>
             </tr>
         </tfoot>
@@ -52,6 +54,12 @@ $xcloner_scheduler = new Xcloner_Scheduler();
 </table>       
 </div>
 
+<div class="row">
+	<div class="col s12 m6 offset-m6 teal lighten-1" id="server_time">
+		<h2><?php echo __('Current Server Time', 'xcloner')?>: <span class="right"><?php echo date("Y/m/d H:i")?></span></h2>
+	</div>
+</div>
+
 
 <!-- Modal Structure -->
   <div id="edit_schedule" class="modal">
@@ -59,8 +67,24 @@ $xcloner_scheduler = new Xcloner_Scheduler();
 	<input type="hidden" name="id" id="schedule_id_hidden">
 	<input type="hidden" name="action" value="save_schedule">
     <div class="modal-content">
-      <h4>Edit Schedule #<span id="schedule_id"></span></h4>
-      <p>&nbsp;<p>
+      
+      <div class="row">
+			<div class="col s12 m6">
+			  <h4>Edit Schedule #<span id="schedule_id"></span></h4>
+			</div>	  
+      
+			<div class="col s12 m6 right-align">
+				<div class="switch">
+					<label>
+					Off
+					<input type="checkbox" id="status" name="status" value="1">
+					<span class="lever"></span>
+					On
+					</label>
+				</div>
+			</div>	
+	  </div>			  
+
 	  <p>	
 		  
 		<ul class="nav-tab-wrapper content row"> 
@@ -70,6 +94,7 @@ $xcloner_scheduler = new Xcloner_Scheduler();
 		
 		<div class="nav-tab-wrapper-content">
 			<div id="scheduler_settings" class="tab-content active">
+			
 				<div class="row">
 					<div class="input-field col s12 l12">
 						<input placeholder="" name="schedule_name" id="schedule_name" type="text" required value="">
@@ -79,14 +104,14 @@ $xcloner_scheduler = new Xcloner_Scheduler();
 				
 				<div class="row">
 					<div class="input-field col s12 l6">
-						<input placeholder="" name="schedule_start_date" id="schedule_start_date" type="text" required value="">
-						<label for="schedule_start_date">Schedule Start At:</label>
+						<input placeholder="" name="schedule_start_date" id="schedule_start_date" type="datetime"  value="">
+						<label for="schedule_start_date" class="active">Schedule Start At:</label>
 					</div>
-				
+
 					<div class="input-field col s12 l6">
 						<select name="schedule_frequency" id="schedule_frequency" class="validate" required>
-							<option value="" disabled selected><?php echo __('Recurrence Schedule', 'xcloner') ?></option>
-							<option value="one_time">One time</option>
+							<option value="" disabled selected><?php echo __('Schedule Recurrence', 'xcloner') ?></option>
+							<option value="single">Don't Repeat</option>
 							<option value="hourly">Hourly</option>
 							<option value="daily">Daily</option>
 							<option value="weekly">Weekly</option>
@@ -128,7 +153,8 @@ $xcloner_scheduler = new Xcloner_Scheduler();
 		</div>
 		
 		<div class="row">
-			<div class="input-field col s12 l12">
+			
+			<div class="input-field col s12">
 				<button class="right btn waves-effect waves-light" type="submit" name="action">Save
 					<i class="material-icons right">send</i>
 				</button>

@@ -84,6 +84,7 @@ class Xcloner {
 		$this->define_plugin_settings();
 		
 		$this->define_ajax_hooks();
+		$this->define_cron_hooks();
 		
 	}
 	
@@ -306,14 +307,49 @@ class Xcloner {
 		add_action( 'wp_ajax_get_scheduler_list'		, array($xcloner_api,'get_scheduler_list')  );
 		add_action( 'wp_ajax_delete_schedule_by_id'		, array($xcloner_api,'delete_schedule_by_id')  );
 		
-		
-		
 		add_action( 'admin_notices', array($this, 'xcloner_error_admin_notices' ));
+		
 	}
 	
-	function xcloner_error_admin_notices() {
+	
+	public function xcloner_error_admin_notices() {
 			settings_errors( 'xcloner_error_message' );
 		}
+	
+	public function define_cron_hooks()
+	{
+		//registering new schedule intervals
+		add_filter( 'cron_schedules', array($this, 'add_new_intervals'));
+			
+		
+		$xcloner_scheduler = new Xcloner_Scheduler();
+		$xcloner_scheduler->update_wp_cron_hooks();
+		
+	}
+	
+	public function xcloner_scheduler_callback($schedule_id)
+	{
+		$cron = new Xcloner_Scheduler;
+		
+		$cron->run_schedule($schedule_id);
+	}
+	
+	function add_new_intervals($schedules) 
+	{
+		// add weekly and monthly intervals
+		$schedules['weekly'] = array(
+			'interval' => 604800,
+			'display' => __('Once Weekly')
+		);
+	
+		$schedules['monthly'] = array(
+			'interval' => 2635200,
+			'display' => __('Once a month')
+		);
+	
+		return $schedules;
+	}
+
 	
 	/**
 	 * Run the loader to execute all of the hooks with WordPress.

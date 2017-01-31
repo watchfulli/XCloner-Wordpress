@@ -30,7 +30,8 @@ class Xcloner_Deactivator {
 	 * @since    1.0.0
 	 */
 	public static function deactivate() {
-
+		$xcloner_scheduler = new Xcloner_Scheduler();
+		$xcloner_scheduler->deactivate_wp_cron_hooks();
 	}
 
 }

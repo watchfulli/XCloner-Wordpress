@@ -109,7 +109,7 @@ class XCloner_Database extends wpdb{
 				$db_count = -1;
 			}
 			
-			if(isset($params))
+			if(isset($params) and is_array($params))
 				foreach($params as $database=>$tables)
 				{	
 					if($database != "#")

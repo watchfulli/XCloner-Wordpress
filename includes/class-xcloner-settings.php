@@ -86,7 +86,7 @@ class Xcloner_Settings
 		
 		$this->set_hash(substr( $hash, 0, 6));
 		
-		return $this;
+		return $hash;
 	}
 	
 	public function set_hash($hash = "")
