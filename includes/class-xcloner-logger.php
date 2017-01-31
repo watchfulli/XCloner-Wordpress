@@ -7,19 +7,27 @@ class Xcloner_Logger extends Logger{
 	
 	private $logger_path ;
 	
-	public function __construct($logger_name = "xcloner_logger")
+	public function __construct($logger_name = "xcloner_logger", $hash="")
 	{
-		$xcloner_settings 	= new Xcloner_Settings();
+		$xcloner_settings 	= new Xcloner_Settings($hash);
 		
 		$logger_path = $xcloner_settings->get_xcloner_store_path().DS.$xcloner_settings->get_logger_filename();
 		
+		if($hash)
+			$logger_path_tmp = $xcloner_settings->get_xcloner_tmp_path().DS.$xcloner_settings->get_logger_filename(1);
+		
+		
 		$this->logger_path = $logger_path;
+		//$this->logger_path_tmp = $logger_path_tmp;
 		
 		if(!is_dir($xcloner_settings->get_xcloner_store_path()) or !is_writable($xcloner_settings->get_xcloner_store_path()))
 			return;
 		
 		if(!$xcloner_settings->get_xcloner_option('xcloner_enable_log'))
+		{
 			$logger_path = "php://stderr";
+			$logger_path_tmp = "";
+		}
 		
 		// create a log channel
 		parent::__construct($logger_name);
@@ -29,10 +37,12 @@ class Xcloner_Logger extends Logger{
 		//if(WP_DEBUG)
 		//	$debug_level = Logger::DEBUG;
 		
-		$this->pushHandler(new StreamHandler($logger_path, $debug_level));
+		if($logger_path)
+			$this->pushHandler(new StreamHandler($logger_path, $debug_level));
 		
+		if($hash and $logger_path_tmp)
+			$this->pushHandler(new StreamHandler($logger_path_tmp, $debug_level));
 		
-		//$this->info("Starting logger");
 		return $this;
 	}
 	

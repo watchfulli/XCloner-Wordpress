@@ -40,7 +40,7 @@ class XCloner_Database extends wpdb{
 	
 	public function __construct($hash="", $wp_user="", $wp_pass="", $wp_db="", $wp_host="")
 	{
-		$this->logger 					= new XCloner_Logger("xcloner_database");
+		$this->logger 					= new XCloner_Logger("xcloner_database", $hash);
 		$this->xcloner_settings 		= new Xcloner_Settings($hash);
 		$this->fs 						= new Xcloner_File_System($hash);
 		

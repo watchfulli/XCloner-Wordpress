@@ -186,17 +186,13 @@ $tab = 1;
 									<p class="right">
 										 
 									</p>
-
-									<div>
-										<p class="right"><span class="last-logged-file"></span></p>
-									</div>	
 									
 									<div class="progress">
-										<div class="determinate" style="width:0%"></div>
+										<div class="determinate" style="width:100%"></div>
 									</div>
 								</div>	
 						      <div class="collapsible-body">
-									<div class="row">
+									<!--<div class="row">
 										<div class="input-field col s12 m6">
 										    <select class="">
 										      <option disabled value="" selected>Send backup to</option>
@@ -206,7 +202,7 @@ $tab = 1;
 										    </select>
 										    <label>Images in select</label>
 										  </div>
-									</div>
+									</div>-->
 							  </div>
 					    </li>
 				  </ul>

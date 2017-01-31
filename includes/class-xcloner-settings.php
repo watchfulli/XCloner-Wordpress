@@ -2,7 +2,8 @@
 
 class Xcloner_Settings
 {
-	private $logger_file = "xcloner_%s.log";
+	private $logger_file = "xcloner_main_%s.log";
+	private $logger_file_hash = "xcloner%s.log";
 	private $hash ;
 	
 	public function __construct($hash = "")
@@ -11,9 +12,14 @@ class Xcloner_Settings
 			$this->set_hash($hash);
 	}
 	
-	public function get_logger_filename()
+	public function get_logger_filename($include_hash = 0)
 	{
-		return sprintf($this->logger_file, $this->get_server_unique_hash(5));
+		if($include_hash)
+			$filename = sprintf($this->logger_file_hash, $this->get_hash()); 
+		else
+			$filename = sprintf($this->logger_file, $this->get_server_unique_hash(5));
+		
+		return $filename;
 	}
 	
 	public function get_xcloner_start_path()

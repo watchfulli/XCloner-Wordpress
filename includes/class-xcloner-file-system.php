@@ -29,7 +29,7 @@ class Xcloner_File_System{
 	
 	public function __construct($hash = "")
 	{
-		$this->logger = new XCloner_Logger('xcloner_file_system');
+		$this->logger = new XCloner_Logger('xcloner_file_system', $hash);
 		$this->xcloner_requirements = new Xcloner_Requirements();
 
 		$this->xcloner_settings 		= new Xcloner_Settings($hash);
@@ -181,11 +181,35 @@ class Xcloner_File_System{
 			{
 				$this->storage_filesystem->write("index.html","");
 			}
+			
+			//adding the default log file
+			if($this->get_tmp_filesystem()->has($this->xcloner_settings->get_logger_filename(1)))
+			{
+				$metadata_dumpfile = $this->get_tmp_filesystem()->getMetadata($this->xcloner_settings->get_logger_filename(1));
+				$this->store_file($metadata_dumpfile, 'tmp_filesystem');
+				$this->files_counter++;
+			}
 		
 			return false;
 		}	
 	
 		return true;	
+	}
+	
+	public function remove_tmp_filesystem()
+	{
+		//delete the temporary folder
+		$this->logger->info(sprintf("Deleting the temporary storage folder %s", $this->xcloner_settings->get_xcloner_tmp_path()));
+		
+		$contents = $this->get_tmp_filesystem()->listContents();
+	
+		if(is_array($contents))
+		foreach($contents as $file_info)
+			$this->get_tmp_filesystem()->delete($file_info['path']);
+			
+		@rmdir($this->xcloner_settings->get_xcloner_tmp_path());
+		
+		return;
 	}
 	
 	private function do_system_init()

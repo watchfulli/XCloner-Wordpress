@@ -39,7 +39,7 @@ class Xcloner_Api{
 		$this->xcloner_requirements 	= new XCloner_Requirements();
 		$this->archive_system 			= new Xcloner_Archive($this->xcloner_settings->get_hash());
 		$this->xcloner_database 		= new XCloner_Database($this->xcloner_settings->get_hash());
-		$this->logger 					= new XCloner_Logger("xcloner_api");
+		$this->logger 					= new XCloner_Logger("xcloner_api", $this->xcloner_settings->get_hash());
 		
 	}
 	
@@ -188,6 +188,9 @@ class Xcloner_Api{
 		$return = $this->archive_system->start_incremental_backup($this->form_params['backup_params'], $this->form_params['extra'], $init);
 		
 		$data = $return;
+		
+		if($return['finished'] )
+			$this->xcloner_file_system->remove_tmp_filesystem();
 		
 		return $this->send_response($data, $hash = 1);
 	}

@@ -132,50 +132,6 @@ class XCloner_Requirements
 		return $open_basedir;	
 	}
 	
-	/*
-	public function estimate_read_write_time()
-	{
-		$tmp_path = $this->xcloner_settings->get_xcloner_tmp_path();
-		$tmp_file = tempnam(sys_get_temp_dir(), 'prefix');
-		
-		$start_time = microtime();
-		$data = str_repeat(rand(0,9), 1024*1024);
-		file_put_contents($tmp_file, $data);
-		
-		$fp = fopen($tmp_file, "w");
-		for($i=0;$i<(1024*1024);$i+=512)
-		{
-			fwrite($fp, str_repeat(rand(0,9), 512));
-		}
-		fclose($fp);
-		
-		$end_time = microtime() - $start_time;
-
-		
-		$return['writing_time'] = $end_time;
-		
-		$return['reading_time']	= $this->estimate_reading_time($tmp_file);
-		
-		unlink($tmp_file);
-		
-		return $return;
-	}
-	
-	public function estimate_reading_time($tmp_file)
-	{
-		$start_time = microtime();
-		$fp = fopen($tmp_file, "r");
-		while(!feof($fp))
-		{
-			fread($fp, 512);
-		}
-		fclose($fp);
-		$end_time = microtime() - $start_time;
-		
-		return $end_time;
-	}
-	*/
-	
 	public function get_free_disk_space()
 	{
 			return $this->file_format_size(disk_free_space($this->xcloner_settings->get_xcloner_store_path()));

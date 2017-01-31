@@ -124,6 +124,8 @@ class Xcloner_Backup{
 		jQuery(elem).find(".total-records").attr('data-processed', 0);
 		jQuery(elem).find(".table-counter").text(0);
 		jQuery(elem).find(".database-counter").text(0);
+		jQuery(elem).find(".logged-databases").html("");
+		jQuery(elem).find(".logged-tables").html("");
 		
 		this.last_dumpfile = 0;
 		

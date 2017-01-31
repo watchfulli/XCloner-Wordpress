@@ -88,7 +88,6 @@ class Xcloner_Scheduler{
 			
 			if ( ! wp_next_scheduled( $hook, array($schedule->id) ) and $schedule->status) {
 				
-				//echo $schedule->start_at; exit;
 				if($schedule->recurrence == "single")
 					wp_schedule_single_event( strtotime($schedule->start_at), $hook, array($schedule->id));
 				else	
@@ -130,7 +129,7 @@ class Xcloner_Scheduler{
 		
 		$schedule['status'] = 0;
 		
-		$insert = $this->db->update( 
+		$update = $this->db->update( 
 				$this->scheduler_table, 
 				$schedule, 
 				array( 'id' => $schedule_id ), 
@@ -139,7 +138,24 @@ class Xcloner_Scheduler{
 					'%s' 
 				) 
 				);
+		return $update;		
 	}
+	
+	public function update_hash($schedule_id, $hash)
+	{
+		$schedule['hash'] = $hash;
+		
+		$update = $this->db->update( 
+				$this->scheduler_table, 
+				$schedule, 
+				array( 'id' => $schedule_id ), 
+				array( 
+					'%s', 
+					'%s' 
+				) 
+				);
+		return $update;		
+	} 
 	
 	public function xcloner_scheduler_callback($id)
 	{
@@ -150,10 +166,9 @@ class Xcloner_Scheduler{
 		$this->xcloner_file_system 		= new Xcloner_File_System($this->xcloner_settings->get_hash());
 		$this->xcloner_database 		= new XCloner_Database($this->xcloner_settings->get_hash());
 		$this->archive_system 			= new Xcloner_Archive($this->xcloner_settings->get_hash());
-		$this->logger 					= new XCloner_Logger('xcloner_file_system');
+		$this->logger 					= new XCloner_Logger('xcloner_scheduler', $this->xcloner_settings->get_hash());
 		
 		$schedule = $this->get_schedule_by_id($id);
-		
 		
 		if($schedule['recurrence'] == "single")
 		{
@@ -165,6 +180,8 @@ class Xcloner_Scheduler{
 			$this->logger->info(sprintf("Could not load schedule with id'%s'", $id), array("CRON"));
 			return;
 		}
+		
+		$this->update_hash($schedule['id'], $this->xcloner_settings->get_hash());
 		
 		$this->logger->info(sprintf("Starting cron schedule '%s'", $schedule['name']), array("CRON"));
 		
@@ -210,6 +227,8 @@ class Xcloner_Scheduler{
 		}
 		$this->logger->info(sprintf("File archive process FINISHED."), array("CRON"));
 		
+		
+		$this->xcloner_file_system->remove_tmp_filesystem();
 	}
 	
 	

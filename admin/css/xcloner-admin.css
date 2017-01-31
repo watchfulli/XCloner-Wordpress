@@ -104,6 +104,10 @@ span.shorten_string{
 	display: none;
 }
 
+ul.backup-name{
+	margin-top: 1.78rem;
+}
+
 #generate_backup .status-body ul.backup-name li, #generate_backup ul.logged-databases  li{
 	font-weight: bold;
 }

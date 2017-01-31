@@ -18,7 +18,7 @@ class Xcloner_Archive extends Tar
 	public function __construct($hash = "", $archive_name = "")
 	{
 		$this->filesystem 		= new Xcloner_File_System($hash);
-		$this->logger 			= new XCloner_Logger('xcloner_archive');
+		$this->logger 			= new XCloner_Logger('xcloner_archive', $hash);
 		$this->xcloner_settings = new Xcloner_Settings($hash);
 		
 		if($value = $this->xcloner_settings->get_xcloner_option('xcloner_size_limit_per_request'))
@@ -233,10 +233,10 @@ class Xcloner_Archive extends Tar
 			else{	
 				
 				//remove the tmp files
-				if($start_filesystem == "tmp_filesystem"){
+				/*if($start_filesystem == "tmp_filesystem"){
 					$this->logger->info(sprintf("Deleting temporary file %s from the system", $file_info['path']));
 					$this->filesystem->get_filesystem($start_filesystem)->delete($file_info['path']);
-				}
+				}*/
 					
 				$extra_params['start_at_line']++;
 				$file->next();
@@ -269,9 +269,7 @@ class Xcloner_Archive extends Tar
 		$this->logger->info(sprintf("Closing the backup archive %s with 2*512 zero bytes blocks.", $this->get_archive_name_with_extension()));
 		$this->backup_archive->close();
 		
-		//delete the temporary folder
-		$this->logger->info(sprintf("Deleting the temporary storage folder %s", $this->xcloner_settings->get_xcloner_tmp_path()));
-		@rmdir($this->xcloner_settings->get_xcloner_tmp_path());
+		
 		
 		if($return['extra']['backup_part'])
 			$this->write_multipart_file($this->get_archive_name_with_extension());
