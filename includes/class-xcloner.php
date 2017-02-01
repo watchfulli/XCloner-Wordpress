@@ -306,6 +306,8 @@ class Xcloner {
 		add_action( 'wp_ajax_get_schedule_by_id'		, array($xcloner_api,'get_schedule_by_id')  );
 		add_action( 'wp_ajax_get_scheduler_list'		, array($xcloner_api,'get_scheduler_list')  );
 		add_action( 'wp_ajax_delete_schedule_by_id'		, array($xcloner_api,'delete_schedule_by_id')  );
+		add_action( 'wp_ajax_delete_backup_by_name'		, array($xcloner_api,'delete_backup_by_name')  );
+		add_action( 'wp_ajax_download_backup_by_name'		, array($xcloner_api,'download_backup_by_name')  );
 		
 		add_action( 'admin_notices', array($this, 'xcloner_error_admin_notices' ));
 		

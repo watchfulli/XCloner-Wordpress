@@ -110,8 +110,6 @@ class Xcloner_Api{
 				$schedule['status'] = 0;
 			else	
 				$schedule['status'] = $this->xcloner_sanitization->sanitize_input_as_int($_POST['status']);
-				
-			//$params = json_decode(stripslashes($this->form_params['backup_params']['params']));
 		}else{
 		
 			$schedule['status'] = 1;
@@ -128,9 +126,6 @@ class Xcloner_Api{
 		$schedule['recurrence'] = $this->form_params['backup_params']['schedule_frequency'];
 		
 		$schedule['params'] = json_encode($this->form_params);
-		
-		#print_r($_POST);
-		//print_r($schedule);exit;
 		
 		if(!isset($_POST['id']))
 		{
@@ -462,6 +457,10 @@ class Xcloner_Api{
 	
 	public function get_schedule_by_id()
 	{
+		if (!current_user_can('manage_options')) {
+			die("Not allowed access here!");
+		}
+		
 		$schedule_id = $this->xcloner_sanitization->sanitize_input_as_int($_GET['id']);
 		$scheduler = new Xcloner_Scheduler();
 		$data  = $scheduler->get_schedule_by_id($schedule_id);
@@ -471,6 +470,10 @@ class Xcloner_Api{
 	
 	public function get_scheduler_list()
 	{
+		if (!current_user_can('manage_options')) {
+			die("Not allowed access here!");
+		}
+		
 		$scheduler = new Xcloner_Scheduler();
 		$data  = $scheduler->get_scheduler_list();
 		
@@ -510,11 +513,61 @@ class Xcloner_Api{
 	
 	public function delete_schedule_by_id()
 	{
+		if (!current_user_can('manage_options')) {
+			die("Not allowed access here!");
+		}
+		
 		$schedule_id = $this->xcloner_sanitization->sanitize_input_as_int($_GET['id']);
 		$scheduler = new Xcloner_Scheduler();
 		$data['finished']  = $scheduler->delete_schedule_by_id($schedule_id);
 		
 		return $this->send_response($data);
+	}
+	
+	public function delete_backup_by_name()
+	{
+		if (!current_user_can('manage_options')) {
+			die("Not allowed access here!");
+		}
+		
+		$backup_name = $this->xcloner_sanitization->sanitize_input_as_string($_GET['name']);
+		$data['finished']  = $this->xcloner_file_system->delete_backup_by_name($backup_name);
+		
+		return $this->send_response($data);
+	}
+	
+	public function download_backup_by_name()
+	{
+		if (!current_user_can('manage_options')) {
+			die("Not allowed access here!");
+		}
+		
+		$backup_name = $this->xcloner_sanitization->sanitize_input_as_string($_GET['name']);
+		
+		
+		$metadata  = $this->xcloner_file_system->get_storage_filesystem()->getMetadata($backup_name);
+		$mimetype  = $this->xcloner_file_system->get_storage_filesystem()->getMimetype($backup_name);
+		$read_stream  = $this->xcloner_file_system->get_storage_filesystem()->readStream($backup_name);
+		
+		
+		header('Pragma: public');
+	    header('Expires: 0');
+	    header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+	    header('Cache-Control: private', false);
+	    header('Content-Transfer-Encoding: binary');
+	    header('Content-Disposition: attachment; filename="'.$metadata['path'].'";');
+	    header('Content-Type: ' . $mimetype);
+	    header('Content-Length: ' . $metadata['size']);
+	    
+	    $chunkSize = 1024 * 1024;
+	    while (!feof($read_stream))
+	    {
+	        $buffer = fread($read_stream, $chunkSize);
+	        echo $buffer;
+	    }
+	    fclose($read_stream);
+	    exit;
+    
 	}
 	
 	private function send_response($data, $attach_hash = 1)

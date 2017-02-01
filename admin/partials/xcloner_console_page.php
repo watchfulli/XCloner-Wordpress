@@ -5,7 +5,7 @@ $logger				= new Xcloner_Logger();
 
 
 $xcloner_scheduler = new Xcloner_Scheduler();
-$xcloner_scheduler->xcloner_scheduler_callback(90);
+#$xcloner_scheduler->xcloner_scheduler_callback(90);
 
 $logger_content = $logger->getLastDebugLines();
 

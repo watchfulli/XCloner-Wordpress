@@ -116,7 +116,7 @@ ul.backup-name{
 	margin-top: 1.83rem;
 }
 
-#generate_backup .status-body > ul{
+#generate_backup .status-body > ul, #generate_backup .status-body ul.logged-tables{
 	margin: 5px 10px;
 	max-height: 200px;
     overflow-y: auto;
@@ -148,7 +148,8 @@ ul.backup-name{
 	display: none;
 }
 
-#scheduled_backups_wrapper .dataTables_length{
+#scheduled_backups_wrapper .dataTables_length, 
+#manage_backups_wrapper  .dataTables_length{
 	display: none;
 }
 
@@ -181,6 +182,28 @@ textarea.materialize-textarea{
 
 #scheduled_backups .status.inactive{
 	color: #d32f2f ;
+}
+
+table.dataTable thead th, table.dataTable tfoot th{
+	padding-left: 10px;
+}
+
+#manage_backups ul.multipart{
+	margin-left: 20px;
+	display: none;
+}
+
+#manage_backups ul.multipart li{
+	padding: 5px;
+	list-style-type: decimal;
+}
+ 
+a.expand-multipart.remove{
+	display: none;
+}
+
+#manage_backups td.checkbox{
+	vertical-align: top;
 }
 
 @media only screen and (min-width: 993px){

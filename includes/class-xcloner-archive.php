@@ -288,7 +288,7 @@ class Xcloner_Archive extends Tar
 		
 		$file = $this->filesystem->get_filesystem("storage_filesystem_append")->getMetadata($path);
 		//print_r($file_info);
-		$line = '"'.$file['path'].'","'.$file['timestamp'].'","'.$file['size'].PHP_EOL;
+		$line = '"'.$file['path'].'","'.$file['timestamp'].'","'.$file['size'].'"'.PHP_EOL;
 
 		
 		$this->filesystem->get_filesystem("storage_filesystem_append")

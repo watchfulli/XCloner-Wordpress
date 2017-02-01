@@ -24,7 +24,7 @@ class Xcloner_File_System{
 	private $files_size;
 	private $last_logged_file;
 	private $folders_to_process_per_session = 25;
-	private $backup_archive_extensions = array("zip", "tar", "tgz", "tar.gz", "gz");
+	private $backup_archive_extensions = array("zip", "tar", "tgz", "tar.gz", "gz", "csv");
 	private $backup_name_tags = array('[time]', '[hostname]', '[domain]');
 	
 	public function __construct($hash = "")
@@ -125,6 +125,37 @@ class Xcloner_File_System{
 		return $this->temp_dir_handler;
 	}
 	
+	public function is_multipart($backup_name)
+	{
+		if(stristr($backup_name, "-multipart.csv"))
+			return true;
+		
+		return false;	
+	}
+	
+	public function delete_backup_by_name($backup_name)
+	{
+		if($this->is_multipart($backup_name))
+		{
+			$lines = explode(PHP_EOL, $this->get_storage_filesystem()->read($backup_name));
+			foreach($lines as $line)
+			{
+				if($line)
+				{
+					$data = str_getcsv($line);
+					$this->get_storage_filesystem()->delete($data[0]);
+				}
+			}
+		}
+		
+		if($this->get_storage_filesystem()->delete($backup_name))
+			$return = true;
+		else
+			$return = false;
+			
+		return $return;	
+	}
+	
 	public function getMetadataFull($adapter = "storage_adapter" , $path)
     {
         $location = $this->$adapter->applyPathPrefix($path);
@@ -132,7 +163,47 @@ class Xcloner_File_System{
         
         return ($spl_info);
     }
-
+	
+	
+	public function get_backup_archives_list()
+	{
+		$list = $this->get_storage_filesystem()->listContents();
+		
+		$backup_files = array();
+		$parents = array();
+		
+		foreach($list as $file_info)
+		{
+			$data = array();
+			
+			if($file_info['extension'] == "csv")
+			{
+				$lines = explode(PHP_EOL, $this->get_storage_filesystem()->read($file_info['path']));
+				foreach($lines as $line)
+					if($line)
+					{
+						$data = str_getcsv($line);
+						if(is_array($data)){
+							$parents[$data[0]] = $file_info['path'];
+							$file_info['childs'][] = $data;
+							$file_info['size'] += $data[2];
+						}
+					}
+						
+			}
+			
+			if($file_info['type'] == 'file' and in_array($file_info['extension'], $this->backup_archive_extensions))
+				$backup_files[$file_info['path']] = $file_info;
+		}
+		
+		foreach($backup_files as $key=>$file_info)
+		{
+			if(isset($parents[$file_info['path']]))
+				$backup_files[$key]['parent'] = $parents[$file_info['path']];
+		}
+		
+		return $backup_files;
+	}
 	
 	public function start_file_recursion($init = 0)
 	{

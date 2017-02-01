@@ -33,15 +33,19 @@
 	</div>
 	
 <?php endif ?>
+
+<div class="row">
+	<div class="col s12">
+		<h5 class="left-align">
+			<?php echo __('Backup Dashboard', 'xcloner') ?>
+		</h5>
+	</div>
+</div>
 				
 <!-- This file should primarily consist of HTML with a little bit of PHP. -->
 <div class="row dashboard">
 	<div class="col s12 m12 l7">
 		<div>
-			<h5 class="left-align">
-					<?php echo __('Backup Dashboard', 'xcloner') ?>
-			</h5>
-			
 			<?php if($xcloner_settings->get_xcloner_option('xcloner_enable_log')) :?>
 			<ul class="collapsible xcloner-debugger" data-collapsible="accordion">
 				<li class="active">

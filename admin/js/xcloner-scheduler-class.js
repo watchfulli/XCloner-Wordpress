@@ -144,6 +144,9 @@ jQuery(document).ready(function(){
 			'selectAll',
 			'selectNone'
 		],
+		"language": {
+				"emptyTable": "No schedules available"
+		},
 		columnDefs: [
 			{ targets: 'no-sort', orderable: false }
 		],
@@ -156,7 +159,7 @@ jQuery(document).ready(function(){
 	    "ajax": ajaxurl+"?action=get_scheduler_list",
 	    "fnDrawCallback": function( oSettings ) {
 			jQuery("#scheduled_backups").find(".edit").each(function(){
-				jQuery(this).on("click", function(){
+				jQuery(this).off("click").on("click", function(){
 					var hash = jQuery(this).attr('href');
 					var id = hash.substr(1)
 					var data = xcloner_scheduler.get_schedule_by_id(id);
@@ -164,10 +167,11 @@ jQuery(document).ready(function(){
 			})
 			
 			jQuery("#scheduled_backups").find(".delete").each(function(){
-				jQuery(this).on("click", function(){
+				jQuery(this).off("click").on("click", function(){
 					var hash = jQuery(this).attr('href');
 					var id = hash.substr(1)
-					var data = xcloner_scheduler.delete_schedule_by_id(id, (this), dataTable);
+					if(confirm('Are you sure you want to delete it?'))
+						var data = xcloner_scheduler.delete_schedule_by_id(id, (this), dataTable);
 				})
 			})
 			
@@ -200,18 +204,4 @@ jQuery(document).ready(function(){
 		}
 	});
 	
-	/*jQuery("#scheduled_backups .edit").on("click", function(){
-		var hash = jQuery(this).attr('href');
-		var id = hash.substr(1)
-		var data = xcloner_scheduler.get_schedule_by_id(id);
-	})
-	
-	jQuery("#scheduled_backups .delete").on("click", function(){
-		var hash = jQuery(this).attr('href');
-		var id = hash.substr(1)
-		var data = xcloner_scheduler.delete_schedule_by_id(id, (this), dataTable);
-		
-		
-	})*/
-
 });
