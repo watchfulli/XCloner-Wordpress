@@ -4,14 +4,15 @@ $xcloner_file_system 		= new Xcloner_File_System();
 
 $backup_list = $xcloner_file_system->get_backup_archives_list();
 
-//print_r($backup_list);
+$xcloner_remote_storage = new Xcloner_Remote_Storage();
+$available_storages = $xcloner_remote_storage->get_available_storages();
 ?>
 
 <h1><?= esc_html(get_admin_page_title()); ?></h1>
 
 <table id="manage_backups">
 	<thead>
-	  <tr>
+	  <tr class="grey lighten-2">
 		  <th class="no-sort">
 				<p>
 				  <input name="select_all" class="" id="select_all" value="1" type="checkbox">
@@ -63,7 +64,9 @@ foreach($backup_list as $file_info):?>
 		<td><?php echo size_format($file_info['size'])?></td>
 		<td>
 			 <a href="#<?php echo $file_info['path'];?>" class="download" title="Download Backup"><i class="material-icons">file_download</i></a>
-			 <!--<a href="#<?php echo $file_info['path']?>" class="list-view" title="View Backup Files List"><i class="material-icons">view_list</i></a>-->
+			 <?php if(sizeof($available_storages)):?>
+				<a href="#<?php echo $file_info['path']?>" class="cloud-upload" title="Send Backup To Remote Storage"><i class="material-icons">cloud_upload</i></a>
+			 <?php endif?>
 			 <a href="#<?php echo $file_info['path']?>" class="delete" title="Delete Backup"><i class="material-icons">delete</i></a>
 		</td>
 		
@@ -76,4 +79,42 @@ foreach($backup_list as $file_info):?>
 </table>
 
 <a class="waves-effect waves-light btn delete-all"><i class="material-icons left">delete</i><?php echo __("Delete","xcloner")?></a>
+
+
+<!-- Remote Storage Modal Structure -->
+<div id="remote_storage_modal" class="modal">
+	<form method="POST" class="remote-storage-form">
+	<input type="hidden" name="file" class="backup_name">	  
+	<div class="modal-content">
+	  <h4><?php echo __("Remote Storage Transfer","xcloner")?></h4>
+	  <p>
+	  <?php if(sizeof($available_storages)):?>
+			<div class="row">
+				<div class="col s12 label">
+					<label><?php echo __(sprintf('Send %s to remote storage', "<span class='backup_name'></span>"), 'xcloner') ?></label>
+				</div>
+				<div class="input-field col s8 m10">
+					<select name="transfer_storage" id="transfer_storage" class="validate" required >
+						<option value="" selected><?php echo __('please select...', 'xcloner') ?></option>
+						<?php foreach($available_storages as $storage=>$text):?>
+							<option value="<?php echo $storage?>"><?php echo $text?></option>
+						<?php endforeach?>
+						</select>
+						
+				</div>
+				<div class="s4 m2 right">
+					<button type="submit" class="upload-submit btn-floating btn-large waves-effect waves-light teal"><i class="material-icons">file_upload</i></submit>
+				</div>
+			</div>
+			<div class="row status">
+				<?php echo __("Uploading backup to the selected remote storage...","xcloner")?> <span class="status-text"></span>
+				<div class="progress">
+					<div class="indeterminate"></div>
+				</div>
+			</div>
+		<?php endif?>
+		</p>
+	</div>
+	</form>	
+</div>
 

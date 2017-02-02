@@ -1,29 +1,9 @@
 
-jQuery(document).ready(function(){
-
 	class Xcloner_Manage_Backups{
 		
 		constructor()
 		{
 			//this.edit_modal = jQuery('.modal').modal();
-		}
-		
-		
-		get_schedule_by_id(id)
-		{
-			var $this = this
-			
-			if(id){
-				jQuery.ajax({
-				  url: ajaxurl,
-				  data: { action : 'get_schedule_by_id', id: id},
-				  success: function(response){
-					  if(response.id == id)
-						$this.create_modal(response)
-					  },
-				  dataType: 'json'
-				});
-			}
 		}
 		
 		download_backup_by_name(id, elem, dataTable)
@@ -57,36 +37,53 @@ jQuery(document).ready(function(){
 			}
 		}
 		
-		create_modal(response)
+		cloud_upload(backup_file)
 		{
-			this.edit_modal.find("#schedule_id").text(response.id)
-			
-			if(response.status == 1)
-				this.edit_modal.find("#status").attr("checked", "checked");
-			else	
-				this.edit_modal.find("#status").removeAttr("checked");
-				
-			this.edit_modal.find("#schedule_id").text(response.id)
-			this.edit_modal.find("#schedule_id_hidden").val(response.id)
-			this.edit_modal.find("#schedule_name").val(response.name)
-			this.edit_modal.find("#backup_name").val(response.backup_params.backup_name)
-			this.edit_modal.find("#email_notification").val(response.backup_params.email_notification)
-			this.edit_modal.find('#schedule_frequency>option[value="' + response.recurrence + '"]').prop('selected', true);
-			//var date = new Date(response.start_at);
-			this.edit_modal.find("#schedule_start_date").val(response.start_at)
-			this.edit_modal.find("#table_params").val(response.table_params)
-			this.edit_modal.find("#excluded_files").val(response.excluded_files)
-			
+			jQuery('#remote_storage_modal').find(".backup_name").text(backup_file)
+			jQuery('#remote_storage_modal').find("input.backup_name").val(backup_file)
+			Materialize.updateTextFields();	
 			jQuery('select').material_select();
+			jQuery("#remote_storage_modal").modal('open')
+			jQuery("#remote_storage_modal .status").hide();
 			
-			Materialize.updateTextFields();
-			
-			this.edit_modal.modal('open');
+			jQuery(".remote-storage-form").off("submit").on("submit",function(){
+				jQuery("#remote_storage_modal .status").show();
+				jQuery("#remote_storage_modal .status .progress .indeterminate").removeClass("determinate").css("width", "0%");
+				jQuery("#remote_storage_modal .status-text").removeClass("error").text("");
+				
+				var storage_type = jQuery("#remote_storage_modal select").val();
+				
+				if(backup_file)
+				{
+					jQuery.ajax({
+					  url: ajaxurl,
+					  method: 'post',
+					  data: { action : 'upload_backup_to_remote', file: backup_file, storage_type: storage_type},
+					  success: function(response){
+						  if(response.error)
+						  {
+							jQuery("#remote_storage_modal .status-text").addClass("error").text(response.message)
+						  }else{
+							jQuery("#remote_storage_modal .status-text").removeClass("error").text("done")
+						  }
+						  
+						  jQuery("#remote_storage_modal .status .progress .indeterminate").addClass("determinate").css("width", "100%");
+					  },
+					  error: function(xhr, textStatus, error){
+					      jQuery("#remote_storage_modal .status-text").addClass("error").text(textStatus+error)
+					  },
+					  dataType: 'json'
+					});
+				}
+				
+				return false;
+			})
 		}
 		
 	//end class
 	}
 	
+jQuery(document).ready(function(){
 	
 	var xcloner_manage_backups = new Xcloner_Manage_Backups();
 	
@@ -144,6 +141,15 @@ jQuery(document).ready(function(){
 					})
 				})
 				
+				jQuery("#manage_backups").find(".cloud-upload").each(function(){
+					jQuery(this).off("click").on("click", function(e){
+						var hash = jQuery(this).attr('href');
+						var id = hash.substr(1)
+						var data = xcloner_manage_backups.cloud_upload(id);
+						
+					})
+				})
+				
 			}
 		});
 	
@@ -171,6 +177,9 @@ jQuery(document).ready(function(){
 		
 		return false;
 	})
+	
+	jQuery("#remote_storage_modal").modal();
+	
 	
 	var show_delete_alert=1;
 	

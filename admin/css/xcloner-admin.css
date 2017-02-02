@@ -176,7 +176,8 @@ textarea.materialize-textarea{
 	resize: auto;
 }
 
-#scheduled_backups .edit, #scheduled_backups .status.active, #scheduled_backups .delete{
+#scheduled_backups .edit, #scheduled_backups .status.active, #scheduled_backups .delete,
+#manage_backups .download, #manage_backups .cloud-upload, #manage_backups .delete{
 	color: #4db6ac;
 }
 
@@ -188,6 +189,9 @@ table.dataTable thead th, table.dataTable tfoot th{
 	padding-left: 10px;
 }
 
+table.dataTable tr.odd { background-color: #fff; } 
+table.dataTable tr.even { background-color: #f3f3f3; }
+
 #manage_backups ul.multipart{
 	margin-left: 20px;
 	display: none;
@@ -195,15 +199,43 @@ table.dataTable thead th, table.dataTable tfoot th{
 
 #manage_backups ul.multipart li{
 	padding: 5px;
-	list-style-type: decimal;
+	list-style-type: square;
 }
  
 a.expand-multipart.remove{
 	display: none;
 }
 
+.remote-storage .label label{
+	font-size:16px;
+}
+.remote-storage .label{
+	padding-top: 25px;
+}
+
+
 #manage_backups td.checkbox{
 	vertical-align: top;
+}
+
+#remote_storage_modal .label label{
+	font-size: 16px;
+}
+
+#remote_storage_modal .label{
+	padding-top: 25px;
+}
+
+#remote_storage_modal .status{
+	display: none;
+}
+
+#remote_storage_modal .status-text.error{
+	color: red;
+}
+
+#remote_storage_modal .status-text{
+	font-weight: bold;
 }
 
 @media only screen and (min-width: 993px){

@@ -125,12 +125,40 @@ class Xcloner_File_System{
 		return $this->temp_dir_handler;
 	}
 	
+	public function is_part($backup_name)
+	{
+		if(stristr($backup_name, "-part"))
+			return true;
+		
+		return false;	
+	}
+	
 	public function is_multipart($backup_name)
 	{
 		if(stristr($backup_name, "-multipart.csv"))
 			return true;
 		
 		return false;	
+	}
+	
+	public function get_multipart_files($backup_name)
+	{
+		$files = array();
+		
+		if($this->is_multipart($backup_name))
+		{
+			$lines = explode(PHP_EOL, $this->get_storage_filesystem()->read($backup_name));
+			foreach($lines as $line)
+			{
+				if($line)
+				{
+					$data = str_getcsv($line);
+					$files[] = $data[0];
+				}
+			}
+		}
+		
+		return $files;
 	}
 	
 	public function delete_backup_by_name($backup_name)

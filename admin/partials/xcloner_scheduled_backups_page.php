@@ -1,19 +1,21 @@
 <?php
 $xcloner_scheduler = new Xcloner_Scheduler();
-
+$xcloner_remote_storage = new Xcloner_Remote_Storage();
+$available_storages = $xcloner_remote_storage->get_available_storages();
 ?>
 
 <h1><?= esc_html(get_admin_page_title()); ?></h1>
 
 <div class="row">
-<table id="scheduled_backups" class="col s12 display" cellspacing="0" width="100%">
+<table id="scheduled_backups" class="col s12" cellspacing="0" width="100%">
         <thead>
-            <tr>
+            <tr class="grey lighten-2">
                 <th><?php echo __('ID', 'xcloner')?></th>
                 <th><?php echo __('Schedule Name', 'xcloner')?></th>
                 <th><?php echo __('Recurrence', 'xcloner')?></th>
                 <!--<th><?php echo __('Start Time', 'xcloner')?></th>-->
                 <th><?php echo __('Next Execution', 'xcloner')?></th>
+                <th><?php echo __('Remote Storage', 'xcloner')?></th>
                 <th><?php echo __('Status', 'xcloner')?></th>
                 <th class="no-sort"><?php echo __('Action', 'xcloner')?></th>
             </tr>
@@ -25,6 +27,7 @@ $xcloner_scheduler = new Xcloner_Scheduler();
                 <th><?php echo __('Recurrence', 'xcloner')?></th>
                 <!--<th><?php echo __('Start Time', 'xcloner')?></th>-->
                 <th><?php echo __('Next Execution', 'xcloner')?></th>
+                <th><?php echo __('Remote Storage', 'xcloner')?></th>
                 <th><?php echo __('Status', 'xcloner')?></th>
                 <th><?php echo __('Action', 'xcloner')?></th>
             </tr>
@@ -117,12 +120,27 @@ $xcloner_scheduler = new Xcloner_Scheduler();
 					</div>
 				</div>
 				
+				<?php if(sizeof($available_storages)):?>
+				<div class="row">
+					<div class="input-field col s12 l6">
+						<select name="schedule_storage" id="schedule_storage" class="validate" >
+							<option value="" selected><?php echo __('none', 'xcloner') ?></option>
+							<?php foreach($available_storages as $storage=>$text):?>
+								<option value="<?php echo $storage?>"><?php echo $text?></option>
+							<?php endforeach?>
+						</select>
+						<label><?php echo __('Send To Remote Storage ', 'xcloner') ?></label>
+					</div>
+				</div>	
+				<?php endif?>
+				
 				<div class="row">
 					<div class="input-field col s12 l12">
 						<input placeholder="" name="email_notification" id="email_notification" type="text" required value="">
 						<label for="email_notification">Email Notification</label>
 					</div>
 				</div>
+				
 			</div>
 			
 			<div id="advanced_scheduler_settings" class="tab-content">

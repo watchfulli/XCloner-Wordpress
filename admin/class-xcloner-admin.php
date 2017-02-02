@@ -115,23 +115,26 @@ class Xcloner_Admin {
 		wp_enqueue_script( $this->plugin_name."_xcloner-backup-class", plugin_dir_url( __FILE__ ) . 'js/xcloner-backup-class.js', array( 'jquery' ), $this->version, false );
 		wp_enqueue_script( $this->plugin_name."_xcloner-scheduler-class", plugin_dir_url( __FILE__ ) . 'js/xcloner-scheduler-class.js', array( 'jquery' ), $this->version, false );
 		wp_enqueue_script( $this->plugin_name."_xcloner-manage-backups-class", plugin_dir_url( __FILE__ ) . 'js/xcloner-manage-backups-class.js', array( 'jquery' ), $this->version, false );
+		wp_enqueue_script( $this->plugin_name."_xcloner-remote-storage-class", plugin_dir_url( __FILE__ ) . 'js/xcloner-remote-storage-class.js', array( 'jquery' ), $this->version, false );
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/xcloner-admin.js', array( 'jquery' ), $this->version, false );
 		
 
 	}
 	
-	public function trigger_message_notice($message, $status = "success")
-	{
-		?>
-		<div class="notice notice-<?php echo $status?> is-dismissible">
-	        <p><?php _e( $message, 'xcloner' ); ?></p>
-	    </div>
-		<?php
-	}
-	
 	public function xcloner_init_page()
 	{
 		require_once("partials/xcloner_init_page.php");
+		
+	}
+	
+	public function xcloner_remote_storage_page()
+	{
+		if(isset($_POST['action']))
+		{
+			$remote_storage = new Xcloner_Remote_Storage();
+			$remote_storage->save($_POST['action']);
+		}
+		require_once("partials/xcloner_remote_storage_page.php");
 		
 	}
 	

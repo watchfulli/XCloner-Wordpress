@@ -1,5 +1,7 @@
 <?php 
 $xcloner_settings = new Xcloner_Settings();
+$xcloner_remote_storage = new Xcloner_Remote_Storage();
+$available_storages = $xcloner_remote_storage->get_available_storages();
 $tab = 1;
 ?>
 
@@ -184,7 +186,9 @@ $tab = 1;
 									<i class="material-icons">done</i><?php echo __('Backup Done')?>
 									
 									<p class="right">
-										 
+										 <?php if(sizeof($available_storages)):?>
+											<a href="#" class="cloud-upload" title="Send Backup To Remote Storage"><i class="material-icons">cloud_upload</i></a>
+										 <?php endif?>
 									</p>
 									
 									<div class="progress">
@@ -192,17 +196,6 @@ $tab = 1;
 									</div>
 								</div>	
 						      <div class="collapsible-body">
-									<!--<div class="row">
-										<div class="input-field col s12 m6">
-										    <select class="">
-										      <option disabled value="" selected>Send backup to</option>
-										      <option value="" data-icon2="images/sample-1.jpg" class="circle">Ftp Server</option>
-										      <option value="" data-icon2="images/office.jpg" class="circle">Dropbox</option>
-										      <option value="" data-icon2="images/yuna.jpg" class="circle">Amazon S3</option>
-										    </select>
-										    <label>Images in select</label>
-										  </div>
-									</div>-->
 							  </div>
 					    </li>
 				  </ul>
@@ -228,34 +221,47 @@ $tab = 1;
 			<div class="row">
 				 <div class="input-field inline col s12 m6 l4">
 					  <input type="datetime-local" id="datepicker" class="datepicker" name="schedule_start_date" >
-					  <label for="datepicker"><?php echo __('Schedule Backup To Start At:')?></label>
+					  <label for="datepicker"><?php echo __('Schedule Backup To Start On:')?></label>
 				</div>
 				 <div class="input-field inline col s12 m4 l2">
 					  <input id="timepicker_ampm_dark" class="timepicker" type="time" name="schedule_start_time">
-					  <label for="timepicker_ampm_dark"><?php echo __('Time:')?></label>
+					  <label for="timepicker_ampm_dark"><?php echo __('At:')?></label>
 				</div>
 			</div>
 			
 			<div class="row">
 				<div class="input-field col s12 m10 l6">
 					<select name="schedule_frequency" id="schedule_frequency" class="validate" required>
-						<option value="" disabled selected><?php echo __('--Please Select--', 'xcloner') ?></option>
+						<option value="" disabled selected><?php echo __('please select', 'xcloner') ?></option>
 						<option value="single">Don't Repeat</option>
 						<option value="hourly">Hourly</option>
 						<option value="daily">Daily</option>
 						<option value="weekly">Weekly</option>
 						<option value="monthly">Monthly</option>
 						</select>
-						<label>Frequency To Run</label>
+						<label><?php echo __('Please Select Frequency to run', 'xcloner') ?></label>
 				</div>
 			</div>	
-			
 			<div class="row">
 				 <div class="input-field inline col s12 m10 l6">
 					  <input type="text" id="schedule_name" class="" name="schedule_name" required>
 					  <label for="schedule_name">Schedule Name</label>
 				</div>
 			</div>
+			
+			<?php if(sizeof($available_storages)):?>
+			<div class="row">
+				<div class="input-field col s12 m10 l6">
+					<select name="schedule_storage" id="schedule_storage" class="validate">
+						<option value="" selected><?php echo __('none', 'xcloner') ?></option>
+						<?php foreach($available_storages as $storage=>$text):?>
+							<option value="<?php echo $storage?>"><?php echo $text?></option>
+						<?php endforeach?>
+						</select>
+						<label><?php echo __('Send To Remote Storage', 'xcloner') ?></label>
+				</div>
+			</div>
+			<?php endif?>
 			<div class="row">
 				<div class="col s12 m10 l6">
 					<button class="right btn waves-effect waves-light" type="submit" name="action">Submit
@@ -280,14 +286,56 @@ $tab = 1;
 		<a class=" modal-action modal-close waves-effect waves-green btn-flat  red darken-2"><?php echo __('Close')?></a>
 	</div>
 </div>
+
+<!-- Remote Storage Modal Structure -->
+<div id="remote_storage_modal" class="modal">
+	<form method="POST" class="remote-storage-form">
+	<input type="hidden" name="file" class="backup_name">	  
+	<div class="modal-content">
+	  <h4><?php echo __("Remote Storage Transfer","xcloner")?></h4>
+	  <p>
+	  <?php if(sizeof($available_storages)):?>
+			<div class="row">
+				<div class="col s12 label">
+					<label><?php echo __(sprintf('Send %s to remote storage', "<span class='backup_name'></span>"), 'xcloner') ?></label>
+				</div>
+				<div class="input-field col s8 m10">
+					<select name="transfer_storage" id="transfer_storage" class="validate" required >
+						<option value="" selected><?php echo __('please select...', 'xcloner') ?></option>
+						<?php foreach($available_storages as $storage=>$text):?>
+							<option value="<?php echo $storage?>"><?php echo $text?></option>
+						<?php endforeach?>
+						</select>
+						
+				</div>
+				<div class="s4 m2 right">
+					<button type="submit" class="upload-submit btn-floating btn-large waves-effect waves-light teal"><i class="material-icons">file_upload</i></submit>
+				</div>
+			</div>
+			<div class="row status">
+				<?php echo __("Uploading backup to the selected remote storage...","xcloner")?> <span class="status-text"></span>
+				<div class="progress">
+					<div class="indeterminate"></div>
+				</div>
+			</div>
+		<?php endif?>
+		</p>
+	</div>
+	</form>	
+</div>
   
 <script>
 jQuery(function () { 
 	
 	jQuery('select').material_select();
 	jQuery("select[required]").css({display: "block", height: 0, padding: 0, width: 0, position: 'absolute'});
-
-	
+	jQuery(".cloud-upload").on("click", function(){
+		var xcloner_manage_backups = new Xcloner_Manage_Backups();
+		var hash = jQuery(this).attr('href');
+		var id = hash.substr(1)
+						
+		xcloner_manage_backups.cloud_upload(id)
+	})
 	
 	jQuery('.timepicker').pickatime({
 	    default: 'now',

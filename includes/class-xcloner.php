@@ -98,12 +98,29 @@ class Xcloner {
 			{
 				$status = "error";
 				$message = sprintf(__("Unable to create the Backup Storage Location Folder %s . Please fix this before starting the backup process."), $backup_storage_path);
-				add_action( 'xcloner_admin_notices', array("Xcloner_Admin","trigger_message_notice"), 10, 2);
-				do_action( 'xcloner_admin_notices', $message, $status);
+				$this->trigger_message($message, $status, $backup_storage_path);
+				//add_action( 'xcloner_admin_notices', array("Xcloner_Admin","trigger_message_notice"), 10, 2);
+				//do_action( 'xcloner_admin_notices', $message, $status);
 			}
 		}	
 		define("XCLONER_STORAGE_PATH", realpath($backup_storage_path));
 		
+	}
+	
+	public function trigger_message($message, $status = "error", $message_param1 = "", $message_param2 = "", $message_param3 = "")
+	{
+		$message = sprintf(__($message), $message_param1, $message_param2, $message_param3);
+		add_action( 'xcloner_admin_notices', array($this,"trigger_message_notice"), 10, 2);
+		do_action( 'xcloner_admin_notices', $message, $status);
+	}
+	
+	public function trigger_message_notice($message, $status = "success")
+	{
+		?>
+		<div class="notice notice-<?php echo $status?> is-dismissible">
+	        <p><?php _e( $message, 'xcloner' ); ?></p>
+	    </div>
+		<?php
 	}
 
 	/**
@@ -150,6 +167,11 @@ class Xcloner {
 		 * The class responsible for defining the admin settings area.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-xcloner-settings.php';
+		
+		/**
+		 * The class responsible for defining the Remote Storage settings area.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-xcloner-remote-storage.php';
 		
 		/**
 		 * The class responsible for implementing the database backup methods.
@@ -308,6 +330,8 @@ class Xcloner {
 		add_action( 'wp_ajax_delete_schedule_by_id'		, array($xcloner_api,'delete_schedule_by_id')  );
 		add_action( 'wp_ajax_delete_backup_by_name'		, array($xcloner_api,'delete_backup_by_name')  );
 		add_action( 'wp_ajax_download_backup_by_name'		, array($xcloner_api,'download_backup_by_name')  );
+		add_action( 'wp_ajax_remote_storage_save_status'		, array($xcloner_api,'remote_storage_save_status')  );
+		add_action( 'wp_ajax_upload_backup_to_remote'		, array($xcloner_api,'upload_backup_to_remote')  );
 		
 		add_action( 'admin_notices', array($this, 'xcloner_error_admin_notices' ));
 		

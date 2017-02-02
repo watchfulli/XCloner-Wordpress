@@ -106,7 +106,7 @@ class Xcloner_Settings
 	{
 		$data = parse_url(get_site_url());
 			
-		$backup_name = "backup_[hostname]".(isset($data['port'])?":".$data['port']:"")."-[time]-".($this->get_enable_mysql_backup()?"sql":"nosql");
+		$backup_name = "backup_[domain]".(isset($data['port'])?":".$data['port']:"")."-[time]-".($this->get_enable_mysql_backup()?"sql":"nosql");
 		
 		return $backup_name;
 	}

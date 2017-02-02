@@ -92,7 +92,6 @@ class Xcloner_Api{
 		
 		$this->process_params($params);
 		
-		
 		if(isset($_POST['id']))
 		{
 			
@@ -101,6 +100,7 @@ class Xcloner_Api{
 			$this->form_params['backup_params']['schedule_name'] = $this->xcloner_sanitization->sanitize_input_as_string($_POST['schedule_name']);
 			$this->form_params['backup_params']['start_at'] = strtotime($_POST['schedule_start_date']);
 			$this->form_params['backup_params']['schedule_frequency'] = $this->xcloner_sanitization->sanitize_input_as_string($_POST['schedule_frequency']);
+			$this->form_params['backup_params']['schedule_storage'] = $this->xcloner_sanitization->sanitize_input_as_string($_POST['schedule_storage']);
 			$this->form_params['database'] = json_decode(stripslashes($this->xcloner_sanitization->sanitize_input_as_raw($_POST['table_params'])));
 			$this->form_params['excluded_files'] = json_decode(stripslashes($this->xcloner_sanitization->sanitize_input_as_raw($_POST['excluded_files'])));
 			
@@ -124,6 +124,7 @@ class Xcloner_Api{
 		
 		$schedule['name'] = $this->form_params['backup_params']['schedule_name'];
 		$schedule['recurrence'] = $this->form_params['backup_params']['schedule_frequency'];
+		$schedule['remote_storage'] = $this->form_params['backup_params']['schedule_storage'];
 		
 		$schedule['params'] = json_encode($this->form_params);
 		
@@ -181,6 +182,13 @@ class Xcloner_Api{
 		$return['finished'] = 1;
 
 		$return = $this->archive_system->start_incremental_backup($this->form_params['backup_params'], $this->form_params['extra'], $init);
+		
+		if($return['finished'])
+		{
+			$return['extra']['backup_parent'] = $this->archive_system->get_archive_name_with_extension();
+			if($this->xcloner_file_system->is_part($this->archive_system->get_archive_name_with_extension()))
+				$return['extra']['backup_parent'] = $this->archive_system->get_archive_name_multipart();
+		}
 		
 		$data = $return;
 		
@@ -490,6 +498,8 @@ class Xcloner_Api{
 				
 			$next_run = date("d M, Y H:i", $next_run_time);	
 			
+			$remote_storage = $res->remote_storage;
+			
 			if(!$next_run_time >= time())
 				$next_run = " ";
 			
@@ -505,7 +515,7 @@ class Xcloner_Api{
 				$next_run .=" ($date_text)";	
 			}
 				
-			$return['data'][] = array($res->id, $res->name, $res->recurrence,/*$res->start_at,*/ $next_run, $status, $action);
+			$return['data'][] = array($res->id, $res->name, $res->recurrence,/*$res->start_at,*/ $next_run, $remote_storage, $status, $action);
 		}
 		
 		return $this->send_response($return, 0);
@@ -530,10 +540,53 @@ class Xcloner_Api{
 			die("Not allowed access here!");
 		}
 		
-		$backup_name = $this->xcloner_sanitization->sanitize_input_as_string($_GET['name']);
+		$backup_name = $this->xcloner_sanitization->sanitize_input_as_string($_POST['file']);
 		$data['finished']  = $this->xcloner_file_system->delete_backup_by_name($backup_name);
 		
 		return $this->send_response($data);
+	}
+	
+	public function upload_backup_to_remote()
+	{
+		$backup_file = $this->xcloner_sanitization->sanitize_input_as_string($_POST['file']);
+		$storage_type = $this->xcloner_sanitization->sanitize_input_as_string($_POST['storage_type']);
+		
+		$xcloner_remote_storage = new Xcloner_Remote_Storage();
+		
+		$return = array();
+		
+		try
+		{
+			if(method_exists($xcloner_remote_storage, "upload_backup_to_".$storage_type))
+				$return = call_user_func_array(array($xcloner_remote_storage, "upload_backup_to_".$storage_type), array($backup_file));
+		}catch(Exception $e){
+		
+			$return['error'] = 1;
+			$return['message'] = $e->getMessage();
+		}
+		
+		if(!$return)
+		{
+			$return['error'] = 1;
+			$return['message'] = "Upload failed, please check the error log for more information!";
+		}
+			
+		
+		$this->send_response($return, 0);
+		
+	}
+	
+	public function remote_storage_save_status()
+	{
+		if (!current_user_can('manage_options')) {
+			die("Not allowed access here!");
+		}
+		
+		$xcloner_remote_storage = new Xcloner_Remote_Storage();
+		
+		$return['finished'] = $xcloner_remote_storage->change_storage_status($_POST['id'], $_POST['value']);
+		
+		$this->send_response($return, 0);
 	}
 	
 	public function download_backup_by_name()
