@@ -512,7 +512,8 @@ class Xcloner_Api{
 				else
 					$next_run = __("executed", "xcloner");
 				
-				$next_run .=" ($date_text)";	
+				$next_run = "<a href='#' title='".$date_text."'>".$next_run."</a>";
+				//$next_run .=" ($date_text)";	
 			}
 				
 			$return['data'][] = array($res->id, $res->name, $res->recurrence,/*$res->start_at,*/ $next_run, $remote_storage, "<span class='shorten_string'>".$res->last_backup."</span>", $status, $action);

@@ -60,7 +60,7 @@ class Xcloner_Remote_Storage{
 	public function save($action = "ftp")
 	{
 		$storage = $this->xcloner_sanitization->sanitize_input_as_string($action);
-		
+		$this->logger->debug(sprintf("Saving the remote storage %s options", strtoupper($action)));	
 		
 		if(is_array($this->storage_fields[$storage]))
 		{
@@ -82,19 +82,12 @@ class Xcloner_Remote_Storage{
 			$this->xcloner->trigger_message(__("%s storage settings saved.", "xcloner"), "success", ucfirst($action));
 		}
 		
-		if(isset($_POST['connection_check']) && $_POST['connection_check'] == "ftp_check")
+		if(isset($_POST['connection_check']) && $_POST['connection_check'])
 		{
 			try{
-				$this->verify_ftp_filesystem();
+				$this->verify_filesystem($action);
 				$this->xcloner->trigger_message(__("%s connection is valid.", "xcloner"), "success", ucfirst($action));
-			}catch(Exception $e){
-				$this->xcloner->trigger_message("%s connection error: ".$e->getMessage(), "error", ucfirst($action));
-			}
-		}elseif(isset($_POST['connection_check']) && $_POST['connection_check'] == "sftp_check")
-		{
-			try{
-				$this->verify_sftp_filesystem();
-				$this->xcloner->trigger_message(__("%s connection is valid.", "xcloner"), "success", ucfirst($action));
+				$this->logger->debug(sprintf("Connection to remote storage %s is valid", strtoupper($action)));	
 			}catch(Exception $e){
 				$this->xcloner->trigger_message("%s connection error: ".$e->getMessage(), "error", ucfirst($action));
 			}
@@ -102,43 +95,33 @@ class Xcloner_Remote_Storage{
 		
 	}
 	
-	public function verify_filesystem($filesystem)
+	public function verify_filesystem($storage_type)
 	{
+		$method = "get_".$storage_type."_filesystem";
+		
+		$this->logger->info(sprintf("Checking validity of the remote storage %s filesystem", strtoupper($storage_type)));	
+		
+		if(!method_exists($this, $method))
+			return false;
+		
+		list($adapter, $filesystem) = $this->$method();
+		
 		$test_file = substr(".xcloner_".md5(time()), 0, 15);
 			
 		//testing write access
 		if(!$filesystem->write($test_file, "data"))
 			throw new Exception(__("Could not write data","xcloner"));
+		$this->logger->debug(sprintf("I can write data to remote storage %s", strtoupper($storage_type)));	
 		
 		//testing read access
 		if(!$filesystem->read($test_file))
 			throw new Exception(__("Could not read data","xcloner"));
+		$this->logger->debug(sprintf("I can read data to remote storage %s", strtoupper($storage_type)));		
 		
 		//delete test file
 		if(!$filesystem->delete($test_file))
 			throw new Exception(__("Could not delete data","xcloner"));
-	}
-	
-	public function verify_ftp_filesystem()
-	{
-		$filesystem = $this->get_ftp_filesystem();
-		
-		if($filesystem)
-		{
-			$this->verify_filesystem($filesystem);
-		}
-		
-	}
-	
-	public function verify_sftp_filesystem()
-	{
-		$filesystem = $this->get_sftp_filesystem();
-		
-		if($filesystem)
-		{
-			$this->verify_filesystem($filesystem);
-		}
-		
+		$this->logger->debug(sprintf("I can delete data to remote storage %s", strtoupper($storage_type)));		
 	}
 	
 	public function upload_backup_to_storage($file, $storage)
@@ -147,6 +130,10 @@ class Xcloner_Remote_Storage{
 			return false;
 			
 		$method = "get_".$storage."_filesystem";	
+		
+		if(!method_exists($this, $method))
+			return false;
+			
 		list($remote_storage_adapter, $remote_storage_filesystem) = $this->$method();
 		
 		$this->logger->info(sprintf("Transferring backup %s to remote storage %s", $file, strtoupper($storage)), array(""));
@@ -190,6 +177,8 @@ class Xcloner_Remote_Storage{
 			
 			}
 		}
+		
+		$this->logger->info(sprintf("Upload done, disconnecting from remote storage %s", strtoupper($storage)));	
 		
 		$remote_storage_adapter->disconnect();
 		

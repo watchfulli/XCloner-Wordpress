@@ -8,9 +8,9 @@
 	<div class="col s12 m12 l8">
 		<ul class="collapsible popout" data-collapsible="accordion">
 			<!-- FTP STORAGE-->
-			<li>
+			<li id="ftp">
 				<div class="collapsible-header">
-					<i class="material-icons">computer</i>Ftp Storage
+					<i class="material-icons">computer</i><?php echo __("Ftp Storage","xcloner")?>
 					<div class="right">
 						<div class="switch">
 							<label>
@@ -25,96 +25,96 @@
 				<div class="collapsible-body">
 					<div class="row">
 						<div class="col s12 m3 label">
-							<label for="ftp_host">Ftp Hostname</label>
+							<label for="ftp_host"><?php echo __("Ftp Hostname","xcloner")?></label>
 						</div>
 						<div class="col s12 m6">
-							<input placeholder="Ftp Hostname" id="ftp_host" type="text" name="xcloner_ftp_hostname" class="validate" value="<?php echo get_option("xcloner_ftp_hostname")?>">
+							<input placeholder="<?php echo __("Ftp Hostname","xcloner")?>" id="ftp_host" type="text" name="xcloner_ftp_hostname" class="validate" value="<?php echo get_option("xcloner_ftp_hostname")?>">
 				        </div>
 				        <div class=" col s12 m2">
-							<input placeholder="Ftp Port" id="ftp_port" type="text" name="xcloner_ftp_port" class="validate" value="<?php echo get_option("xcloner_ftp_port", 21)?>">
+							<input placeholder="<?php echo __("Ftp Port","xcloner")?>" id="ftp_port" type="text" name="xcloner_ftp_port" class="validate" value="<?php echo get_option("xcloner_ftp_port", 21)?>">
 				        </div>
 			        </div>
 			        
 			        <div class="row">
 						<div class="col s12 m3 label">
-							<label for="ftp_username">Ftp Username</label>
+							<label for="ftp_username"><?php echo __("Ftp Username","xcloner")?></label>
 						</div>	
 						<div class=" col s12 m6">
-							<input placeholder="Ftp Username" id="ftp_username" type="text" name="xcloner_ftp_username" class="validate" value="<?php echo get_option("xcloner_ftp_username")?>" autocomplete="off" >
+							<input placeholder="<?php echo __("Ftp Username","xcloner")?>" id="ftp_username" type="text" name="xcloner_ftp_username" class="validate" value="<?php echo get_option("xcloner_ftp_username")?>" autocomplete="off" >
 				        </div>
 			        </div>
 			        
 			        
 			        <div class="row">
 						<div class="col s12 m3 label">
-							<label for="ftp_password">Ftp Password</label>
+							<label for="ftp_password"><?php echo __("Ftp Password","xcloner")?></label>
 						</div>
 						<div class=" col s12 m6">
-							<input placeholder="Ftp Password" id="ftp_password" type="password" name="xcloner_ftp_password" class="validate" value="<?php echo get_option("xcloner_ftp_password")?>" autocomplete="off" >
+							<input placeholder="<?php echo __("Ftp Password","xcloner")?>" id="ftp_password" type="password" name="xcloner_ftp_password" class="validate" value="<?php echo get_option("xcloner_ftp_password")?>" autocomplete="off" >
 				        </div>
 			        </div>
 			        
 			        <div class="row">
 						<div class="col s12 m3 label">
-							<label for="ftp_root">Ftp Storage Folder</label>
+							<label for="ftp_root"><?php echo __("Ftp Storage Folder","xcloner")?></label>
 						</div>
 						<div class=" col s12 m6">
-							<input placeholder="Ftp Storage Folder" id="ftp_root" type="text" name="xcloner_ftp_path" class="validate" value="<?php echo get_option("xcloner_ftp_path")?>">
+							<input placeholder="<?php echo __("Ftp Storage Folder","xcloner")?>" id="ftp_root" type="text" name="xcloner_ftp_path" class="validate" value="<?php echo get_option("xcloner_ftp_path")?>">
 						</div>	
 			        </div>
 			        
 			        <div class="row">
 						<div class="col s12 m3 label">
-							<label for="ftp_root">Ftp Transfer Mode</label>
+							<label for="ftp_root"><?php echo __("Ftp Transfer Mode","xcloner")?></label>
 						</div>
 						<div class=" col s12 m6 input-field inline">
 							<input name="xcloner_ftp_transfer_mode" type="radio" id="passive" value="1" <?php if(get_option("xcloner_ftp_transfer_mode", 1)) echo "checked"?> />
-							<label for="passive">Passive</label>
+							<label for="passive"><?php echo __("Passive","xcloner")?></label>
 
 							<input name="xcloner_ftp_transfer_mode" type="radio" id="active" value="0" <?php if(!get_option("xcloner_ftp_transfer_mode", 1)) echo "checked"?> />
-							<label for="active">Active</label>
+							<label for="active"><?php echo __("Active","xcloner")?></label>
 						</div>	
 			        </div>
 			        
 			        <div class="row">
 						<div class="col s12 m3 label">
-							<label for="ftp_ssl_mode">Ftp Secure Connection</label>
+							<label for="ftp_ssl_mode"><?php echo __("Ftp Secure Connection","xcloner")?></label>
 						</div>
 						<div class=" col s12 m6 input-field inline">
 							<input name="xcloner_ftp_ssl_mode" type="radio" id="ftp_ssl_mode_inactive" value="0" <?php if(!get_option("xcloner_ftp_ssl_mode")) echo "checked"?> />
-							<label for="ftp_ssl_mode_inactive">Disable</label>
+							<label for="ftp_ssl_mode_inactive"><?php echo __("Disable","xcloner")?></label>
 
 							<input name="xcloner_ftp_ssl_mode" type="radio" id="ftp_ssl_mode_active" value="1" <?php if(get_option("xcloner_ftp_ssl_mode")) echo "checked"?> />
-							<label for="ftp_ssl_mode_active">Enable</label>
+							<label for="ftp_ssl_mode_active"><?php echo __("Enable","xcloner")?></label>
 						</div>	
 			        </div>
 			        
 			        <div class="row">
 						<div class="col s12 m3 label">
-							<label for="ftp_timeout">Ftp Timeout</label>
+							<label for="ftp_timeout"><?php echo __("Ftp Timeout","xcloner")?></label>
 						</div>
 						<div class=" col s12 m2">
-							<input placeholder="Ftp Timeout" id="ftp_timeout" type="text" name="xcloner_ftp_timeout" class="validate" value="<?php echo get_option("xcloner_ftp_timeout", 30)?>">
+							<input placeholder="<?php echo __("Ftp Timeout","xcloner")?>" id="ftp_timeout" type="text" name="xcloner_ftp_timeout" class="validate" value="<?php echo get_option("xcloner_ftp_timeout", 30)?>">
 				        </div>
 			        </div>
 			        
 			        <div class="row">
 						<div class="col s12 m3 label">
-							<label for="ftp_cleanup_days">FTP Cleanup (days)</label>
+							<label for="ftp_cleanup_days"><?php echo __("Ftp Cleanup (days)","xcloner")?></label>
 						</div>
 						<div class=" col s12 m6">
-							<input placeholder="how many days to keep the backups for" id="ftp_cleanup_days" type="text" name="xcloner_ftp_cleanup_days" class="validate" value="<?php echo get_option("xcloner_ftp_cleanup_days")?>">
+							<input placeholder="<?php echo __("how many days to keep the backups for","xcloner")?>" id="ftp_cleanup_days" type="text" name="xcloner_ftp_cleanup_days" class="validate" value="<?php echo get_option("xcloner_ftp_cleanup_days")?>">
 				        </div>
 			        </div>
 			        
 			        <div class="row">
 						<div class="col s12 m2">
-							<button class="btn waves-effect waves-light" type="submit" name="action" value="ftp">Save Settings
+							<button class="btn waves-effect waves-light" type="submit" name="action" id="action"  value="ftp"><?php echo __("Save Settings","xcloner")?>
 								<i class="material-icons right">save</i>
 							</button>
 						</div>	
 						<div class="col s12 m2">
-							<button class="btn waves-effect waves-light orange" type="submit" name="action" value="ftp" onclick="jQuery('#connection_check').val('ftp_check')">Verify
+							<button class="btn waves-effect waves-light orange" type="submit" name="action" id="action"  value="ftp" onclick="jQuery('#connection_check').val('1')"><?php echo __("Verify","xcloner")?>
 								<i class="material-icons right">import_export</i>
 							</button>
 						</div>
@@ -123,9 +123,9 @@
 				</div>
 			</li>
 			<!-- SFTP STORAGE-->
-			<li>
-				<div class="collapsible-header active">
-					<i class="material-icons">computer</i>SFTP Storage
+			<li id="sftp">
+				<div class="collapsible-header">
+					<i class="material-icons">computer</i><?php echo __("SFTP Storage","xcloner")?>
 					<div class="right">
 						<div class="switch">
 							<label>
@@ -140,79 +140,79 @@
 				<div class="collapsible-body">
 					<div class="row">
 						<div class="col s12 m3 label">
-							<label for="sftp_host">SFTP Hostname</label>
+							<label for="sftp_host"><?php echo __("SFTP Hostname","xcloner")?></label>
 						</div>
 						<div class="col s12 m6">
-							<input placeholder="SFTP Hostname" id="sftp_host" type="text" name="xcloner_sftp_hostname" class="validate" value="<?php echo get_option("xcloner_sftp_hostname")?>">
+							<input placeholder="<?php echo __("SFTP Hostname","xcloner")?>" id="sftp_host" type="text" name="xcloner_sftp_hostname" class="validate" value="<?php echo get_option("xcloner_sftp_hostname")?>">
 				        </div>
 				        <div class=" col s12 m2">
-							<input placeholder="SFTP Port" id="sftp_port" type="text" name="xcloner_sftp_port" class="validate" value="<?php echo get_option("xcloner_sftp_port", 22)?>">
+							<input placeholder="<?php echo __("SFTP Port","xcloner")?>" id="sftp_port" type="text" name="xcloner_sftp_port" class="validate" value="<?php echo get_option("xcloner_sftp_port", 22)?>">
 				        </div>
 			        </div>
 			        
 			        <div class="row">
 						<div class="col s12 m3 label">
-							<label for="sftp_username">SFTP Username</label>
+							<label for="sftp_username"><?php echo __("SFTP Username","xcloner")?></label>
 						</div>	
 						<div class=" col s12 m6">
-							<input placeholder="SFTP Username" id="sftp_username" type="text" name="xcloner_sftp_username" class="validate" value="<?php echo get_option("xcloner_sftp_username")?>" autocomplete="off" >
+							<input placeholder="<?php echo __("SFTP Username","xcloner")?>" id="sftp_username" type="text" name="xcloner_sftp_username" class="validate" value="<?php echo get_option("xcloner_sftp_username")?>" autocomplete="off" >
 				        </div>
 			        </div>
 			        
 			        
 			        <div class="row">
 						<div class="col s12 m3 label">
-							<label for="sftp_password">SFTP Password</label>
+							<label for="sftp_password"><?php echo __("SFTP Password","xcloner")?></label>
 						</div>
 						<div class=" col s12 m6">
-							<input placeholder="SFTP Password" id="ftp_spassword" type="password" name="xcloner_sftp_password" class="validate" value="<?php echo get_option("xcloner_sftp_password")?>" autocomplete="off" >
+							<input placeholder="<?php echo __("SFTP Password","xcloner")?>" id="ftp_spassword" type="password" name="xcloner_sftp_password" class="validate" value="<?php echo get_option("xcloner_sftp_password")?>" autocomplete="off" >
 				        </div>
 			        </div>
 			        
 			        <div class="row">
 						<div class="col s12 m3 label">
-							<label for="sftp_private_key">SFTP Private Key</label>
+							<label for="sftp_private_key"><?php echo __("SFTP Private Key","xcloner")?></label>
 						</div>
 						<div class=" col s12 m6">
-							<input placeholder="SFTP Private Key" id="sftp_private_key" type="text" name="xcloner_sftp_private_key" class="validate" value="<?php echo get_option("xcloner_sftp_private_key")?>">
+							<input placeholder="<?php echo __("SFTP Private Key","xcloner")?>" id="sftp_private_key" type="text" name="xcloner_sftp_private_key" class="validate" value="<?php echo get_option("xcloner_sftp_private_key")?>">
 						</div>	
 			        </div>
 			        
 			        <div class="row">
 						<div class="col s12 m3 label">
-							<label for="sftp_root">SFTP Storage Folder</label>
+							<label for="sftp_root"><?php echo __("SFTP Storage Folder","xcloner")?></label>
 						</div>
 						<div class=" col s12 m6">
-							<input placeholder="SFTP Storage Folder" id="sftp_root" type="text" name="xcloner_sftp_path" class="validate" value="<?php echo get_option("xcloner_sftp_path")?>">
+							<input placeholder="<?php echo __("SFTP Storage Folder","xcloner")?>" id="sftp_root" type="text" name="xcloner_sftp_path" class="validate" value="<?php echo get_option("xcloner_sftp_path")?>">
 						</div>	
 			        </div>
 			        
 			        <div class="row">
 						<div class="col s12 m3 label">
-							<label for="sftp_timeout">SFTP Timeout</label>
+							<label for="sftp_timeout"><?php echo __("SFTP Timeout","xcloner")?></label>
 						</div>
 						<div class=" col s12 m2">
-							<input placeholder="SFTP Timeout" id="sftp_timeout" type="text" name="xcloner_sftp_timeout" class="validate" value="<?php echo get_option("xcloner_sftp_timeout", 30)?>">
+							<input placeholder="<?php echo __("SFTP Timeout","xcloner")?>" id="sftp_timeout" type="text" name="xcloner_sftp_timeout" class="validate" value="<?php echo get_option("xcloner_sftp_timeout", 30)?>">
 				        </div>
 			        </div>
 			        
 			        <div class="row">
 						<div class="col s12 m3 label">
-							<label for="sftp_cleanup_days">SFTP Cleanup (days)</label>
+							<label for="sftp_cleanup_days"><?php echo __("SFTP Cleanup (days)","xcloner")?></label>
 						</div>
 						<div class=" col s12 m6">
-							<input placeholder="how many days to keep the backups for" id="sftp_cleanup_days" type="text" name="xcloner_sftp_cleanup_days" class="validate" value="<?php echo get_option("xcloner_sftp_cleanup_days")?>">
+							<input placeholder="<?php echo __("how many days to keep the backups for","xcloner")?>" id="sftp_cleanup_days" type="text" name="xcloner_sftp_cleanup_days" class="validate" value="<?php echo get_option("xcloner_sftp_cleanup_days")?>">
 				        </div>
 			        </div>
 			        
 			        <div class="row">
 						<div class="col s12 m2">
-							<button class="btn waves-effect waves-light" type="submit" name="action" value="sftp">Save Settings
+							<button class="btn waves-effect waves-light" type="submit" name="action" id="action"  value="sftp"><?php echo __("Save Settings","xcloner")?>
 								<i class="material-icons right">save</i>
 							</button>
 						</div>	
 						<div class="col s12 m2">
-							<button class="btn waves-effect waves-light orange" type="submit" name="action" value="sftp" onclick="jQuery('#connection_check').val('sftp_check')">Verify
+							<button class="btn waves-effect waves-light orange" type="submit" name="action" id="action"  value="sftp" onclick="jQuery('#connection_check').val('1')"><?php echo __("Verify","xcloner")?>
 								<i class="material-icons right">import_export</i>
 							</button>
 						</div>
@@ -245,6 +245,14 @@ jQuery(document).ready(function(){
 	jQuery(".remote-storage .status").on("change", function(){
 			remote_storage.toggle_status(this);
 	})
+	
+	jQuery(".remote-storage-form #action").on("click", function(){
+		var tag = jQuery(this).val()
+		window.location.hash = "#"+tag;
+	})
+	
+	if(location.hash)
+		jQuery(location.hash+" div.collapsible-header").addClass("active");
 	
 	jQuery('.collapsible').collapsible();
 	
