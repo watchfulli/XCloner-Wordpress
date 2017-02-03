@@ -218,6 +218,10 @@ a.expand-multipart.remove{
 	vertical-align: top;
 }
 
+#remote_storage_modal{
+	min-height: 350px;
+}
+
 #remote_storage_modal .label label{
 	font-size: 16px;
 }

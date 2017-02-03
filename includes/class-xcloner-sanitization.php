@@ -8,6 +8,11 @@ class Xcloner_Sanitization {
 		return filter_var($option, FILTER_SANITIZE_NUMBER_INT);
 	}
 	
+	public function sanitize_input_as_float($option)
+	{
+		return filter_var($option, FILTER_VALIDATE_FLOAT);
+	}
+	
 	public function sanitize_input_as_string($option)
 	{
 		return filter_var($option, FILTER_SANITIZE_STRING);

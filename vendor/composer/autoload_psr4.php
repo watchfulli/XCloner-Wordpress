@@ -7,7 +7,9 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'splitbrain\\PHPArchive\\' => array($vendorDir . '/splitbrain/php-archive/src'),
+    'phpseclib\\' => array($vendorDir . '/phpseclib/phpseclib/phpseclib'),
     'Psr\\Log\\' => array($vendorDir . '/psr/log/Psr/Log'),
     'Monolog\\' => array($vendorDir . '/monolog/monolog/src/Monolog'),
+    'League\\Flysystem\\Sftp\\' => array($vendorDir . '/league/flysystem-sftp/src'),
     'League\\Flysystem\\' => array($vendorDir . '/league/flysystem/src'),
 );

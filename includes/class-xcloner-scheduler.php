@@ -157,6 +157,22 @@ class Xcloner_Scheduler{
 		return $update;		
 	} 
 	
+	public function update_last_backup($schedule_id, $last_backup)
+	{
+		$schedule['last_backup'] = $last_backup;
+		
+		$update = $this->db->update( 
+				$this->scheduler_table, 
+				$schedule, 
+				array( 'id' => $schedule_id ), 
+				array( 
+					'%s', 
+					'%s' 
+				) 
+				);
+		return $update;		
+	} 
+	
 	public function xcloner_scheduler_callback($id)
 	{
 		set_time_limit(0);
@@ -167,6 +183,7 @@ class Xcloner_Scheduler{
 		$this->xcloner_database 		= new XCloner_Database($this->xcloner_settings->get_hash());
 		$this->archive_system 			= new Xcloner_Archive($this->xcloner_settings->get_hash());
 		$this->logger 					= new XCloner_Logger('xcloner_scheduler', $this->xcloner_settings->get_hash());
+		$this->xcloner_remote_storage 	= new Xcloner_Remote_Storage($this->xcloner_settings->get_hash());
 		
 		$schedule = $this->get_schedule_by_id($id);
 		
@@ -227,8 +244,28 @@ class Xcloner_Scheduler{
 		}
 		$this->logger->info(sprintf("File archive process FINISHED."), array("CRON"));
 		
+		//getting the last backup archive file
+		$return['extra']['backup_parent'] = $this->archive_system->get_archive_name_with_extension();
+		if($this->xcloner_file_system->is_part($this->archive_system->get_archive_name_with_extension()))
+				$return['extra']['backup_parent'] = $this->archive_system->get_archive_name_multipart();
+		
+		$this->update_last_backup($schedule['id'], $return['extra']['backup_parent']);
+		
+		if($schedule['remote_storage'] and array_key_exists($schedule['remote_storage'], $this->xcloner_remote_storage->get_available_storages()))
+		{
+			$backup_file = $return['extra']['backup_parent'];
+			
+			$this->logger->info(sprintf("Transferring backup to remote storage %s", strtoupper($schedule['remote_storage'])), array("CRON"));
+			
+			if(method_exists($this->xcloner_remote_storage, "upload_backup_to_storage"))
+				$return = call_user_func_array(array($this->xcloner_remote_storage, "upload_backup_to_storage"), array($backup_file, $schedule['remote_storage']));
+		}
+		
 		
 		$this->xcloner_file_system->remove_tmp_filesystem();
+		
+		$this->xcloner_file_system->backup_storage_cleanup();
+		
 	}
 	
 	

@@ -3,7 +3,8 @@
         "splitbrain/php-archive": "^1.0",
         "vakata/jstree": "^3.3",
         "league/flysystem": "^1.0",
-        "monolog/monolog": "^1.22"
+        "monolog/monolog": "^1.22",
+        "league/flysystem-sftp": "^1.0"
     },
     "prefer-stable": true
 }

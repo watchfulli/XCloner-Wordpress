@@ -430,8 +430,7 @@ class Xcloner_File_System{
 	
 	public function backup_storage_cleanup()
 	{
-		if($this->logger)
-			$this->logger->debug(sprintf(("Cleaning the backup storage")));
+		$this->logger->info(sprintf(("Cleaning the backup storage on matching rules")));
 		
 		$_storage_size = 0;
 		$_backup_files_list = array();

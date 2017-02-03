@@ -19,6 +19,7 @@
 			if(id){
 				jQuery.ajax({
 				  url: ajaxurl,
+				  method: 'post',
 				  data: { action : 'delete_backup_by_name', name: id},
 				  success: function(response){
 					  if(response.finished)

@@ -14,8 +14,9 @@ $available_storages = $xcloner_remote_storage->get_available_storages();
                 <th><?php echo __('Schedule Name', 'xcloner')?></th>
                 <th><?php echo __('Recurrence', 'xcloner')?></th>
                 <!--<th><?php echo __('Start Time', 'xcloner')?></th>-->
-                <th><?php echo __('Next Execution', 'xcloner')?></th>
+                <th class="hide-on-med-and-down"><?php echo __('Next Execution', 'xcloner')?></th>
                 <th><?php echo __('Remote Storage', 'xcloner')?></th>
+                <th class="hide-on-med-and-down"><?php echo __('Last Backup', 'xcloner')?></th>
                 <th><?php echo __('Status', 'xcloner')?></th>
                 <th class="no-sort"><?php echo __('Action', 'xcloner')?></th>
             </tr>
@@ -26,8 +27,9 @@ $available_storages = $xcloner_remote_storage->get_available_storages();
                 <th><?php echo __('Schedule Name', 'xcloner')?></th>
                 <th><?php echo __('Recurrence', 'xcloner')?></th>
                 <!--<th><?php echo __('Start Time', 'xcloner')?></th>-->
-                <th><?php echo __('Next Execution', 'xcloner')?></th>
+                <th class="hide-on-med-and-down"><?php echo __('Next Execution', 'xcloner')?></th>
                 <th><?php echo __('Remote Storage', 'xcloner')?></th>
+                <th class="hide-on-med-and-down"><?php echo __('Last Backup', 'xcloner')?></th>
                 <th><?php echo __('Status', 'xcloner')?></th>
                 <th><?php echo __('Action', 'xcloner')?></th>
             </tr>

@@ -515,7 +515,7 @@ class Xcloner_Api{
 				$next_run .=" ($date_text)";	
 			}
 				
-			$return['data'][] = array($res->id, $res->name, $res->recurrence,/*$res->start_at,*/ $next_run, $remote_storage, $status, $action);
+			$return['data'][] = array($res->id, $res->name, $res->recurrence,/*$res->start_at,*/ $next_run, $remote_storage, "<span class='shorten_string'>".$res->last_backup."</span>", $status, $action);
 		}
 		
 		return $this->send_response($return, 0);
@@ -540,7 +540,8 @@ class Xcloner_Api{
 			die("Not allowed access here!");
 		}
 		
-		$backup_name = $this->xcloner_sanitization->sanitize_input_as_string($_POST['file']);
+		$backup_name = $this->xcloner_sanitization->sanitize_input_as_string($_POST['name']);
+		
 		$data['finished']  = $this->xcloner_file_system->delete_backup_by_name($backup_name);
 		
 		return $this->send_response($data);
@@ -557,8 +558,10 @@ class Xcloner_Api{
 		
 		try
 		{
-			if(method_exists($xcloner_remote_storage, "upload_backup_to_".$storage_type))
-				$return = call_user_func_array(array($xcloner_remote_storage, "upload_backup_to_".$storage_type), array($backup_file));
+			if(method_exists($xcloner_remote_storage, "upload_backup_to_storage"))
+			{
+				$return = call_user_func_array(array($xcloner_remote_storage, "upload_backup_to_storage"), array($backup_file, $storage_type));
+			}
 		}catch(Exception $e){
 		
 			$return['error'] = 1;

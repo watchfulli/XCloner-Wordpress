@@ -149,7 +149,8 @@ jQuery(document).ready(function(){
 				"emptyTable": "No schedules available"
 		},
 		columnDefs: [
-			{ targets: 'no-sort', orderable: false }
+			{ targets: 'no-sort', orderable: false },
+			{ className: "hide-on-med-and-down", "targets": [ 3, 5 ] }
 		],
 		language: {
 	        buttons: {
@@ -174,6 +175,14 @@ jQuery(document).ready(function(){
 					if(confirm('Are you sure you want to delete it?'))
 						var data = xcloner_scheduler.delete_schedule_by_id(id, (this), dataTable);
 				})
+			})
+			
+			jQuery("span.shorten_string").each(function(){
+				doShortText(jQuery(this));
+			})
+			jQuery("span.shorten_string").click(function(){
+				jQuery(this).toggleClass("full");
+				doShortText(jQuery(this));
 			})
 			
 		}

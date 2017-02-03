@@ -307,6 +307,9 @@ class Xcloner_Archive extends Tar
 			$this->set_archive_name($this->get_archive_name(), ++$part);
 			$this->rename_archive($old_name, $this->get_archive_name_with_extension());
 			
+			if($this->filesystem->get_storage_filesystem()->has($this->get_archive_name_multipart()))
+				$this->filesystem->get_storage_filesystem()->delete($this->get_archive_name_multipart());
+				
 			$this->write_multipart_file($this->get_archive_name_with_extension());
 			
 		}else

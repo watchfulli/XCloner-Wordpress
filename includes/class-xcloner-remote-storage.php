@@ -2,6 +2,7 @@
 use League\Flysystem\Config;
 use League\Flysystem\Filesystem;
 use League\Flysystem\Adapter\Ftp as Adapter;
+use League\Flysystem\Sftp\SftpAdapter;
 
 
 class Xcloner_Remote_Storage{
@@ -9,23 +10,37 @@ class Xcloner_Remote_Storage{
 	private $storage_fields = array(
 					"option_prefix" => "xcloner_",
 					"ftp" => array(
-						"text"			=> "Ftp",
-						"ftp_enable"	=> "int",
-						"ftp_hostname" => "string",
-						"ftp_port" => "int",
-						"ftp_username" => "string",
-						"ftp_password" => "raw",
-						"ftp_path" => "path",
+						"text"				=> "Ftp",
+						"ftp_enable"		=> "int",
+						"ftp_hostname" 		=> "string",
+						"ftp_port" 			=> "int",
+						"ftp_username" 		=> "string",
+						"ftp_password" 		=> "raw",
+						"ftp_path" 			=> "path",
 						"ftp_transfer_mode" => "int",
-						"ftp_ssl_mode" => "int",
-						"ftp_timeout" => "int",
-						)
+						"ftp_ssl_mode"		=> "int",
+						"ftp_timeout" 		=> "int",
+						"ftp_cleanup_days"	=> "float",
+						),
+					"sftp" => array(
+						"text"				=> "SFtp",
+						"sftp_enable"		=> "int",
+						"sftp_hostname" 	=> "string",
+						"sftp_port" 		=> "int",
+						"sftp_username" 	=> "string",
+						"sftp_password" 	=> "raw",
+						"sftp_path" 		=> "path",
+						"sftp_private_key" 	=> "path",
+						"sftp_timeout" 		=> "int",
+						"sftp_cleanup_days"	=> "float",
+						),
 					);
 	
-	public function __construct()
+	public function __construct($hash = "")
 	{
-		$this->xcloner_sanitization 	= new Xcloner_Sanitization();
-		$this->xcloner_file_system 		= new Xcloner_File_System();
+		$this->xcloner_sanitization 	= new Xcloner_Sanitization($hash);
+		$this->xcloner_file_system 		= new Xcloner_File_System($hash);
+		$this->logger 					= new XCloner_Logger("xcloner_remote_storage", $hash);
 		$this->xcloner = new Xcloner();
 	}
 	
@@ -45,6 +60,7 @@ class Xcloner_Remote_Storage{
 	public function save($action = "ftp")
 	{
 		$storage = $this->xcloner_sanitization->sanitize_input_as_string($action);
+		
 		
 		if(is_array($this->storage_fields[$storage]))
 		{
@@ -74,7 +90,16 @@ class Xcloner_Remote_Storage{
 			}catch(Exception $e){
 				$this->xcloner->trigger_message("%s connection error: ".$e->getMessage(), "error", ucfirst($action));
 			}
+		}elseif(isset($_POST['connection_check']) && $_POST['connection_check'] == "sftp_check")
+		{
+			try{
+				$this->verify_sftp_filesystem();
+				$this->xcloner->trigger_message(__("%s connection is valid.", "xcloner"), "success", ucfirst($action));
+			}catch(Exception $e){
+				$this->xcloner->trigger_message("%s connection error: ".$e->getMessage(), "error", ucfirst($action));
+			}
 		}
+		
 	}
 	
 	public function verify_filesystem($filesystem)
@@ -105,9 +130,30 @@ class Xcloner_Remote_Storage{
 		
 	}
 	
-	public function upload_backup_to_ftp($file)
+	public function verify_sftp_filesystem()
 	{
-		$ftp_filesystem = $this->get_ftp_filesystem();
+		$filesystem = $this->get_sftp_filesystem();
+		
+		if($filesystem)
+		{
+			$this->verify_filesystem($filesystem);
+		}
+		
+	}
+	
+	public function upload_backup_to_storage($file, $storage)
+	{
+		if(!$this->xcloner_file_system->get_storage_filesystem()->has($file))
+			return false;
+			
+		$method = "get_".$storage."_filesystem";	
+		list($remote_storage_adapter, $remote_storage_filesystem) = $this->$method();
+		
+		$this->logger->info(sprintf("Transferring backup %s to remote storage %s", $file, strtoupper($storage)), array(""));
+		
+		$backup_file_stream = $this->xcloner_file_system->get_storage_filesystem()->readStream($file);
+		if(!$remote_storage_filesystem->updateStream($file, $backup_file_stream))
+			return false;
 		
 		if($this->xcloner_file_system->is_multipart($file))
 		{
@@ -115,15 +161,37 @@ class Xcloner_Remote_Storage{
 			if(is_array($parts))
 				foreach($parts as $part_file)
 				{
+					$this->logger->info(sprintf("Transferring backup %s to remote storage %s", $part_file, strtoupper($storage)), array(""));
+					
 					$backup_file_stream = $this->xcloner_file_system->get_storage_filesystem()->readStream($part_file);
-					if(!$ftp_filesystem->updateStream($part_file, $backup_file_stream))
+					if(!$remote_storage_filesystem->updateStream($part_file, $backup_file_stream))
 						return false;
 				}
 		}
 		
-		$backup_file_stream = $this->xcloner_file_system->get_storage_filesystem()->readStream($file);
-		if(!$ftp_filesystem->updateStream($file, $backup_file_stream))
-			return false;
+		$check_field = $this->storage_fields["option_prefix"].$storage."_cleanup_days";
+		if($expire_days = get_option($check_field))
+		{
+			$this->logger->info(sprintf("Doing %s remote storage cleanup for %s days limit", strtoupper($storage), $expire_days));
+			$files = $remote_storage_filesystem->listContents();
+			
+			$current_timestamp = strtotime("-".$expire_days." days");
+			
+			if(is_array($files))
+			foreach($files as $file)
+			{
+				$file['timestamp'] = $remote_storage_filesystem->getTimestamp($file['path']);
+				
+				if($current_timestamp >= $file['timestamp'])
+				{
+					$remote_storage_filesystem->delete($file['path']);
+					$this->logger->info("Deleting remote file ".$file['path']." matching rule", array("RETENTION LIMIT TIMESTAMP", $file['timestamp']." =< ".$expire_days));
+				}
+			
+			}
+		}
+		
+		$remote_storage_adapter->disconnect();
 		
 		return true;
 		
@@ -131,7 +199,8 @@ class Xcloner_Remote_Storage{
 	
 	public function get_ftp_filesystem()
 	{
-
+		$this->logger->info(sprintf("Creating the FTP remote storage connection"), array(""));
+		
 		$adapter = new Adapter([
 		    'host' => get_option("xcloner_ftp_hostname"),
 		    'username' => get_option("xcloner_ftp_username"),
@@ -151,7 +220,32 @@ class Xcloner_Remote_Storage{
 				'disable_asserts' => true,
 			]));
 		
-		return $filesystem;
+		return array($adapter, $filesystem);
+	}
+	
+	public function get_sftp_filesystem()
+	{
+		$this->logger->info(sprintf("Creating the SFTP remote storage connection"), array(""));
+		
+		$adapter = new SftpAdapter([
+		    'host' => get_option("xcloner_sftp_hostname"),
+		    'username' => get_option("xcloner_sftp_username"),
+		    'password' => get_option("xcloner_sftp_password"),
+		
+		    /** optional config settings */
+		    'port' => get_option("xcloner_sftp_port", 22),
+		    'root' => get_option("xcloner_sftp_path"),
+		    'privateKey' => get_option("xcloner_sftp_private_key"),
+		    'timeout' => get_option("xcloner_ftp_timeout", 30),
+		]);
+		
+		$adapter->connect();
+		
+		$filesystem = new Filesystem($adapter, new Config([
+				'disable_asserts' => true,
+			]));
+		
+		return array($adapter, $filesystem);
 	}
 	
 	public function change_storage_status($field, $value)
