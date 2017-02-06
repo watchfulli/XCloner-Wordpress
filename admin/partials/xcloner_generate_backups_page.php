@@ -106,12 +106,12 @@ $tab = 1;
 		</div>
 		<div id="generate_backup" class="tab-content">
 			<div class="row ">
-				 <div class="col s12 l8 center action-buttons">
+				 <div class="col s12 l10 center action-buttons">
 					<a class="waves-effect waves-light btn-large teal darken-1 start" onclick="xcloner_backup.start_backup()">Start Backup<i class="material-icons left">forward</i></a>
 					<a class="waves-effect waves-light btn-large teal darken-1 restart" onclick="xcloner_backup.start_backup()">Restart Backup<i class="material-icons left">cached</i></a>
 					<a class="waves-effect waves-light btn-large red darken-1 cancel" onclick="xcloner_backup.cancel_backup()">Cancel Backup<i class="material-icons left">cancel</i></a>
 				</div>
-				<div class="col l8 s12">
+				<div class="col l10 s12">
 					<ul class="backup-status collapsible" data-collapsible="accordion">
 					    <li class="file-system">
 						      <div class="collapsible-header">

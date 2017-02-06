@@ -78,11 +78,40 @@ class Xcloner_Archive extends Tar
 		return $this->archive_name.$this->xcloner_settings->get_backup_extension_name();
 	}
 	
-	public function send_notification($to, $backup_name, $params)
+	public function send_notification_error($to, $from, $subject, $backup_name, $params, $error_message)
 	{
+		
+		$body  = $error_message; 
+		
+		$this->logger->info(__(sprintf("Sending backup error notification to %s", $to), "xcloner"));
+		
+		$admin_email = get_option("admin_email");
+		
+		$headers = array('Content-Type: text/html; charset=UTF-8');
+		
+		if($admin_email and $from )
+			$headers[] = 'From: '.$from.' <'.$admin_email.'>';
+
+		$return = wp_mail( $to, $subject, $body, $headers );
+		
+		return $return;
+	}
+	
+	public function send_notification($to, $from, $subject, $backup_name, $params, $error_message="")
+	{
+		if(!$from)
+			$from = "XCloner Backup";
+			
+		if(($error_message))
+		{
+			return $this->send_notification_error($to, $from, $subject, $backup_name, $params, $error_message);
+		}
+		
 		$params = (array)$params;
 		
-		$subject = sprintf(__("New backup generated %s") ,$backup_name);
+		if(!$subject)
+			$subject = sprintf(__("New backup generated %s") ,$backup_name);
+			
 		$body = sprintf(__("Generated Backup Size: %s"), size_format($this->filesystem->get_backup_size($backup_name)));
 		$body .= "<br /><br />";
 		
@@ -102,7 +131,7 @@ class Xcloner_Archive extends Tar
 		
 		$body.= "<br />";
 		
-		if(isset($schedule['backup_params']->backup_comments))
+		if(isset($params['backup_params']->backup_comments))
 		{
 			$body .= __("Backup Comments: ").$this->form_params['backup_params']->backup_comments;
 			$body .= "<br /><br />";
@@ -117,7 +146,7 @@ class Xcloner_Archive extends Tar
 		
 		$admin_email = get_option("admin_email");
 		
-		$headers = array('Content-Type: text/html; charset=UTF-8', 'From: XCloner Backup <'.$admin_email.'>');
+		$headers = array('Content-Type: text/html; charset=UTF-8', 'From: '.$from.' <'.$admin_email.'>');
 		
 		$return = wp_mail( $to, $subject, $body, $headers, $attachments );
 	

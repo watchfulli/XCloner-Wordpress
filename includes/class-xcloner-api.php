@@ -198,7 +198,9 @@ class Xcloner_Api{
 			if(isset($this->form_params['backup_params']['email_notification']) and $to=$this->form_params['backup_params']['email_notification'])
 			{
 				try{
-					$this->archive_system->send_notification($to, $return['extra']['backup_parent'], $this->form_params);
+					$from = "";
+					$subject = "";
+					$this->archive_system->send_notification($to, $from, $subject, $return['extra']['backup_parent'], $this->form_params);
 				}catch(Exception $e)
 				{
 					$this->logger->error($e->getMessage());

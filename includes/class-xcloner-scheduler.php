@@ -173,7 +173,7 @@ class Xcloner_Scheduler{
 		return $update;		
 	} 
 	
-	public function xcloner_scheduler_callback($id)
+	private function __xcloner_scheduler_callback($id, $schedule)
 	{
 		set_time_limit(0);
 		
@@ -185,7 +185,7 @@ class Xcloner_Scheduler{
 		$this->logger 					= new XCloner_Logger('xcloner_scheduler', $this->xcloner_settings->get_hash());
 		$this->xcloner_remote_storage 	= new Xcloner_Remote_Storage($this->xcloner_settings->get_hash());
 		
-		$schedule = $this->get_schedule_by_id($id);
+		//$schedule = $this->get_schedule_by_id($id);
 		
 		if($schedule['recurrence'] == "single")
 		{
@@ -265,7 +265,8 @@ class Xcloner_Scheduler{
 		if(isset($schedule['backup_params']->email_notification) and $to=$schedule['backup_params']->email_notification)
 		{	
 			try{
-				$this->archive_system->send_notification($to, $return['extra']['backup_parent'], $schedule);
+				$from = "XCloner Schedule - ".$schedule['name'];
+				$this->archive_system->send_notification($to, $from, "", $return['extra']['backup_parent'], $schedule);
 			}catch(Exception $e)
 			{
 				$this->logger->error($e->getMessage());
@@ -275,6 +276,25 @@ class Xcloner_Scheduler{
 		$this->xcloner_file_system->remove_tmp_filesystem();
 		
 		$this->xcloner_file_system->backup_storage_cleanup();
+	}
+	
+	public function xcloner_scheduler_callback($id)
+	{
+		$schedule = $this->get_schedule_by_id($id);
+		
+		try{
+
+			$this->__xcloner_scheduler_callback($id, $schedule);
+			
+		}catch(Exception $e){
+			
+			if(isset($schedule['backup_params']->email_notification) and $to=$schedule['backup_params']->email_notification)
+			{
+				$from = "XCloner Schedule - ".$schedule['name'];
+				$this->archive_system->send_notification($to, $from, "Scheduled backup error","", "", $e->getMessage());
+			}
+			
+		}
 		
 	}
 	

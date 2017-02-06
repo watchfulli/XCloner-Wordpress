@@ -108,12 +108,12 @@
 			        </div>
 			        
 			        <div class="row">
-						<div class="col s12 m2">
+						<div class="col s12 m4">
 							<button class="btn waves-effect waves-light" type="submit" name="action" id="action"  value="ftp"><?php echo __("Save Settings","xcloner")?>
 								<i class="material-icons right">save</i>
 							</button>
 						</div>	
-						<div class="col s12 m2">
+						<div class="col s12 m4">
 							<button class="btn waves-effect waves-light orange" type="submit" name="action" id="action"  value="ftp" onclick="jQuery('#connection_check').val('1')"><?php echo __("Verify","xcloner")?>
 								<i class="material-icons right">import_export</i>
 							</button>
@@ -206,12 +206,12 @@
 			        </div>
 			        
 			        <div class="row">
-						<div class="col s12 m2">
+						<div class="col s12 m4">
 							<button class="btn waves-effect waves-light" type="submit" name="action" id="action"  value="sftp"><?php echo __("Save Settings","xcloner")?>
 								<i class="material-icons right">save</i>
 							</button>
 						</div>	
-						<div class="col s12 m2">
+						<div class="col s12 m4">
 							<button class="btn waves-effect waves-light orange" type="submit" name="action" id="action"  value="sftp" onclick="jQuery('#connection_check').val('1')"><?php echo __("Verify","xcloner")?>
 								<i class="material-icons right">import_export</i>
 							</button>
