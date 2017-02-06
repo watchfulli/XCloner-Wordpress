@@ -23,7 +23,7 @@ class Xcloner_Remote_Storage{
 						"ftp_cleanup_days"	=> "float",
 						),
 					"sftp" => array(
-						"text"				=> "SFtp",
+						"text"				=> "SFTP",
 						"sftp_enable"		=> "int",
 						"sftp_hostname" 	=> "string",
 						"sftp_port" 		=> "int",

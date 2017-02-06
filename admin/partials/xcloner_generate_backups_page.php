@@ -213,11 +213,19 @@ $tab = 1;
 				</div>
 			</div>
 			
-			<div class="row server-time">
+			<!--<div class="row server-time">
 				<div class="col s12 m10 l6 teal lighten-1">
 					<h2><?php echo __('Current Server Time', 'xcloner')?>: <span class="right"><?php echo date("Y/m/d H:i")?></span></h2>
 				</div>
 			</div>
+			-->
+			<div class="row">
+				 <div class="input-field inline col s12 m10 l6">
+					  <input type="text" id="schedule_name" class="" name="schedule_name" required>
+					  <label for="schedule_name">Schedule Name</label>
+				</div>
+			</div>
+			
 			<div class="row">
 				 <div class="input-field inline col s12 m6 l4">
 					  <input type="datetime-local" id="datepicker" class="datepicker" name="schedule_start_date" >
@@ -242,13 +250,7 @@ $tab = 1;
 						<label><?php echo __('Please Select Frequency to run', 'xcloner') ?></label>
 				</div>
 			</div>	
-			<div class="row">
-				 <div class="input-field inline col s12 m10 l6">
-					  <input type="text" id="schedule_name" class="" name="schedule_name" required>
-					  <label for="schedule_name">Schedule Name</label>
-				</div>
-			</div>
-			
+
 			<?php if(sizeof($available_storages)):?>
 			<div class="row">
 				<div class="input-field col s12 m10 l6">

@@ -78,6 +78,52 @@ class Xcloner_Archive extends Tar
 		return $this->archive_name.$this->xcloner_settings->get_backup_extension_name();
 	}
 	
+	public function send_notification($to, $backup_name, $params)
+	{
+		$params = (array)$params;
+		
+		$subject = sprintf(__("New backup generated %s") ,$backup_name);
+		$body = sprintf(__("Generated Backup Size: %s"), size_format($this->filesystem->get_backup_size($backup_name)));
+		$body .= "<br /><br />";
+		
+		$backup_parts = $this->filesystem->get_multipart_files($backup_name);
+		
+		if(!$backups_counter = sizeof($backup_parts))
+			$backups_counter = 1;
+		
+		$body .= sprintf(__("Backup Parts: %s"), $backups_counter);
+		$body .= "<br />";
+		
+		if(sizeof($backup_parts))
+		{
+			$body .= implode("<br />",$backup_parts);
+			$body .= "<br />";
+		}
+		
+		$body.= "<br />";
+		
+		if(isset($schedule['backup_params']->backup_comments))
+		{
+			$body .= __("Backup Comments: ").$this->form_params['backup_params']->backup_comments;
+			$body .= "<br /><br />";
+		}
+		
+		if($this->xcloner_settings->get_xcloner_option('xcloner_enable_log'))
+			$body .= __("Latest 50 Log Lines: ")."<br />".implode("<br />\n", $this->logger->getLastDebugLines(50));
+		
+		$attachments = $this->filesystem->get_backup_attachments();
+		
+		$this->logger->info(__(sprintf("Sending backup notification to %s", $to), "xcloner"));
+		
+		$admin_email = get_option("admin_email");
+		
+		$headers = array('Content-Type: text/html; charset=UTF-8', 'From: XCloner Backup <'.$admin_email.'>');
+		
+		$return = wp_mail( $to, $subject, $body, $headers, $attachments );
+	
+		return $return;
+	}
+	
 	public function start_incremental_backup($backup_params, $extra_params, $init)
 	{
 		if(!isset($extra_params['backup_part']))

@@ -262,6 +262,16 @@ class Xcloner_Scheduler{
 		}
 		
 		
+		if(isset($schedule['backup_params']->email_notification) and $to=$schedule['backup_params']->email_notification)
+		{	
+			try{
+				$this->archive_system->send_notification($to, $return['extra']['backup_parent'], $schedule);
+			}catch(Exception $e)
+			{
+				$this->logger->error($e->getMessage());
+			}
+		}
+
 		$this->xcloner_file_system->remove_tmp_filesystem();
 		
 		$this->xcloner_file_system->backup_storage_cleanup();

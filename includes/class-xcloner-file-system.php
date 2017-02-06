@@ -141,6 +141,19 @@ class Xcloner_File_System{
 		return false;	
 	}
 	
+	public function get_backup_size($backup_name)
+	{
+		$backup_size = $this->get_storage_filesystem()->getSize($backup_name);
+		if($this->is_multipart($backup_name))
+		{
+			$backup_parts = $this->get_multipart_files($backup_name);
+			foreach($backup_parts as $part_file)
+				$backup_size += $this->get_storage_filesystem()->getSize($part_file);
+		}
+		
+		return $backup_size;
+	}
+	
 	public function get_multipart_files($backup_name)
 	{
 		$files = array();
@@ -293,6 +306,16 @@ class Xcloner_File_System{
 		}	
 	
 		return true;	
+	}
+	
+	public function get_backup_attachments()
+	{
+		$return = array();
+		$return[] = $this->xcloner_settings->get_xcloner_tmp_path().DS.$this->get_included_files_handler();
+		if($this->xcloner_settings->get_xcloner_option('xcloner_enable_log'))
+			$return[] = $this->xcloner_settings->get_xcloner_tmp_path().DS.$this->xcloner_settings->get_logger_filename(1);
+		
+		return $return;
 	}
 	
 	public function remove_tmp_filesystem()

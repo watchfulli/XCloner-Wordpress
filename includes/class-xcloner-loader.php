@@ -65,8 +65,8 @@ class Xcloner_Loader {
 			add_submenu_page( 'xcloner_init_page', __('XCloner Backup Settings','xcloner'), __('Settings','xcloner'), 'manage_options', 'xcloner_settings_page', 'xcloner_display');
 			add_submenu_page( 'xcloner_init_page', __('Remote Storage Settings','xcloner'), __('Remote Storage','xcloner'), 'manage_options', 'xcloner_remote_storage_page', 'xcloner_display');
 			add_submenu_page( 'xcloner_init_page', __('Manage Backups','xcloner'), __('Manage Backups','xcloner'), 'manage_options', 'xcloner_manage_backups_page', 'xcloner_display');
-			add_submenu_page( 'xcloner_init_page', __('Generate Backups','xcloner'), __('Generate Backups','xcloner'), 'manage_options', 'xcloner_generate_backups_page', 'xcloner_display');
 			add_submenu_page( 'xcloner_init_page', __('Scheduled Backups','xcloner'), __('Scheduled Backups','xcloner'), 'manage_options', 'xcloner_scheduled_backups_page', 'xcloner_display');
+			add_submenu_page( 'xcloner_init_page', __('Generate Backups','xcloner'), __('Generate Backups','xcloner'), 'manage_options', 'xcloner_generate_backups_page', 'xcloner_display');
 			add_submenu_page( 'xcloner_init_page', __('Open Debugger','xcloner'), __('Open Debugger','xcloner'), 'manage_options', 'xcloner_debugger_page', 'xcloner_display');
 		}
 	

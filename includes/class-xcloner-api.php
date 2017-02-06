@@ -192,8 +192,20 @@ class Xcloner_Api{
 		
 		$data = $return;
 		
+		//check if backup is finished
 		if($return['finished'] )
+		{
+			if(isset($this->form_params['backup_params']['email_notification']) and $to=$this->form_params['backup_params']['email_notification'])
+			{
+				try{
+					$this->archive_system->send_notification($to, $return['extra']['backup_parent'], $this->form_params);
+				}catch(Exception $e)
+				{
+					$this->logger->error($e->getMessage());
+				}
+			}
 			$this->xcloner_file_system->remove_tmp_filesystem();
+		}
 		
 		return $this->send_response($data, $hash = 1);
 	}

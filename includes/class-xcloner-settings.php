@@ -438,13 +438,11 @@ class Xcloner_Settings
 	    add_settings_field(
 	        'xcloner_split_backup_limit',
 	       __('Split Backup Archive Limit (MB)'),
-	        array($this, 'do_form_range_field'),
+	        array($this, 'do_form_number_field'),
 	        'xcloner_system_settings_page',
 	        'xcloner_system_settings_group',
 	        array('xcloner_split_backup_limit',
 	         __('Use this option to automatically split the backup archive into smaller parts. Range  0-10000 MB'), 
-	         0,
-	         10000
 	         )
 	    );
 		
