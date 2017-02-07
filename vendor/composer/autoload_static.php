@@ -30,6 +30,7 @@ class ComposerStaticInit571f9d19802717f7be61d57b40d60b28
         'L' => 
         array (
             'League\\Flysystem\\Sftp\\' => 22,
+            'League\\Flysystem\\Dropbox\\' => 25,
             'League\\Flysystem\\' => 17,
         ),
     );
@@ -55,9 +56,23 @@ class ComposerStaticInit571f9d19802717f7be61d57b40d60b28
         array (
             0 => __DIR__ . '/..' . '/league/flysystem-sftp/src',
         ),
+        'League\\Flysystem\\Dropbox\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/league/flysystem-dropbox/src',
+        ),
         'League\\Flysystem\\' => 
         array (
             0 => __DIR__ . '/..' . '/league/flysystem/src',
+        ),
+    );
+
+    public static $prefixesPsr0 = array (
+        'D' => 
+        array (
+            'Dropbox' => 
+            array (
+                0 => __DIR__ . '/..' . '/dropbox/dropbox-sdk/lib',
+            ),
         ),
     );
 
@@ -66,6 +81,7 @@ class ComposerStaticInit571f9d19802717f7be61d57b40d60b28
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInit571f9d19802717f7be61d57b40d60b28::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInit571f9d19802717f7be61d57b40d60b28::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit571f9d19802717f7be61d57b40d60b28::$prefixesPsr0;
 
         }, null, ClassLoader::class);
     }

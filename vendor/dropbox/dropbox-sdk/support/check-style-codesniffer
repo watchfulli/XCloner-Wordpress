@@ -1,0 +1,18 @@
+#!/bin/sh
+
+# Locate the script file.  Cross symlinks if necessary.
+loc="$0"
+while [ -h "$loc" ]; do
+	ls=`ls -ld "$loc"`
+	link=`expr "$ls" : '.*-> \(.*\)$'`
+	if expr "$link" : '/.*' > /dev/null; then
+		loc="$link"  # Absolute link
+	else
+		loc="`dirname "$loc"`/$link"  # Relative link
+	fi
+done
+
+script_dir=`dirname "$loc"`
+top_dir=`cd "$script_dir/.."; pwd`
+
+"$top_dir/vendor/bin/phpcs" -s --standard="$script_dir/codesniffer.xml" "$top_dir/"{lib,test,examples}

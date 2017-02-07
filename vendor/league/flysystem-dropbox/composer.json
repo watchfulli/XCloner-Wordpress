@@ -1,0 +1,34 @@
+{
+    "name": "league/flysystem-dropbox",
+    "description": "Flysystem adapter for Dropbox",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Frank de Jonge",
+            "email": "info@frenky.net"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "league/flysystem": "~1.0",
+        "dropbox/dropbox-sdk": "~1.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.8"
+    },
+    "autoload": {
+        "psr-4": {
+            "League\\Flysystem\\Dropbox\\": "src/"
+        }
+    },
+    "config": {
+        "bin-dir": "bin"
+    },
+    "min-stability": "dev",
+    "prefer-stable": true,
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
+    }
+}

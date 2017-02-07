@@ -2,8 +2,11 @@
 use League\Flysystem\Config;
 use League\Flysystem\Filesystem;
 use League\Flysystem\Adapter\Ftp as Adapter;
+
 use League\Flysystem\Sftp\SftpAdapter;
 
+use League\Flysystem\Dropbox\DropboxAdapter;
+use Dropbox\Client;
 
 class Xcloner_Remote_Storage{
 	
@@ -34,6 +37,14 @@ class Xcloner_Remote_Storage{
 						"sftp_timeout" 		=> "int",
 						"sftp_cleanup_days"	=> "float",
 						),
+					"dropbox" => array(
+						"text"					=> "Dropbox",
+						"dropbox_enable"		=> "int",
+						"dropbox_access_token"	=> "string",
+						"dropbox_app_secret"	=> "string",
+						"dropbox_prefix"		=> "string"
+						),	
+						
 					);
 	
 	public function __construct($hash = "")
@@ -180,10 +191,24 @@ class Xcloner_Remote_Storage{
 		
 		$this->logger->info(sprintf("Upload done, disconnecting from remote storage %s", strtoupper($storage)));	
 		
-		$remote_storage_adapter->disconnect();
+		//$remote_storage_adapter->disconnect();
 		
 		return true;
 		
+	}
+	
+	public function get_dropbox_filesystem()
+	{
+		$this->logger->info(sprintf("Creating the DROPBOX remote storage connection"), array(""));
+		
+		$client = new Client(get_option("xcloner_dropbox_access_token"), get_option("xcloner_dropbox_app_secret"));
+		$adapter = new DropboxAdapter($client, get_option("xcloner_dropbox_prefix"));
+		
+		$filesystem = new Filesystem($adapter, new Config([
+				'disable_asserts' => true,
+			]));
+
+		return array($adapter, $filesystem);
 	}
 	
 	public function get_ftp_filesystem()

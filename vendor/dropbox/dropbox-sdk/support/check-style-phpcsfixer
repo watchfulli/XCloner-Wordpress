@@ -1,0 +1,36 @@
+#!/bin/sh
+
+# 1. Install the php-cs-fixer command-line tool: https://github.com/fabpot/PHP-CS-Fixer
+# 2. Run this script.
+
+# Locate the script file.  Cross symlinks if necessary.
+loc="$0"
+while [ -h "$loc" ]; do
+	ls=`ls -ld "$loc"`
+	link=`expr "$ls" : '.*-> \(.*\)$'`
+	if expr "$link" : '/.*' > /dev/null; then
+		loc="$link"  # Absolute link
+	else
+		loc="`dirname "$loc"`/$link"  # Relative link
+	fi
+done
+
+script_dir=`dirname "$loc"`
+top_dir=`cd "$script_dir/.."; pwd`
+
+php-cs-fixer fix "$top_dir/"{lib,test,examples} --dry-run --verbose --diff \
+    --fixers=-phpdoc_params,-visibility,-return,-braces,-psr0,-elseif,-function_declaration
+
+# NOTE(cakoose): Reasons for excluding these fixers:
+# - phpdoc_params: This puts two spaces after the '@param', which I didn't like.
+# - visibility: In PHP, if you don't specify a visibility modifier, it's 'public'.  This seems a
+#   reasonable default and I don't see any advantages to being verbose and saying 'public' each
+#   time.
+# - return: This is annoying for two-line functions where you check something and then return.
+# - braces: Different brace styles don't really bother me, but I'm not strongly opposed to forcing
+#   one style, though.
+# - psr0: I don't object to what this is trying to enforce, but it makes breaking changes to your
+#   code.
+# - elseif: I'm not strongly opposed, but I don't see the advantage.
+# - function_declaration: This probably enforces some good rules, but it also requires a space
+#   between "function" and "(...)" in an anonymous function expression.

@@ -71,40 +71,40 @@
 	  
 	  <div class="card blue-grey darken-1 z-depth-4 backup-ready">
 		<div class="card-content white-text">
-		  <span class="card-title"><?php echo __("System Check")?></span>
+		  <span class="card-title"><?php echo __("System Check",'xcloner')?></span>
 		  <ul>
 				<li class="card-panel <?php echo ($requirements->check_xcloner_start_path(1)?"teal":"red")?> lighten-2" >
-					<?php echo __('Backup Start Location')?>: <span class="shorten_string "><?php echo $requirements->check_xcloner_start_path();?></span>
+					<?php echo __('Backup Start Location','xcloner')?>: <span class="shorten_string "><?php echo $requirements->check_xcloner_start_path();?></span>
 				</li>
 				<li class="card-panel <?php echo ($requirements->check_xcloner_store_path(1)?"teal":"red")?> lighten-2" >
-					<?php echo __('Backup Storage Location')?>: <span class="shorten_string"><?php echo $requirements->check_xcloner_store_path();?></span>
+					<?php echo __('Backup Storage Location','xcloner')?>: <span class="shorten_string"><?php echo $requirements->check_xcloner_store_path();?></span>
 				</li>
 				<li class="card-panel <?php echo ($requirements->check_xcloner_tmp_path(1)?"teal":"red")?> lighten-2" >
-					<?php echo __('Temporary Location')?>: <span class="shorten_string"><?php echo $requirements->check_xcloner_tmp_path();?></span>
+					<?php echo __('Temporary Location','xcloner')?>: <span class="shorten_string"><?php echo $requirements->check_xcloner_tmp_path();?></span>
 				</li>
 				
 				<li class="card-panel <?php echo ($requirements->check_min_php_version(1)?"teal":"red")?> lighten-2" >
-					<?php echo __('PHP Version Check')?>: <?php echo $requirements->check_min_php_version();?>
+					<?php echo __('PHP Version Check','xcloner')?>: <?php echo $requirements->check_min_php_version();?>
 					( >= <?php echo $requirements->get_constant('min_php_version')?>)
 				</li>
 				<li class="card-panel <?php echo ($requirements->check_safe_mode(1)?"teal":"orange")?> lighten-2" >
-					<?php echo __('PHP Safe Mode')?>: <?php echo $requirements->check_safe_mode();?>
+					<?php echo __('PHP Safe Mode','xcloner')?>: <?php echo $requirements->check_safe_mode();?>
 					( <?php echo $requirements->get_constant('safe_mode')?>)
 				</li>
 				<li class="card-panel <?php echo ($requirements->check_backup_ready_status()?"teal":"red")?> lighten-2">
-					<?php echo ($requirements->check_backup_ready_status()?__('BACKUP READY'):__('Backup not ready, please check above requirements'))?>
+					<?php echo ($requirements->check_backup_ready_status()?__('BACKUP READY','xcloner'):__('Backup not ready, please check above requirements','xcloner'))?>
 					<i class="material-icons right tiny"><?php echo ($requirements->check_backup_ready_status()?'thumb_up':'thumb_down')?></i>
 				</li>
 		  </ul>
 		  <ul class="additional_system_info">
 				<li class="card-panel grey darken-1" >
-					<?php echo __('PHP max_execution_time')?>: <?php echo $requirements->get_max_execution_time();?>
+					<?php echo __('PHP max_execution_time','xcloner')?>: <?php echo $requirements->get_max_execution_time();?>
 				</li>
 				<li class="card-panel grey darken-1" >
-					<?php echo __('PHP memory_limit')?>: <?php echo $requirements->get_memory_limit();?>
+					<?php echo __('PHP memory_limit','xcloner')?>: <?php echo $requirements->get_memory_limit();?>
 				</li>
 				<li class="card-panel grey darken-1" >
-					<?php echo __('PHP open_basedir')?>: <?php echo $requirements->get_open_basedir();?>
+					<?php echo __('PHP open_basedir','xcloner')?>: <?php echo $requirements->get_open_basedir();?>
 				</li>
 				<?php 
 				$data = array();
@@ -112,18 +112,18 @@
 					$data = $xcloner_file_system->estimate_read_write_time();
 				?>
 				<li class="card-panel grey darken-1" >
-					<?php echo __('Reading Time 1MB Block')?>: <?php echo (isset($data['reading_time'])?$data['reading_time']:__("unknown"));?>
+					<?php echo __('Reading Time 1MB Block','xcloner')?>: <?php echo (isset($data['reading_time'])?$data['reading_time']:__("unknown"));?>
 				</li>
 				<li class="card-panel grey darken-1" >
-					<?php echo __('Writing Time 1MB Block')?>: <?php echo (isset($data['writing_time'])?$data['writing_time']:__("unknown"));?>
+					<?php echo __('Writing Time 1MB Block','xcloner')?>: <?php echo (isset($data['writing_time'])?$data['writing_time']:__("unknown"));?>
 				</li>
 				<li class="card-panel grey darken-1" >
-					<?php echo __('Free Disk Space')?>: <?php echo $requirements->get_free_disk_space();;?>
+					<?php echo __('Free Disk Space','xcloner')?>: <?php echo $requirements->get_free_disk_space();;?>
 				</li>
 		  </ul>
 		</div>
 		<div class="card-action">
-		  <a class="waves-effect waves-light btn system_info_toggle blue darken-1"><i class="material-icons left">list</i><?php echo __('Toggle Additional System Info')?></a>
+		  <a class="waves-effect waves-light btn system_info_toggle blue darken-1"><i class="material-icons left">list</i><?php echo __('Toggle Additional System Info','xcloner')?></a>
 		</div>
 	  </div>
 

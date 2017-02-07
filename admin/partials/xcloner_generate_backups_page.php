@@ -66,7 +66,7 @@ $tab = 1;
 		<?php if($xcloner_settings->get_enable_mysql_backup()):?>
 		<div id="database_options" class="tab-content">
 			<h2><?php echo __('Select database data to include in the backup', 'xcloner')?>:
-				<a class="btn-floating tooltipped btn-small" data-position="right" data-delay="50" data-tooltip="<?php echo __('Disable the \'Backup only WP tables\' setting if you don\'t want to show all other databases and tables not related to this Wordpress install','xcloner');?>" data-tooltip-id=""><i class="material-icons">help_outline</i></a>
+				<a class="btn-floating tooltipped btn-small" data-position="right" data-delay="50" data-tooltip="<?php echo __('Enable the \'Backup only WP tables\' setting if you don\'t want to show all other databases and tables not related to this Wordpress install','xcloner');?>" data-tooltip-id=""><i class="material-icons">help_outline</i></a>
 			</h2>
 			
 			<!-- database/tables tree -->
@@ -229,11 +229,11 @@ $tab = 1;
 			<div class="row">
 				 <div class="input-field inline col s12 m6 l4">
 					  <input type="datetime-local" id="datepicker" class="datepicker" name="schedule_start_date" >
-					  <label for="datepicker"><?php echo __('Schedule Backup To Start On:')?></label>
+					  <label for="datepicker"><?php echo __('Schedule Backup To Start On:','xcloner')?></label>
 				</div>
 				 <div class="input-field inline col s12 m4 l2">
 					  <input id="timepicker_ampm_dark" class="timepicker" type="time" name="schedule_start_time">
-					  <label for="timepicker_ampm_dark"><?php echo __('At:')?></label>
+					  <label for="timepicker_ampm_dark"><?php echo __('At:','xcloner')?></label>
 				</div>
 			</div>
 			
@@ -241,11 +241,11 @@ $tab = 1;
 				<div class="input-field col s12 m10 l6">
 					<select name="schedule_frequency" id="schedule_frequency" class="validate" required>
 						<option value="" disabled selected><?php echo __('please select', 'xcloner') ?></option>
-						<option value="single">Don't Repeat</option>
-						<option value="hourly">Hourly</option>
-						<option value="daily">Daily</option>
-						<option value="weekly">Weekly</option>
-						<option value="monthly">Monthly</option>
+						<option value="single"><?php echo __("Don't Repeat","xcloner")?></option>
+						<option value="hourly"><?php echo __("Hourly","xcloner")?></option>
+						<option value="daily"><?php echo __("Daily","xcloner")?></option>
+						<option value="weekly"><?php echo __("Weekly","xcloner")?></option>
+						<option value="monthly"><?php echo __("Monthly","xcloner")?></option>
 						</select>
 						<label><?php echo __('Please Select Frequency to run', 'xcloner') ?></label>
 				</div>

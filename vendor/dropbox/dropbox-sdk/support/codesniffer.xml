@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<!-- This file just disables errors that we don't agree with.  However, it would be nice if it
+     enforced things that we wanted. -->
+<ruleset name="Dropbox PHP SDK Standard">
+    <rule ref="PSR2">
+
+        <!-- Definitely exclude these rules -->
+
+        <exclude name="Squiz.WhiteSpace.ScopeClosingBrace.ContentBefore"/>
+        <exclude name="Generic.ControlStructures.InlineControlStructure.NotAllowed"/>
+        <exclude name="PSR2.Methods.FunctionCallSignature.CloseBracketLine"/>
+        <exclude name="PSR2.Methods.FunctionCallSignature.MultipleArguments"/>
+        <exclude name="PSR2.Methods.FunctionCallSignature.ContentAfterOpenBracket"/>
+        <exclude name="PSR2.Methods.FunctionCallSignature.Indent"/>
+        <exclude name="PSR2.Methods.MethodDeclaration.Underscore"/>
+        <exclude name="PSR2.ControlStructures.ElseIfDeclaration.NotAllowed"/>
+
+        <exclude name="Squiz.Scope.MethodScope.Missing"/>
+        <exclude name="PSR2.Classes.PropertyDeclaration.ScopeMissing"/>
+        <exclude name="PSR2.Classes.PropertyDeclaration.VarUsed"/>
+            <!-- The convention we use: Use "private" for private members.  Use no modifier
+                 for public members.  TODO: Write a checker to enforce this. -->
+
+        <!-- Rules that are good, but too broad -->
+
+        <exclude name="Squiz.Functions.MultiLineFunctionDeclaration.BraceOnSameLine"/>
+            <!-- This rule triggers on single-line functions. -->
+        <exclude name="Squiz.ControlStructures.ControlSignature.SpaceAfterCloseBrace"/>
+            <!-- This rule prevents putting "else" on the next line. -->
+        <exclude name="PSR2.Methods.FunctionCallSignature.ContentAfterOpenBracket"/>
+        <exclude name="Squiz.Functions.MultiLineFunctionDeclaration.BraceSpacing"/>
+            <!-- These two rules prevents single-line comments before open brace line. -->
+        <exclude name="Squiz.ControlStructures.ControlSignature.NewlineAfterOpenBrace"/>
+            <!-- This rule prevents putting single-line comments after open braces. -->
+        <exclude name="PSR1.Files.SideEffects.FoundWithSymbols"/>
+            <!-- This rule creates problems for two files:
+                 autoload.php - Though global side-effects on includes are generally bad, I think
+                     in this case it's better than forcing the client code to explicitly call a
+                     function to register the autoloader.
+                 Curl.php - We configure the ciphersuite depending on the Curl configuration.  All
+                     the variables are namespaced, so I don't think pollution is a big concern.
+            -->
+
+        <!-- Rules that I'm unsure about. -->
+
+        <exclude name="PSR2.Classes.ClassDeclaration.CloseBraceAfterBody"/>
+        <exclude name="Generic.Files.LineLength.TooLong"/>
+    </rule>
+
+    <!-- Special cases -->
+
+    <rule ref="Squiz.Classes.ValidClassName.NotCamelCaps">
+        <exclude-pattern>lib/Dropbox/WebAuthException/*</exclude-pattern>
+        <exclude-pattern>lib/Dropbox/Exception/*</exclude-pattern>
+            <!-- The naming of Exception casses was a historical hack to satisfy some PSR, I
+                 think.  We can change "Exception_BadRequest" to "Exception\BadRequest" if we
+                 break backwards compatibility. -->
+    </rule>
+    <rule ref="PSR1.Classes.ClassDeclaration.MissingNamespace">
+        <exclude-pattern>test/*</exclude-pattern>
+    </rule>
+    <rule ref="PSR1.Classes.ClassDeclaration.MultipleClasses">
+        <exclude-pattern>test/*</exclude-pattern>
+    </rule>
+</ruleset>

@@ -1,0 +1,70 @@
+---------------------------------------------
+1.1.7 (2015-06-29)
+
+- Util: Fix syntax to be compatible with PHP 5.3.
+- Many minor fixes.
+
+---------------------------------------------
+1.1.6 (2015-06-29)
+
+- WebAuth: Add support for "force_reapprove" parameter.
+- Add exception class for HTTP 507 error (over quota).
+- Put SDK version in HTTP request's "User-Agent" field.
+
+---------------------------------------------
+1.1.5 (2015-02-23)
+
+- Add RootCertificates::useExternalPaths() so SDK can be used in PHARs.
+- When reading AppInfo/AuthInfo files, strip out UTF-8 BOM if present.
+
+---------------------------------------------
+1.1.4 (2014-10-21)
+
+- Use TLS instead of SSLv3 (SSLv3 has security issues).
+
+---------------------------------------------
+1.1.3 (2014-01-28)
+
+- Fix for PHP installations that use NSS as the SSL backend.
+
+---------------------------------------------
+1.1.2 (2013-12-10)
+
+- Bail out if 'mbstring.func_overload' is set.  We need the standard string
+  functions to behave as originally defined.
+- Tweak web-file-browser.php example to work in an existing web server setup.
+- Fix bug with file uploads, triggered when a chunked upload request succeeds
+  but the response doesn't get back to us.
+- Add support for "path_prefix" parameter to /delta.
+- Add support for API call that upgrades OAuth 1 tokens to OAuth 2 tokens.
+- Stricter SSL: Use pinned root certificates and a fixed list of ciphersuites.
+  Include "examples/test-ssl.php" to let people check their PHP installation.
+
+---------------------------------------------
+1.1.1 (2013-08-21)
+
+- uploadFile no longer closes the caller's input stream.
+	
+---------------------------------------------
+1.1.0 (2013-07-08)
+
+- Switch to OAuth 2.  This is a backwards incompatible change to the auth API,
+  but all regular API calls remain unchanged.
+
+---------------------------------------------
+1.0.2 (2013-06-17)
+
+- Fixed performance problem with file uploads when reading from from a
+  network stream.
+- Treat HTTP 502 like HTTP 500 (yields better retry behavior)
+
+---------------------------------------------
+1.0.1 (2013-05-09)
+
+- Fix Client.getMetadataWithChildrenIfChanged
+- Add "--locale=..." option to examples.
+
+---------------------------------------------
+1.0.0 (2013-04-04)
+
+- First versioned release.

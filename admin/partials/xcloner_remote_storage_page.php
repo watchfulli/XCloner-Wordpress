@@ -108,12 +108,12 @@
 			        </div>
 			        
 			        <div class="row">
-						<div class="col s12 m4">
+						<div class="col s6 m4">
 							<button class="btn waves-effect waves-light" type="submit" name="action" id="action"  value="ftp"><?php echo __("Save Settings","xcloner")?>
 								<i class="material-icons right">save</i>
 							</button>
 						</div>	
-						<div class="col s12 m4">
+						<div class="col s6 m4">
 							<button class="btn waves-effect waves-light orange" type="submit" name="action" id="action"  value="ftp" onclick="jQuery('#connection_check').val('1')"><?php echo __("Verify","xcloner")?>
 								<i class="material-icons right">import_export</i>
 							</button>
@@ -206,13 +206,85 @@
 			        </div>
 			        
 			        <div class="row">
-						<div class="col s12 m4">
+						<div class="col s6 m4">
 							<button class="btn waves-effect waves-light" type="submit" name="action" id="action"  value="sftp"><?php echo __("Save Settings","xcloner")?>
 								<i class="material-icons right">save</i>
 							</button>
 						</div>	
-						<div class="col s12 m4">
+						<div class="col s6 m4">
 							<button class="btn waves-effect waves-light orange" type="submit" name="action" id="action"  value="sftp" onclick="jQuery('#connection_check').val('1')"><?php echo __("Verify","xcloner")?>
+								<i class="material-icons right">import_export</i>
+							</button>
+						</div>
+					</div>
+			        
+				</div>
+			</li>
+			
+			<!-- DROPBOX STORAGE-->
+			<li id="dropbox">
+				<div class="collapsible-header">
+					<i class="material-icons">computer</i><?php echo __("Dropbox Storage","xcloner")?>
+					<div class="right">
+						<div class="switch">
+							<label>
+							Off
+							<input type="checkbox" name="xcloner_dropbox_enable" class="status" value="1" <?php if(get_option("xcloner_dropbox_enable")) echo "checked"?> \>
+							<span class="lever"></span>
+							On
+							</label>
+						</div>
+					</div>
+				</div>
+				<div class="collapsible-body">
+			        
+			        <div class="row">
+						<div class="col s12 m3 label">
+							&nbsp;
+						</div>	
+						<div class=" col s12 m6">
+							<p>
+								<?php echo sprintf(__('Visit %s and get your "App secret".','xcloner'), '<a href="https://www.dropbox.com/developers/apps" target="_blank">https://www.dropbox.com/developers/apps</a>')?>
+							</p>
+				        </div>
+			        </div>
+			        
+			        <div class="row">
+						<div class="col s12 m3 label">
+							<label for="sftp_username"><?php echo __("Dropbox Access Token","xcloner")?></label>
+						</div>	
+						<div class=" col s12 m6">
+							<input placeholder="<?php echo __("Dropbox Access Token","xcloner")?>" id="dropbox_access_token" type="text" name="xcloner_dropbox_access_token" class="validate" value="<?php echo get_option("xcloner_dropbox_access_token")?>" autocomplete="off" >
+				        </div>
+			        </div>
+			        
+			        
+			        <div class="row">
+						<div class="col s12 m3 label">
+							<label for="sftp_password"><?php echo __("Dropbox App Secret","xcloner")?></label>
+						</div>
+						<div class=" col s12 m6">
+							<input placeholder="<?php echo __("Dropbox App Secret","xcloner")?>" id="dropbox_app_secret" type="password" name="xcloner_dropbox_app_secret" class="validate" value="<?php echo get_option("xcloner_dropbox_app_secret")?>" autocomplete="off" >
+				        </div>
+			        </div>
+			        
+			        <div class="row">
+						<div class="col s12 m3 label">
+							<label for="sftp_private_key"><?php echo __("Dropbox Prefix","xcloner")?></label>
+						</div>
+						<div class=" col s12 m6">
+							<input placeholder="<?php echo __("Dropbox Prefix","xcloner")?>" id="dropbox_prefix" type="text" name="xcloner_dropbox_prefix" class="validate" value="<?php echo get_option("xcloner_dropbox_prefix")?>">
+						</div>	
+			        </div>
+			        
+			        <div class="row">
+						<div class="col s6 m4">
+							<button class="btn waves-effect waves-light" type="submit" name="action" id="action"  value="dropbox"><?php echo __("Save Settings","xcloner")?>
+								<i class="material-icons right">save</i>
+							</button>
+						</div>	
+						<div class="col s6 m4">
+							<button class="btn waves-effect waves-light orange" type="submit" name="action" id="action"  value="dropbox" onclick="jQuery('#connection_check').val('1')"><?php echo __("Verify","xcloner")?>
 								<i class="material-icons right">import_export</i>
 							</button>
 						</div>

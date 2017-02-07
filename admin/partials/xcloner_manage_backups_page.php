@@ -63,11 +63,11 @@ foreach($backup_list as $file_info):?>
 		<td><?php echo date("d M, Y H:i", $file_info['timestamp'])?></td>
 		<td><?php echo size_format($file_info['size'])?></td>
 		<td>
-			 <a href="#<?php echo $file_info['path'];?>" class="download" title="Download Backup"><i class="material-icons">file_download</i></a>
+			 <a href="#<?php echo $file_info['path'];?>" class="download" title="<?php echo __('Download Backup','xcloner')?>"><i class="material-icons">file_download</i></a>
 			 <?php if(sizeof($available_storages)):?>
-				<a href="#<?php echo $file_info['path']?>" class="cloud-upload" title="Send Backup To Remote Storage"><i class="material-icons">cloud_upload</i></a>
+				<a href="#<?php echo $file_info['path']?>" class="cloud-upload" title="<?php echo __('Send Backup To Remote Storage','xcloner')?>"><i class="material-icons">cloud_upload</i></a>
 			 <?php endif?>
-			 <a href="#<?php echo $file_info['path']?>" class="delete" title="Delete Backup"><i class="material-icons">delete</i></a>
+			 <a href="#<?php echo $file_info['path']?>" class="delete" title="<?php echo __('Delete Backup','xcloner')?>"><i class="material-icons">delete</i></a>
 		</td>
 		
 	</tr>
@@ -91,7 +91,7 @@ foreach($backup_list as $file_info):?>
 	  <?php if(sizeof($available_storages)):?>
 			<div class="row">
 				<div class="col s12 label">
-					<label><?php echo __(sprintf('Send %s to remote storage', "<span class='backup_name'></span>"), 'xcloner') ?></label>
+					<label><?php echo sprintf(__('Send %s to remote storage','xcloner'), "<span class='backup_name'></span>") ?></label>
 				</div>
 				<div class="input-field col s8 m10">
 					<select name="transfer_storage" id="transfer_storage" class="validate" required >
