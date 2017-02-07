@@ -258,7 +258,7 @@ class Xcloner_Scheduler{
 			$this->logger->info(sprintf("Transferring backup to remote storage %s", strtoupper($schedule['remote_storage'])), array("CRON"));
 			
 			if(method_exists($this->xcloner_remote_storage, "upload_backup_to_storage"))
-				$return = call_user_func_array(array($this->xcloner_remote_storage, "upload_backup_to_storage"), array($backup_file, $schedule['remote_storage']));
+				$return_storage = call_user_func_array(array($this->xcloner_remote_storage, "upload_backup_to_storage"), array($backup_file, $schedule['remote_storage']));
 		}
 		
 		
@@ -291,7 +291,7 @@ class Xcloner_Scheduler{
 			if(isset($schedule['backup_params']->email_notification) and $to=$schedule['backup_params']->email_notification)
 			{
 				$from = "XCloner Schedule - ".$schedule['name'];
-				$this->archive_system->send_notification($to, $from, "Scheduled backup error","", "", $e->getMessage());
+				$this->archive_system->send_notification($to, $from, "Scheduled backup error",$return['extra']['backup_parent'], "", $e->getMessage());
 			}
 			
 		}

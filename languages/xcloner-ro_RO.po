@@ -1,17 +1,18 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2017-02-07 14:29+0200\n"
-"PO-Revision-Date: 2017-02-07 14:34+0200\n"
+"POT-Creation-Date: 2017-02-07 15:28+0200\n"
+"PO-Revision-Date: 2017-02-07 15:30+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
-"Language: en\n"
+"Language: ro_RO\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.8.11\n"
 "X-Poedit-Basepath: ..\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
+"2:1));\n"
 "X-Poedit-KeywordsList: __\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPath-1: .\n"
@@ -21,83 +22,85 @@ msgstr ""
 
 #: admin/class-xcloner-admin.php:185
 msgid "Settings Saved"
-msgstr ""
+msgstr "Setari Salvate"
 
 #: admin/class-xcloner-admin.php:204
 msgid "General Options"
-msgstr ""
+msgstr "Optiuni Generale"
 
 #: admin/class-xcloner-admin.php:205
 msgid "Mysql Options"
-msgstr ""
+msgstr "Optiuni Mysql"
 
 #: admin/class-xcloner-admin.php:206
 msgid "System Options"
-msgstr ""
+msgstr "Optiuni Sistem"
 
 #: admin/class-xcloner-admin.php:207
 msgid "Cleanup Options"
-msgstr ""
+msgstr "Optiuni Curatare"
 
 #: admin/class-xcloner-admin.php:208
 msgid "Cron Options"
-msgstr ""
+msgstr "Optiuni Cron"
 
 #: admin/partials/xcloner_console_page.php:16
 msgid "XCloner Debugger Dashboard"
-msgstr ""
+msgstr "Consola Debug XCloner"
 
 #: admin/partials/xcloner_generate_backups_page.php:13
 msgid "Backup Options"
-msgstr ""
+msgstr "Optiuni Backup"
 
 #: admin/partials/xcloner_generate_backups_page.php:15
 msgid "Database Options"
-msgstr ""
+msgstr "Optiuni Baza Date"
 
 #: admin/partials/xcloner_generate_backups_page.php:17
 msgid "Files Options"
-msgstr ""
+msgstr "Optiuni Fisiere"
 
 #: admin/partials/xcloner_generate_backups_page.php:18
 #: includes/class-xcloner.php:348
 msgid "Generate Backup"
-msgstr ""
+msgstr "Creare Backup"
 
 #: admin/partials/xcloner_generate_backups_page.php:19
 msgid "Schedule Backup"
-msgstr ""
+msgstr "Programare Backup"
 
 #: admin/partials/xcloner_generate_backups_page.php:30
 #: admin/partials/xcloner_manage_backups_page.php:22
 #: admin/partials/xcloner_scheduled_backups_page.php:133
 msgid "Backup Name"
-msgstr ""
+msgstr "Nume Backup"
 
 #: admin/partials/xcloner_generate_backups_page.php:33
 msgid "The default backup name, supported tags [time], [hostname], [domain]"
 msgstr ""
+"Numele implicit al fisierului de backup, tag-uri suportate [time], "
+"[hostname], [domain] "
 
 #: admin/partials/xcloner_generate_backups_page.php:41
 msgid "Send Email Notification To"
-msgstr ""
+msgstr "Trimite Notificare E-Mail Catre"
 
 #: admin/partials/xcloner_generate_backups_page.php:44
 msgid "If left blank, no notification will be sent"
-msgstr ""
+msgstr "Daca lasat gol, nici o notificare nu va fi trimisa"
 
 #: admin/partials/xcloner_generate_backups_page.php:52
 msgid "Backup Comments"
-msgstr ""
+msgstr "Comentarii backup"
 
 #: admin/partials/xcloner_generate_backups_page.php:55
 msgid ""
 "Some default backup comments that will be stored inside the backup archive"
-msgstr ""
+msgstr "Comentarii implicite care for fi storcate inauntrul arhivei"
 
 #: admin/partials/xcloner_generate_backups_page.php:68
 msgid "Select database data to include in the backup"
-msgstr ""
+msgstr "Selectati baza de date pentru adaugare in backup"
 
 #: admin/partials/xcloner_generate_backups_page.php:69
 msgid ""
@@ -110,6 +113,7 @@ msgid ""
 "Select from below the files/folders you want to exclude from your Backup "
 "Archive"
 msgstr ""
+"Selectati de mai jos fisierele pe care vreti sa le excludeti din Backup"
 
 #: admin/partials/xcloner_generate_backups_page.php:90
 msgid ""
@@ -117,125 +121,129 @@ msgid ""
 "Location) to exclude any file/folder you need by clicking the checkbox near "
 "it"
 msgstr ""
+"Puteti naviga prin intreaga structure a site-ului(Locatia de Start Backup) "
+"pentru a exclude fisiere prin apasarea casutei de checkbox "
 
 #: admin/partials/xcloner_generate_backups_page.php:118
 msgid "Scanning The File System..."
-msgstr ""
+msgstr "Scanez Sistemul De Fisiere…"
 
 #: admin/partials/xcloner_generate_backups_page.php:120
 #, php-format
 msgid "Found %s files (%s)"
-msgstr ""
+msgstr "Am gasit %s fisiere (%s)"
 
 #: admin/partials/xcloner_generate_backups_page.php:135
 msgid "Generating the Mysql Backup..."
-msgstr ""
+msgstr "Creare Backup Mysql…"
 
 #: admin/partials/xcloner_generate_backups_page.php:137
 #, php-format
 msgid "Found %s tables in %s databases (%s)"
-msgstr ""
+msgstr "Am gasit  %s tabele in %s base de date (%s)"
 
 #: admin/partials/xcloner_generate_backups_page.php:161
 msgid "Adding Files to Archive..."
-msgstr ""
+msgstr "Adaug Fisierele in Arhiva…"
 
 #: admin/partials/xcloner_generate_backups_page.php:163
 #, php-format
 msgid "Adding %s files (%s)"
-msgstr ""
+msgstr "Adaug %s fisiere (%s)"
 
 #: admin/partials/xcloner_generate_backups_page.php:176
 msgid "Backup Parts"
-msgstr ""
+msgstr "Parti Backup"
 
 #: admin/partials/xcloner_generate_backups_page.php:186
 msgid "Backup Done"
-msgstr ""
+msgstr "Backup Terminat"
 
 #: admin/partials/xcloner_generate_backups_page.php:190
 msgid "Send Backup To Remote Storage"
-msgstr ""
+msgstr "Trimite Backup In Stocare La Distanta "
 
 #: admin/partials/xcloner_generate_backups_page.php:211
 msgid "Schedule Saved"
-msgstr ""
+msgstr "Program Salvat"
 
 #: admin/partials/xcloner_generate_backups_page.php:212
 msgid "(Dismiss this notice."
-msgstr ""
+msgstr "(Anuleaza aceasta notificare."
 
 #: admin/partials/xcloner_generate_backups_page.php:218
 #: admin/partials/xcloner_scheduled_backups_page.php:42
 msgid "Current Server Time"
-msgstr ""
+msgstr "Timpul Curent Pe Server"
 
 #: admin/partials/xcloner_generate_backups_page.php:225
 #: admin/partials/xcloner_scheduled_backups_page.php:14
 #: admin/partials/xcloner_scheduled_backups_page.php:26
 #: admin/partials/xcloner_scheduled_backups_page.php:84
 msgid "Schedule Name"
-msgstr ""
+msgstr "Numele Programarii"
 
 #: admin/partials/xcloner_generate_backups_page.php:232
 msgid "Schedule Backup To Start On:"
-msgstr ""
+msgstr "Programeaza Backup-ul Sa Inceapa Pe:"
 
 #: admin/partials/xcloner_generate_backups_page.php:236
 msgid "At:"
-msgstr ""
+msgstr "La:"
 
 #: admin/partials/xcloner_generate_backups_page.php:243
 msgid "please select"
-msgstr ""
+msgstr "faceti o selectie"
 
 #: admin/partials/xcloner_generate_backups_page.php:250
 msgid "Please Select Frequency to run"
-msgstr ""
+msgstr "Selectati Frecventa De Rulare"
 
 #: admin/partials/xcloner_generate_backups_page.php:258
 #: admin/partials/xcloner_scheduled_backups_page.php:110
 msgid "none"
-msgstr ""
+msgstr "nici una"
 
 #: admin/partials/xcloner_generate_backups_page.php:263
 msgid "Send To Remote Storage"
-msgstr ""
+msgstr "Trimite In Spatiul De Storcare La Distanta"
 
 #: admin/partials/xcloner_generate_backups_page.php:269
 msgid "Submit"
-msgstr ""
+msgstr "Trimite"
 
 #: admin/partials/xcloner_generate_backups_page.php:283
 msgid "Message"
-msgstr ""
+msgstr "Mesaj"
 
 #: admin/partials/xcloner_generate_backups_page.php:284
 msgid "Response Code"
-msgstr ""
+msgstr "Cod Raspuns"
 
 #: admin/partials/xcloner_generate_backups_page.php:288
 msgid "Close"
-msgstr ""
+msgstr "Inchide"
 
 #: admin/partials/xcloner_generate_backups_page.php:297
 #: admin/partials/xcloner_manage_backups_page.php:89
 msgid "Remote Storage Transfer"
-msgstr ""
+msgstr "Transfer Stocare La Distanta"
 
 #: admin/partials/xcloner_generate_backups_page.php:306
 #: admin/partials/xcloner_manage_backups_page.php:98
 msgid "please select..."
-msgstr ""
+msgstr "faceti o selectie…"
 
 #: admin/partials/xcloner_generate_backups_page.php:318
 #: admin/partials/xcloner_manage_backups_page.php:110
 msgid "Uploading backup to the selected remote storage..."
-msgstr ""
+msgstr "Incarc backup-ul in spatiul de stocare selectat"
 
 #: admin/partials/xcloner_init_page.php:30
 msgid "Backup system not ready, please check and fix the issues marked in red"
 msgstr ""
+"Sistemul de backup nu este pregatit, va rugam reparati problemele marcate cu "
+"rosu"
 
 #: admin/partials/xcloner_init_page.php:40
 msgid "Backup Dashboard"
@@ -243,25 +251,25 @@ msgstr ""
 
 #: admin/partials/xcloner_init_page.php:74
 msgid "System Check"
-msgstr ""
+msgstr "Verificare Sistem"
 
 #: admin/partials/xcloner_init_page.php:77
 #: includes/class-xcloner-settings.php:262
 msgid "Backup Start Location"
-msgstr ""
+msgstr "Cale Inceput Backup"
 
 #: admin/partials/xcloner_init_page.php:80
 #: includes/class-xcloner-settings.php:276
 msgid "Backup Storage Location"
-msgstr ""
+msgstr "Cale Stocare Backup"
 
 #: admin/partials/xcloner_init_page.php:83
 msgid "Temporary Location"
-msgstr ""
+msgstr "Locatia Temporara"
 
 #: admin/partials/xcloner_init_page.php:87
 msgid "PHP Version Check"
-msgstr ""
+msgstr "Verificare Versiune PHP"
 
 #: admin/partials/xcloner_init_page.php:91
 msgid "PHP Safe Mode"
@@ -269,11 +277,11 @@ msgstr ""
 
 #: admin/partials/xcloner_init_page.php:95
 msgid "BACKUP READY"
-msgstr ""
+msgstr "GATA DE BACKUP"
 
 #: admin/partials/xcloner_init_page.php:95
 msgid "Backup not ready, please check above requirements"
-msgstr ""
+msgstr "Sistem Backup Invalid, va rog verificati cerintele date"
 
 #: admin/partials/xcloner_init_page.php:101
 msgid "PHP max_execution_time"
@@ -289,7 +297,7 @@ msgstr ""
 
 #: admin/partials/xcloner_init_page.php:115
 msgid "Reading Time 1MB Block"
-msgstr ""
+msgstr "Timp citire bloc de 1MB "
 
 #: admin/partials/xcloner_init_page.php:115
 #: admin/partials/xcloner_init_page.php:118
@@ -298,37 +306,37 @@ msgstr ""
 
 #: admin/partials/xcloner_init_page.php:118
 msgid "Writing Time 1MB Block"
-msgstr ""
+msgstr "Timp scriere bloc de 1M"
 
 #: admin/partials/xcloner_init_page.php:121
 msgid "Free Disk Space"
-msgstr ""
+msgstr "Spatiul Disc Liber"
 
 #: admin/partials/xcloner_init_page.php:126
 msgid "Toggle Additional System Info"
-msgstr ""
+msgstr "Arata Informatii Sistem Aditionale"
 
 #: admin/partials/xcloner_manage_backups_page.php:23
 msgid "Created Time"
-msgstr ""
+msgstr "Timpul Creat"
 
 #: admin/partials/xcloner_manage_backups_page.php:24
 msgid "Size"
-msgstr ""
+msgstr "Marime"
 
 #: admin/partials/xcloner_manage_backups_page.php:25
 #: admin/partials/xcloner_scheduled_backups_page.php:20
 #: admin/partials/xcloner_scheduled_backups_page.php:32
 msgid "Action"
-msgstr ""
+msgstr "Actiune"
 
 #: admin/partials/xcloner_manage_backups_page.php:81
 msgid "Delete"
-msgstr ""
+msgstr "Sterge"
 
 #: admin/partials/xcloner_remote_storage_page.php:13
 msgid "Ftp Storage"
-msgstr ""
+msgstr "Stocare Ftp"
 
 #: admin/partials/xcloner_remote_storage_page.php:28
 #: admin/partials/xcloner_remote_storage_page.php:31
@@ -404,7 +412,7 @@ msgstr ""
 
 #: admin/partials/xcloner_remote_storage_page.php:128
 msgid "SFTP Storage"
-msgstr ""
+msgstr "Stocare SFTP"
 
 #: admin/partials/xcloner_remote_storage_page.php:143
 #: admin/partials/xcloner_remote_storage_page.php:146
@@ -452,23 +460,23 @@ msgstr ""
 #: admin/partials/xcloner_scheduled_backups_page.php:15
 #: admin/partials/xcloner_scheduled_backups_page.php:27
 msgid "Recurrence"
-msgstr ""
+msgstr "Recurenta"
 
 #: admin/partials/xcloner_scheduled_backups_page.php:16
 #: admin/partials/xcloner_scheduled_backups_page.php:28
 msgid "Next Execution"
-msgstr ""
+msgstr "Urmatoarea Executie"
 
 #: admin/partials/xcloner_scheduled_backups_page.php:17
 #: admin/partials/xcloner_scheduled_backups_page.php:29
 #: includes/class-xcloner-loader.php:66
 msgid "Remote Storage"
-msgstr ""
+msgstr "Stocare Remote"
 
 #: admin/partials/xcloner_scheduled_backups_page.php:18
 #: admin/partials/xcloner_scheduled_backups_page.php:30
 msgid "Last Backup"
-msgstr ""
+msgstr "Ultimul Backup"
 
 #: admin/partials/xcloner_scheduled_backups_page.php:19
 #: admin/partials/xcloner_scheduled_backups_page.php:31
@@ -477,7 +485,7 @@ msgstr ""
 
 #: admin/partials/xcloner_scheduled_backups_page.php:56
 msgid "Edit Schedule"
-msgstr ""
+msgstr "Editare Program"
 
 #: admin/partials/xcloner_scheduled_backups_page.php:62
 msgid "Off"
@@ -489,133 +497,133 @@ msgstr ""
 
 #: admin/partials/xcloner_scheduled_backups_page.php:74
 msgid "Scheduler Settings"
-msgstr ""
+msgstr "Setari Program"
 
 #: admin/partials/xcloner_scheduled_backups_page.php:75
 msgid "Advanced"
-msgstr ""
+msgstr "Avansat"
 
 #: admin/partials/xcloner_scheduled_backups_page.php:91
 msgid "Schedule Start At"
-msgstr ""
+msgstr "Programul Incepe La"
 
 #: admin/partials/xcloner_scheduled_backups_page.php:96
 msgid "Schedule Recurrence"
-msgstr ""
+msgstr "Recurenta Program"
 
 #: admin/partials/xcloner_scheduled_backups_page.php:115
 msgid "Send To Remote Storage "
-msgstr ""
+msgstr "Trimite In Spatiul De Storcare La Distanta"
 
 #: admin/partials/xcloner_scheduled_backups_page.php:123
 msgid "Email Notification Address"
-msgstr ""
+msgstr "Adresa E-Mail Pentru Notificari"
 
 #: admin/partials/xcloner_scheduled_backups_page.php:140
 msgid "Included Database Data"
-msgstr ""
+msgstr "Include Baza De Data"
 
 #: admin/partials/xcloner_scheduled_backups_page.php:147
 msgid "Excluded Files"
-msgstr ""
+msgstr "Exclude Fisiere"
 
 #: admin/partials/xcloner_scheduled_backups_page.php:156
 msgid "Save"
-msgstr ""
+msgstr "Salveaza"
 
 #: includes/class-xcloner-api.php:569
 msgid "executed"
-msgstr ""
+msgstr "executat"
 
 #: includes/class-xcloner-archive.php:148
 #, php-format
 msgid "New backup generated %s"
-msgstr ""
+msgstr "Backup nou creat %s"
 
 #: includes/class-xcloner-archive.php:150
 #, php-format
 msgid "Generated Backup Size: %s"
-msgstr ""
+msgstr "Marime backup creat: %s"
 
 #: includes/class-xcloner-archive.php:158
 #, php-format
 msgid "Backup Parts: %s"
-msgstr ""
+msgstr "Parti Backup: %s"
 
 #: includes/class-xcloner-archive.php:171
 msgid "Backup Comments: "
-msgstr ""
+msgstr "Comentarii Backup:"
 
 #: includes/class-xcloner-archive.php:176
 msgid "Latest 50 Log Lines: "
-msgstr ""
+msgstr "Ultimele 50 de linii log:"
 
 #: includes/class-xcloner-archive.php:218
 #, php-format
 msgid "Initializing the backup archive %s"
-msgstr ""
+msgstr "Initializare archiva de backup %s"
 
 #: includes/class-xcloner-archive.php:227
 #, php-format
 msgid "Opening for append the backup archive %s"
-msgstr ""
+msgstr "Deschid pentru adaugare arhiva %s"
 
 #: includes/class-xcloner-database.php:94
 msgid "Starting database backup process"
-msgstr ""
+msgstr "Incep procesul de backup baza de date"
 
 #: includes/class-xcloner-database.php:181
 msgid "Setting mysql headers"
-msgstr ""
+msgstr "Setez header mysql"
 
 #: includes/class-xcloner-database.php:196
 #, php-format
 msgid "Getting number of tables in %s"
-msgstr ""
+msgstr "Obtin numarul de tabele din %s"
 
 #: includes/class-xcloner-database.php:276
 #, php-format
 msgid "Excluding table %s.%s from backup"
-msgstr ""
+msgstr "Exclud tabela %s.%s din backup"
 
 #: includes/class-xcloner-database.php:290
 msgid "Preparing the database recursion file"
-msgstr ""
+msgstr "Prepar fisierul de recursie al bazei de date"
 
 #: includes/class-xcloner-database.php:373
 #, php-format
 msgid "Starting new backup dump to file %s"
-msgstr ""
+msgstr "Incep un nou backup al bazei de date in fisierul %s"
 
 #: includes/class-xcloner-database.php:506
 #, php-format
 msgid "Dumping %s records starting position %s from %s.%s table"
-msgstr ""
+msgstr "Incarc %s randuri incepand de la pozitia %s din %s.%s tabela"
 
 #: includes/class-xcloner-database.php:514
 #, php-format
 msgid "Dumping the structure for %s.%s table"
-msgstr ""
+msgstr "Salvez structura pentru tabela %s.%s"
 
 #: includes/class-xcloner-database.php:606
 #, php-format
 msgid "Writing %s database dump headers"
-msgstr ""
+msgstr "Scrie %s capul bazei de date"
 
 #: includes/class-xcloner-file-system.php:253
 #, php-format
 msgid "Starting the filesystem scanner on root folder %s"
-msgstr ""
+msgstr "Incep scanarea sistemului de fisiere din %s"
 
 #: includes/class-xcloner-file-system.php:404
 #, php-format
 msgid "Adding %s to the filesystem list"
-msgstr ""
+msgstr "Adaug %s in lista de fisiere"
 
 #: includes/class-xcloner-file-system.php:412
 #, php-format
 msgid "Excluding %s from the filesystem list, matching pattern %s"
-msgstr ""
+msgstr "Exclud %s din lista de fisiere, pattern gasit %s"
 
 #: includes/class-xcloner-loader.php:59
 msgid "Site Backup"
@@ -631,53 +639,53 @@ msgstr ""
 
 #: includes/class-xcloner-loader.php:65
 msgid "XCloner Backup Settings"
-msgstr ""
+msgstr "XCloner Setari Backup"
 
 #: includes/class-xcloner-loader.php:65 includes/class-xcloner.php:347
 msgid "Settings"
-msgstr ""
+msgstr "Setari"
 
 #: includes/class-xcloner-loader.php:66
 msgid "Remote Storage Settings"
-msgstr ""
+msgstr "Setari Stocare Distanta"
 
 #: includes/class-xcloner-loader.php:67
 msgid "Manage Backups"
-msgstr ""
+msgstr "Administrare Backups"
 
 #: includes/class-xcloner-loader.php:68
 msgid "Scheduled Backups"
-msgstr ""
+msgstr "Programare Backups"
 
 #: includes/class-xcloner-loader.php:69
 msgid "Generate Backups"
-msgstr ""
+msgstr "Creare Backups"
 
 #: includes/class-xcloner-loader.php:70
 msgid "Open Debugger"
-msgstr ""
+msgstr "Deschide Depanator"
 
 #: includes/class-xcloner-remote-storage.php:82
 #, php-format
 msgid "%s storage settings saved."
-msgstr ""
+msgstr "%s setarile de stocare au fost salvate."
 
 #: includes/class-xcloner-remote-storage.php:89
 #, php-format
 msgid "%s connection is valid."
-msgstr ""
+msgstr "%s conexiunea este valida."
 
 #: includes/class-xcloner-remote-storage.php:113
 msgid "Could not write data"
-msgstr ""
+msgstr "Nu pot scrie data"
 
 #: includes/class-xcloner-remote-storage.php:118
 msgid "Could not read data"
-msgstr ""
+msgstr "Nu pot citi data"
 
 #: includes/class-xcloner-remote-storage.php:123
 msgid "Could not delete data"
-msgstr ""
+msgstr "Nu pot sterge data"
 
 #: includes/class-xcloner-settings.php:205
 #: includes/class-xcloner-settings.php:212
@@ -688,33 +696,42 @@ msgstr ""
 
 #: includes/class-xcloner-settings.php:220
 msgid "These are advanced options recommended for developers!"
-msgstr ""
+msgstr "Acestea sunt optiuni avansate pentru dezvoltatori!"
 
 #: includes/class-xcloner-settings.php:248
 msgid "Backup Compression Level"
-msgstr ""
+msgstr "Nivelul De Compresie Backup"
 
 #: includes/class-xcloner-settings.php:253
 msgid ""
 "Options between [0-9]. Value 0 means no compression, while 9 is maximum "
 "compression affecting cpu load"
 msgstr ""
+"Optiuni intre [0-9]. Valoarea 0 inseamna nici o compresie, in timp ce 9 este "
+"compresia maxima care insa poate afecta viteza de rulare a procesorului"
 
 #: includes/class-xcloner-settings.php:267
 msgid "Base path location from where XCloner can start the Backup."
-msgstr ""
+msgstr "Locatie de start de unde XCloner va citi fisierele"
 
 #: includes/class-xcloner-settings.php:281
 msgid "Location where XCloner will store the Backup archives."
-msgstr ""
+msgstr "Locatia unde XCloner v-a stoca fisierele de backup."
 
 #: includes/class-xcloner-settings.php:290
 msgid "Enable XCloner Backup Log"
+msgstr "Permite Logare XCloner"
+
+#: includes/class-xcloner-settings.php:295
+#, php-format
+msgid ""
+"Enable the XCloner Backup log. You will find it stored unde the Backup "
+"Storage Location, file %s"
 msgstr ""
 
 #: includes/class-xcloner-settings.php:303
 msgid "Enable Mysql Backup"
-msgstr ""
+msgstr "Permite Backup Mysql"
 
 #: includes/class-xcloner-settings.php:308
 msgid ""
@@ -724,7 +741,7 @@ msgstr ""
 
 #: includes/class-xcloner-settings.php:315
 msgid "Backup only WP tables"
-msgstr ""
+msgstr "Backup doar tabelele WP"
 
 #: includes/class-xcloner-settings.php:320
 #, php-format
@@ -758,7 +775,7 @@ msgstr ""
 
 #: includes/class-xcloner-settings.php:370
 msgid "Data Size Limit Per Request"
-msgstr ""
+msgstr "Limita Procesare Date Pe Actiune"
 
 #: includes/class-xcloner-settings.php:375
 msgid ""
@@ -768,7 +785,7 @@ msgstr ""
 
 #: includes/class-xcloner-settings.php:384
 msgid "Files To Process Per Request"
-msgstr ""
+msgstr "Numar Fisiesre De Procesat Pe Actiune"
 
 #: includes/class-xcloner-settings.php:389
 msgid ""
@@ -778,7 +795,7 @@ msgstr ""
 
 #: includes/class-xcloner-settings.php:398
 msgid "Directories To Scan Per Request"
-msgstr ""
+msgstr "Numar Dosare De Procesat Pe Actiune"
 
 #: includes/class-xcloner-settings.php:403
 msgid ""
@@ -788,7 +805,7 @@ msgstr ""
 
 #: includes/class-xcloner-settings.php:412
 msgid "Database Records Per Request"
-msgstr ""
+msgstr "Limita Inregistrari Baze Date Pe Actiune"
 
 #: includes/class-xcloner-settings.php:417
 msgid ""
@@ -798,7 +815,7 @@ msgstr ""
 
 #: includes/class-xcloner-settings.php:426
 msgid "Exclude files larger than (MB)"
-msgstr ""
+msgstr "Exclude fisierele mai mari decat(MB)"
 
 #: includes/class-xcloner-settings.php:431
 msgid ""
@@ -808,7 +825,7 @@ msgstr ""
 
 #: includes/class-xcloner-settings.php:438
 msgid "Split Backup Archive Limit (MB)"
-msgstr ""
+msgstr "Limita Impartire Arhiva(MB)"
 
 #: includes/class-xcloner-settings.php:443
 msgid ""
@@ -818,7 +835,7 @@ msgstr ""
 
 #: includes/class-xcloner-settings.php:451
 msgid "Cleanup by Date(days)"
-msgstr ""
+msgstr "Curatatare Prin Data(zile)"
 
 #: includes/class-xcloner-settings.php:456
 msgid ""
@@ -828,7 +845,7 @@ msgstr ""
 
 #: includes/class-xcloner-settings.php:463
 msgid "Cleanup by Quantity"
-msgstr ""
+msgstr "Curatare Prin Cantitate"
 
 #: includes/class-xcloner-settings.php:468
 msgid ""
@@ -838,7 +855,7 @@ msgstr ""
 
 #: includes/class-xcloner-settings.php:475
 msgid "Cleanup by Capacity(MB)"
-msgstr ""
+msgstr "Curatare Prin Capacitate(MB)"
 
 #: includes/class-xcloner-settings.php:480
 msgid ""
@@ -849,7 +866,7 @@ msgstr ""
 #: includes/class-xcloner-settings.php:488
 #: includes/class-xcloner-settings.php:493
 msgid "Cron frequency"
-msgstr ""
+msgstr "Frecventa Cron"
 
 #: includes/class-xcloner.php:100
 #, php-format
@@ -860,8 +877,8 @@ msgstr ""
 
 #: includes/class-xcloner.php:381
 msgid "Once Weekly"
-msgstr ""
+msgstr "O data pe saptamana"
 
 #: includes/class-xcloner.php:386
 msgid "Once a month"
-msgstr ""
+msgstr "O data pe luna"

@@ -3,7 +3,6 @@
 use League\Flysystem\Config;
 use League\Flysystem\Filesystem;
 use League\Flysystem\Util;
-//use League\Flysystem\Util\ContentListingFormatter;
 use League\Flysystem\Adapter\Local;
 
 class Xcloner_Api{
@@ -14,7 +13,6 @@ class Xcloner_Api{
 	private $xcloner_requirements;
 	private $_file_system;
 	private $archive_system;
-	//protected $exclude_files_by_default = array("administrator/backups", "wp-content/backups");
 	private $form_params;
 	private $logger;
 	
@@ -75,6 +73,10 @@ class Xcloner_Api{
 	
 	}
 	
+	/*
+	 * 
+	 * Save Schedule API
+	 */
 	public function save_schedule()
 	{
 		global $wpdb; 
@@ -164,6 +166,11 @@ class Xcloner_Api{
 		$this->send_response($response);
 	}
 	
+	/*
+	 * 
+	 * Backup Files API
+	 * 
+	 */ 
 	public function backup_files()
 	{
 		if (!current_user_can('manage_options')) {
@@ -212,6 +219,11 @@ class Xcloner_Api{
 		return $this->send_response($data, $hash = 1);
 	}
 	
+	/*
+	 * 
+	 * Backup Database API
+	 * 
+	 */ 
 	public function backup_database()
 	{
 		if (!current_user_can('manage_options')) {
@@ -240,6 +252,11 @@ class Xcloner_Api{
 		return $this->send_response($data, $hash = 1);
 	}
 	
+	/*
+	 * 
+	 * Scan Filesystem API
+	 * 
+	 */ 
 	public function scan_filesystem()
 	{
 		if (!current_user_can('manage_options')) {
@@ -266,6 +283,11 @@ class Xcloner_Api{
 		return $this->send_response($data, $hash = 1);
 	}
 	
+	/*
+	 * 
+	 * Process params sent by the user
+	 * 
+	 */ 
 	private function process_params($params)
 	{
 		if(isset($params->hash))
@@ -329,6 +351,11 @@ class Xcloner_Api{
 		return $this->xcloner_settings->get_hash();
 	}
 	
+	/*
+	 * 
+	 * Get file list for tree view API
+	 * 
+	 */ 
 	public function get_file_system_action()
 	{
 		if (!current_user_can('manage_options')) {
@@ -399,6 +426,11 @@ class Xcloner_Api{
 		return $this->send_response($data, 0);
 	}
 	
+	/*
+	 * 
+	 * Get databases/tables list for frontend tree display API
+	 * 
+	 */ 
 	public function get_database_tables_action()
 	{
 		if (!current_user_can('manage_options')) {
@@ -477,6 +509,11 @@ class Xcloner_Api{
 		return $this->send_response($data, 0);
 	}
 	
+	/*
+	 * 
+	 * Get schedule by id API
+	 * 
+	 */ 
 	public function get_schedule_by_id()
 	{
 		if (!current_user_can('manage_options')) {
@@ -490,6 +527,11 @@ class Xcloner_Api{
 		return $this->send_response($data);
 	}
 	
+	/*
+	 * 
+	 * Get Schedule list API
+	 * 
+	 */ 
 	public function get_scheduler_list()
 	{
 		if (!current_user_can('manage_options')) {
@@ -536,6 +578,11 @@ class Xcloner_Api{
 		return $this->send_response($return, 0);
 	}
 	
+	/*
+	 * 
+	 * Delete Schedule by ID API
+	 * 
+	 */
 	public function delete_schedule_by_id()
 	{
 		if (!current_user_can('manage_options')) {
@@ -549,6 +596,11 @@ class Xcloner_Api{
 		return $this->send_response($data);
 	}
 	
+	/*
+	 * 
+	 * Delete backup by name from the storage path
+	 * 
+	 */ 
 	public function delete_backup_by_name()
 	{
 		if (!current_user_can('manage_options')) {
@@ -562,6 +614,11 @@ class Xcloner_Api{
 		return $this->send_response($data);
 	}
 	
+	/*
+	 * 
+	 * Upload backup to remote API
+	 * 
+	 */ 
 	public function upload_backup_to_remote()
 	{
 		$backup_file = $this->xcloner_sanitization->sanitize_input_as_string($_POST['file']);
@@ -594,6 +651,11 @@ class Xcloner_Api{
 		
 	}
 	
+	/*
+	 * 
+	 * Remote Storage Status Save
+	 * 
+	 */ 
 	public function remote_storage_save_status()
 	{
 		if (!current_user_can('manage_options')) {
@@ -607,6 +669,11 @@ class Xcloner_Api{
 		$this->send_response($return, 0);
 	}
 	
+	/*
+	 * 
+	 * Download backup by Name from the Storage Path
+	 * 
+	 */ 
 	public function download_backup_by_name()
 	{
 		if (!current_user_can('manage_options')) {
@@ -641,6 +708,11 @@ class Xcloner_Api{
     
 	}
 	
+	/*
+	 * 
+	 * Send the json response back
+	 * 
+	 */
 	private function send_response($data, $attach_hash = 1)
 	{
 		if($attach_hash and null !== $this->xcloner_settings->get_hash())

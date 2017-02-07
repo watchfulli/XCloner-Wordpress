@@ -1,5 +1,7 @@
 <?php
 
+$xcloner_db_version = '1.0';
+
 /**
  * Fired during plugin activation
  *
@@ -30,7 +32,36 @@ class Xcloner_Activator {
 	 * @since    1.0.0
 	 */
 	public static function activate() {
+	
+		global $wpdb, $xcloner_db_version;
 		
+		$charset_collate = $wpdb->get_charset_collate();	
+		
+		$installed_ver = get_option( "xcloner_db_version" );
+		
+		if($installed_ver != $xcloner_db_version)
+		{
+			$table_name = $wpdb->prefix . "xcloner_scheduler";
+		 
+			$xcloner_schedule_sql="CREATE TABLE IF NOT EXISTS `".$table_name."` (
+				  `id` int(11) NOT NULL AUTO_INCREMENT,
+				  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+				  `recurrence` varchar(10) CHARACTER SET latin1 NOT NULL,
+				  `params` text CHARACTER SET latin1 NOT NULL,
+				  `start_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+				  `remote_storage` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
+				  `hash` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+				  `status` int(1) NOT NULL,
+				  `last_backup` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+				  PRIMARY KEY (`id`)
+				) ".$charset_collate.";
+				";
+			require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+			dbDelta( $xcloner_schedule_sql );
+			
+			update_option( "xcloner_db_version", $xcloner_db_version );
+		}
+	
 		if(!get_option('xcloner_backup_compression_level'))
 			update_option('xcloner_backup_compression_level', 0);
 		

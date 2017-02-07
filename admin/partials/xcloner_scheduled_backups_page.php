@@ -13,7 +13,6 @@ $available_storages = $xcloner_remote_storage->get_available_storages();
                 <th><?php echo __('ID', 'xcloner')?></th>
                 <th><?php echo __('Schedule Name', 'xcloner')?></th>
                 <th><?php echo __('Recurrence', 'xcloner')?></th>
-                <!--<th><?php echo __('Start Time', 'xcloner')?></th>-->
                 <th class="hide-on-med-and-down"><?php echo __('Next Execution', 'xcloner')?></th>
                 <th><?php echo __('Remote Storage', 'xcloner')?></th>
                 <th class="hide-on-med-and-down"><?php echo __('Last Backup', 'xcloner')?></th>
@@ -26,7 +25,6 @@ $available_storages = $xcloner_remote_storage->get_available_storages();
 				<th><?php echo __('ID', 'xcloner')?></th>
                 <th><?php echo __('Schedule Name', 'xcloner')?></th>
                 <th><?php echo __('Recurrence', 'xcloner')?></th>
-                <!--<th><?php echo __('Start Time', 'xcloner')?></th>-->
                 <th class="hide-on-med-and-down"><?php echo __('Next Execution', 'xcloner')?></th>
                 <th><?php echo __('Remote Storage', 'xcloner')?></th>
                 <th class="hide-on-med-and-down"><?php echo __('Last Backup', 'xcloner')?></th>
@@ -35,23 +33,6 @@ $available_storages = $xcloner_remote_storage->get_available_storages();
             </tr>
         </tfoot>
         <tbody>
-        <?php
-        /*if(is_array($scheduled_backups))
-        {
-			foreach($scheduled_backups as $schedule)
-			{
-			?>
-			<tr>
-				<td><?php echo $schedule->id?></td>
-				<td><?php echo $schedule->name?></td>
-				<td><?php echo $schedule->start_at?></td>
-				<td><?php echo $schedule->recurrence?></td>
-				<td><a href="#<?php echo $schedule->id?>" class="edit"> Edit </a>| <a href="#<?php echo $schedule->id?>" class="delete">Delete</a></td>
-			</tr>
-			<?php
-			}
-		}*/
-        ?>
         </tbody>    
 </table>       
 </div>
@@ -72,16 +53,16 @@ $available_storages = $xcloner_remote_storage->get_available_storages();
       
       <div class="row">
 			<div class="col s12 m6">
-			  <h4>Edit Schedule #<span id="schedule_id"></span></h4>
+			  <h4><?php echo __('Edit Schedule', 'xcloner') ?> #<span id="schedule_id"></span></h4>
 			</div>	  
       
 			<div class="col s12 m6 right-align">
 				<div class="switch">
 					<label>
-					Off
+					<?php echo __('Off', 'xcloner') ?>
 					<input type="checkbox" id="status" name="status" value="1">
 					<span class="lever"></span>
-					On
+					<?php echo __('On', 'xcloner') ?>
 					</label>
 				</div>
 			</div>	
@@ -90,8 +71,8 @@ $available_storages = $xcloner_remote_storage->get_available_storages();
 	  <p>	
 		  
 		<ul class="nav-tab-wrapper content row"> 
-			<li> <a href="#scheduler_settings" class="nav-tab col s12 m6 nav-tab-active">Scheduler Settings</a></li>
-			<li> <a href="#advanced_scheduler_settings" class="nav-tab col s12 m6">Advanced</a></li>
+			<li> <a href="#scheduler_settings" class="nav-tab col s12 m6 nav-tab-active"><?php echo __('Scheduler Settings', 'xcloner') ?></a></li>
+			<li> <a href="#advanced_scheduler_settings" class="nav-tab col s12 m6"><?php echo __('Advanced', 'xcloner') ?></a></li>
 		</ul>
 		
 		<div class="nav-tab-wrapper-content">
@@ -100,14 +81,14 @@ $available_storages = $xcloner_remote_storage->get_available_storages();
 				<div class="row">
 					<div class="input-field col s12 l12">
 						<input placeholder="" name="schedule_name" id="schedule_name" type="text" required value="">
-						<label for="schedule_name">Schedule Name</label>
+						<label for="schedule_name"><?php echo __('Schedule Name', 'xcloner') ?></label>
 					</div>
 				</div>
 				
 				<div class="row">
 					<div class="input-field col s12 l6">
 						<input placeholder="" name="schedule_start_date" id="schedule_start_date" type="datetime"  value="">
-						<label for="schedule_start_date" class="active">Schedule Start At:</label>
+						<label for="schedule_start_date" class="active"><?php echo __('Schedule Start At', 'xcloner') ?>:</label>
 					</div>
 
 					<div class="input-field col s12 l6">
@@ -139,7 +120,7 @@ $available_storages = $xcloner_remote_storage->get_available_storages();
 				<div class="row">
 					<div class="input-field col s12 l12">
 						<input placeholder="" name="email_notification" id="email_notification" type="text" required value="">
-						<label for="email_notification">Email Notification</label>
+						<label for="email_notification"><?php echo __('Email Notification Address', 'xcloner') ?></label>
 					</div>
 				</div>
 				
@@ -149,21 +130,21 @@ $available_storages = $xcloner_remote_storage->get_available_storages();
 				<div class="row">
 					<div class="input-field col s12 l12">
 						<input placeholder="" name="backup_name" id="backup_name" type="text" required value="">
-						<label for="backup_name">Backup Name</label>
+						<label for="backup_name"><?php echo __('Backup Name', 'xcloner') ?></label>
 					</div>
 				</div>
 				
 				<div class="row">	
 					<div class="input-field col s12 l12">
 						<textarea id="table_params" name="table_params" class="materialize-textarea" rows="15"></textarea>
-						<label for="table_params" class="active">Included Database Data</label>
+						<label for="table_params" class="active"><?php echo __('Included Database Data', 'xcloner') ?></label>
 					</div>
 				</div>
 				
 				<div class="row">	
 					<div class="input-field col s12 l12">
 						<textarea id="excluded_files" name="excluded_files" class="materialize-textarea" rows="15"></textarea>
-						<label for="excluded_files" class="active">Exclude Files</label>
+						<label for="excluded_files" class="active"><?php echo __('Excluded Files', 'xcloner') ?></label>
 					</div>
 				</div>
 			</div>	
@@ -172,7 +153,7 @@ $available_storages = $xcloner_remote_storage->get_available_storages();
 		<div class="row">
 			
 			<div class="input-field col s12">
-				<button class="right btn waves-effect waves-light" type="submit" name="action">Save
+				<button class="right btn waves-effect waves-light" type="submit" name="action"><?php echo __('Save', 'xcloner') ?>
 					<i class="material-icons right">send</i>
 				</button>
 			</div>

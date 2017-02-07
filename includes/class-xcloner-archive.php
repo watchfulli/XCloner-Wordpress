@@ -8,7 +8,7 @@ class Xcloner_Archive extends Tar
 	/*
 	 * bytes
 	 */ 
-	private $file_size_per_request_limit 	= 1*1024*1024; //1MB
+	private $file_size_per_request_limit	= 1*1024*1024; //1MB
 	private $files_to_process_per_request 	= 100; //block of 512 bytes
 	private $compression_level 				= 0; //0-9 , 0 uncompressed
 	private $xcloner_split_backup_limit		= 2048; //2048MB
@@ -39,6 +39,11 @@ class Xcloner_Archive extends Tar
 			$this->set_archive_name($archive_name);
 	}
 	
+	/*
+	 * 
+	 * Rename backup archive
+	 * 
+	 */ 
 	public function rename_archive($old_name, $new_name)
 	{
 		$this->logger->info(sprintf("Renaming backup archive %s to %s", $old_name, $new_name));
@@ -46,6 +51,11 @@ class Xcloner_Archive extends Tar
 		$storage_filesystem->rename($old_name, $new_name);
 	}
 	
+	/*
+	 * 
+	 * Set the backup archive name
+	 * 
+	 */ 
 	public function set_archive_name($name = "", $part = 0)
 	{
 		$this->archive_name = $this->filesystem->process_backup_name($name);
@@ -62,22 +72,42 @@ class Xcloner_Archive extends Tar
 		return $this;
 	}
 	
+	/*
+	 * 
+	 * Returns the backup archive name
+	 * 
+	 */
 	public function get_archive_name()
 	{
 		return $this->archive_name;
 	}
 	
+	/*
+	 * 
+	 * Returns the multipart naming for the backup archive
+	 * 
+	 */ 
 	public function get_archive_name_multipart()
 	{
 		$new_name =  preg_replace('/-part(\d*)/', "", $this->archive_name);
 		return $new_name."-multipart.csv";
 	}
 	
+	/*
+	 * 
+	 * Returns the full backup name including extension
+	 * 
+	 */ 
 	public function get_archive_name_with_extension()
 	{
 		return $this->archive_name.$this->xcloner_settings->get_backup_extension_name();
 	}
 	
+	/*
+	 * 
+	 * Send notification error by E-Mail
+	 * 
+	 */
 	public function send_notification_error($to, $from, $subject, $backup_name, $params, $error_message)
 	{
 		
@@ -97,6 +127,11 @@ class Xcloner_Archive extends Tar
 		return $return;
 	}
 	
+	/*
+	 * 
+	 * Send backup archive notfication by E-Mail
+	 * 
+	 */ 
 	public function send_notification($to, $from, $subject, $backup_name, $params, $error_message="")
 	{
 		if(!$from)
@@ -153,6 +188,11 @@ class Xcloner_Archive extends Tar
 		return $return;
 	}
 	
+	/*
+	 * 
+	 * Incremental Backup method
+	 * 
+	 */ 
 	public function start_incremental_backup($backup_params, $extra_params, $init)
 	{
 		if(!isset($extra_params['backup_part']))
@@ -357,6 +397,11 @@ class Xcloner_Archive extends Tar
 		return $return;
 	}
 	
+	/*
+	 * 
+	 * Write multipart file components
+	 * 
+	 */ 
 	private function write_multipart_file($path)
 	{
 		$path = $this->get_archive_name_with_extension();
@@ -370,6 +415,11 @@ class Xcloner_Archive extends Tar
 						->write($this->get_archive_name_multipart(), $line);
 	}
 	
+	/*
+	 * 
+	 * Create a new backup part
+	 * 
+	 */ 
 	private function create_new_backup_part($part = 0)
 	{
 		//close the backup archive by adding 2*512 blocks of zero bytes
@@ -406,6 +456,11 @@ class Xcloner_Archive extends Tar
 		
 	}
 	
+	/*
+	 * 
+	 * Add file to archive
+	 * 
+	 */ 
 	public function add_file_to_archive($file_info, $start_at_byte, $byte_limit = 0, $append, $start_adapter)
 	{
 		if(!$file_info['path'])
@@ -550,11 +605,11 @@ class Xcloner_Archive extends Tar
      * @param string $start				start position from where to start reading data
      * @throws ArchiveIOException
      */
-	public function addFileToArchive($archive, $file, $start = 0)
+	/*public function addFileToArchive($archive, $file, $start = 0)
 	{
 		$this->openForAppend($archive);
 		return $start = $this->appendFileData($file, $start, $this->file_size_per_request_limit);
 	}
-	
+	*/
 
 }

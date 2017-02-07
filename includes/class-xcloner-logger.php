@@ -34,8 +34,8 @@ class Xcloner_Logger extends Logger{
 		
 		$debug_level = Logger::INFO;
 		
-		//if(WP_DEBUG)
-		//	$debug_level = Logger::DEBUG;
+		if(WP_DEBUG)
+			$debug_level = Logger::DEBUG;
 		
 		if($logger_path)
 			$this->pushHandler(new StreamHandler($logger_path, $debug_level));

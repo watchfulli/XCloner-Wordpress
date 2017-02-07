@@ -217,7 +217,7 @@ class Xcloner_Settings
 	    //SYSTEM section
 	    add_settings_section(
 	        'xcloner_system_settings_group',
-	        __('These are advanced options recommended for developers!'),
+	        __('These are advanced options recommended for developers!','xcloner'),
 	        array($this, 'xcloner_settings_section_cb'),
 	        'xcloner_system_settings_page'
 	    );
@@ -245,12 +245,12 @@ class Xcloner_Settings
 		register_setting('xcloner_general_settings_group', 'xcloner_backup_compression_level', array($this->xcloner_sanitization, "sanitize_input_as_int"));
 	    add_settings_field(
 	        'xcloner_backup_compression_level',
-	       __('Backup Compression Level'),
+	       __('Backup Compression Level','xcloner'),
 	        array($this, 'do_form_range_field'),
 	        'xcloner_settings_page',
 	        'xcloner_general_settings_group',
 	        array('xcloner_backup_compression_level',
-	         __('Options between [0-9]. Value 0 means no compression, while 9 is maximum compression affecting cpu load'), 
+	         __('Options between [0-9]. Value 0 means no compression, while 9 is maximum compression affecting cpu load','xcloner'), 
 	         0,
 	         9
 	         )
@@ -259,12 +259,12 @@ class Xcloner_Settings
 	    register_setting('xcloner_general_settings_group', 'xcloner_start_path', array($this->xcloner_sanitization, "sanitize_input_as_absolute_path"));
 	    add_settings_field(
 	        'xcloner_start_path',
-	        __('Backup Start Location'),
+	        __('Backup Start Location','xcloner'),
 	        array($this, 'do_form_text_field'),
 	        'xcloner_settings_page',
 	        'xcloner_general_settings_group',
 	        array('xcloner_start_path',
-				__('Base path location from where XCloner can start the Backup.'),
+				__('Base path location from where XCloner can start the Backup.','xcloner'),
 				$this->get_xcloner_start_path(),
 				//'disabled'
 				)
@@ -273,12 +273,12 @@ class Xcloner_Settings
 	    register_setting('xcloner_general_settings_group', 'xcloner_store_path', array($this->xcloner_sanitization, "sanitize_input_as_absolute_path"));
 	    add_settings_field(
 	        'xcloner_store_path',
-	        __('Backup Storage Location'),
+	        __('Backup Storage Location','xcloner'),
 	        array($this, 'do_form_text_field'),
 	        'xcloner_settings_page',
 	        'xcloner_general_settings_group',
 	        array('xcloner_store_path',
-				__('Location where XCloner will store the Backup archives.'),
+				__('Location where XCloner will store the Backup archives.','xcloner'),
 				$this->get_xcloner_store_path(), 
 				//'disabled'
 				)
@@ -287,12 +287,12 @@ class Xcloner_Settings
 	    register_setting('xcloner_general_settings_group', 'xcloner_enable_log', array($this->xcloner_sanitization, "sanitize_input_as_int"));
 	    add_settings_field(
 	        'xcloner_enable_log',
-	        __('Enable XCloner Backup Log'),
+	        __('Enable XCloner Backup Log','xcloner'),
 	        array($this, 'do_form_switch_field'),
 	        'xcloner_settings_page',
 	        'xcloner_general_settings_group',
 	        array('xcloner_enable_log',
-				__(sprintf('Enable the XCloner Backup log. You will find it stored unde the Backup Storage Location, file %s', $this->get_logger_filename()))
+				sprintf(__('Enable the XCloner Backup log. You will find it stored unde the Backup Storage Location, file %s','xcloner'), $this->get_logger_filename())
 				)
 		);	
 	 
@@ -300,36 +300,36 @@ class Xcloner_Settings
 		register_setting('xcloner_mysql_settings_group', 'xcloner_enable_mysql_backup', array($this->xcloner_sanitization, "sanitize_input_as_int"));
 	    add_settings_field(
 	        'xcloner_enable_mysql_backup',
-	        __('Enable Mysql Backup'),
+	        __('Enable Mysql Backup','xcloner'),
 	        array($this, 'do_form_switch_field'),
 	        'xcloner_mysql_settings_page',
 	        'xcloner_mysql_settings_group',
 	        array('xcloner_enable_mysql_backup',
-				__('Enable Mysql Backup Option. If you don\'t want to backup the database, you can disable this.')
+				__('Enable Mysql Backup Option. If you don\'t want to backup the database, you can disable this.','xcloner')
 				)
 	    );
 	    
 	    register_setting('xcloner_mysql_settings_group', 'xcloner_backup_only_wp_tables');
 	    add_settings_field(
 	        'xcloner_backup_only_wp_tables',
-	        __('Backup only WP tables'),
+	        __('Backup only WP tables','xcloner'),
 	        array($this, 'do_form_switch_field'),
 	        'xcloner_mysql_settings_page',
 	        'xcloner_mysql_settings_group',
 	        array('xcloner_backup_only_wp_tables',
-				sprintf(__('Enable this if you only want to Backup only tables starting with \'%s\' prefix'), $this->get_table_prefix())
+				sprintf(__('Enable this if you only want to Backup only tables starting with \'%s\' prefix','xcloner'), $this->get_table_prefix())
 				)
 	    );
 	    
 	    register_setting('xcloner_mysql_settings_group', 'xcloner_mysql_hostname', array($this->xcloner_sanitization, "sanitize_input_as_raw"));
 	    add_settings_field(
 	        'xcloner_mysql_hostname',
-	        __('Mysql Hostname'),
+	        __('Mysql Hostname','xcloner'),
 	        array($this, 'do_form_text_field'),
 	        'xcloner_mysql_settings_page',
 	        'xcloner_mysql_settings_group',
 	        array('xcloner_mysql_hostname',
-				__('Wordpress mysql hostname'),
+				__('Wordpress mysql hostname','xcloner'),
 				$this->get_db_hostname(),
 				'disabled'
 				)
@@ -338,12 +338,12 @@ class Xcloner_Settings
 	    register_setting('xcloner_mysql_settings_group', 'xcloner_mysql_username', array($this->xcloner_sanitization, "sanitize_input_as_raw"));
 	    add_settings_field(
 	        'xcloner_mysql_username',
-	        __('Mysql Username'),
+	        __('Mysql Username','xcloner'),
 	        array($this, 'do_form_text_field'),
 	        'xcloner_mysql_settings_page',
 	        'xcloner_mysql_settings_group',
 	        array('xcloner_mysql_username',
-				__('Wordpress mysql username'),
+				__('Wordpress mysql username','xcloner'),
 				$this->get_db_username(),
 				'disabled'
 				)
@@ -352,12 +352,12 @@ class Xcloner_Settings
 	    register_setting('xcloner_mysql_settings_group', 'xcloner_mysql_database', array($this->xcloner_sanitization, "sanitize_input_as_raw"));
 	    add_settings_field(
 	        'xcloner_mysql_database',
-	        __('Mysql Database'),
+	        __('Mysql Database','xcloner'),
 	        array($this, 'do_form_text_field'),
 	        'xcloner_mysql_settings_page',
 	        'xcloner_mysql_settings_group',
 	        array('xcloner_mysql_database',
-				__('Wordpress mysql database'),
+				__('Wordpress mysql database','xcloner'),
 				$this->get_db_database(),
 				'disabled'
 				)
@@ -367,12 +367,12 @@ class Xcloner_Settings
 	    register_setting('xcloner_system_settings_group', 'xcloner_size_limit_per_request', array($this->xcloner_sanitization, "sanitize_input_as_int"));
 	    add_settings_field(
 	        'xcloner_size_limit_per_request',
-	       __('Data Size Limit Per Request'),
+	       __('Data Size Limit Per Request','xcloner'),
 	        array($this, 'do_form_range_field'),
 	        'xcloner_system_settings_page',
 	        'xcloner_system_settings_group',
 	        array('xcloner_size_limit_per_request',
-	         __('Use this option to set how much file data can XCloner backup in one AJAX request. Range 0-100 MB'), 
+	         __('Use this option to set how much file data can XCloner backup in one AJAX request. Range 0-100 MB','xcloner'), 
 	         0,
 	         100
 	         )
@@ -381,12 +381,12 @@ class Xcloner_Settings
 		register_setting('xcloner_system_settings_group', 'xcloner_files_to_process_per_request', array($this->xcloner_sanitization, "sanitize_input_as_int"));
 	    add_settings_field(
 	        'xcloner_files_to_process_per_request',
-	       __('Files To Process Per Request'),
+	       __('Files To Process Per Request','xcloner'),
 	        array($this, 'do_form_range_field'),
 	        'xcloner_system_settings_page',
 	        'xcloner_system_settings_group',
 	        array('xcloner_files_to_process_per_request',
-	         __('Use this option to set how many files XCloner should process at one time before doing another AJAX call'), 
+	         __('Use this option to set how many files XCloner should process at one time before doing another AJAX call','xcloner'), 
 	         0,
 	         1000
 	         )
@@ -395,12 +395,12 @@ class Xcloner_Settings
 		register_setting('xcloner_system_settings_group', 'xcloner_directories_to_scan_per_request', array($this->xcloner_sanitization, "sanitize_input_as_int"));
 	    add_settings_field(
 	        'xcloner_directories_to_scan_per_request',
-	       __('Directories To Scan Per Request'),
+	       __('Directories To Scan Per Request','xcloner'),
 	        array($this, 'do_form_range_field'),
 	        'xcloner_system_settings_page',
 	        'xcloner_system_settings_group',
 	        array('xcloner_directories_to_scan_per_request',
-	         __('Use this option to set how many directories XCloner should scan at one time before doing another AJAX call'), 
+	         __('Use this option to set how many directories XCloner should scan at one time before doing another AJAX call','xcloner'), 
 	         0,
 	         1000
 	         )
@@ -409,12 +409,12 @@ class Xcloner_Settings
 		register_setting('xcloner_system_settings_group', 'xcloner_database_records_per_request', array($this->xcloner_sanitization, "sanitize_input_as_int"));
 	    add_settings_field(
 	        'xcloner_database_records_per_request',
-	       __('Database Records Per Request'),
+	       __('Database Records Per Request','xcloner'),
 	        array($this, 'do_form_range_field'),
 	        'xcloner_system_settings_page',
 	        'xcloner_system_settings_group',
 	        array('xcloner_database_records_per_request',
-	         __('Use this option to set how many database table records should be fetched per AJAX request, or set to 0 to fetch all.  Range 0-100000 records'), 
+	         __('Use this option to set how many database table records should be fetched per AJAX request, or set to 0 to fetch all.  Range 0-100000 records','xcloner'), 
 	         0,
 	         100000
 	         )
@@ -423,26 +423,24 @@ class Xcloner_Settings
 		register_setting('xcloner_system_settings_group', 'xcloner_exclude_files_larger_than_mb', array($this->xcloner_sanitization, "sanitize_input_as_int"));
 	    add_settings_field(
 	        'xcloner_exclude_files_larger_than_mb',
-	       __('Exclude files larger than (MB)'),
-	        array($this, 'do_form_range_field'),
+	       __('Exclude files larger than (MB)','xcloner'),
+	        array($this, 'do_form_number_field'),
 	        'xcloner_system_settings_page',
 	        'xcloner_system_settings_group',
 	        array('xcloner_exclude_files_larger_than_mb',
-	         __('Use this option to automatically exclude files larger than a certain size in MB, or set to -1 to include all. Range 0-1000 MB'), 
-	         0,
-	         1000
+	         __('Use this option to automatically exclude files larger than a certain size in MB, or set to -1 to include all. Range 0-1000 MB','xcloner'), 
 	         )
 	    );
 	    
 		register_setting('xcloner_system_settings_group', 'xcloner_split_backup_limit', array($this->xcloner_sanitization, "sanitize_input_as_int"));
 	    add_settings_field(
 	        'xcloner_split_backup_limit',
-	       __('Split Backup Archive Limit (MB)'),
+	       __('Split Backup Archive Limit (MB)','xcloner'),
 	        array($this, 'do_form_number_field'),
 	        'xcloner_system_settings_page',
 	        'xcloner_system_settings_group',
 	        array('xcloner_split_backup_limit',
-	         __('Use this option to automatically split the backup archive into smaller parts. Range  0-10000 MB'), 
+	         __('Use this option to automatically split the backup archive into smaller parts. Range  0-10000 MB','xcloner'), 
 	         )
 	    );
 		
@@ -450,36 +448,36 @@ class Xcloner_Settings
 		register_setting('xcloner_cleanup_settings_group', 'xcloner_cleanup_retention_limit_days', array($this->xcloner_sanitization, "sanitize_input_as_int"));
 	    add_settings_field(
 	        'xcloner_cleanup_retention_limit_days',
-	        __('Cleanup by Date(days)'),
+	        __('Cleanup by Date(days)','xcloner'),
 	        array($this, 'do_form_number_field'),
 	        'xcloner_cleanup_settings_page',
 	        'xcloner_cleanup_settings_group',
 	        array('xcloner_cleanup_retention_limit_days',
-				__('Specify the maximum number of days a backup archive can be kept on the server. 0 disables this option')
+				__('Specify the maximum number of days a backup archive can be kept on the server. 0 disables this option','xcloner')
 			)
 	    );
 	    
 		register_setting('xcloner_cleanup_settings_group', 'xcloner_cleanup_retention_limit_archives', array($this->xcloner_sanitization, "sanitize_input_as_int"));
 	    add_settings_field(
 	        'xcloner_cleanup_retention_limit_archives',
-	        __('Cleanup by Quantity'),
+	        __('Cleanup by Quantity','xcloner'),
 	        array($this, 'do_form_number_field'),
 	        'xcloner_cleanup_settings_page',
 	        'xcloner_cleanup_settings_group',
 	        array('xcloner_cleanup_retention_limit_archives',
-				__('Specify the maximum number of backup archives to keep on the server. 0 disables this option')
+				__('Specify the maximum number of backup archives to keep on the server. 0 disables this option','xcloner')
 			)
 	    );
 	    
 		register_setting('xcloner_cleanup_settings_group', 'xcloner_cleanup_capacity_limit', array($this->xcloner_sanitization, "sanitize_input_as_int"));
 	    add_settings_field(
 	        'xcloner_cleanup_capacity_limit',
-	        __('Cleanup by Capacity(MB)'),
+	        __('Cleanup by Capacity(MB)','xcloner'),
 	        array($this, 'do_form_number_field'),
 	        'xcloner_cleanup_settings_page',
 	        'xcloner_cleanup_settings_group',
 	        array('xcloner_cleanup_capacity_limit',
-				__('Remove oldest backups if all created backups exceed the configured limit in Megabytes. 0 disables this option')
+				__('Remove oldest backups if all created backups exceed the configured limit in Megabytes. 0 disables this option','xcloner')
 			)
 	    );
 		
@@ -487,7 +485,7 @@ class Xcloner_Settings
 		register_setting('xcloner_cron_settings_group', 'xcloner_cron_frequency');
 	    add_settings_field(
 	        'xcloner_cron_frequency',
-	        __('Cron frequency'),
+	        __('Cron frequency','xcloner'),
 	        array($this, 'do_form_text_field'),
 	        'xcloner_cron_settings_page',
 	        'xcloner_cron_settings_group',

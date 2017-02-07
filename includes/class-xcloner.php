@@ -335,8 +335,21 @@ class Xcloner {
 		
 		add_action( 'admin_notices', array($this, 'xcloner_error_admin_notices' ));
 		
+		if (is_admin()) {
+            add_filter('plugin_action_links', array($this, 'add_plugin_action_links'), 10, 2);
+        }
+		
 	}
 	
+	function add_plugin_action_links($links, $file) {
+        if ($file == plugin_basename(dirname(dirname(__FILE__)) . '/xcloner.php'))
+		{	
+			$links[] = '<a href="admin.php?page=xcloner_settings_page">'.__('Settings', 'xcloner').'</a>';
+			$links[] = '<a href="admin.php?page=xcloner_generate_backups_page">'.__('Generate Backup', 'xcloner').'</a>';
+		}
+        
+        return $links;
+    }
 	
 	public function xcloner_error_admin_notices() {
 			settings_errors( 'xcloner_error_message' );

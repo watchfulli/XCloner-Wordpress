@@ -201,11 +201,11 @@ class Xcloner_Admin {
         <h1><?= esc_html(get_admin_page_title()); ?></h1>
          
         <ul class="nav-tab-wrapper row">
-            <li><a href="?page=xcloner_settings_page&tab=general_options" class="nav-tab col s12 m3 l2 <?php echo $active_tab == 'general_options' ? 'nav-tab-active' : ''; ?>"><?php echo __('General Options')?></a></li>
-            <li><a href="?page=xcloner_settings_page&tab=mysql_options" class="nav-tab col s12 m3 l2 <?php echo $active_tab == 'mysql_options' ? 'nav-tab-active' : ''; ?>"><?php echo __('Mysql Options')?></a></li>
-            <li><a href="?page=xcloner_settings_page&tab=system_options" class="nav-tab col s12 m3 l2 <?php echo $active_tab == 'system_options' ? 'nav-tab-active' : ''; ?>"><?php echo __('System Options')?></a></li>
-            <li><a href="?page=xcloner_settings_page&tab=cleanup_options" class="nav-tab col s12 m3 l2 <?php echo $active_tab == 'cleanup_options' ? 'nav-tab-active' : ''; ?>"><?php echo __('Cleanup Options')?></a></li>
-            <!--<li><a href="?page=xcloner_settings_page&tab=cron_options" class="nav-tab col s12 m3 l2 <?php echo $active_tab == 'cron_options' ? 'nav-tab-active' : ''; ?>"><?php echo __('Cron Options')?></a></li>
+            <li><a href="?page=xcloner_settings_page&tab=general_options" class="nav-tab col s12 m3 l2 <?php echo $active_tab == 'general_options' ? 'nav-tab-active' : ''; ?>"><?php echo __('General Options', 'xcloner')?></a></li>
+            <li><a href="?page=xcloner_settings_page&tab=mysql_options" class="nav-tab col s12 m3 l2 <?php echo $active_tab == 'mysql_options' ? 'nav-tab-active' : ''; ?>"><?php echo __('Mysql Options', 'xcloner')?></a></li>
+            <li><a href="?page=xcloner_settings_page&tab=system_options" class="nav-tab col s12 m3 l2 <?php echo $active_tab == 'system_options' ? 'nav-tab-active' : ''; ?>"><?php echo __('System Options', 'xcloner')?></a></li>
+            <li><a href="?page=xcloner_settings_page&tab=cleanup_options" class="nav-tab col s12 m3 l2 <?php echo $active_tab == 'cleanup_options' ? 'nav-tab-active' : ''; ?>"><?php echo __('Cleanup Options', 'xcloner')?></a></li>
+            <!--<li><a href="?page=xcloner_settings_page&tab=cron_options" class="nav-tab col s12 m3 l2 <?php echo $active_tab == 'cron_options' ? 'nav-tab-active' : ''; ?>"><?php echo __('Cron Options', 'xcloner')?></a></li>
             -->
         </ul>
 

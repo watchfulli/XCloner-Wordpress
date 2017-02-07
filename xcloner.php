@@ -13,10 +13,10 @@
  * @package           Xcloner
  *
  * @wordpress-plugin
- * Plugin Name:       XCloner - Backup and Restore plugin
+ * Plugin Name:       XCloner - Site Backup and Restore
  * Plugin URI:        http://www.xcloner.com
- * Description:       This is a short description of what the plugin does. It's displayed in the WordPress admin area.
- * Version:           1.0.0
+ * Description:       XCloner is a tool that will help you manage your website backups, generate/restore/move so your website will be always secured! With XCloner you will be able to clone your site to any other location with just a few clicks, as well as transfer the backup archives to remote FTP, SFTP accounts.
+ * Version:           4.0.0
  * Author:            Liuta Ovidiu
  * Author URI:        http://www.thinkovi.com
  * License:           GPL-2.0+
@@ -99,4 +99,3 @@ function run_xcloner()
 
 
 run_xcloner();
-

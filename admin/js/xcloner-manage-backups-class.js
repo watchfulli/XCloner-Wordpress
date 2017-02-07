@@ -109,7 +109,7 @@ jQuery(document).ready(function(){
 			],
 			"columns": [
 			    { "width": "1%" },
-			    { "width": "15%" },
+			    { "width": "25%" },
 			    { "width": "5%" },
 			    { "width": "5%" },
 			    { "width": "5%" },

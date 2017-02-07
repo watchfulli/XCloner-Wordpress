@@ -5,7 +5,7 @@
 <input type="hidden" id="connection_check" name="connection_check" value="">
 
 <div class="row remote-storage">
-	<div class="col s12 m12 l8">
+	<div class="col s12 m12 l10">
 		<ul class="collapsible popout" data-collapsible="accordion">
 			<!-- FTP STORAGE-->
 			<li id="ftp">
