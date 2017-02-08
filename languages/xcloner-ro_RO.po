@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2017-02-07 19:07+0200\n"
-"PO-Revision-Date: 2017-02-07 19:19+0200\n"
+"POT-Creation-Date: 2017-02-07 20:29+0200\n"
+"PO-Revision-Date: 2017-02-07 20:54+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ro_RO\n"
@@ -142,7 +142,7 @@ msgstr "Creare Backup Mysql…"
 #: admin/partials/xcloner_generate_backups_page.php:137
 #, php-format
 msgid "Found %s tables in %s databases (%s)"
-msgstr "Am gasit  %s tabele in %s base de date (%s)"
+msgstr "Am gasit  %s tabele in %s baze de date (%s)"
 
 #: admin/partials/xcloner_generate_backups_page.php:161
 msgid "Adding Files to Archive..."
@@ -443,11 +443,13 @@ msgstr "pentru cate zile sa pastrez fisierele de backup"
 
 #: admin/partials/xcloner_remote_storage_page.php:112
 #: admin/partials/xcloner_remote_storage_page.php:210
+#: admin/partials/xcloner_remote_storage_page.php:282
 msgid "Save Settings"
 msgstr "Salveaza Setari"
 
 #: admin/partials/xcloner_remote_storage_page.php:117
 #: admin/partials/xcloner_remote_storage_page.php:215
+#: admin/partials/xcloner_remote_storage_page.php:287
 msgid "Verify"
 msgstr "Verifica"
 
@@ -492,6 +494,30 @@ msgstr ""
 #: admin/partials/xcloner_remote_storage_page.php:201
 msgid "SFTP Cleanup (days)"
 msgstr "Curatare SFTP(zile)"
+
+#: admin/partials/xcloner_remote_storage_page.php:227
+msgid "Dropbox Storage"
+msgstr "Stocare Dropbox"
+
+#: admin/partials/xcloner_remote_storage_page.php:247
+#, php-format
+msgid "Visit %s and get your \"App secret\"."
+msgstr ""
+
+#: admin/partials/xcloner_remote_storage_page.php:254
+#: admin/partials/xcloner_remote_storage_page.php:257
+msgid "Dropbox Access Token"
+msgstr ""
+
+#: admin/partials/xcloner_remote_storage_page.php:264
+#: admin/partials/xcloner_remote_storage_page.php:267
+msgid "Dropbox App Secret"
+msgstr ""
+
+#: admin/partials/xcloner_remote_storage_page.php:273
+#: admin/partials/xcloner_remote_storage_page.php:276
+msgid "Dropbox Prefix"
+msgstr ""
 
 #: admin/partials/xcloner_scheduled_backups_page.php:13
 #: admin/partials/xcloner_scheduled_backups_page.php:25
@@ -706,25 +732,25 @@ msgstr "Generare Backup"
 msgid "Open Debugger"
 msgstr "Deschide Depanator"
 
-#: includes/class-xcloner-remote-storage.php:82
+#: includes/class-xcloner-remote-storage.php:93
 #, php-format
 msgid "%s storage settings saved."
 msgstr "%s setarile de stocare au fost salvate."
 
-#: includes/class-xcloner-remote-storage.php:89
+#: includes/class-xcloner-remote-storage.php:100
 #, php-format
 msgid "%s connection is valid."
 msgstr "%s conexiunea este valida."
 
-#: includes/class-xcloner-remote-storage.php:113
+#: includes/class-xcloner-remote-storage.php:124
 msgid "Could not write data"
 msgstr "Nu pot scrie data"
 
-#: includes/class-xcloner-remote-storage.php:118
+#: includes/class-xcloner-remote-storage.php:129
 msgid "Could not read data"
 msgstr "Nu pot citi data"
 
-#: includes/class-xcloner-remote-storage.php:123
+#: includes/class-xcloner-remote-storage.php:134
 msgid "Could not delete data"
 msgstr "Nu pot sterge data"
 
@@ -761,7 +787,7 @@ msgstr "Locatia unde XCloner v-a stoca fisierele de backup."
 
 #: includes/class-xcloner-settings.php:290
 msgid "Enable XCloner Backup Log"
-msgstr "Permite Logare XCloner"
+msgstr "Logare XCloner"
 
 #: includes/class-xcloner-settings.php:295
 #, php-format
@@ -774,7 +800,7 @@ msgstr ""
 
 #: includes/class-xcloner-settings.php:303
 msgid "Enable Mysql Backup"
-msgstr "Permite Backup Mysql"
+msgstr "Backup Mysql"
 
 #: includes/class-xcloner-settings.php:308
 msgid ""
@@ -880,7 +906,7 @@ msgstr ""
 
 #: includes/class-xcloner-settings.php:451
 msgid "Cleanup by Date(days)"
-msgstr "Limita zile"
+msgstr "Limita Zile"
 
 #: includes/class-xcloner-settings.php:456
 msgid ""

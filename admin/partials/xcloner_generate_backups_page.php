@@ -173,7 +173,7 @@ $tab = 1;
 						      <div class="collapsible-body status-body">
 									<div class="row">
 										<div class="col l3 s12">
-											<h2><?php echo __("Backup Parts")?>: </h2>
+											<h2><?php echo __("Backup Parts","xcloner")?>: </h2>
 										</div>	
 										<div class="col l9 s12">
 											<ul class="backup-name"></ul>
