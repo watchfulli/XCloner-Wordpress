@@ -708,6 +708,20 @@ class Xcloner_Api{
     
 	}
 	
+	
+	public function restore_upload_backup()
+	{
+		$file = $this->xcloner_sanitization->sanitize_input_as_string($_POST['file']);
+		$start = $this->xcloner_sanitization->sanitize_input_as_string($_POST['start']);
+		$target_url = $this->xcloner_sanitization->sanitize_input_as_string($_POST['target_url']);
+
+		$xcloner_file_transfer = new Xcloner_File_Transfer();
+		$xcloner_file_transfer->set_target($target_url);
+		$return['start'] = $xcloner_file_transfer->transfer_file($file, $start);
+		$return['total_size'] = $this->xcloner_file_system->get_backup_size($file);
+		
+		$this->send_response( $return, 0);
+	}
 	/*
 	 * 
 	 * Send the json response back

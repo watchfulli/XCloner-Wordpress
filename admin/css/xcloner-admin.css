@@ -258,12 +258,16 @@ a.expand-multipart.remove{
 }
 
 .xcloner-restore li .collapsible-body{
-	padding: 25px 10px 5px 10px;
+	padding: 25px 10px 15px 10px;
 }
 
 .xcloner-restore select.browser-default{
 	height: 36px;
 	font-size: 18px;
+}
+
+.xcloner-restore #cancel_upload_backup{
+	display: none;
 }
 
 @media only screen and (min-width: 993px){

@@ -49,7 +49,7 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 				<div class="collapsible-body row">
 					
 					<div class="input-field col s9">
-						<select name="backup_name" class="browser-default">
+						<select id="backup_file" name="backup_file" class="browser-default">
 					      <option value="" disabled selected>Please select backup archive to upload</option>
 					      <?php if(is_array($backup_list)):?>
 							<?php foreach($backup_list as $file):?>
@@ -59,10 +59,17 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 							<?php endforeach?>
 						<?php endif ?>	
 					    </select>
-						<div id="status"></div>
+						<div id="status">
+						</div>
+						<div class="progress">
+						      <div class="determinate" style="width: 0%"></div>
+						</div>
 					</div>
 					<div class="col s3">
 						<button class="btn waves-effect waves-light" type="submit" id="upload_backup" name="action">Upload
+						    <i class="material-icons right">send</i>
+						</button>
+						<button class="btn waves-effect waves-light red" type="submit" id="cancel_upload_backup" name="action">Cancel
 						    <i class="material-icons right">send</i>
 						</button>
 					</div>
