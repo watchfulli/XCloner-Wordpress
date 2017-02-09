@@ -242,6 +242,12 @@ a.expand-multipart.remove{
 	font-weight: bold;
 }
 
+#backup-status .row .item .title{
+    width: 100px;
+    display: inline-block;
+    font-weight: bold;
+    margin-left: 10px;
+}
 
 @media only screen and (min-width: 993px){
 	.dashboard .backup-ready{

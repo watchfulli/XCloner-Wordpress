@@ -12,17 +12,47 @@
  * @subpackage Xcloner/admin/partials
  */
  
- $requirements 			= new XCloner_Requirements();
- $xcloner_settings 		= new Xcloner_Settings();
- $xcloner_file_system 	= new Xcloner_File_System();
- $logger				= new Xcloner_Logger();
- 
- $logger_content = $logger->getLastDebugLines();
- 
- if($requirements->check_backup_ready_status())
-	$xcloner_file_system->backup_storage_cleanup();
+$requirements 			= new XCloner_Requirements();
+$xcloner_settings 		= new Xcloner_Settings();
+$xcloner_file_system 	= new Xcloner_File_System();
+$logger				= new Xcloner_Logger();
+$xcloner_scheduler 	= new Xcloner_Scheduler();
 
+$logger_content = $logger->getLastDebugLines();
+
+$date_format = get_option( 'date_format' );
+$time_format = get_option( 'time_format' );
+$latest_backup =  $xcloner_file_system->get_latest_backup();
+
+//if($requirements->check_backup_ready_status())
+//	$xcloner_file_system->backup_storage_cleanup();
 ?>
+
+<div class="row">
+	<div class="col s12">
+		<h5 class="left-align">
+			<?php echo __('Backup Dashboard', 'xcloner') ?>
+		</h5>
+	</div>
+</div>
+
+<?php if(isset($latest_backup['timestamp']) and $latest_backup['timestamp'] < strtotime("-1 day")): ?>
+	<div id="setting-error-" class="error settings-error notice is-dismissible"> 
+		<p><strong>
+			<?php echo __('Your latest backup is older than 24 hours, please create a new backup to keep your site protected.', 'xcloner') ?>
+			</strong>
+		</p><button type="button" class="notice-dismiss"><span class="screen-reader-text">Dismiss this notice.</span></button>
+	</div>
+<?php endif?>
+
+<?php if(!isset($latest_backup['timestamp']) ): ?>
+	<div id="setting-error-" class="error settings-error notice is-dismissible"> 
+		<p><strong>
+			<?php echo __('You have no backup that I could find, please generate a new backup to keep your site protected.', 'xcloner') ?>
+			</strong>
+		</p><button type="button" class="notice-dismiss"><span class="screen-reader-text">Dismiss this notice.</span></button>
+	</div>
+<?php endif?>
 
 <?php if(!$requirements->check_backup_ready_status()):?>
 	<div id="setting-error-" class="error settings-error notice is-dismissible"> 
@@ -34,24 +64,84 @@
 	
 <?php endif ?>
 
-<div class="row">
-	<div class="col s12">
-		<h5 class="left-align">
-			<?php echo __('Backup Dashboard', 'xcloner') ?>
-		</h5>
-	</div>
-</div>
+
 				
 <!-- This file should primarily consist of HTML with a little bit of PHP. -->
 <div class="row dashboard">
 	<div class="col s12 m12 l7">
-		<div>
+			
+		<div class="row">
 			<?php if($xcloner_settings->get_xcloner_option('xcloner_enable_log')) :?>
 			<ul class="collapsible xcloner-debugger" data-collapsible="accordion">
+				
+				<li class="active">
+					<div class="collapsible-header active"><i class="material-icons">info</i>Backup Status</div>
+					<div class="collapsible-body">
+						<div class="" id="backup-status">
+							<div class="row">
+								<h5><?php echo __("Latest Backup", "xcloner")?></h5>
+								<?php if($latest_backup):?>
+									<div class="item">
+										<div class="title"><?php echo __("Backup Name", "xcloner")?>:</div>
+										<?php echo $latest_backup['basename']?>
+									</div> 	
+									<div class="item">
+										<div class="title">
+											<?php echo __("Backup Size", "xcloner")?>:
+										</div>	
+										<?php echo size_format($latest_backup['size'])?>
+									</div> 	
+									<div class="item">
+										<div class="title"><?php echo __("Backup Date", "xcloner")?>:</div>
+										<?php 
+										echo date($date_format." ".$time_format, $latest_backup['timestamp'])
+										?>
+									</div> 
+								<?php else:?>
+									<div class="item">
+										<div class="title"><?php echo __("No Backup Yet", "xcloner")?></div>
+									</div> 
+								<?php endif?>
+							<div>
+							<h5><?php echo __("Backup Storage Usage", "xcloner")?></h5>
+								<div class="item">
+									<div class="title"><?php echo __("Total Size", "xcloner")?>:</div>
+									<?php echo size_format($xcloner_file_system->get_storage_usage());?>
+								</div>
+							<h5><?php echo __("Next Scheduled Backup", "xcloner")?></h5>
+								<div class="item">
+									<?php
+									$list = ($xcloner_scheduler->get_next_run_schedule());
+										
+										if(is_array($list))
+										{
+											$xcloner_file_system->sort_by($list, "next_run_time","desc");
+										}
+										
+										if(isset($list[0]))
+											$latest_schedule = $list[0];
+									?>
+									<?php if(isset($latest_schedule->name)):?>
+									<div class="title"><?php echo __("Schedule Name", "xcloner")?>:</div>
+										<?php	echo $latest_schedule->name;?>
+									<?php endif;?>	
+								</div>
+								<div class="item">
+									<div class="title"><?php echo __("Next Call", "xcloner")?>:</div>
+									<?php if(isset($latest_schedule->next_run_time))	
+											echo date($date_format." ".$time_format, $latest_schedule->next_run_time);
+										  else
+											echo __("Unscheduled","xcloner");
+									?>
+								</div>
+						</div>
+					</div>
+				</li>
+				
 				<li class="active">
 					<div class="collapsible-header active"><i class="material-icons">bug_report</i>XCloner Debugger</div>
 					<div class="collapsible-body">
-						<div class="console" id="xcloner-console"><?php if($logger_content) echo implode("<br />\n", $logger_content); ?></div>
+						<div class="console" id="xcloner-console"><?php if($logger_content) echo implode("<br />\n", array_reverse($logger_content)); ?></div>
 					</div>
 				</li>
 			</ul>
@@ -66,6 +156,8 @@
 			</script>
 			<?php endif;?>
 		</div>
+	
+	
 	</div>
 	<div class="col s12 m12 l5">
 	  

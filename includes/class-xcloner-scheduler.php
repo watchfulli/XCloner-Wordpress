@@ -22,10 +22,29 @@ class Xcloner_Scheduler{
 		$this->scheduler_table 			= $this->db->prefix.$this->scheduler_table;
 	}
 
-	public function get_scheduler_list()
+	public function get_scheduler_list($return_only_enabled = 0 )
 	{
 		$list = $this->db->get_results("SELECT * FROM ".$this->scheduler_table);
 		
+		if($return_only_enabled)
+		{
+			$new_list= array();
+			
+			foreach($list as $res)
+				if($res->status)
+				{
+					$res->next_run_time = wp_next_scheduled('xcloner_scheduler_'.$res->id, array($res->id));
+					$new_list[] = $res;
+				}
+			$list = $new_list;	
+		}
+		return $list;
+	}
+	
+	public function get_next_run_schedule($xcloner_file_system = "")
+	{
+		$list = $this->get_scheduler_list($return_only_enabled = 1);
+
 		return $list;
 	}
 	

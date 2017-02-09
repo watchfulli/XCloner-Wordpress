@@ -125,6 +125,35 @@ class Xcloner_File_System{
 		return $this->temp_dir_handler;
 	}
 	
+	public function get_latest_backup()
+	{
+		$files = $this->get_backup_archives_list();
+		
+		if(is_array($files))
+			$this->sort_by($files, "timestamp","desc");
+		
+		$new_list = array();
+		
+		foreach($files as $key=>$file)
+			if(!isset($file['parent']))
+				$new_list[] = ($files[$key]);
+
+		if(isset($new_list[0]))
+			return $new_list[0];
+	}
+	
+	public function get_storage_usage()
+	{
+		$files = $this->get_backup_archives_list();
+		$total = 0;
+		
+		if(is_array($files))
+			foreach($files as $file)
+				$total += $file['size'];
+				
+		return $total;		
+	}
+	
 	public function is_part($backup_name)
 	{
 		if(stristr($backup_name, "-part"))
@@ -547,7 +576,7 @@ class Xcloner_File_System{
 		return $name;	
 	}
 	
-	private function sort_by( &$array, $field, $direction = 'asc')
+	public function sort_by( &$array, $field, $direction = 'asc')
 	{
 	    usort($array, create_function('$a, $b', '
 	        $a = $a["' . $field . '"];
