@@ -7,8 +7,20 @@ $logger				= new Xcloner_Logger();
 $xcloner_scheduler = new Xcloner_Scheduler();
 //$xcloner_scheduler->xcloner_scheduler_callback(90);
 
-$logger_content = $logger->getLastDebugLines();
+//$logger_content = $logger->getLastDebugLines();
 
+$xcloner_file_transfer = new Xcloner_File_Transfer();
+
+$xcloner_file_transfer->set_target("http://thinkovi.com/xcloner/xcloner_restore.php");
+//$xcloner_file_transfer->set_target("http://localhost/xcloner/xcloner_restore.php");
+
+$start = 0 ;
+while( $start = $xcloner_file_transfer->transfer_file("backup_localhost-2017-02-07_13-29-sql-ac9b0.tgz", $start))
+{
+	//echo $start."--";
+}
+
+echo "done";
 ?>
 <div class="col s12 ">
 	<div>
@@ -21,7 +33,7 @@ $logger_content = $logger->getLastDebugLines();
 			<li class="active">
 				<div class="collapsible-header active"><i class="material-icons">bug_report</i>XCloner Debugger</div>
 				<div class="collapsible-body">
-					<div class="console" id="xcloner-console"><?php if($logger_content) echo implode("<br />\n", $logger_content); ?></div>
+					<div class="console" id="xcloner-console"><?php if(isset($logger_content)) echo implode("<br />\n", $logger_content); ?></div>
 				</div>
 			</li>
 		</ul>

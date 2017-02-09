@@ -204,6 +204,11 @@ class Xcloner {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-xcloner-file-system.php';
 		
 		/**
+		 * The class responsible for the XCloner File Transfer methods.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-xcloner-file-transfer.php';
+		
+		/**
 		 * The class responsible for the XCloner Scheduler methods.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-xcloner-scheduler.php';

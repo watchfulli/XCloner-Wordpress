@@ -249,6 +249,23 @@ a.expand-multipart.remove{
     margin-left: 10px;
 }
 
+.xcloner-restore li.steps{
+	display: none;
+}
+
+.xcloner-restore .steps.show{
+	display: block;
+}
+
+.xcloner-restore li .collapsible-body{
+	padding: 25px 10px 5px 10px;
+}
+
+.xcloner-restore select.browser-default{
+	height: 36px;
+	font-size: 18px;
+}
+
 @media only screen and (min-width: 993px){
 	.dashboard .backup-ready{
 		float: right;

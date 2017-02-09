@@ -142,6 +142,22 @@ class Xcloner_File_System{
 			return $new_list[0];
 	}
 	
+	public function get_latest_backups()
+	{
+		$files = $this->get_backup_archives_list();
+		
+		if(is_array($files))
+			$this->sort_by($files, "timestamp","desc");
+		
+		$new_list = array();
+		
+		foreach($files as $key=>$file)
+			if(!isset($file['parent']))
+				$new_list[] = ($files[$key]);
+
+		return $new_list;
+	}
+	
 	public function get_storage_usage()
 	{
 		$files = $this->get_backup_archives_list();
@@ -246,7 +262,7 @@ class Xcloner_File_System{
 		{
 			$data = array();
 			
-			if($file_info['extension'] == "csv")
+			if(isset($file_info['extension']) and $file_info['extension'] == "csv")
 			{
 				$lines = explode(PHP_EOL, $this->get_storage_filesystem()->read($file_info['path']));
 				foreach($lines as $line)
