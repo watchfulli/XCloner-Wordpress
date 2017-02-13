@@ -5,6 +5,11 @@ use League\Flysystem\Filesystem;
 use League\Flysystem\Util;
 use League\Flysystem\Adapter\Local;
 
+use splitbrain\PHPArchive\Tar;
+use splitbrain\PHPArchive\Archive;
+use splitbrain\PHPArchive\FileInfo;
+
+
 class Xcloner_Api{
 
 	private $xcloner_database;
@@ -667,6 +672,41 @@ class Xcloner_Api{
 		$return['finished'] = $xcloner_remote_storage->change_storage_status($_POST['id'], $_POST['value']);
 		
 		$this->send_response($return, 0);
+	}
+	
+	
+	public function download_restore_script()
+	{
+		if($_GET['phar'])
+		{
+			$tmp_file = $this->xcloner_settings->get_xcloner_tmp_path().DS."xcloner-restore.tgz";
+			
+			$tar = new Tar();
+			//$tar->setCompression(4);
+			$tar->create($tmp_file);
+			$tar->addFile(dirname(__DIR__)."/restore/vendor.phar", "vendor.phar");
+			$tar->addFile(dirname(__DIR__)."/restore/xcloner_restore.php.txt", "xcloner_restore.php");
+			
+			$tar->close();
+		}else
+		{
+		
+			$tmp_file = dirname(__DIR__).DS."restore".DS."xcloner-restore.tgz";
+		}
+		
+		if (file_exists($tmp_file)) {
+		    header('Content-Description: File Transfer');
+		    header('Content-Type: application/octet-stream');
+		    header('Content-Disposition: attachment; filename="'.basename($tmp_file).'"');
+		    header('Expires: 0');
+		    header('Cache-Control: must-revalidate');
+		    header('Pragma: public');
+		    header('Content-Length: ' . filesize($tmp_file));
+		    readfile($tmp_file);
+		    
+		}
+		
+		exit;
 	}
 	
 	/*

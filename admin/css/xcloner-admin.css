@@ -287,6 +287,21 @@ a.expand-multipart.remove{
 	display: block;
 }
 
+.xcloner-restore ul.text-steps li{
+	list-style-type: decimal;
+}
+
+.xcloner-restore ul.text-steps ul li{
+	list-style-type: disc;
+}
+
+.xcloner-restore ul.text-steps ul{
+	margin: 10px;
+}
+
+.xcloner-restore ul.text-steps{
+	margin-left: 20px;
+}
 
 @media only screen and (min-width: 993px){
 	.dashboard .backup-ready{

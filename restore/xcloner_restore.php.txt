@@ -2,9 +2,9 @@
 
 define("DS", DIRECTORY_SEPARATOR);
 
-//require_once(dirname( __FILE__ )  . DS.'vendor'.DS.'autoload.php');
+require_once(dirname( __FILE__ )  . DS.'vendor'.DS.'autoload.php');
 //require_once(dirname( __FILE__ )  . DS.'../wordpress/wp-content/plugins/xcloner/vendor'.DS.'autoload.php');
-require_once(__DIR__.DS."vendor.phar");
+//require_once(__DIR__.DS."vendor.phar");
 
 use League\Flysystem\Config;
 use League\Flysystem\Filesystem;

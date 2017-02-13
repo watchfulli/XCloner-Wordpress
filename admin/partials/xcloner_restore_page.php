@@ -20,7 +20,21 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 				<div class="collapsible-header active"><i class="material-icons">settings_remote</i>Restore Script Upload</div>
 				<div class="collapsible-body row">
 						
-						Please upload this script to your new host and provide the url below to the xcloner_restore.php file
+						<ul class="text-steps">
+							<li>Please download the restore script from 
+								<ul>
+									<li><a href='#' onclick="window.location=ajaxurl+'?action=download_restore_script&phar=true'">here</a> if your restore location has php <span class="green">phar module enabled</span></li> 
+									<li><a href='#' onclick="window.location=ajaxurl+'?action=download_restore_script&phar=0'">here</a> if your restore location has <span class="red">phar module disabled</span></li> 
+								</ul>	
+							</li>	
+							<li>
+							Extract the files on your new host
+							</li>
+							<li>
+							Provide url below to the <u>xcloner_restore.php</u> restore script
+							</li>
+							
+						</ul>	
 						
 						<div class="input-field col m9 s12">
 							<input value="http://localhost/xcloner/xcloner_restore.php" id="restore_script_url" type="text" class="validate" placeholder="Url to XCloner Restore Script, example http://myddns.com/xcloner/xcloner_restore.php" >
