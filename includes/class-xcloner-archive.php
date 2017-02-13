@@ -273,7 +273,7 @@ class Xcloner_Archive extends Tar
 		{
 			$line = str_getcsv($file->current());
 
-			$relative_path = $line[0];
+			$relative_path = stripslashes($line[0]);
 			
 			$start_filesystem = "start_filesystem";
 			
@@ -298,7 +298,7 @@ class Xcloner_Archive extends Tar
 				$file_info['size'] = 0;
 			
 			if($start_filesystem == "tmp_filesystem")	
-				$file_info['archive_prefix_path'] = "xcloner".$this->xcloner_settings->get_hash();
+				$file_info['archive_prefix_path'] = $this->xcloner_settings->get_xcloner_tmp_path_suffix();
 			
 			$byte_limit = (int)$this->file_size_per_request_limit/512;
 			

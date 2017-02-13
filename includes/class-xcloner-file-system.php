@@ -98,6 +98,11 @@ class Xcloner_File_System{
 		return $this->start_adapter;
 	}
 	
+	public function get_logger()
+	{
+		return $this->logger;
+	}
+	
 	public function get_start_path_file_info($file)
 	{
 		//$info= $this->getMetadataFull('start_adapter', $file);
@@ -319,12 +324,12 @@ class Xcloner_File_System{
 			$this->build_files_list();
 		}
 		
-		$metadata_dumpfile = $this->get_tmp_filesystem()->getMetadata("index.html");
-		$this->store_file($metadata_dumpfile, 'tmp_filesystem');
-		$this->files_counter++;
-		
 		if($this->scan_finished())
 		{
+			$metadata_dumpfile = $this->get_tmp_filesystem()->getMetadata("index.html");
+			$this->store_file($metadata_dumpfile, 'tmp_filesystem');
+			$this->files_counter++;
+		
 			//adding included dump file to the included files list
 			if($this->get_tmp_filesystem()->has($this->get_included_files_handler()))
 			{
@@ -336,7 +341,7 @@ class Xcloner_File_System{
 			//adding a default index.html to the temp xcloner folder
 			if(!$this->get_tmp_filesystem()->has("index.html"))
 			{
-				$this->storage_filesystem->write("index.html","");
+				$this->get_tmp_filesystem()->write("index.html","");
 			}
 			
 			//adding the default log file
@@ -643,8 +648,8 @@ class Xcloner_File_System{
 			$file['size'] = 0;
 		if(!isset($file['visibility']))	
 			$file['visibility'] = "private";
-			
-		$line = '"'.$file['path'].'","'.$file['timestamp'].'","'.$file['size'].'","'.$file['visibility'].'","'.$storage.'"'.PHP_EOL;
+		
+		$line = '"'.addslashes($file['path']).'","'.$file['timestamp'].'","'.$file['size'].'","'.$file['visibility'].'","'.$storage.'"'.PHP_EOL;
 		
 		$this->last_logged_file = $file['path'];
 		

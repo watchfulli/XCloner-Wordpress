@@ -7,29 +7,19 @@
 html {
     font-family: GillSans, Calibri, Trebuchet, sans-serif;
   }
-  
+/* 
 @font-face {
   font-family: 'Material Icons';
   font-style: normal;
   font-weight: 400;
-  src: local('Material Icons'), local('MaterialIcons-Regular'), url(http://fonts.gstatic.com/s/materialicons/v19/2fcrYFNaTjcS6g4U3t-Y5UEw0lE80llgEseQY3FEmqw.woff2) format('woff2');
-}
+  src: url(../fonts/MaterialIcons-Regular.eot); 
+  src: local('Material Icons'),
+       local('MaterialIcons-Regular'),
+       url(../fonts/MaterialIcons-Regular.woff2) format('woff2'),
+       url(../fonts/MaterialIcons-Regular.woff) format('woff'),
+       url(../fontsMaterialIcons-Regular.ttf) format('truetype');
+}*/
 
-.material-icons {
-  font-family: 'Material Icons';
-  font-weight: normal;
-  font-style: normal;
-  font-size: 24px;
-  line-height: 1;
-  letter-spacing: normal;
-  text-transform: none;
-  display: inline-block;
-  white-space: nowrap;
-  word-wrap: normal;
-  direction: ltr;
-  -webkit-font-feature-settings: 'liga';
-  -webkit-font-smoothing: antialiased;
-}
 
 
 h1{
@@ -242,11 +232,14 @@ a.expand-multipart.remove{
 	font-weight: bold;
 }
 
+#backup-status h5{
+    font-size: 18px;
+}
+
 #backup-status .row .item .title{
     width: 100px;
     display: inline-block;
     font-weight: bold;
-    margin-left: 10px;
 }
 
 .xcloner-restore li.steps{
@@ -266,9 +259,34 @@ a.expand-multipart.remove{
 	font-size: 18px;
 }
 
-.xcloner-restore #cancel_upload_backup{
+.xcloner-restore .steps .progress{
 	display: none;
 }
+
+.xcloner-restore .status > div{
+	margin: 10px 0px 0px 0px;
+}
+
+.xcloner-restore .toggler{
+	display: inline-block;
+}
+
+.xcloner-restore .toggler .normal{
+	display: block;
+}
+
+.xcloner-restore .toggler .cancel{
+	display: none;
+}
+
+.xcloner-restore .toggler.cancel .normal{
+	display: none;
+}
+
+.xcloner-restore .toggler.cancel .cancel{
+	display: block;
+}
+
 
 @media only screen and (min-width: 993px){
 	.dashboard .backup-ready{

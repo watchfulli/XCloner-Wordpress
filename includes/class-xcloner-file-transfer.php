@@ -3,7 +3,7 @@
 class Xcloner_File_Transfer extends Xcloner_File_System{
 	
 	private $target_url;
-	private $transfer_limit = 100*1024; //bytes
+	private $transfer_limit = 150*1024; //bytes
 	
 	public function set_target($target_url)
 	{
@@ -36,6 +36,8 @@ class Xcloner_File_Transfer extends Xcloner_File_System{
 		
 		$data = http_build_query($send_array);
 		
+		$this->get_logger()->debug(sprintf("Sending curl request to %s with %s data of file %s starting position %s", $this->target_url, $this->transfer_limit, $file, $start));
+		
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL,$this->target_url);
 		curl_setopt($ch,CURLOPT_POST, 1);
@@ -46,10 +48,13 @@ class Xcloner_File_Transfer extends Xcloner_File_System{
 		curl_setopt($ch,CURLOPT_POSTFIELDS, $data );
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		curl_setopt($ch, CURLOPT_VERBOSE, true);
-		$result = json_decode(curl_exec ($ch));
 		
+		$result = curl_exec ($ch);
+		
+		$result = json_decode($result);
+				
 		if(!$result)
-			return false;
+			throw new Exception("We have received no response from the remote host");
 			
 		if($result->status != 200)
 		{

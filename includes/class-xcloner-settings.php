@@ -49,9 +49,15 @@ class Xcloner_Settings
 		return $path;
 	}
 	
+	public function get_xcloner_tmp_path_suffix()
+	{
+		return "xcloner".$this->get_hash();
+	}
+	
+	
 	public function get_xcloner_tmp_path()
 	{
-		$path = sys_get_temp_dir().DS.".xcloner".$this->get_hash();
+		$path = sys_get_temp_dir().DS.".".$this->get_xcloner_tmp_path_suffix();
 		if(!is_dir($path))
 			mkdir($path);
 		

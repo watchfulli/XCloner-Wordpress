@@ -80,6 +80,7 @@ $latest_backup =  $xcloner_file_system->get_latest_backup();
 						<div class="" id="backup-status">
 							<div class="row">
 								<h5><?php echo __("Latest Backup", "xcloner")?></h5>
+								<blockquote>
 								<?php if($latest_backup):?>
 									<div class="item">
 										<div class="title"><?php echo __("Backup Name", "xcloner")?>:</div>
@@ -102,13 +103,17 @@ $latest_backup =  $xcloner_file_system->get_latest_backup();
 										<div class="title"><?php echo __("No Backup Yet", "xcloner")?></div>
 									</div> 
 								<?php endif?>
+								</blockquote>
 							<div>
 							<h5><?php echo __("Backup Storage Usage", "xcloner")?></h5>
+								<blockquote>
 								<div class="item">
 									<div class="title"><?php echo __("Total Size", "xcloner")?>:</div>
 									<?php echo size_format($xcloner_file_system->get_storage_usage());?>
 								</div>
+								</blockquote>
 							<h5><?php echo __("Next Scheduled Backup", "xcloner")?></h5>
+								<blockquote>
 								<div class="item">
 									<?php
 									$list = ($xcloner_scheduler->get_next_run_schedule());
@@ -134,6 +139,7 @@ $latest_backup =  $xcloner_file_system->get_latest_backup();
 											echo __("Unscheduled","xcloner");
 									?>
 								</div>
+								</blockquote>
 						</div>
 					</div>
 				</li>

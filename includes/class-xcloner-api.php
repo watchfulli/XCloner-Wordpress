@@ -711,14 +711,61 @@ class Xcloner_Api{
 	
 	public function restore_upload_backup()
 	{
+		$return['part'] = 0;
+		$return['total_parts'] = 0;
+		$return['uploaded_size'] = 0;
+		$is_multipart = 0;
+		
 		$file = $this->xcloner_sanitization->sanitize_input_as_string($_POST['file']);
+		
+		if(isset($_POST['part']))
+			$return['part'] = $this->xcloner_sanitization->sanitize_input_as_int($_POST['part']);
+		
+		if(isset($_POST['uploaded_size']))
+			$return['uploaded_size'] = $this->xcloner_sanitization->sanitize_input_as_int($_POST['uploaded_size']);
+		
 		$start = $this->xcloner_sanitization->sanitize_input_as_string($_POST['start']);
 		$target_url = $this->xcloner_sanitization->sanitize_input_as_string($_POST['target_url']);
-
-		$xcloner_file_transfer = new Xcloner_File_Transfer();
-		$xcloner_file_transfer->set_target($target_url);
-		$return['start'] = $xcloner_file_transfer->transfer_file($file, $start);
+		
 		$return['total_size'] = $this->xcloner_file_system->get_backup_size($file);
+		
+		if($this->xcloner_file_system->is_multipart($file))
+		{
+			$backup_parts = $this->xcloner_file_system->get_multipart_files($file);
+			
+			$return['total_parts'] = sizeof($backup_parts)+1;
+			
+			if($return['part'] and isset($backup_parts[$return['part']-1]))
+			{
+				$file = $backup_parts[$return['part']-1];
+			}
+			
+			$is_multipart = 1;	
+		}
+		
+		try{
+		
+			$xcloner_file_transfer = new Xcloner_File_Transfer();
+			$xcloner_file_transfer->set_target($target_url);
+			$return['start'] = $xcloner_file_transfer->transfer_file($file, $start);
+		
+		}catch(Exception $e){
+		
+			$return = array();
+			$return['error'] = true;
+			$return['message'] = $e->getMessage();
+			$this->send_response( $return, 0);
+		
+		}
+		
+		$return['status'] = 200;
+		
+		//we have finished the upload
+		if(!$return['start'] and $is_multipart)
+		{
+			$return['part']++;
+			$return['uploaded_size'] += $this->xcloner_file_system->get_storage_filesystem()->getSize($file);
+		}
 		
 		$this->send_response( $return, 0);
 	}

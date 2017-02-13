@@ -46,7 +46,7 @@ class Tar extends Archive
      * @param string $file
      * @throws ArchiveIOException
      */
-    public function open($file)
+    public function open($file, $start_byte = 0)
     {
         $this->file = $file;
 
@@ -68,6 +68,9 @@ class Tar extends Archive
             throw new ArchiveIOException('Could not open file for reading: '.$this->file);
         }
         $this->closed = false;
+        
+        if($start_byte)
+			fseek($this->fh, $start_byte);
     }
 
     /**
@@ -127,7 +130,7 @@ class Tar extends Archive
      * @throws ArchiveIOException
      * @return FileInfo[]
      */
-    public function extract($outdir, $strip = '', $exclude = '', $include = '')
+    public function extract($outdir, $strip = '', $exclude = '', $include = '', $files_limit = 0)
     {
         if ($this->closed || !$this->file) {
             throw new ArchiveIOException('Can not read from a closed archive');
@@ -138,7 +141,10 @@ class Tar extends Archive
         if (!is_dir($outdir)) {
             throw new ArchiveIOException("Could not create directory '$outdir'");
         }
-
+		
+		$files_counter = 0;
+		$return = array();
+		
         $extracted = array();
         while ($dat = $this->readbytes(512)) {
             // read the file header
@@ -146,6 +152,15 @@ class Tar extends Archive
             if (!is_array($header)) {
                 continue;
             }
+            
+            if($files_limit)
+            {
+				if(++$files_counter > $files_limit)
+				{
+					return array("start"=>ftell($this->fh)-512);
+				}
+			}
+            
             $fileinfo = $this->header2fileinfo($header);
 
             // apply strip rules
@@ -164,6 +179,9 @@ class Tar extends Archive
 
             // extract data
             if (!$fileinfo->getIsdir()) {
+				if(file_exists($output))
+					unlink($output);
+					
                 $fp = fopen($output, "wb");
                 if (!$fp) {
                     throw new ArchiveIOException('Could not open file for writing: '.$output);
@@ -181,7 +199,8 @@ class Tar extends Archive
                 touch($output, $fileinfo->getMtime());
                 chmod($output, $fileinfo->getMode());
             } else {
-                $this->skipbytes(ceil($header['size'] / 512) * 512); // the size is usually 0 for directories
+                //$this->skipbytes(ceil($header['size'] / 512) * 512); // the size is usually 0 for directories
+                $this->skipbytes(ceil(0 / 512) * 512); // the size is usually 0 for directories
             }
 
             $extracted[] = $fileinfo;
@@ -634,10 +653,11 @@ class Tar extends Archive
         if (!$header) {
             throw new ArchiveCorruptedException('Failed to parse header');
         }
-
+		//print_r($header);
         $return['checksum'] = OctDec(trim($header['checksum']));
         if ($return['checksum'] != $chks) {
-            throw new ArchiveCorruptedException('Header does not match it\'s checksum');
+			
+            throw new ArchiveCorruptedException('Header does not match it\'s checksum for ');
         }
 
         $return['filename'] = trim($header['filename']);
