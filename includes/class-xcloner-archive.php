@@ -90,7 +90,7 @@ class Xcloner_Archive extends Tar
 	public function get_archive_name_multipart()
 	{
 		$new_name =  preg_replace('/-part(\d*)/', "", $this->archive_name);
-		return $new_name."-multipart.csv";
+		return $new_name."-multipart".$this->xcloner_settings->get_backup_extension_name(".csv");
 	}
 	
 	/*

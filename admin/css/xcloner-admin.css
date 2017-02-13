@@ -303,6 +303,12 @@ a.expand-multipart.remove{
 	margin-left: 20px;
 }
 
+.xcloner-restore .restore-remote-backup-step .files-list{
+	max-height: 250px;
+    overflow: auto;
+    margin: 10px 5px;
+}
+
 @media only screen and (min-width: 993px){
 	.dashboard .backup-ready{
 		float: right;

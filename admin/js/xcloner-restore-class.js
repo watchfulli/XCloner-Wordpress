@@ -2,7 +2,7 @@ class Xcloner_Restore{
 
 	constructor()
 	{
-		this.steps = ['restore-script-upload-step','backup-upload-step','restore-remote-backup-step']
+		this.steps = ['restore-script-upload-step','backup-upload-step','restore-remote-backup-step','restore-remote-database-step']
 		this.ajaxurl = ajaxurl;
 		this.cancel = false;
 		this.upload_file_event = new Event('upload_file_event');
@@ -41,9 +41,28 @@ class Xcloner_Restore{
 			
 			jQuery('.xcloner-restore #remote_backup_file').find('option').not(':first').remove();
 			
+			
 			for( var key in files)
 			{
-				jQuery('.xcloner-restore #remote_backup_file').append(new Option(key+"("+e.detail.$this.getSize(files[key].size)+" MB)", key)).addClass("file");
+				jQuery('.xcloner-restore #remote_backup_file').append(new Option(files[key].path+"("+e.detail.$this.getSize(files[key].size)+" MB)", files[key].path)).addClass("file");
+			}
+				
+		}, false);
+		
+		document.addEventListener("xcloner_populate_remote_mysqldump_files_list", function (e) {
+			
+			var files = e.detail.files
+			
+			jQuery('.xcloner-restore #remote_database_file').find('option').not(':first').remove();
+			
+			for( var key in files)
+			{
+				if(files[key].selected)
+					var selected = "selected";
+				else
+					var selected = "not-selected";
+					
+				var option = jQuery('.xcloner-restore #remote_database_file').append("<option value='"+files[key].path+"' "+selected+">"+files[key].path+"("+e.detail.$this.getSize(files[key].size)+" MB)"+"</option>").addClass("file");
 			}
 				
 		}, false);
@@ -63,7 +82,16 @@ class Xcloner_Restore{
 			if(e.detail.percent !== undefined)
 			{
 				jQuery(".xcloner-restore .steps.active .progress").show();
-				jQuery(".xcloner-restore .steps.active .progress .determinate").css("width", e.detail.percent+"%")
+				
+				if(e.detail.class == "indeterminate")
+					jQuery(".xcloner-restore .steps.active .progress > div").addClass(e.detail.class).removeClass('determinate')
+				if(e.detail.class == "determinate")
+					jQuery(".xcloner-restore .steps.active .progress > div").addClass(e.detail.class).removeClass('indeterminate')
+				
+				if(e.detail.percent == 100)
+					jQuery(".xcloner-restore .steps.active .progress > div").removeClass('indeterminate').addClass('determinate').css("width", e.detail.percent+"%")	
+				else	
+					jQuery(".xcloner-restore .steps.active .progress .determinate").css("width", e.detail.percent+"%")
 			}
 				
 		}, false);
@@ -91,6 +119,17 @@ class Xcloner_Restore{
 				
 		}, false);
 		
+		document.addEventListener("remote_restore_update_files_list", function (e) {
+			
+			if(e.detail.files !== undefined && e.detail.files.length)
+			{
+				for(var i=0; i<e.detail.files.length;i++)
+				jQuery('.xcloner-restore .restore-remote-backup-step .files-list').prepend(e.detail.files[i]+"<br />")
+			}else
+				jQuery('.xcloner-restore .restore-remote-backup-step .files-list').html("");
+				
+		}, false);
+		
 		
 	}
 	
@@ -110,6 +149,50 @@ class Xcloner_Restore{
 		this.do_ajax('get_remote_backup_files_callback', 'list_backup_archives')
 		
 		this.get_remote_restore_path_default()
+	}
+	
+	get_remote_mysqldump_files_callback(response, status, params = new Object())
+	{
+		if(status)
+		{
+			var files = response.statusText.files;
+			document.dispatchEvent(new CustomEvent("xcloner_populate_remote_mysqldump_files_list", {detail: {files: files, $this: this }}));
+		}
+	}
+	
+	get_remote_mysqldump_files()
+	{
+		this.ajaxurl = this.restore_script_url;
+		this.set_cancel(false);
+		
+		
+		if(this.resume.callback == "get_remote_mysqldump_files_callback")
+		{
+			console.log("do resume");
+			this.do_ajax(this.resume.callback, this.resume.action, this.resume.params);
+			this.resume = new Object();
+			return;
+		}
+		
+		
+		var params = new Object()
+		params.backup_file = this.get_backup_file()
+		params.remote_path = this.get_remote_path()
+		
+		//console.log(params)
+		
+		this.do_ajax('get_remote_mysqldump_files_callback', 'list_mysqldump_backups', params)
+		
+	}
+	
+	get_backup_file()
+	{
+		return jQuery(".xcloner-restore #remote_backup_file").val()
+	}
+	
+	get_remote_path()
+	{
+		return jQuery(".xcloner-restore #remote_restore_path").val()
 	}
 	
 	get_remote_restore_path_default_callback(response, status, params = new Object())
@@ -140,6 +223,12 @@ class Xcloner_Restore{
 		}
 		
 		var processed = parseInt(response.statusText.start)+parseInt(response.statusText.processed)
+		
+		if(response.statusText.extracted_files)
+		{
+			//console.log(response.statusText.extracted_files);
+			document.dispatchEvent(new CustomEvent("remote_restore_update_files_list", {detail: {files: response.statusText.extracted_files}}));
+		}
 			
 		if(!response.statusText.finished)
 		{
@@ -175,8 +264,8 @@ class Xcloner_Restore{
 			this.resume = new Object();
 			return;
 		}
-		
-		document.dispatchEvent(new CustomEvent("xcloner_restore_update_progress", {detail: {percent: 0 }}));
+		document.dispatchEvent(new CustomEvent("xcloner_restore_update_progress", {detail: {percent: 0, class: 'indeterminate' }}));
+		document.dispatchEvent(new CustomEvent("remote_restore_update_files_list", {detail: {files: ""}}));
 		
 		this.do_ajax('remote_restore_backup_file_callback', 'restore_backup_to_path', params)
 	}
@@ -276,8 +365,8 @@ class Xcloner_Restore{
 	
 	next_step()
 	{
-		this.set_current_step++;
-		//console.log(this.set_current_step)
+		this.set_current_step = jQuery(".xcloner-restore li.active").attr("data-step");
+		
 		document.dispatchEvent(new CustomEvent("xcloner_restore_next_step", {detail: {$this: this}}));
 		
 	}
@@ -285,6 +374,11 @@ class Xcloner_Restore{
 	init_resume()
 	{
 		this.resume = new Object()
+		if(jQuery(".xcloner-restore .steps.active .progress").is(":visible"))
+			document.dispatchEvent(new CustomEvent("xcloner_restore_update_progress", {detail: {percent: 0 }}));
+		if(jQuery(".xcloner-restore .steps.active .status").html())
+			document.dispatchEvent(new CustomEvent("xcloner_restore_display_status_text", {detail: {message: ""}}));
+		document.dispatchEvent(new CustomEvent("remote_restore_update_files_list", {detail: {files: ""}}));
 	}
 	
 	do_ajax(callback, action="", params= new Object())
@@ -346,7 +440,8 @@ class Xcloner_Restore{
 	{
 		if(status)
 		{
-			document.dispatchEvent(new CustomEvent("xcloner_restore_display_status_text", {detail: {message: "Cancelled" }}));
+			//document.dispatchEvent(new CustomEvent("xcloner_restore_display_status_text", {detail: {append : true, message: "Cancelled" }}));
+			document.dispatchEvent(new CustomEvent("xcloner_restore_update_progress", {detail: {percent: 0, class: 'determinate' }}));
 
 		}
 			
@@ -419,12 +514,24 @@ jQuery(document).ready(function(){
 		xcloner_restore.set_current_step = (jQuery(this).attr("data-step")-1)
 	})
 	
+	jQuery(".xcloner-restore #skip_remote_backup_step").on("click", function(){
+		xcloner_restore.set_cancel(true);
+		xcloner_restore.next_step();
+	})
+	
 	jQuery(".xcloner-restore .restore-remote-backup-step .collapsible-header").click(function(){
-		xcloner_restore.get_remote_restore_path_default();
 		xcloner_restore.get_remote_backup_files();
 	})
 	
+	jQuery(".xcloner-restore .restore-remote-database-step .collapsible-header").click(function(){
+		xcloner_restore.get_remote_mysqldump_files();
+	})
+	
 	jQuery(".xcloner-restore #remote_backup_file").on("change", function(){
+		xcloner_restore.init_resume()
+	})
+	
+	jQuery(".xcloner-restore #backup_file").on("change", function(){
 		xcloner_restore.init_resume()
 	})
 	
@@ -434,17 +541,17 @@ jQuery(document).ready(function(){
 		else
 			xcloner_restore.set_cancel(false);
 		
-		var backup_file = jQuery(".xcloner-restore #remote_backup_file").val();
+		this.backup_file = jQuery(".xcloner-restore #remote_backup_file").val();
 			
-		if(!backup_file)
+		if(!this.backup_file)
 		{
 			document.dispatchEvent(new CustomEvent("xcloner_restore_display_status_text", {detail: {status: 'error', message: "Please select a backup file from the list above" }}));
 			return;
 		}	
 		
-		var remote_path = jQuery(".xcloner-restore #remote_restore_path").val();
+		this.remote_path = jQuery(".xcloner-restore #remote_restore_path").val();
 			
-		if(!remote_path)
+		if(!this.remote_path)
 		{
 			document.dispatchEvent(new CustomEvent("xcloner_restore_display_status_text", {detail: {status: 'error', message: "Please enter the remote restore path" }}));
 			return;
@@ -453,7 +560,10 @@ jQuery(document).ready(function(){
 		jQuery(this).parent().toggleClass("cancel")
 			
 		if(!xcloner_restore.get_cancel())
-			xcloner_restore.remote_restore_backup_file(backup_file, remote_path);
+		{
+			document.dispatchEvent(new CustomEvent("xcloner_restore_update_progress", {detail: {percent: 0, class: 'indeterminate' }}));
+			xcloner_restore.remote_restore_backup_file(this.backup_file, this.remote_path);
+		}
 			
 	})
 	

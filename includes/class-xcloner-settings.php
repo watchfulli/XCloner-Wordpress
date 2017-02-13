@@ -72,13 +72,15 @@ class Xcloner_Settings
 		return false;	
 	}
 	
-	public function get_backup_extension_name()
+	public function get_backup_extension_name($ext = "")
 	{
-		if(get_option('xcloner_backup_compression_level'))
-			$ext = ".tgz";
-		else
-			$ext = ".tar";
-			
+		if(!$ext)
+		{
+			if(get_option('xcloner_backup_compression_level'))
+				$ext = ".tgz";
+			else
+				$ext = ".tar";
+		}	
 		return ($this->get_hash()).$ext;	
 	}
 	

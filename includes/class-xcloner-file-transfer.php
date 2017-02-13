@@ -3,7 +3,7 @@
 class Xcloner_File_Transfer extends Xcloner_File_System{
 	
 	private $target_url;
-	private $transfer_limit = 150*1024; //bytes
+	private $transfer_limit = 350*1024; //bytes
 	
 	public function set_target($target_url)
 	{

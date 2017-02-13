@@ -185,7 +185,7 @@ class Xcloner_File_System{
 	
 	public function is_multipart($backup_name)
 	{
-		if(stristr($backup_name, "-multipart.csv"))
+		if(stristr($backup_name, "-multipart"))
 			return true;
 		
 		return false;	
@@ -283,7 +283,7 @@ class Xcloner_File_System{
 						
 			}
 			
-			if($file_info['type'] == 'file' and in_array($file_info['extension'], $this->backup_archive_extensions))
+			if($file_info['type'] == 'file' and isset($file_info['extension']) and in_array($file_info['extension'], $this->backup_archive_extensions))
 				$backup_files[$file_info['path']] = $file_info;
 		}
 		

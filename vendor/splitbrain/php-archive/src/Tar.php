@@ -157,7 +157,9 @@ class Tar extends Archive
             {
 				if(++$files_counter > $files_limit)
 				{
-					return array("start"=>ftell($this->fh)-512);
+					$return['extracted_files'] = $extracted;
+					$return['start'] = ftell($this->fh)-512;
+					return $return;
 				}
 			}
             
@@ -207,7 +209,10 @@ class Tar extends Archive
         }
 
         $this->close();
-        return $extracted;
+        
+        $return['extracted_files'] = $extracted;
+        
+        return $return;
     }
 
     /**
