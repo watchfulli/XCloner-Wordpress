@@ -1,12 +1,16 @@
 <?php
 use League\Flysystem\Config;
 use League\Flysystem\Filesystem;
+
 use League\Flysystem\Adapter\Ftp as Adapter;
 
 use League\Flysystem\Sftp\SftpAdapter;
 
 use League\Flysystem\Dropbox\DropboxAdapter;
 use Dropbox\Client;
+
+use MicrosoftAzure\Storage\Common\ServicesBuilder;
+use League\Flysystem\Azure\AzureAdapter;
 
 class Xcloner_Remote_Storage{
 	
@@ -43,6 +47,13 @@ class Xcloner_Remote_Storage{
 						"dropbox_access_token"	=> "string",
 						"dropbox_app_secret"	=> "string",
 						"dropbox_prefix"		=> "string"
+						),	
+					"azure" => array(
+						"text"					=> "Azure BLOB",
+						"azure_enable"			=> "int",
+						"azure_account_name"	=> "string",
+						"azure_api_key"			=> "string",
+						"azure_container"		=> "string"
 						),	
 						
 					);
@@ -195,6 +206,25 @@ class Xcloner_Remote_Storage{
 		
 		return true;
 		
+	}
+	
+	public function get_azure_filesystem()
+	{
+		$this->logger->info(sprintf("Creating the AZURE BLOB remote storage connection"), array(""));
+		
+		$endpoint = sprintf(
+		    'DefaultEndpointsProtocol=https;AccountName=%s;AccountKey=%s',
+		    get_option("xcloner_azure_account_name"),
+		    get_option("xcloner_azure_api_key")
+		);
+		
+		$blobRestProxy = ServicesBuilder::getInstance()->createBlobService($endpoint);
+		
+		$adapter = new AzureAdapter($blobRestProxy, get_option("xcloner_azure_container"));
+		
+		$filesystem = new Filesystem($adapter);
+
+		return array($adapter, $filesystem);
 	}
 	
 	public function get_dropbox_filesystem()

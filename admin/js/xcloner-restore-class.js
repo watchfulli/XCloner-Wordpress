@@ -62,7 +62,7 @@ class Xcloner_Restore{
 				else
 					var selected = "not-selected";
 					
-				var option = jQuery('.xcloner-restore #remote_database_file').append("<option value='"+files[key].path+"' "+selected+">"+files[key].path+"("+e.detail.$this.getSize(files[key].size)+" MB)"+"</option>").addClass("file");
+				var option = jQuery('.xcloner-restore #remote_database_file').append("<option value='"+files[key].path+"' "+selected+">"+files[key].path+"("+e.detail.$this.getSize(files[key].size)+" MB) "+files[key].timestamp+"</option>").addClass("file");
 			}
 				
 		}, false);
@@ -533,6 +533,17 @@ jQuery(document).ready(function(){
 	
 	jQuery(".xcloner-restore #backup_file").on("change", function(){
 		xcloner_restore.init_resume()
+	})
+	
+	
+	jQuery(".xcloner-restore #refresh_remote_backup_file").on("click", function(e){
+		xcloner_restore.get_remote_backup_files();
+		e.stopPropagation();
+	})
+	
+	jQuery(".xcloner-restore #refresh_database_file").on("click", function(e){
+		xcloner_restore.get_remote_mysqldump_files();
+		e.stopPropagation();
 	})
 	
 	jQuery(".xcloner-restore .restore-remote-backup-step .restore_remote_backup").click(function(){

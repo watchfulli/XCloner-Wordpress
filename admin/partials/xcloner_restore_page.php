@@ -50,10 +50,11 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 			</li>
 			
 			<li data-step="2" class="backup-upload-step steps">
-				<div class="collapsible-header active"><i class="material-icons">file_upload</i>Local Backup Archive Upload To Remote Host</div>
+				<div class="collapsible-header active"><i class="material-icons">file_upload</i>Upload Local Backup Archive To Remote Host
+				</div>
 				<div class="collapsible-body row">
 					<p>You can skip this step if you can transfer the archive in some other way</p>
-					<div class="input-field col s12 m7">
+					<div class="input-field col s12 m9">
 						<select id="backup_file" name="backup_file" class="browser-default">
 					      <option value="" disabled selected>Please select a local backup archive to upload to remote host</option>
 					      <?php if(is_array($backup_list)):?>
@@ -64,13 +65,14 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 							<?php endforeach?>
 						<?php endif ?>	
 					    </select>
+					    
 					    <label> </label>
 						<div class="progress">
 						      <div class="determinate" style="width: 0%"></div>
 						</div>
 						<div class="status"></div>
 					</div>
-					<div class="col s12 m5 right-align">
+					<div class="col s12 m3 right-align">
 						<div class="toggler">
 							<button class="btn waves-effect waves-light upload-backup normal" type="submit" id="" name="action">Upload
 							    <i class="material-icons right">send</i>
@@ -87,7 +89,9 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 			</li>	
 			
 			<li data-step="3" class="restore-remote-backup-step steps active">
-				<div class="collapsible-header"><i class="material-icons">folder_open</i>Restore Files Backup Available On Remote Host</div>
+				<div class="collapsible-header"><i class="material-icons">folder_open</i>Restore Files Backup Available On Remote Host
+					<i class="material-icons right" title="Refresh Remote Backup Files List" id="refresh_remote_backup_file">cached</i>
+				</div>
 				<div class="collapsible-body row">
 												
 						<div class=" col s12 m9">
@@ -128,7 +132,9 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 			</li>
 			
 			<li data-step="4" class="restore-remote-database-step steps active">
-				<div class="collapsible-header"><i class="material-icons">folder_open</i>Restore Remote Database Backup</div>
+				<div class="collapsible-header"><i class="material-icons">list</i>Restore Remote Database Backup
+					<i class="material-icons right" title="Refresh Database Backup Files List" id="refresh_database_file">cached</i>
+				</div>
 				<div class="collapsible-body row">
 												
 						<div class=" col s12 m9">
@@ -162,6 +168,7 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 								<select id="remote_database_file" name="remote_database_file" class="browser-default">
 									<option value="" disabled selected>Please select the remote database backup file to restore</option>
 							    </select>
+							    
 							    <label></label>
 							</div>
 							

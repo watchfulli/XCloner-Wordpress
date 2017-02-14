@@ -599,6 +599,8 @@ class Xcloner_File_System{
 	
 	public function sort_by( &$array, $field, $direction = 'asc')
 	{
+		$direction = strtolower($direction);
+		
 	    usort($array, create_function('$a, $b', '
 	        $a = $a["' . $field . '"];
 	        $b = $b["' . $field . '"];
