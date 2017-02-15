@@ -53,7 +53,7 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 				<div class="collapsible-header active"><i class="material-icons">file_upload</i>Upload Local Backup Archive To Remote Host
 				</div>
 				<div class="collapsible-body row">
-					<p>You can skip this step if you can transfer the archive in some other way</p>
+					<p>You can skip this step if you want to transfer the archive in some other way, make sure you upload it in the same directory as the restore script from the previous step.</p>
 					<div class="input-field col s12 m9">
 						<select id="backup_file" name="backup_file" class="browser-default">
 					      <option value="" disabled selected>Please select a local backup archive to upload to remote host</option>
@@ -81,7 +81,7 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 							    <i class="material-icons right">close</i>
 							</button>
 						</div>
-						<button class="btn waves-effect waves-light teal" type="submit" id="skip_upload_backup" name="action">Next
+						<button class="btn waves-effect waves-light grey" type="submit" id="skip_upload_backup" name="action">Next
 						    <i class="material-icons right">navigate_next</i>
 						</button>
 					</div>
@@ -93,10 +93,16 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 					<i class="material-icons right" title="Refresh Remote Backup Files List" id="refresh_remote_backup_file">cached</i>
 				</div>
 				<div class="collapsible-body row">
-												
+						
+						<div class=" col s12 ">
+							<div class="input-field row">
+								<input type="text" name="remote_restore_url" id="remote_restore_url" class="validate" placeholder="Restore Target Url">
+								<label>Remote Restore Target Url</label>
+							</div>
+						</div>							
 						<div class=" col s12 m9">
 							<div class="input-field row">
-								<input type="text" name="remote_restore_path" id="remote_restore_path" class="validate" placeholder="Remote Restore Path">
+								<input type="text" name="remote_restore_path" id="remote_restore_path" class="validate" placeholder="Restore Target Path">
 								<label>Remote Restore Target Path</label>
 							</div>
 							
@@ -124,7 +130,7 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 								    <i class="material-icons right">close</i>
 								</button>
 							</div>
-							<button class="btn waves-effect waves-light teal" type="submit" id="skip_remote_backup_step" name="action">Next
+							<button class="btn waves-effect waves-light grey" type="submit" id="skip_remote_backup_step" name="action">Next
 								<i class="material-icons right">navigate_next</i>
 							</button>
 				        </div>
@@ -137,28 +143,27 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 				</div>
 				<div class="collapsible-body row">
 												
-						<div class=" col s12 m9">
+						<div class=" col s12">
 							
-							<div class="input-field row">
-								<input type="text" name="remote_mysql_host" id="remote_mysql_host" class="validate" placeholder="Remote Mysql Hostname">
+							<div class="input-field col s12 m6">
+								<input type="text" name="remote_mysql_host" id="remote_mysql_host" class="validate" placeholder="Remote Mysql Hostname" value="localhost">
 								<label>Remote Mysql Hostname</label>
 							</div>
 							
-							<div class="input-field row">
+							<div class="input-field  col s12 m6">
+								<input type="text" name="remote_mysql_db" id="remote_mysql_db" class="validate" placeholder="Remote Mysql Database">
+								<label>Remote Mysql Database</label>
+							</div>
+							
+							<div class="input-field  col s12 m6">
 								<input type="text" name="remote_mysql_user" id="remote_mysql_user" class="validate" placeholder="Remote Mysql Username">
 								<label>Remote Mysql Username</label>
 							</div>
 							
 							
-							<div class="input-field row">
+							<div class="input-field  col s12 m6">
 								<input type="text" name="remote_mysql_pass" id="remote_mysql_pass" class="validate" placeholder="Remote Mysql Password">
 								<label>Remote Mysql Password</label>
-							</div>
-							
-							
-							<div class="input-field row">
-								<input type="text" name="remote_mysql_db" id="remote_mysql_db" class="validate" placeholder="Remote Mysql Database">
-								<label>Remote Mysql Database</label>
 							</div>
 							
 						</div>	
@@ -182,14 +187,86 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 				       
 				        <div class="col s12 m3 right-align">
 							<div class="toggler">
-								<button class="btn waves-effect waves-light restore_remote_backup normal " type="submit" id="" name="action">Restore
+								<button class="btn waves-effect waves-light restore_remote_mysqldump normal " type="submit" id="" name="action">Restore
 								    <i class="material-icons right">send</i>
 								</button>
-								<button class="btn waves-effect waves-light red restore_remote_backup cancel" type="submit" id="" name="action">Cancel
+								<button class="btn waves-effect waves-light red restore_remote_mysqldump cancel" type="submit" id="" name="action">Cancel
 								    <i class="material-icons right">close</i>
 								</button>
 							</div>
 							
+							<button class="btn waves-effect waves-light grey" type="submit" id="skip_restore_remote_database_step" name="action">Next
+								<i class="material-icons right">navigate_next</i>
+							</button>
+							
+				        </div>
+				 	
+				</div>
+			</li>
+			
+			<li data-step="5" class="restore-finish-step steps active">
+				<div class="collapsible-header"><i class="material-icons">folder_open</i>Finishing up...
+				</div>
+				<div class="collapsible-body row">
+						
+						<div class="row">
+							<div class="col s4">
+								<label>Update wp-config.php mysql details and update the restored site Home and Site Url</label>
+							</div>
+							
+							<div class="col s8">
+								<div class="switch">
+									<label>
+									Off
+									<input type="checkbox" id="update_remote_site_url" name="update_remote_site_url" checked value="1">
+									<span class="lever"></span>
+									On
+									</label>
+								</div>
+							</div>
+						</div>
+						
+						<div class="row">
+							<div class="col s4">
+								<label>Delete Restored Backup Temporary Folder</label>
+							</div>
+							<div class="col s8">
+								<div class="switch">
+									<label>
+									Off
+									<input type="checkbox" id="delete_backup_temporary_folder" name="delete_backup_temporary_folder" checked value="1">
+									<span class="lever"></span>
+									On
+									</label>
+								</div>
+							</div>
+						</div>	
+						
+						<div class="row">
+							<div class="col s4">
+								<label>Delete Restore Script</label>
+							</div>
+							<div class="col s8">
+								<div class="switch">
+									<label>
+									Off
+									<input type="checkbox" id="delete_restore_script" name="delete_restore_script" checked value="1">
+									<span class="lever"></span>
+									On
+									</label>
+								</div>
+							</div>
+						</div>
+												
+						<div class=" row col s12">
+							 <div class="status"></div>
+				        </div>
+				        
+				        <div class="col s12 center-align">
+
+							<button class="btn waves-effect waves-light green" type="submit" id="restore_finish" name="action">Finish
+								<i class="material-icons right">navigate_next</i>
+							</button>
 				        </div>
 				</div>
 			</li>
