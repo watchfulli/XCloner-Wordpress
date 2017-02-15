@@ -13,6 +13,10 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 
 <h1><?= esc_html(get_admin_page_title()); ?></h1>
 
+<script>	
+	var xcloner_auth_key = '<?php echo md5(AUTH_KEY)?>';
+</script>
+
 <div class="row xcloner-restore">
 	<div class="col s12 m10">
 		<ul class="collapsible xcloner-restore " data-collapsible="accordion">
@@ -21,11 +25,7 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 				<div class="collapsible-body row">
 						
 						<ul class="text-steps">
-							<li>Please download the restore script from:
-								<ul>
-									<li><a href='#' onclick="window.location=ajaxurl+'?action=download_restore_script&phar=true'">here</a> if your restore location has php <span class="gray">phar module enabled</span></li> 
-									<li><a href='#' onclick="window.location=ajaxurl+'?action=download_restore_script&phar=0'">here</a> if your restore location has phar module <span class="red">disabled</span></li> 
-								</ul>	
+							<li>Please download the restore script from <a href='#' onclick="window.location=ajaxurl+'?action=download_restore_script&phar=true'"><strong>here</strong></a>
 							</li>	
 							<li>
 							Extract the files on your new host
@@ -211,7 +211,7 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 						
 						<div class="row">
 							<div class="col s4">
-								<label>Update wp-config.php mysql details and update the restored site Home and Site Url</label>
+								<label>Update wp-config.php mysql details and update the restored site Url</label>
 							</div>
 							
 							<div class="col s8">
@@ -264,7 +264,7 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 				        
 				        <div class="col s12 center-align">
 
-							<button class="btn waves-effect waves-light green" type="submit" id="restore_finish" name="action">Finish
+							<button class="btn waves-effect waves-light teal" type="submit" id="restore_finish" name="action">Finish
 								<i class="material-icons right">navigate_next</i>
 							</button>
 				        </div>

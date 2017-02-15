@@ -1,13 +1,13 @@
 class Xcloner_Restore{
 
-	constructor()
+	constructor(hash)
 	{
 		this.steps = ['restore-script-upload-step','backup-upload-step','restore-remote-backup-step','restore-remote-database-step','restore-finish-step']
 		this.ajaxurl = ajaxurl;
 		this.cancel = false;
 		this.upload_file_event = new Event('upload_file_event');
 		this.resume = new Object();
-		
+		this.hash = xcloner_auth_key;
 		
 		document.addEventListener("backup_upload_finish", function (e) {
 			
@@ -518,6 +518,8 @@ class Xcloner_Restore{
 	do_ajax(callback, action="", params= new Object())
 	{
 		params.action = action
+		params.hash = this.hash
+		
 		if(this.cancel == true)
 		{
 			this.resume.callback = callback
@@ -597,7 +599,7 @@ class Xcloner_Restore{
 
 jQuery(document).ready(function(){
 	
-	var xcloner_restore = new Xcloner_Restore();
+	var xcloner_restore = new Xcloner_Restore(xcloner_auth_key);
 	
 	xcloner_restore.set_current_step(0);
 	

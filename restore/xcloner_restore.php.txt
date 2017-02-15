@@ -1,26 +1,31 @@
 <?php
 
-define("OPEN_ACCESS", 1);
+define('AUTH_KEY', '');
 
 define("DS", DIRECTORY_SEPARATOR);
 
-if(!OPEN_ACCESS){
+if(!AUTH_KEY or $_REQUEST['hash'] != AUTH_KEY){
 	
-		header("Access-Control-Allow-Origin: *");
-		header("HTTP/1.1 200");
-		header('Content-Type: application/json');
-		$return['status'] = "404";
-		$return['statusText'] = "Could not run restore script";
-		
-		echo json_encode($return);
+		send_response("404", "Could not run restore script, AUTH_KEY missing or invalid!");
 		exit;
 	
 }
 
-if(file_exists("vendor.phar"))
+if(file_exists("vendor.phar") and extension_loaded('phar'))
 	require_once(__DIR__.DS."vendor.phar");
-else	
-	require_once(dirname( __FILE__ )  . DS.'vendor'.DS.'autoload.php');
+else
+{	
+	$file = dirname( __FILE__ )  . DS.'vendor'.DS.'autoload.php';
+	
+	if(!file_exists($file))
+	{
+		send_response("404", "File $file does not exists, please extract the vendor.tgz archive on the server or enable PHP Phar module!");
+		exit;
+	}
+	
+	require_once($file);
+}
+
 
 use League\Flysystem\Config;
 use League\Flysystem\Filesystem;
@@ -635,3 +640,15 @@ class Xcloner_Restore
 	}
 }
 
+
+function send_response($status = 200, $response)
+	{
+		header("Access-Control-Allow-Origin: *");
+		header("HTTP/1.1 200");
+		header('Content-Type: application/json');
+		$return['status'] = $status;
+		$return['statusText'] = $response;
+		
+		echo json_encode($return);
+		exit;
+	}

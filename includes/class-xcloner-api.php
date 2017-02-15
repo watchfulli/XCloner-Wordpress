@@ -6,6 +6,7 @@ use League\Flysystem\Util;
 use League\Flysystem\Adapter\Local;
 
 use splitbrain\PHPArchive\Tar;
+use splitbrain\PHPArchive\Zip;
 use splitbrain\PHPArchive\Archive;
 use splitbrain\PHPArchive\FileInfo;
 
@@ -677,22 +678,32 @@ class Xcloner_Api{
 	
 	public function download_restore_script()
 	{
-		if($_GET['phar'])
-		{
-			$tmp_file = $this->xcloner_settings->get_xcloner_tmp_path().DS."xcloner-restore.tgz";
-			
-			$tar = new Tar();
-			//$tar->setCompression(4);
-			$tar->create($tmp_file);
-			$tar->addFile(dirname(__DIR__)."/restore/vendor.phar", "vendor.phar");
-			$tar->addFile(dirname(__DIR__)."/restore/xcloner_restore.php.txt", "xcloner_restore.php");
-			
-			$tar->close();
-		}else
-		{
 		
-			$tmp_file = dirname(__DIR__).DS."restore".DS."xcloner-restore.tgz";
+		$adapter = new Local(dirname(__DIR__) ,LOCK_EX, 'SKIP_LINKS');
+		$xcloner_plugin_filesystem = new Filesystem($adapter, new Config([
+				'disable_asserts' => true,
+			]));
+			
+		$tmp_file = $this->xcloner_settings->get_xcloner_tmp_path().DS."xcloner-restore.tgz";
+		
+		$tar = new Tar();
+		$tar->create($tmp_file);
+		
+		$tar->addFile(dirname(__DIR__)."/restore/vendor.phar", "vendor.phar");
+		//$tar->addFile(dirname(__DIR__)."/restore/vendor.tgz", "vendor.tgz");
+		
+		$files = $xcloner_plugin_filesystem->listContents("vendor/", true);
+		foreach($files as $file)
+		{
+			$tar->addFile(dirname(__DIR__).DS.$file['path'], $file['path']);
 		}
+		
+		$content = file_get_contents(dirname(__DIR__)."/restore/xcloner_restore.php.txt");
+		$content = str_replace("define('AUTH_KEY', '');", "define('AUTH_KEY', '".md5(AUTH_KEY)."');", $content);
+		
+		$tar->addData("xcloner_restore.php", $content);
+		
+		$tar->close();
 		
 		if (file_exists($tmp_file)) {
 		    header('Content-Description: File Transfer');
