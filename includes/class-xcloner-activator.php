@@ -48,7 +48,7 @@ class Xcloner_Activator {
 				  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
 				  `recurrence` varchar(10) CHARACTER SET latin1 NOT NULL,
 				  `params` text CHARACTER SET latin1 NOT NULL,
-				  `start_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+				  `start_at` datetime,
 				  `remote_storage` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
 				  `hash` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
 				  `status` int(1) NOT NULL,

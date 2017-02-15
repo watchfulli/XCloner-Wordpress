@@ -2,9 +2,11 @@
 
 define("DS", DIRECTORY_SEPARATOR);
 
-require_once(dirname( __FILE__ )  . DS.'vendor'.DS.'autoload.php');
-//require_once(dirname( __FILE__ )  . DS.'../wordpress/wp-content/plugins/xcloner/vendor'.DS.'autoload.php');
-//require_once(__DIR__.DS."vendor.phar");
+if(file_exists("vendor.phar"))
+	require_once(__DIR__.DS."vendor.phar");
+else	
+	require_once(dirname( __FILE__ )  . DS.'vendor'.DS.'autoload.php');
+	//require_once(dirname( __FILE__ )  . DS.'../wordpress/wp-content/plugins/xcloner/vendor'.DS.'autoload.php');
 
 use League\Flysystem\Config;
 use League\Flysystem\Filesystem;
@@ -30,6 +32,7 @@ class Xcloner_Restore
 {
 	private $backup_archive_extensions = array("zip", "tar", "tgz", "tar.gz", "gz", "csv");
 	private $process_files_limit = 50;
+	private $process_mysql_records_limit = 250;
 	private $adapter;
 	private $filesystem;
 	
@@ -92,9 +95,282 @@ class Xcloner_Restore
 		
 	}
 	
+	public function mysql_connect($remote_mysql_host, $remote_mysql_user, $remote_mysql_pass, $remote_mysql_db )
+	{
+		$mysqli = new mysqli($remote_mysql_host, $remote_mysql_user, $remote_mysql_pass, $remote_mysql_db);
+		if ($mysqli->connect_error) {
+			throw new Exception('Connect Error (' . $mysqli->connect_errno . ') '
+				. $mysqli->connect_error);
+		}
+		
+		$mysqli->query("SET sql_mode='';");
+		$mysqli->query("SET foreign_key_checks = 0;");
+		if(isset($_REQUEST['charset_of_file']) and $_REQUEST['charset_of_file'])
+			$mysqli->query("SET NAMES ".$_REQUEST['charset_of_file']."");
+		else
+			$mysqli->query("SET NAMES utf8;");
+			
+		return $mysqli;	
+	}
+	
+	public function restore_mysql_backup_action()
+	{
+		$mysqldump_file 	= filter_input(INPUT_POST, 'mysqldump_file', FILTER_SANITIZE_STRING);
+		$remote_path 		= filter_input(INPUT_POST, 'remote_path', FILTER_SANITIZE_STRING);
+		$remote_mysql_user 	= filter_input(INPUT_POST, 'remote_mysql_user', FILTER_SANITIZE_STRING);
+		$remote_mysql_pass 	= filter_input(INPUT_POST, 'remote_mysql_pass', FILTER_SANITIZE_STRING);
+		$remote_mysql_db 	= filter_input(INPUT_POST, 'remote_mysql_db', FILTER_SANITIZE_STRING);
+		$remote_mysql_host 	= filter_input(INPUT_POST, 'remote_mysql_host', FILTER_SANITIZE_STRING);
+		$start			 	= filter_input(INPUT_POST, 'start', FILTER_SANITIZE_NUMBER_INT);
+		
+		$mysql_backup_file = $remote_path.DS.$mysqldump_file;
+		
+		if(!file_exists($mysql_backup_file))
+			throw new Exception(sprintf("Mysql backup file %s does not exists",$mysql_backup_file));
+		
+		$mysqli = $this->mysql_connect($remote_mysql_host, $remote_mysql_user, $remote_mysql_pass, $remote_mysql_db );
+		
+		$line_count = 0;
+		$query = "";
+		$return['finished'] = 1;
+		$return['backup_file']	= $mysqldump_file;
+		$return['backup_size']	= filesize($mysql_backup_file);
+		
+		$fp = fopen($mysql_backup_file, "r");
+		if($fp)
+		{
+			fseek($fp, $start);
+			while ($line_count <= $this->process_mysql_records_limit and ($line = fgets($fp)) !== false) {
+			// process the line read.
+			
+				//check if line is comment
+				if(substr($line, 0, 1) == "#")
+					continue;
+				
+				//check if line is empty	
+				if($line == "\n" or trim($line) == "")
+					continue;
+					
+				if(substr($line, strlen($line)-2, strlen($line)) == ";\n")
+					$query .= $line;
+				else{
+					$query .= $line;
+					continue;
+				}
+					
+				//echo "###".$query."###";
+				if(!$mysqli->query($query))
+					throw new Exception(sprintf("Mysql Error: %s\n Mysql Query: %s", $mysqli->error, $query));
+					
+				$query = "";
+
+				$line_count++;
+				
+			}
+		}
+		
+		$return['start'] = ftell($fp);
+		
+		if(!feof($fp))
+		{
+			$return['finished'] = 0;
+		}
+		
+		fclose($fp);
+		
+		$this->send_response(200, $return);
+	}
+	
+	public function restore_finish_action()
+	{
+		$remote_path 		= filter_input(INPUT_POST, 'remote_path', FILTER_SANITIZE_STRING);
+		$remote_restore_url = filter_input(INPUT_POST, 'remote_restore_url', FILTER_SANITIZE_STRING);
+		$remote_mysql_user 	= filter_input(INPUT_POST, 'remote_mysql_user', FILTER_SANITIZE_STRING);
+		$remote_mysql_pass 	= filter_input(INPUT_POST, 'remote_mysql_pass', FILTER_SANITIZE_STRING);
+		$remote_mysql_db 	= filter_input(INPUT_POST, 'remote_mysql_db', FILTER_SANITIZE_STRING);
+		$remote_mysql_host 	= filter_input(INPUT_POST, 'remote_mysql_host', FILTER_SANITIZE_STRING);
+		
+		$update_remote_site_url			 	= filter_input(INPUT_POST, 'update_remote_site_url', FILTER_SANITIZE_NUMBER_INT);
+		$delete_restore_script			 	= filter_input(INPUT_POST, 'delete_restore_script', FILTER_SANITIZE_NUMBER_INT);
+		$delete_backup_temporary_folder		= filter_input(INPUT_POST, 'delete_backup_temporary_folder', FILTER_SANITIZE_NUMBER_INT);
+				
+		if($update_remote_site_url)
+		{
+			$mysqli = $this->mysql_connect($remote_mysql_host, $remote_mysql_user, $remote_mysql_pass, $remote_mysql_db );
+			$this->update_wp_config($remote_path, $remote_mysql_host, $remote_mysql_user, $remote_mysql_pass, $remote_mysql_db);
+			$this->update_wp_url($remote_path, $remote_restore_url, $mysqli);
+		}
+		
+		if($delete_backup_temporary_folder)
+		{
+			$this->delete_backup_temporary_folder($remote_path);
+		}
+		
+		if($delete_restore_script)
+		{
+			$this->delete_self();
+		}
+		
+		$return = "All good!";
+		$this->send_response(200, $return);
+	}
+	
+	private function delete_backup_temporary_folder($remote_path)
+	{
+		$this->target_adapter = new Local($remote_path ,LOCK_EX, 'SKIP_LINKS');
+		$this->target_filesystem = new Filesystem($this->target_adapter, new Config([
+				'disable_asserts' => true,
+			]));
+			
+		$mysqldump_list = array();
+		$list = $this->target_filesystem->listContents();
+		
+		foreach($list as $file)
+		{
+			$matches = array();
+			
+			if($file['type'] == "dir")
+			{
+				if(preg_match("/xcloner-(\w*)/", $file['basename'], $matches)){
+					//print_r($file['path']);
+					$this->target_filesystem->deleteDir($file['path']);
+				}
+			}
+		}
+		
+		return true;
+	
+	}
+	
+	private function delete_self()
+	{
+		/*if($this->filesystem->has("vendor.phar"))
+			$this->filesystem->delete("vendor.phar");
+		if($this->filesystem->has("vendor"))
+			$this->filesystem->delete("vendor");
+		if($this->filesystem->has("xcloner_restore.php"))
+			$this->filesystem->delete("xcloner_restore.php");
+		*/
+	}
+	
+	private function update_wp_url($wp_path, $url, $mysqli)
+	{
+		$wp_config = $wp_path.DS."wp-config.php";
+		
+		if(file_exists($wp_config))
+		{
+			$config = file_get_contents($wp_config);
+			preg_match("/.*table_prefix.*=.*'(.*)'/i", $config, $matches);
+			if(isset($matches[1]))
+				$table_prefix = $matches[1];
+			else
+				throw new Exception("Could not load wordpress table prefix from wp-config.php file.");
+		}
+		else
+			throw new Exception("Could not update the SITEURL and HOME, wp-config.php file not found");
+			
+		if(!$mysqli->query("update ".$table_prefix."options set option_value='".($url)."' where option_name='home'"))
+			throw new Exception(sprintf("Could not update the HOME option, error: %s\n", $mysqli->error));
+		
+		if(!$mysqli->query("update ".$table_prefix."options set option_value='".($url)."' where option_name='siteurl'"))
+			throw new Exception(sprintf("Could not update the SITEURL option, error: %s\n", $mysqli->error));
+		
+		return true;
+	}
+	
+	private function update_wp_config($remote_path, $remote_mysql_host, $remote_mysql_user, $remote_mysql_pass, $remote_mysql_db)
+	{
+		$wp_config = $remote_path.DS."wp-config.php";
+		
+		if(!file_exists($wp_config))
+		{
+			throw new Exception("Could not find the wp-config.php in ".$remote_path);
+		}
+		
+		$content = file_get_contents($wp_config);
+		
+		$content = preg_replace("/(?<=DB_NAME', ')(.*?)(?='\);)/", $remote_mysql_db, $content);
+		$content = preg_replace("/(?<=DB_USER', ')(.*?)(?='\);)/", $remote_mysql_user, $content);
+		$content = preg_replace("/(?<=DB_PASSWORD', ')(.*?)(?='\);)/", $remote_mysql_pass, $content);
+		$content = preg_replace("/(?<=DB_HOST', ')(.*?)(?='\);)/", $remote_mysql_host, $content);
+		
+		$file_perms = fileperms($wp_config);
+		
+		chmod($wp_config, 0777);
+		
+		if(!file_put_contents($wp_config, $content))
+			throw new Exception("Could not write updated config data to ".$wp_config);
+		
+		chmod($wp_config, $file_perms);
+		
+		return $wp_config;
+		
+	}
+	
+	public function list_mysqldump_backups_action()
+	{
+		$source_backup_file = filter_input(INPUT_POST, 'backup_file', FILTER_SANITIZE_STRING);
+		$remote_path = filter_input(INPUT_POST, 'remote_path', FILTER_SANITIZE_STRING);
+	
+		$hash = $this->get_hash_from_backup($source_backup_file);	
+		
+		$this->target_adapter = new Local($remote_path ,LOCK_EX, 'SKIP_LINKS');
+		$this->target_filesystem = new Filesystem($this->target_adapter, new Config([
+				'disable_asserts' => true,
+			]));
+			
+		$mysqldump_list = array();
+		$list = $this->target_filesystem->listContents();
+		
+		foreach($list as $file)
+		{
+			$matches = array();
+			
+			if($file['type'] == "dir")
+			{
+				if(preg_match("/xcloner-(\w*)/", $file['basename'], $matches))
+				{
+					$files = $this->target_filesystem->listContents($file['basename']);
+					foreach($files as $file)
+					{
+						if($file['extension'] == "sql")
+						{
+							$mysqldump_list[$file['path']]['path'] = $file['path'];
+							$mysqldump_list[$file['path']]['size'] = $file['size'];
+							$mysqldump_list[$file['path']]['timestamp'] = date("d M,Y H:i",$file['timestamp']);
+							
+							if($hash and $hash == $matches[1])
+								$mysqldump_list[$file['path']]['selected'] = "selected";
+							else
+								$mysqldump_list[$file['path']]['selected'] = "";	
+						}
+					}
+				}
+			}	
+		}
+		
+		$this->sort_by($mysqldump_list, 'timestamp','desc');
+		$return['files'] = $mysqldump_list;
+		
+		$this->send_response(200, $return);
+	}
+	
+	private function get_hash_from_backup($backup_file)
+	{
+		if(!$backup_file)
+			return false;
+			
+		$result = preg_match("/-(\w*)./", substr($backup_file, strlen($backup_file)-10, strlen($backup_file)), $matches)	;
+		
+		if($result and isset($matches[1]))
+			return ($matches[1]);
+		
+		return false;
+	}
+	
 	public function list_backup_archives_action()
 	{
-		
+		$local_backup_file = filter_input(INPUT_POST, 'local_backup_file', FILTER_SANITIZE_STRING);
 		$list = $this->filesystem->listContents();
 		
 		$backup_files = array();
@@ -130,10 +406,17 @@ class Xcloner_Restore
 		{
 			if(isset($parents[$file_info['path']]))
 				$backup_files[$key]['parent'] = $parents[$file_info['path']];
-			else
+			else{
+				
+				if($local_backup_file and ($file_info['basename'] == $local_backup_file))
+					$file_info['selected'] = 'selected';
+					
 				$new_list[$key] = $file_info;
+			}
+				
 		}
 		
+		$this->sort_by($new_list, "timestamp","desc");
 		
 		$return['files'] = $new_list;
 		
@@ -143,19 +426,24 @@ class Xcloner_Restore
 	
 	public function restore_backup_to_path_action()
 	{
-		$backup_file = filter_input(INPUT_POST, 'backup_file', FILTER_SANITIZE_STRING);
+		$source_backup_file = filter_input(INPUT_POST, 'backup_file', FILTER_SANITIZE_STRING);
 		$remote_path = filter_input(INPUT_POST, 'remote_path', FILTER_SANITIZE_STRING);
 		$start = filter_input(INPUT_POST, 'start', FILTER_SANITIZE_NUMBER_INT);
 		$return['part'] = (int)filter_input(INPUT_POST, 'part', FILTER_SANITIZE_NUMBER_INT);
 		$return['processed'] = (int)filter_input(INPUT_POST, 'processed', FILTER_SANITIZE_NUMBER_INT);
 				
 		$this->target_adapter = new Local($remote_path ,LOCK_EX, 'SKIP_LINKS');
-		$this->target_adapter = new Filesystem($this->target_adapter, new Config([
+		$this->target_filesystem = new Filesystem($this->target_adapter, new Config([
 				'disable_asserts' => true,
 			]));
 		
+		$backup_file = $source_backup_file;
+		
 		$return['finished'] = 1;
+		$return['extracted_files'] = array();
 		$return['total_size'] = $this->get_backup_size($backup_file);
+		
+		
 		
 		$backup_archive = new Tar();
 		if($this->is_multipart($backup_file))
@@ -175,6 +463,14 @@ class Xcloner_Restore
 		*/
 		$data = $backup_archive->extract($remote_path, '','','', $this->process_files_limit);
 		
+		if(isset($data['extracted_files']))
+		{
+			foreach($data['extracted_files'] as $spl_fileinfo)
+			{
+				$return['extracted_files'][] = $spl_fileinfo->getPath()." (".$spl_fileinfo->getSize()." bytes)";
+			}
+		}
+		
 		if(isset($data['start']))
 		//if(isset($data['start']) and $data['start'] <= $this->filesystem->getSize($backup_file))
 		{
@@ -184,7 +480,7 @@ class Xcloner_Restore
 			
 			$return['processed'] += $start;
 			
-			if($this->is_multipart($backup_file))
+			if($this->is_multipart($source_backup_file))
 			{
 				$return['start'] = 0;
 				
@@ -192,6 +488,7 @@ class Xcloner_Restore
 			
 				if($return['part'] < sizeof($backup_parts))	
 					$return['finished'] = 0;
+				
 			}
 		}
 		
@@ -202,7 +499,17 @@ class Xcloner_Restore
 	
 	public function get_current_directory_action()
 	{
-		$return['dir'] = (dirname(__FILE__))."/tmp";
+		
+		$restore_script_url = filter_input(INPUT_POST, 'restore_script_url', FILTER_SANITIZE_STRING);
+		
+		$pathinfo = pathinfo( __FILE__);
+		
+		$suffix = "tmp";
+		
+		$return['dir'] = ($pathinfo['dirname']).DS.$suffix;
+		$return['restore_script_url'] = str_replace($pathinfo['basename'], "", $restore_script_url).$suffix;
+		
+		
 		$this->send_response(200, $return);
 	}
 	
@@ -243,7 +550,7 @@ class Xcloner_Restore
 	
 	public function is_multipart($backup_name)
 	{
-		if(stristr($backup_name, "-multipart.csv"))
+		if(stristr($backup_name, "-multipart"))
 			return true;
 		
 		return false;	
@@ -280,6 +587,25 @@ class Xcloner_Restore
 		}
 		
 		return $files;
+	}
+	
+	private function sort_by( &$array, $field, $direction = 'asc')
+	{
+		$direction = strtolower($direction);
+		
+	    usort($array, create_function('$a, $b', '
+	        $a = $a["' . $field . '"];
+	        $b = $b["' . $field . '"];
+	
+	        if ($a == $b)
+	        {
+	            return 0;
+	        }
+	
+	        return ($a ' . ($direction == 'desc' ? '>' : '<') .' $b) ? -1 : 1;
+	    '));
+	
+	    return true;
 	}
 		
 	public function send_response($status = 200, $response)
