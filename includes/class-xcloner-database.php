@@ -220,6 +220,7 @@ class XCloner_Database extends wpdb{
 		$databases_list[$i]['num_tables'] = $this->get_database_num_tables($this->dbname);
 		$i++;
 		
+		if(is_array($databases))
 		foreach( $databases as $db){
 			if($db->Database != $this->dbname)
 			{

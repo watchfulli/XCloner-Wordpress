@@ -144,7 +144,7 @@ class Xcloner_Settings
 		global $wpdb;
 		
 		if(!$data = get_option('xcloner_mysql_password'))
-			$data = $wpdb->dbuser;
+			$data = $wpdb->dbpassword;
 		
 		return $data;
 	}

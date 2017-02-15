@@ -7,7 +7,7 @@ class Xcloner_Restore{
 		this.cancel = false;
 		this.upload_file_event = new Event('upload_file_event');
 		this.resume = new Object();
-		this.hash = xcloner_auth_key;
+		this.hash = hash;
 		
 		document.addEventListener("backup_upload_finish", function (e) {
 			
@@ -598,6 +598,9 @@ class Xcloner_Restore{
 }
 
 jQuery(document).ready(function(){
+	
+	if(xcloner_auth_key === undefined)
+		var xcloner_auth_key = "";
 	
 	var xcloner_restore = new Xcloner_Restore(xcloner_auth_key);
 	

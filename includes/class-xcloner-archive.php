@@ -8,7 +8,7 @@ class Xcloner_Archive extends Tar
 	/*
 	 * bytes
 	 */ 
-	private $file_size_per_request_limit	= 1*1024*1024; //1MB
+	private $file_size_per_request_limit	= 1048576; //1MB
 	private $files_to_process_per_request 	= 100; //block of 512 bytes
 	private $compression_level 				= 0; //0-9 , 0 uncompressed
 	private $xcloner_split_backup_limit		= 2048; //2048MB
