@@ -1,12 +1,26 @@
 <?php
 
+define("OPEN_ACCESS", 1);
+
 define("DS", DIRECTORY_SEPARATOR);
+
+if(!OPEN_ACCESS){
+	
+		header("Access-Control-Allow-Origin: *");
+		header("HTTP/1.1 200");
+		header('Content-Type: application/json');
+		$return['status'] = "404";
+		$return['statusText'] = "Could not run restore script";
+		
+		echo json_encode($return);
+		exit;
+	
+}
 
 if(file_exists("vendor.phar"))
 	require_once(__DIR__.DS."vendor.phar");
 else	
 	require_once(dirname( __FILE__ )  . DS.'vendor'.DS.'autoload.php');
-	//require_once(dirname( __FILE__ )  . DS.'../wordpress/wp-content/plugins/xcloner/vendor'.DS.'autoload.php');
 
 use League\Flysystem\Config;
 use League\Flysystem\Filesystem;
