@@ -1,114 +1,161 @@
-=== Plugin Name ===
-Contributors: (this should be a list of wordpress.org userid's)
-Donate link: http://www.thinkovi.com
-Tags: comments, spam
+=== XCloner - Backup and Restore===
+Contributors: xcloner
+Donate link: http://www.xcloner.com/
+Tags: backup, restore, plugin, database, full backup, cloner, xcloner, theme, files, upload, wordpress backup, backup plugin, database backup, database restore, site move, transfer, blog transfer, BuddyPress
 Requires at least: 3.0.1
-Tested up to: 3.4
-Stable tag: 4.3
-License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Tested up to: 4.7
+Stable tag: 3.1.5
 
-Here is a short description of the plugin.  This should be no more than 150 characters.  No markup here.
+XCloner is a full backup and restore plugin for Wordpress, it will backup and restore both files and database. www.xcloner.com
 
 == Description ==
 
-This is the long description.  No limit, and you can use Markdown (as well as in the following sections).
+<strong>Over 500,000+ downloads and counting</strong>
 
-For backwards compatibility, if this section is missing, the full length of the short description will be used, and
-Markdown parsed.
+www.XCloner.com
 
-A few notes about the sections above:
+XCloner is a Backup and Restore plugin that is perfectly integrated with Wordpress.
 
-*   "Contributors" is a comma separated list of wp.org/wp-plugins.org usernames
-*   "Tags" is a comma separated list of tags that apply to the plugin
-*   "Requires at least" is the lowest version that the plugin will work on
-*   "Tested up to" is the highest version that you've *successfully used to test the plugin*. Note that it might work on
-higher versions... this is just the highest one you've verified.
-*   Stable tag should indicate the Subversion "tag" of the latest stable version, or "trunk," if you use `/trunk/` for
-stable.
+XCloner design was specifically created to Generate custom backups of any LAMP website through custom admin inputs, and to be able to Restore the clone on any other location with the help of the automatic Restore script we provide!
 
-    Note that the `readme.txt` of the stable tag is the one that is considered the defining one for the plugin, so
-if the `/trunk/readme.txt` file says that the stable tag is `4.3`, then it is `/tags/4.3/readme.txt` that'll be used
-for displaying information about the plugin.  In this situation, the only thing considered from the trunk `readme.txt`
-is the stable tag pointer.  Thus, if you develop in trunk, you can update the trunk `readme.txt` to reflect changes in
-your in-development version, without having that information incorrectly disclosed about the current stable version
-that lacks those changes -- as long as the trunk's `readme.txt` points to the correct stable tag.
+XCloner Backup tool uses Open Source standards like TAR, Mysql and CSV formats so you can rest assured your backups can be restored in a variety of ways, giving you more flexibility and full control.
 
-    If no stable tag is provided, it is assumed that trunk is stable, but you should specify "trunk" if that's where
-you put the stable version, in order to eliminate any doubt.
+Features:
+
+   * Backup and Restore your Wordpress site
+   * Create compressed backups using TAR open source format
+   * Create automated backups from your Scheduled Backups Section
+   * Received email notifications of created backups
+   * Generate automatic backups based on cronjobs, it can run daily, weekly, monthly or even hourly
+   * Restore your backups on any other location, XCloner will attempt to extract the backup archive files for you, as well as import the mysql dump and update the Wordpress config details
+   * Upload your backups to Remote Storage locations supporting FTP, SFTP, Dropbox, AWS, Azure Blog and many more to come
+   * Watch every step of XCloner through it's built in debugger
 
 == Installation ==
 
-This section describes how to install the plugin and get it working.
+1. Upload the plugin directory to wp-content/plugins directory
+2. Activate the plugin
+3. Access the plugin Dashboard from the Admin Sidebar -> Site Backup Menu
 
-e.g.
+UPGRADE:
 
-1. Upload `xcloner.php` to the `/wp-content/plugins/` directory
-1. Activate the plugin through the 'Plugins' menu in WordPress
-1. Place `<?php do_action('plugin_name_hook'); ?>` in your templates
+You can do it easily from the Wordpress backend.
 
 == Frequently Asked Questions ==
 
-= A question that someone might have =
+= Where does XCloner keep it's database backups? =
 
-An answer to that question.
+XCloner stores them in separate mysql dump files, inside a folder called xcloner-XXXXX inside the backup archive root path, where XXXXX is a hash number that is identical with the last 5 characters of the backup name,
+so if the backup name is backup_localhost-2017-02-16_15-36-sql-1c6c6.tgz , the mysql backup file will be stored in xcloner-1c6c6/ folder.
 
-= What about foo bar? =
+= How do I restore my backup? =
 
-Answer to foo bar dilemma.
+XCloner provide an easy to use restore script available in the Site Backup -> Restore Backups menu, the process is being described there as well.
+
+If the XCloner Restore option fails, you can manually restore your backup as follows:
+
+1. extract the backup archive files to your new location
+2. locate the xcloner-XXXXX folder inside your backup root folder, and look for the mysql backup in database-sql and import it through phpmyadmin
+3. update your wp-config.php file to reflect the new mysql details
+
+= How do I know which files were include in the backup? =
+
+The XCloner Manager Backups Panel provides an easy utility to view each backup content files list. It also stores a copy of the archived backup files inside the xcloner-XXXXX/backup_files.csv file in an easy to read CSV format.
+
+= Do you have a log for the created backup? =
+
+Yes, if XCloner Logger option is enabled, it will store a log file inside the xcloner-XXXXX folder inside the backup archive, file is named xcloner-xxxxx.log
 
 == Screenshots ==
 
-1. This screen shot description corresponds to screenshot-1.(png|jpg|jpeg|gif). Note that the screenshot is taken from
-the /assets directory or the directory that contains the stable readme.txt (tags or trunk). Screenshots in the /assets
-directory take precedence. For example, `/assets/screenshot-1.png` would win over `/tags/4.3/screenshot-1.png`
-(or jpg, jpeg, gif).
-2. This is the second screen shot
+1. XCloner Dashboard
+2. General Backup Settings
+3. List Backup Content
+4. Cleanup Options for Local Storage
+5. Remote Storage Panel supporting ftp, sftp, dropbox, amazon s3, azure blob and many more to come
+6. Manage Scheduled Backups Panel
+7. Edit Scheduled Backup
+8. Generate Backup ->Files Options tab
+9. Restore Backup Panel
+10. Generate Backup Process
 
 == Changelog ==
 
-= 1.0 =
-* A change since the previous version.
-* Another change.
+= 4.0.1 =
+* Code rewritten from ground up to make use of latest code standards
+* Added support for Dropbox, Amazon S3, Azure Blob and SFTP storage
+* Added a new restore script
+* Added an improved backup and system logger 
+* New Setting Panel
+* New Manage Backups Panel with the options to Delete, Transfer to Remote Storage, Download and List Backup archive contents
+* Added mail notifications for scheduled backups 
+* Added a new Cron Scheduler to make use of Wordpress System Cron option
+* Improved user input sanitization
+* Improved recursive file scanning and archiving
+* Improved Mysql Backup dump
+* Added Multiple Cleanup options both for local storage and remote
+* Added Improved Backup Compressing option
 
-= 0.5 =
-* List versions from most recent at top to oldest at bottom.
+= 3.1.5 =
+* Config variables save sanitization addon
+
+= 3.1.4 =
+* DropPHP DropBox library update, upload fixes for files larger than 150MB
+
+= 3.1.3 = 
+* XSS fix
+
+= 3.1.2 =
+* vulnerability fix
+
+= 3.1.1 = 
+* added CSRF protection
+
+= 3.1.0 =
+* added Wordpress login-less integration
+* plugin settings are now saved to database
+* security audit and hardening
+
+= 3.0.8 =
+* added russian language support
+
+= 3.0.7 =
+* added sftp support for backup transfer, thanks Todd Bluhm - dynamicts.com
+
+= 3.0.6 =
+* added php 5.4 compatibility
+
+= 3.0.4 =
+* LFI vulnerability fix
+
+= 3.0.3 =
+* added amazon ssl option box
+* moved the compress option to the System tab, don't use it unless you know what you are doing!
+
+= 3.0.1 =
+* several important security and bug fixes
+
+= 3.0 =
+* incremental database backup
+* incremental file system scan
+* backup size limit and option to split it into additional archives, default 2GB
+* exclude files larger than a certain size option
+* incremental files restore
+* JQuery Start interface
+
+= 2.2.1 =
+* Added JSON AJAX interface to the Generate Backup process
+* Added incremental filesystem scan
+* several bug fixes
+* php >=5.2.0 version check
+
+= 2.1.2 =
+* Added Amazon S3 cron storage support
+
+= 2.1 =
+* Initial release
 
 == Upgrade Notice ==
 
-= 1.0 =
-Upgrade notices describe the reason a user should upgrade.  No more than 300 characters.
-
-= 0.5 =
-This version fixes a security related bug.  Upgrade immediately.
-
-== Arbitrary section ==
-
-You may provide arbitrary sections, in the same format as the ones above.  This may be of use for extremely complicated
-plugins where more information needs to be conveyed that doesn't fit into the categories of "description" or
-"installation."  Arbitrary sections will be shown below the built-in sections outlined above.
-
-== A brief Markdown Example ==
-
-Ordered list:
-
-1. Some feature
-1. Another feature
-1. Something else about the plugin
-
-Unordered list:
-
-* something
-* something else
-* third thing
-
-Here's a link to [WordPress](http://wordpress.org/ "Your favorite software") and one to [Markdown's Syntax Documentation][markdown syntax].
-Titles are optional, naturally.
-
-[markdown syntax]: http://daringfireball.net/projects/markdown/syntax
-            "Markdown is what the parser uses to process much of the readme file"
-
-Markdown uses email style notation for blockquotes and I've been told:
-> Asterisks for *emphasis*. Double it up  for **strong**.
-
-`<?php code(); // goes in backticks ?>`
+= 3.0.3 =
+Please check changelog!
