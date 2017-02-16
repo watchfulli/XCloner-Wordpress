@@ -68,7 +68,7 @@
 							
 							$this.file_counter++
 							
-							jQuery("#backup_cotent_modal .modal-content .files-list").prepend($this.file_counter +". "+response.files[i].path+" ("+response.files[i].size+" bytes)"+"<br />\n");
+							jQuery("#backup_cotent_modal .modal-content .files-list").prepend($this.file_counter +". <span title='"+response.files[i].mtime+"'>"+response.files[i].path+"</span> ("+response.files[i].size+" bytes)<br />\n");
 						  }
 						  
 						  if(!response.finished && jQuery('#backup_cotent_modal').is(':visible'))

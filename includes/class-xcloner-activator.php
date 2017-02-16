@@ -70,6 +70,9 @@ class Xcloner_Activator {
 		
 		if(!get_option('xcloner_system_settings_page'))
 			update_option('xcloner_system_settings_page', 100);
+			
+		if(!get_option('xcloner_files_to_process_per_request'))
+			update_option('xcloner_files_to_process_per_request', 250);
 
 		if(!get_option('xcloner_database_records_per_request'))
 			update_option('xcloner_database_records_per_request', 10000);

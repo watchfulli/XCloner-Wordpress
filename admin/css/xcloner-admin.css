@@ -309,6 +309,10 @@ a.expand-multipart.remove{
     margin: 10px 5px;
 }
 
+#backup_cotent_modal .modal-content .files-list span{
+	cursor: pointer;
+}
+
 @media only screen and (min-width: 993px){
 	.dashboard .backup-ready{
 		float: right;

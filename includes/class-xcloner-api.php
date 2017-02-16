@@ -658,6 +658,7 @@ class Xcloner_Api{
 			{
 				$return['files'][$i]['path'] = $file->getPath();
 				$return['files'][$i]['size'] = $file->getSize();
+				$return['files'][$i]['mtime'] = date(get_option('date_format')." ".get_option('time_format'), $file->getMtime());
 				
 				$i++;
 			}

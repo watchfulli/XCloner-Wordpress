@@ -21,17 +21,17 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 	<div class="col s12 m10">
 		<ul class="collapsible xcloner-restore " data-collapsible="accordion">
 			<li data-step="1" class="restore-script-upload-step steps active show">
-				<div class="collapsible-header active"><i class="material-icons">settings_remote</i>Restore Script Upload</div>
+				<div class="collapsible-header active"><i class="material-icons">settings_remote</i><?php echo __("Restore Script Upload","xcloner")?></div>
 				<div class="collapsible-body row">
 						
 						<ul class="text-steps">
-							<li>Please download the restore script from <a href='#' onclick="window.location=ajaxurl+'?action=download_restore_script&phar=true'"><strong>here</strong></a>
+							<li><?php echo __("Please download the restore script from","xcloner")?> <a href='#' onclick="window.location=ajaxurl+'?action=download_restore_script&phar=true'"><strong><?php echo __("here","xcloner")?></strong></a>
 							</li>	
 							<li>
-							Extract the files on your new host
+							<?php echo __("Extract the files on your new host","xcloner")?>
 							</li>
 							<li>
-							Provide url below to the <u>xcloner_restore.php</u> restore script
+							<?php echo __("Provide url below to the <u>xcloner_restore.php</u> restore script","xcloner")?>
 							</li>
 							
 						</ul>	
@@ -42,7 +42,7 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 							<div id="url_validation_status" class="status"></div>
 				        </div>
 				        <div class="col m3 s12 right-align">
-							<button class="btn waves-effect waves-light" type="submit" id="validate_url" name="action">Check
+							<button class="btn waves-effect waves-light" type="submit" id="validate_url" name="action"><?php echo __("Check","xcloner")?>
 							    <i class="material-icons right">send</i>
 							</button>
 				        </div>
@@ -50,13 +50,13 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 			</li>
 			
 			<li data-step="2" class="backup-upload-step steps">
-				<div class="collapsible-header active"><i class="material-icons">file_upload</i>Upload Local Backup Archive To Remote Host
+				<div class="collapsible-header active"><i class="material-icons">file_upload</i><?php echo __("Upload Local Backup Archive To Remote Host","xcloner")?>
 				</div>
 				<div class="collapsible-body row">
-					<p>You can skip this step if you want to transfer the archive in some other way, make sure you upload it in the same directory as the restore script from the previous step.</p>
+					<p><?php echo __("You can skip this step if you want to transfer the archive in some other way, make sure you upload it in the same directory as the restore script from the previous step.","xcloner")?></p>
 					<div class="input-field col s12 m9">
 						<select id="backup_file" name="backup_file" class="browser-default">
-					      <option value="" disabled selected>Please select a local backup archive to upload to remote host</option>
+					      <option value="" disabled selected><?php echo __("Please select a local backup archive to upload to remote host","xcloner")?></option>
 					      <?php if(is_array($backup_list)):?>
 							<?php foreach($backup_list as $file):?>
 								<option value="<?php echo $file['basename']?>">
@@ -74,14 +74,14 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 					</div>
 					<div class="col s12 m3 right-align">
 						<div class="toggler">
-							<button class="btn waves-effect waves-light upload-backup normal" type="submit" id="" name="action">Upload
+							<button class="btn waves-effect waves-light upload-backup normal" type="submit" id="" name="action"><?php echo __("Upload","xcloner")?>
 							    <i class="material-icons right">send</i>
 							</button>
-							<button class="btn waves-effect waves-light red upload-backup cancel" type="submit" id="" name="action">Cancel
+							<button class="btn waves-effect waves-light red upload-backup cancel" type="submit" id="" name="action"><?php echo __("Cancel","xcloner")?>
 							    <i class="material-icons right">close</i>
 							</button>
 						</div>
-						<button class="btn waves-effect waves-light grey" type="submit" id="skip_upload_backup" name="action">Next
+						<button class="btn waves-effect waves-light grey" type="submit" id="skip_upload_backup" name="action"><?php echo __("Next","xcloner")?>
 						    <i class="material-icons right">navigate_next</i>
 						</button>
 					</div>
@@ -89,7 +89,7 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 			</li>	
 			
 			<li data-step="3" class="restore-remote-backup-step steps active">
-				<div class="collapsible-header"><i class="material-icons">folder_open</i>Restore Files Backup Available On Remote Host
+				<div class="collapsible-header"><i class="material-icons">folder_open</i><?php echo __("Restore Files Backup Available On Remote Host","xcloner")?>
 					<i class="material-icons right" title="Refresh Remote Backup Files List" id="refresh_remote_backup_file">cached</i>
 				</div>
 				<div class="collapsible-body row">
@@ -97,18 +97,18 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 						<div class=" col s12 ">
 							<div class="input-field row">
 								<input type="text" name="remote_restore_url" id="remote_restore_url" class="validate" placeholder="Restore Target Url">
-								<label>Remote Restore Target Url</label>
+								<label><?php echo __("Remote Restore Target Url","xcloner")?></label>
 							</div>
 						</div>							
 						<div class=" col s12 m9">
 							<div class="input-field row">
 								<input type="text" name="remote_restore_path" id="remote_restore_path" class="validate" placeholder="Restore Target Path">
-								<label>Remote Restore Target Path</label>
+								<label><?php echo __("Remote Restore Target Path","xcloner")?></label>
 							</div>
 							
 							<div class="input-field row">
 								<select id="remote_backup_file" name="remote_backup_file" class="browser-default">
-									<option value="" disabled selected>Please select the remote backup file to restore</option>
+									<option value="" disabled selected><?php echo __("Please select the remote backup file to restore","xcloner")?></option>
 							    </select>
 							    <label></label>
 							</div>
@@ -123,14 +123,14 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 				       
 				        <div class="col s12 m3 right-align">
 							<div class="toggler">
-								<button class="btn waves-effect waves-light restore_remote_backup normal " type="submit" id="" name="action">Restore
+								<button class="btn waves-effect waves-light restore_remote_backup normal " type="submit" id="" name="action"><?php echo __("Restore","xcloner")?>
 								    <i class="material-icons right">send</i>
 								</button>
-								<button class="btn waves-effect waves-light red restore_remote_backup cancel" type="submit" id="" name="action">Cancel
+								<button class="btn waves-effect waves-light red restore_remote_backup cancel" type="submit" id="" name="action"><?php echo __("Cancel","xcloner")?>
 								    <i class="material-icons right">close</i>
 								</button>
 							</div>
-							<button class="btn waves-effect waves-light grey" type="submit" id="skip_remote_backup_step" name="action">Next
+							<button class="btn waves-effect waves-light grey" type="submit" id="skip_remote_backup_step" name="action"><?php echo __("Next","xcloner")?>
 								<i class="material-icons right">navigate_next</i>
 							</button>
 				        </div>
@@ -138,7 +138,7 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 			</li>
 			
 			<li data-step="4" class="restore-remote-database-step steps active">
-				<div class="collapsible-header"><i class="material-icons">list</i>Restore Remote Database Backup
+				<div class="collapsible-header"><i class="material-icons">list</i><?php echo __("Restore Remote Database Backup","xcloner")?>
 					<i class="material-icons right" title="Refresh Database Backup Files List" id="refresh_database_file">cached</i>
 				</div>
 				<div class="collapsible-body row">
@@ -147,23 +147,23 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 							
 							<div class="input-field col s12 m6">
 								<input type="text" name="remote_mysql_host" id="remote_mysql_host" class="validate" placeholder="Remote Mysql Hostname" value="localhost">
-								<label>Remote Mysql Hostname</label>
+								<label><?php echo __("Remote Mysql Hostname","xcloner")?></label>
 							</div>
 							
 							<div class="input-field  col s12 m6">
 								<input type="text" name="remote_mysql_db" id="remote_mysql_db" class="validate" placeholder="Remote Mysql Database">
-								<label>Remote Mysql Database</label>
+								<label><?php echo __("Remote Mysql Database","xcloner")?></label>
 							</div>
 							
 							<div class="input-field  col s12 m6">
 								<input type="text" name="remote_mysql_user" id="remote_mysql_user" class="validate" placeholder="Remote Mysql Username">
-								<label>Remote Mysql Username</label>
+								<label><?php echo __("Remote Mysql Username","xcloner")?></label>
 							</div>
 							
 							
 							<div class="input-field  col s12 m6">
 								<input type="text" name="remote_mysql_pass" id="remote_mysql_pass" class="validate" placeholder="Remote Mysql Password">
-								<label>Remote Mysql Password</label>
+								<label><?php echo __("Remote Mysql Password","xcloner")?></label>
 							</div>
 							
 						</div>	
@@ -171,7 +171,7 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 						<div class=" col s12 m9">
 							<div class="input-field row">
 								<select id="remote_database_file" name="remote_database_file" class="browser-default">
-									<option value="" disabled selected>Please select the remote database backup file to restore</option>
+									<option value="" disabled selected><?php echo __("Please select the remote database backup file to restore","xcloner")?></option>
 							    </select>
 							    
 							    <label></label>
@@ -187,15 +187,15 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 				       
 				        <div class="col s12 m3 right-align">
 							<div class="toggler">
-								<button class="btn waves-effect waves-light restore_remote_mysqldump normal " type="submit" id="" name="action">Restore
+								<button class="btn waves-effect waves-light restore_remote_mysqldump normal " type="submit" id="" name="action"><?php echo __("Restore","xcloner")?>
 								    <i class="material-icons right">send</i>
 								</button>
-								<button class="btn waves-effect waves-light red restore_remote_mysqldump cancel" type="submit" id="" name="action">Cancel
+								<button class="btn waves-effect waves-light red restore_remote_mysqldump cancel" type="submit" id="" name="action"><?php echo __("Cancel","xcloner")?>
 								    <i class="material-icons right">close</i>
 								</button>
 							</div>
 							
-							<button class="btn waves-effect waves-light grey" type="submit" id="skip_restore_remote_database_step" name="action">Next
+							<button class="btn waves-effect waves-light grey" type="submit" id="skip_restore_remote_database_step" name="action"><?php echo __("Next","xcloner")?>
 								<i class="material-icons right">navigate_next</i>
 							</button>
 							
@@ -205,13 +205,13 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 			</li>
 			
 			<li data-step="5" class="restore-finish-step steps active">
-				<div class="collapsible-header"><i class="material-icons">folder_open</i>Finishing up...
+				<div class="collapsible-header"><i class="material-icons">folder_open</i><?php echo __("Finishing up...","xcloner")?>
 				</div>
 				<div class="collapsible-body row">
 						
 						<div class="row">
 							<div class="col s4">
-								<label>Update wp-config.php mysql details and update the restored site Url</label>
+								<label><?php echo __("Update wp-config.php mysql details and update the restored site Url","xcloner")?></label>
 							</div>
 							
 							<div class="col s8">
@@ -228,7 +228,7 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 						
 						<div class="row">
 							<div class="col s4">
-								<label>Delete Restored Backup Temporary Folder</label>
+								<label><?php echo __("Delete Restored Backup Temporary Folder","xcloner")?></label>
 							</div>
 							<div class="col s8">
 								<div class="switch">
@@ -244,7 +244,7 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 						
 						<div class="row">
 							<div class="col s4">
-								<label>Delete Restore Script</label>
+								<label><?php echo __("Delete Restore Script","xcloner")?></label>
 							</div>
 							<div class="col s8">
 								<div class="switch">
@@ -264,7 +264,7 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 				        
 				        <div class="col s12 center-align">
 
-							<button class="btn waves-effect waves-light teal" type="submit" id="restore_finish" name="action">Finish
+							<button class="btn waves-effect waves-light teal" type="submit" id="restore_finish" name="action"><?php echo __("Finish","xcloner")?>
 								<i class="material-icons right">navigate_next</i>
 							</button>
 				        </div>
