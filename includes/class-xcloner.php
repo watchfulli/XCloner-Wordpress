@@ -323,26 +323,29 @@ class Xcloner {
 	{
 		$plugin_public = new Xcloner_Public( $this->get_plugin_name(), $this->get_version() );
 		//$this->loader->add_action( 'wp_ajax_get_database_tables_action', $plugin_public, array('Xcloner_Api','get_database_tables_action') );
-		$xcloner_api = new Xcloner_Api();
-		add_action( 'wp_ajax_get_database_tables_action'	, array($xcloner_api,'get_database_tables_action')  );
-		add_action( 'wp_ajax_get_file_system_action'		, array($xcloner_api,'get_file_system_action')  );
-		add_action( 'wp_ajax_scan_filesystem'		, array($xcloner_api,'scan_filesystem')  );
-		add_action( 'wp_ajax_backup_database'		, array($xcloner_api,'backup_database')  );
-		add_action( 'wp_ajax_backup_files'		, array($xcloner_api,'backup_files')  );
-		add_action( 'wp_ajax_save_schedule'		, array($xcloner_api,'save_schedule')  );
-		add_action( 'wp_ajax_get_schedule_by_id'		, array($xcloner_api,'get_schedule_by_id')  );
-		add_action( 'wp_ajax_get_scheduler_list'		, array($xcloner_api,'get_scheduler_list')  );
-		add_action( 'wp_ajax_delete_schedule_by_id'		, array($xcloner_api,'delete_schedule_by_id')  );
-		add_action( 'wp_ajax_delete_backup_by_name'		, array($xcloner_api,'delete_backup_by_name')  );
-		add_action( 'wp_ajax_download_backup_by_name'		, array($xcloner_api,'download_backup_by_name')  );
-		add_action( 'wp_ajax_remote_storage_save_status'		, array($xcloner_api,'remote_storage_save_status')  );
-		add_action( 'wp_ajax_upload_backup_to_remote'		, array($xcloner_api,'upload_backup_to_remote')  );
-		add_action( 'wp_ajax_restore_upload_backup'		, array($xcloner_api,'restore_upload_backup')  );
-		add_action( 'wp_ajax_download_restore_script'		, array($xcloner_api,'download_restore_script')  );
 		
-		add_action( 'admin_notices', array($this, 'xcloner_error_admin_notices' ));
+		if(is_admin())
+		{
+			$xcloner_api = new Xcloner_Api();
+
+			add_action( 'wp_ajax_get_database_tables_action'	, array($xcloner_api,'get_database_tables_action')  );
+			add_action( 'wp_ajax_get_file_system_action'		, array($xcloner_api,'get_file_system_action')  );
+			add_action( 'wp_ajax_scan_filesystem'		, array($xcloner_api,'scan_filesystem')  );
+			add_action( 'wp_ajax_backup_database'		, array($xcloner_api,'backup_database')  );
+			add_action( 'wp_ajax_backup_files'		, array($xcloner_api,'backup_files')  );
+			add_action( 'wp_ajax_save_schedule'		, array($xcloner_api,'save_schedule')  );
+			add_action( 'wp_ajax_get_schedule_by_id'		, array($xcloner_api,'get_schedule_by_id')  );
+			add_action( 'wp_ajax_get_scheduler_list'		, array($xcloner_api,'get_scheduler_list')  );
+			add_action( 'wp_ajax_delete_schedule_by_id'		, array($xcloner_api,'delete_schedule_by_id')  );
+			add_action( 'wp_ajax_delete_backup_by_name'		, array($xcloner_api,'delete_backup_by_name')  );
+			add_action( 'wp_ajax_download_backup_by_name'		, array($xcloner_api,'download_backup_by_name')  );
+			add_action( 'wp_ajax_remote_storage_save_status'		, array($xcloner_api,'remote_storage_save_status')  );
+			add_action( 'wp_ajax_upload_backup_to_remote'		, array($xcloner_api,'upload_backup_to_remote')  );
+			add_action( 'wp_ajax_restore_upload_backup'		, array($xcloner_api,'restore_upload_backup')  );
+			add_action( 'wp_ajax_download_restore_script'		, array($xcloner_api,'download_restore_script')  );
+			add_action( 'admin_notices', array($this, 'xcloner_error_admin_notices' ));
 		
-		if (is_admin()) {
+		//if (is_admin()) {
             add_filter('plugin_action_links', array($this, 'add_plugin_action_links'), 10, 2);
         }
 		
