@@ -221,6 +221,95 @@
 				</div>
 			</li>
 			
+			<!-- AWS STORAGE-->
+			<li id="aws">
+				<div class="collapsible-header">
+					<i class="material-icons">computer</i><?php echo __("AWS Storage","xcloner")?>
+					<div class="right">
+						<div class="switch">
+							<label>
+							Off
+							<input type="checkbox" name="xcloner_aws_enable" class="status" value="1" <?php if(get_option("xcloner_aws_enable")) echo "checked"?> \>
+							<span class="lever"></span>
+							On
+							</label>
+						</div>
+					</div>
+				</div>
+				<div class="collapsible-body">
+			        
+			        <div class="row">
+						<div class="col s12 m3 label">
+							&nbsp;
+						</div>	
+						<div class=" col s12 m6">
+							<p>
+								<?php echo sprintf(__(''))?>
+							</p>
+				        </div>
+			        </div>
+			        
+			        <div class="row">
+						<div class="col s12 m3 label">
+							<label for="aws_key"><?php echo __("AWS Key","xcloner")?></label>
+						</div>	
+						<div class=" col s12 m6">
+							<input placeholder="<?php echo __("AWS Key","xcloner")?>" id="aws_key" type="text" name="xcloner_aws_key" class="validate" value="<?php echo get_option("xcloner_aws_key")?>" autocomplete="off" >
+				        </div>
+			        </div>
+			        
+			        <div class="row">
+						<div class="col s12 m3 label">
+							<label for="aws_secret"><?php echo __("AWS Secret","xcloner")?></label>
+						</div>	
+						<div class=" col s12 m6">
+							<input placeholder="<?php echo __("AWS Secret","xcloner")?>" id="aws_secret" type="text" name="xcloner_aws_secret" class="validate" value="<?php echo get_option("xcloner_aws_secret")?>" autocomplete="off" >
+				        </div>
+			        </div>
+			        
+			        <div class="row">
+						<div class="col s12 m3 label">
+							<label for="aws_region"><?php echo __("AWS Region","xcloner")?></label>
+						</div>	
+						<div class=" col s12 m6">
+							<input placeholder="<?php echo __("AWS Region","xcloner")?>" id="aws_region" type="text" name="xcloner_aws_region" class="validate" value="<?php echo get_option("xcloner_aws_region")?>" autocomplete="off" >
+				        </div>
+			        </div>
+			        
+			        <div class="row">
+						<div class="col s12 m3 label">
+							<label for="aws_bucket_name"><?php echo __("AWS Bucket Name","xcloner")?></label>
+						</div>	
+						<div class=" col s12 m6">
+							<input placeholder="<?php echo __("AWS Bucket Name","xcloner")?>" id="aws_bucket_name" type="text" name="xcloner_aws_bucket_name" class="validate" value="<?php echo get_option("xcloner_aws_bucket_name")?>" autocomplete="off" >
+				        </div>
+			        </div>
+			        
+			        <div class="row">
+						<div class="col s12 m3 label">
+							<label for="aws_cleanup_days"><?php echo __("AWS Cleanup (days)","xcloner")?></label>
+						</div>
+						<div class=" col s12 m6">
+							<input placeholder="<?php echo __("how many days to keep the backups for","xcloner")?>" id="aws_cleanup_days" type="text" name="xcloner_aws_cleanup_days" class="validate" value="<?php echo get_option("xcloner_aws_cleanup_days")?>">
+				        </div>
+			        </div>
+			        
+			        <div class="row">
+						<div class="col s6 m4">
+							<button class="btn waves-effect waves-light" type="submit" name="action" id="action"  value="aws"><?php echo __("Save Settings","xcloner")?>
+								<i class="material-icons right">save</i>
+							</button>
+						</div>	
+						<div class="col s6 m4">
+							<button class="btn waves-effect waves-light orange" type="submit" name="action" id="action"  value="aws" onclick="jQuery('#connection_check').val('1')"><?php echo __("Verify","xcloner")?>
+								<i class="material-icons right">import_export</i>
+							</button>
+						</div>
+					</div>
+			        
+				</div>
+			</li>
+			
 			<!-- DROPBOX STORAGE-->
 			<li id="dropbox">
 				<div class="collapsible-header">
@@ -251,7 +340,7 @@
 			        
 			        <div class="row">
 						<div class="col s12 m3 label">
-							<label for="xcloner_azure_enable"><?php echo __("Dropbox Access Token","xcloner")?></label>
+							<label for="dropbox_access_token"><?php echo __("Dropbox Access Token","xcloner")?></label>
 						</div>	
 						<div class=" col s12 m6">
 							<input placeholder="<?php echo __("Dropbox Access Token","xcloner")?>" id="dropbox_access_token" type="text" name="xcloner_dropbox_access_token" class="validate" value="<?php echo get_option("xcloner_dropbox_access_token")?>" autocomplete="off" >
@@ -275,6 +364,15 @@
 						<div class=" col s12 m6">
 							<input placeholder="<?php echo __("Dropbox Prefix","xcloner")?>" id="dropbox_prefix" type="text" name="xcloner_dropbox_prefix" class="validate" value="<?php echo get_option("xcloner_dropbox_prefix")?>">
 						</div>	
+			        </div>
+			        
+			        <div class="row">
+						<div class="col s12 m3 label">
+							<label for="dropbox_cleanup_days"><?php echo __("Dropbox Cleanup (days)","xcloner")?></label>
+						</div>
+						<div class=" col s12 m6">
+							<input placeholder="<?php echo __("how many days to keep the backups for","xcloner")?>" id="dropbox_cleanup_days" type="text" name="xcloner_dropbox_cleanup_days" class="validate" value="<?php echo get_option("xcloner_dropbox_cleanup_days")?>">
+				        </div>
 			        </div>
 			        
 			        <div class="row">
@@ -348,6 +446,15 @@
 						<div class=" col s12 m6">
 							<input placeholder="<?php echo __("Azure Container","xcloner")?>" id="azure_container" type="text" name="xcloner_azure_container" class="validate" value="<?php echo get_option("xcloner_azure_container")?>">
 						</div>	
+			        </div>
+			        
+			        <div class="row">
+						<div class="col s12 m3 label">
+							<label for="azure_cleanup_days"><?php echo __("Azure Cleanup (days)","xcloner")?></label>
+						</div>
+						<div class=" col s12 m6">
+							<input placeholder="<?php echo __("how many days to keep the backups for","xcloner")?>" id="azure_cleanup_days" type="text" name="xcloner_azure_cleanup_days" class="validate" value="<?php echo get_option("xcloner_azure_cleanup_days")?>">
+				        </div>
 			        </div>
 			        
 			        <div class="row">

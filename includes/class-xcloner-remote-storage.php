@@ -12,6 +12,9 @@ use Dropbox\Client;
 use MicrosoftAzure\Storage\Common\ServicesBuilder;
 use League\Flysystem\Azure\AzureAdapter;
 
+use Aws\S3\S3Client;
+use League\Flysystem\AwsS3v3\AwsS3Adapter;
+
 class Xcloner_Remote_Storage{
 	
 	private $storage_fields = array(
@@ -41,19 +44,30 @@ class Xcloner_Remote_Storage{
 						"sftp_timeout" 		=> "int",
 						"sftp_cleanup_days"	=> "float",
 						),
+					"aws" => array(
+						"text"					=> "AWS",
+						"aws_enable"			=> "int",
+						"aws_key"				=> "string",
+						"aws_secret"			=> "string",
+						"aws_region"			=> "string",
+						"aws_bucket_name"		=> "string",
+						"aws_cleanup_days"		=> "float",		
+						),		
 					"dropbox" => array(
 						"text"					=> "Dropbox",
 						"dropbox_enable"		=> "int",
 						"dropbox_access_token"	=> "string",
 						"dropbox_app_secret"	=> "string",
-						"dropbox_prefix"		=> "string"
+						"dropbox_prefix"		=> "string",
+						"dropbox_cleanup_days"	=> "float",		
 						),	
 					"azure" => array(
 						"text"					=> "Azure BLOB",
 						"azure_enable"			=> "int",
 						"azure_account_name"	=> "string",
 						"azure_api_key"			=> "string",
-						"azure_container"		=> "string"
+						"azure_container"		=> "string",
+						"azure_cleanup_days"	=> "float",
 						),	
 						
 					);
@@ -160,9 +174,19 @@ class Xcloner_Remote_Storage{
 		
 		$this->logger->info(sprintf("Transferring backup %s to remote storage %s", $file, strtoupper($storage)), array(""));
 		
-		$backup_file_stream = $this->xcloner_file_system->get_storage_filesystem()->readStream($file);
-		if(!$remote_storage_filesystem->updateStream($file, $backup_file_stream))
+		if(!$this->xcloner_file_system->get_storage_filesystem()->has($file))
+		{
+			$this->logger->info(sprintf("File not found %s in local storage", $file));
 			return false;
+		}
+		
+		$backup_file_stream = $this->xcloner_file_system->get_storage_filesystem()->readStream($file);
+
+		if(!$remote_storage_filesystem->updateStream($file, $backup_file_stream))
+		{
+			$this->logger->info(sprintf("Could not transfer file %s", $file));
+			return false;
+		}
 		
 		if($this->xcloner_file_system->is_multipart($file))
 		{
@@ -234,6 +258,27 @@ class Xcloner_Remote_Storage{
 		$client = new Client(get_option("xcloner_dropbox_access_token"), get_option("xcloner_dropbox_app_secret"));
 		$adapter = new DropboxAdapter($client, get_option("xcloner_dropbox_prefix"));
 		
+		$filesystem = new Filesystem($adapter, new Config([
+				'disable_asserts' => true,
+			]));
+
+		return array($adapter, $filesystem);
+	}
+	
+	public function get_aws_filesystem()
+	{
+		$this->logger->info(sprintf("Creating the AWS remote storage connection"), array(""));
+		
+		$client = new S3Client([
+		    'credentials' => [
+		        'key'    => get_option("xcloner_aws_key"),
+		        'secret' => get_option("xcloner_aws_secret")
+		    ],
+		    'region' => get_option("xcloner_aws_region"),
+		    'version' => 'latest',
+		]);
+		
+		$adapter = new AwsS3Adapter($client, get_option("xcloner_aws_bucket_name"));
 		$filesystem = new Filesystem($adapter, new Config([
 				'disable_asserts' => true,
 			]));
