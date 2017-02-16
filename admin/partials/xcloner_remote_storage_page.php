@@ -244,7 +244,7 @@
 						</div>	
 						<div class=" col s12 m6">
 							<p>
-								<?php echo sprintf(__(''))?>
+								<?php echo sprintf(__('Visit %s and get your "Key" and "Secret".'), "<a href='https://aws.amazon.com/s3/' target='_blank'>https://aws.amazon.com/s3/</a>")?>
 							</p>
 				        </div>
 			        </div>
@@ -333,7 +333,7 @@
 						</div>	
 						<div class=" col s12 m6">
 							<p>
-								<?php echo sprintf(__(''))?>
+								<?php echo sprintf(__('Visit %s and get your "App secret".'), "<a href='https://www.dropbox.com/developers/apps' target='_blank'>https://www.dropbox.com/developers/apps</a>")?>
 							</p>
 				        </div>
 			        </div>
