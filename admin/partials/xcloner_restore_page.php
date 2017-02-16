@@ -34,7 +34,7 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 							<?php echo __("Provide url below to the <u>xcloner_restore.php</u> restore script","xcloner")?>
 							</li>
 							<li>
-							<?php echo __("If your host is not web accessible directly, like a localhost computer, you can use a DynDNS service or install a blank copy of Wordpress with XCloner and start the restore from there.","xcloner")?>
+							<?php echo __("If your server is not web accessible, like a localhost computer, you can use a DynDNS service or install a blank copy of Wordpress with XCloner in the same environment and start the restore from there.","xcloner")?>
 							</li>
 							
 						</ul>	

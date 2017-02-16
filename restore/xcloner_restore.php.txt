@@ -1,6 +1,6 @@
 <?php
 
-define('AUTH_KEY', '');
+define('AUTH_KEY', 'b7403757f01e8255ccdd10151b971c4a');
 
 define("DS", DIRECTORY_SEPARATOR);
 
@@ -140,6 +140,8 @@ class Xcloner_Restore
 		$remote_mysql_pass 	= filter_input(INPUT_POST, 'remote_mysql_pass', FILTER_SANITIZE_STRING);
 		$remote_mysql_db 	= filter_input(INPUT_POST, 'remote_mysql_db', FILTER_SANITIZE_STRING);
 		$remote_mysql_host 	= filter_input(INPUT_POST, 'remote_mysql_host', FILTER_SANITIZE_STRING);
+		$execute_query 		= $_POST['query'];
+		$error_line			= filter_input(INPUT_POST, 'error_line', FILTER_SANITIZE_NUMBER_INT);
 		$start			 	= filter_input(INPUT_POST, 'start', FILTER_SANITIZE_NUMBER_INT);
 		
 		$mysql_backup_file = $remote_path.DS.$mysqldump_file;
@@ -161,7 +163,7 @@ class Xcloner_Restore
 			fseek($fp, $start);
 			while ($line_count <= $this->process_mysql_records_limit and ($line = fgets($fp)) !== false) {
 			// process the line read.
-			
+									
 				//check if line is comment
 				if(substr($line, 0, 1) == "#")
 					continue;
@@ -176,10 +178,26 @@ class Xcloner_Restore
 					$query .= $line;
 					continue;
 				}
+				
+				if($execute_query)
+				{
+					$query  = $execute_query;
+					$execute_query = "";
+				}	
 					
 				//echo "###".$query."###";
 				if(!$mysqli->query($query))
-					throw new Exception(sprintf("Mysql Error: %s\n Mysql Query: %s", $mysqli->error, $query));
+				{
+					//$return['error_line'] = $line_count;
+					$return['start'] = ftell($fp)-strlen($line);
+					$return['query_error'] = true;
+					$return['query'] = $query;
+					$return['message'] = sprintf("Mysql Error: %s\n", $mysqli->error);
+					$this->send_response(417, $return);
+					exit;
+					//throw new Exception(sprintf("Mysql Error: %s\n Mysql Query: %s", $mysqli->error, $query));
+				}
+				//else echo $line;
 					
 				$query = "";
 
