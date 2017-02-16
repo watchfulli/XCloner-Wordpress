@@ -84,25 +84,42 @@ class Tar extends Archive
      * @throws ArchiveIOException
      * @returns FileInfo[]
      */
-    public function contents()
+    public function contents($files_limit = 0)
     {
         if ($this->closed || !$this->file) {
             throw new ArchiveIOException('Can not read from a closed archive');
         }
-
+		
+		$files_counter = 0;
         $result = array();
+        
         while ($read = $this->readbytes(512)) {
             $header = $this->parseHeader($read);
             if (!is_array($header)) {
                 continue;
             }
-
+            
+            if($files_limit)
+            {
+				if(++$files_counter > $files_limit)
+				{
+					$return['extracted_files'] = $result;
+					$return['start'] = ftell($this->fh)-512;
+					return $return;
+				}
+			}
+			
+			if($header['typeflag'] == 5)
+				$header['size'] = 0;
+				
             $this->skipbytes(ceil($header['size'] / 512) * 512);
             $result[] = $this->header2fileinfo($header);
         }
-
+		
+		$return['extracted_files'] = $result;
+		
         $this->close();
-        return $result;
+        return $return;
     }
 
     /**

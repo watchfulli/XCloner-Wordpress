@@ -167,7 +167,7 @@ textarea.materialize-textarea{
 }
 
 #scheduled_backups .edit, #scheduled_backups .status.active, #scheduled_backups .delete,
-#manage_backups .download, #manage_backups .cloud-upload, #manage_backups .delete{
+#manage_backups .download, #manage_backups .cloud-upload, #manage_backups .delete, #manage_backups .list-backup-content{
 	color: #4db6ac;
 }
 

@@ -621,6 +621,68 @@ class Xcloner_Api{
 		return $this->send_response($data);
 	}
 	
+	public function list_backup_files()
+	{
+		$source_backup_file = $this->xcloner_sanitization->sanitize_input_as_string($_POST['file']);
+		$start = $this->xcloner_sanitization->sanitize_input_as_int($_POST['start']);
+		$return['part'] = $this->xcloner_sanitization->sanitize_input_as_int($_POST['part']);
+		
+		$backup_file = $source_backup_file;
+		
+		if($this->xcloner_file_system->is_multipart($backup_file))
+		{
+			$backup_parts = $this->xcloner_file_system->get_multipart_files($backup_file);
+			$backup_file = $backup_parts[$return['part']];
+		}
+		
+		try{
+			$tar = new Tar();
+			$tar->open($this->xcloner_settings->get_xcloner_store_path().DS.$backup_file, $start);
+		
+			$data = $tar->contents(get_option('xcloner_files_to_process_per_request'));
+		}catch(Exception $e)
+		{
+			$return['error'] = true;
+			$return['message'] = $e->getMessage();
+			$this->send_response($return, 0);
+		}
+		
+		$return['files'] 		= array();
+		$return['finished'] 	= 1;
+		$return['total_size'] 	= filesize($this->xcloner_settings->get_xcloner_store_path().DS.$backup_file);
+		$i = 0;
+		
+		if(isset($data['extracted_files']) and is_array($data['extracted_files']))
+		{
+			foreach($data['extracted_files'] as $file)
+			{
+				$return['files'][$i]['path'] = $file->getPath();
+				$return['files'][$i]['size'] = $file->getSize();
+				
+				$i++;
+			}
+		}
+		
+		if(isset($data['start']))
+		{
+			$return['start'] = $data['start'];
+			$return['finished'] = 0;	
+		}else{
+			if($this->xcloner_file_system->is_multipart($source_backup_file))
+			{
+				$return['start'] = 0;
+				
+				++$return['part'];
+			
+				if($return['part'] < sizeof($backup_parts))	
+					$return['finished'] = 0;
+				
+			}
+		}	
+		
+		$this->send_response($return, 0);
+	}
+	
 	/*
 	 * 
 	 * Upload backup to remote API

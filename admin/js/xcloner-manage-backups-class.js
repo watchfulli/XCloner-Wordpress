@@ -3,6 +3,7 @@
 		
 		constructor()
 		{
+			this.file_counter = 0
 			//this.edit_modal = jQuery('.modal').modal();
 		}
 		
@@ -36,6 +37,65 @@
 				  dataType: 'json'
 				});
 			}
+		}
+		
+		list_backup_content_callback(backup_file, start = 0, part= 0)
+		{
+			var $this = this;
+			
+			if(backup_file)
+				{
+					jQuery.ajax({
+					  url: ajaxurl,
+					  method: 'post',
+					  data: { action : 'list_backup_files', file: backup_file, start: start, part: part},
+					  success: function(response){
+						  
+						  if(response.error)
+						  {
+							jQuery("#backup_cotent_modal .files-list").addClass("error").prepend(response.message)
+							jQuery("#backup_cotent_modal .progress > div").addClass("determinate").removeClass(".indeterminate").css('width', "100%")
+							return;
+						  }
+						  
+						  for(var i in response.files)
+						  {
+							  if(response.total_size !== undefined)
+							  {
+								var percent = parseInt(response.start*100)/parseInt(response.total_size)
+								//jQuery("#backup_cotent_modal .progress .determinate").css('width', percent + "%")
+							  }
+							
+							$this.file_counter++
+							
+							jQuery("#backup_cotent_modal .modal-content .files-list").prepend($this.file_counter +". "+response.files[i].path+" ("+response.files[i].size+" bytes)"+"<br />\n");
+						  }
+						  
+						  if(!response.finished && jQuery('#backup_cotent_modal').is(':visible'))
+							$this.list_backup_content_callback(backup_file, response.start, response.part)
+						  else
+							jQuery("#backup_cotent_modal .progress > div").addClass('determinate').removeClass(".indeterminate").css('width', "100%")
+						  
+					  },
+					  error: function(xhr, textStatus, error){
+					      jQuery("#backup_cotent_modal .files-list").addClass("error").prepend(textStatus+error)
+					  },
+					  dataType: 'json'
+					});
+				}
+			
+		}
+		
+				
+		list_backup_content(backup_file)
+		{
+			this.file_counter = 0
+			jQuery("#backup_cotent_modal .modal-content .files-list").text("").removeClass("error");
+			jQuery("#backup_cotent_modal .modal-content .backup-name").text(backup_file);
+			jQuery("#backup_cotent_modal").modal('open');
+			jQuery("#backup_cotent_modal .progress > div").removeClass('determinate').addClass("indeterminate");
+			
+			this.list_backup_content_callback(backup_file)
 		}
 		
 		cloud_upload(backup_file)
@@ -147,6 +207,15 @@ jQuery(document).ready(function(){
 						var hash = jQuery(this).attr('href');
 						var id = hash.substr(1)
 						var data = xcloner_manage_backups.cloud_upload(id);
+						
+					})
+				})
+				
+				jQuery("#manage_backups").find(".list-backup-content").each(function(){
+					jQuery(this).off("click").on("click", function(e){
+						var hash = jQuery(this).attr('href');
+						var id = hash.substr(1)
+						var data = xcloner_manage_backups.list_backup_content(id);
 						
 					})
 				})

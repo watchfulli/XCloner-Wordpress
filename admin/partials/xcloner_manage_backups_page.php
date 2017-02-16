@@ -67,6 +67,7 @@ foreach($backup_list as $file_info):?>
 			 <?php if(sizeof($available_storages)):?>
 				<a href="#<?php echo $file_info['path']?>" class="cloud-upload" title="<?php echo __('Send Backup To Remote Storage','xcloner')?>"><i class="material-icons">cloud_upload</i></a>
 			 <?php endif?>
+			 <a href="#<?php echo $file_info['path']?>" class="list-backup-content" title="<?php echo __('List Backup Content','xcloner')?>"><i class="material-icons">folder_open</i></a>
 			 <a href="#<?php echo $file_info['path']?>" class="delete" title="<?php echo __('Delete Backup','xcloner')?>"><i class="material-icons">delete</i></a>
 		</td>
 		
@@ -80,6 +81,19 @@ foreach($backup_list as $file_info):?>
 
 <a class="waves-effect waves-light btn delete-all"><i class="material-icons left">delete</i><?php echo __("Delete","xcloner")?></a>
 
+<!-- List Backup Content Modal-->
+
+<div id="backup_cotent_modal" class="modal">
+	<div class="modal-content">
+		<h4><?php echo sprintf(__("Listing Backup Content ","xcloner"), "")?></h4>
+		<h5 class="backup-name"></h5>
+		
+		<div class="progress">
+			<div class="indeterminate"></div>
+		</div>
+		<div class="files-list"></div>
+	</div>	
+</div>
 
 <!-- Remote Storage Modal Structure -->
 <div id="remote_storage_modal" class="modal">

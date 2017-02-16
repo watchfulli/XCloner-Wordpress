@@ -16,7 +16,7 @@ class Xcloner_File_Transfer extends Xcloner_File_System{
 	}
 	
 	
-	public function transfer_file($file, $start = 0)
+	public function transfer_file($file, $start = 0, $hash = "")
 	{
 		if(!$this->target_url)
 			throw new Exception("Please setup a target url for upload");

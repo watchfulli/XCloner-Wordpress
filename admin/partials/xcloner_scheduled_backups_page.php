@@ -6,6 +6,15 @@ $available_storages = $xcloner_remote_storage->get_available_storages();
 
 <h1><?= esc_html(get_admin_page_title()); ?></h1>
 
+<?php if(!DISABLE_WP_CRON): ?>
+	<div id="setting-error-" class="error settings-error notice is-dismissible"> 
+		<p><strong>
+			<?php echo sprintf(__('We have noticed that DISABLE_WP_CRON is disabled, we recommend enabling that and setting up wp-cron.php to run manually through your hosting account scheduler as explained <a href="%s" target="_blank">here</a>', 'xcloner'), "http://www.inmotionhosting.com/support/website/wordpress/disabling-the-wp-cronphp-in-wordpress") ?>
+			</strong>
+		</p><button type="button" class="notice-dismiss"><span class="screen-reader-text">Dismiss this notice.</span></button>
+	</div>
+<?php endif?>
+
 <div class="row">
 <table id="scheduled_backups" class="col s12" cellspacing="0" width="100%">
         <thead>
