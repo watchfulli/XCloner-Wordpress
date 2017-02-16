@@ -177,13 +177,24 @@ class Xcloner_Archive extends Tar
 		
 		$attachments = $this->filesystem->get_backup_attachments();
 		
+		foreach($attachments as $key => $file)
+		{
+			$attachments_archive = $this->xcloner_settings->get_xcloner_tmp_path().DS."info.tgz";
+		
+			$tar = new Tar();
+			$tar->create($attachments_archive);
+			$tar->addFile($file, basename($file));
+			$tar->close();
+			
+		}
+		
 		$this->logger->info(__(sprintf("Sending backup notification to %s", $to), "xcloner"));
 		
 		$admin_email = get_option("admin_email");
 		
 		$headers = array('Content-Type: text/html; charset=UTF-8', 'From: '.$from.' <'.$admin_email.'>');
 		
-		$return = wp_mail( $to, $subject, $body, $headers, $attachments );
+		$return = wp_mail( $to, $subject, $body, $headers, array($attachments_archive) );
 	
 		return $return;
 	}

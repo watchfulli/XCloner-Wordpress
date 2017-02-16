@@ -49,7 +49,7 @@ class Xcloner_Activator {
 				  `recurrence` varchar(10) CHARACTER SET latin1 NOT NULL,
 				  `params` text CHARACTER SET latin1 NOT NULL,
 				  `start_at` datetime,
-				  `remote_storage` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
+				  `remote_storage` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
 				  `hash` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
 				  `status` int(1) NOT NULL,
 				  `last_backup` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,

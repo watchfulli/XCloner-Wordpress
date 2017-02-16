@@ -97,5 +97,5 @@ function run_xcloner()
 
 }
 
-
-run_xcloner();
+if(is_admin())
+	run_xcloner();

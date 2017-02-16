@@ -29,10 +29,11 @@ class Xcloner_File_Transfer extends Xcloner_File_System{
 		$binary_data =  fread($fp, $this->transfer_limit);
 		
 		$send_array = array();
-		$send_array['blob'] = $binary_data;
-		$send_array['file'] = $file;
-		$send_array['start'] = $start;
-		$send_array['action'] = "write_file";
+		$send_array['blob'] 	= $binary_data;
+		$send_array['file'] 	= $file;
+		$send_array['start'] 	= $start;
+		$send_array['action'] 	= "write_file";
+		$send_array['hash'] 	= $hash;
 		
 		$data = http_build_query($send_array);
 		

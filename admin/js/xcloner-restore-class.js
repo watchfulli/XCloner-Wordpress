@@ -597,10 +597,9 @@ class Xcloner_Restore{
 	
 }
 
+var xcloner_auth_key = "";
+
 jQuery(document).ready(function(){
-	
-	if(xcloner_auth_key === undefined)
-		var xcloner_auth_key = "";
 	
 	var xcloner_restore = new Xcloner_Restore(xcloner_auth_key);
 	

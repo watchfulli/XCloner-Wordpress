@@ -546,6 +546,7 @@ class Xcloner_Api{
 		
 		$scheduler = new Xcloner_Scheduler();
 		$data  = $scheduler->get_scheduler_list();
+		$return['data'] = array();
 		
 		foreach($data as $res)
 		{
@@ -768,6 +769,7 @@ class Xcloner_Api{
 		$is_multipart = 0;
 		
 		$file = $this->xcloner_sanitization->sanitize_input_as_string($_POST['file']);
+		$hash = $this->xcloner_sanitization->sanitize_input_as_string($_POST['hash']);
 		
 		if(isset($_POST['part']))
 			$return['part'] = $this->xcloner_sanitization->sanitize_input_as_int($_POST['part']);
@@ -798,13 +800,14 @@ class Xcloner_Api{
 		
 			$xcloner_file_transfer = new Xcloner_File_Transfer();
 			$xcloner_file_transfer->set_target($target_url);
-			$return['start'] = $xcloner_file_transfer->transfer_file($file, $start);
+			$return['start'] = $xcloner_file_transfer->transfer_file($file, $start, $hash);
 		
 		}catch(Exception $e){
 		
 			$return = array();
 			$return['error'] = true;
-			$return['message'] = $e->getMessage();
+			$return['status'] = 500;
+			$return['message'] = "CURL communication error with the restore host. ".$e->getMessage();
 			$this->send_response( $return, 0);
 		
 		}

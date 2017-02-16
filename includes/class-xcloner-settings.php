@@ -24,7 +24,7 @@ class Xcloner_Settings
 	
 	public function get_xcloner_start_path()
 	{
-		if(!get_option('xcloner_start_path'))
+		if(!get_option('xcloner_start_path') or !is_dir(get_option('xcloner_start_path')))
 			$path = realpath(ABSPATH);
 		else
 			$path = get_option('xcloner_start_path');
@@ -41,7 +41,7 @@ class Xcloner_Settings
 	
 	public function get_xcloner_store_path()
 	{
-		if(!get_option('xcloner_store_path'))
+		if(!get_option('xcloner_store_path')  or !is_dir(get_option('xcloner_store_path')))
 			$path = realpath(XCLONER_STORAGE_PATH);
 		else
 			$path = get_option('xcloner_store_path');
