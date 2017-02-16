@@ -313,6 +313,14 @@ a.expand-multipart.remove{
 	cursor: pointer;
 }
 
+.xcloner-restore .query-box{
+	display: none;
+}
+
+.xcloner-restore .query-box .query-list{
+	height: 10rem;
+}
+
 @media only screen and (min-width: 993px){
 	.dashboard .backup-ready{
 		float: right;

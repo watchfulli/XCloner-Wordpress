@@ -147,6 +147,20 @@ class Xcloner_Restore{
 				
 		}, false);
 		
+		document.addEventListener("xcloner_restore_display_query_box", function (e) {
+			
+			if(e.detail.query)
+			{
+				jQuery(".xcloner-restore .query-box").show();
+				jQuery(".xcloner-restore .query-list").val(e.detail.query)
+			}else{
+				jQuery(".xcloner-restore .query-box").hide();
+				jQuery(".xcloner-restore .query-list").val("")
+			}
+			
+				
+		}, false);
+		
 		
 	}
 	
@@ -174,6 +188,7 @@ class Xcloner_Restore{
 	
 	get_remote_mysqldump_files_callback(response, status, params = new Object())
 	{
+		
 		if(status)
 		{
 			var files = response.statusText.files;
@@ -278,9 +293,9 @@ class Xcloner_Restore{
 		this.ajaxurl = this.restore_script_url;
 		this.set_cancel(false);
 		
-		var params = new Object()
-		params.backup_file = backup_file
-		params.remote_path = remote_path
+		var params 			= new Object()
+		params.backup_file 	= backup_file
+		params.remote_path 	= remote_path
 		
 		if(this.resume.callback == "remote_restore_backup_file_callback")
 		{
@@ -297,14 +312,21 @@ class Xcloner_Restore{
 	
 	remote_restore_mysql_backup_file_callback(response, status, params = new Object())
 	{
+		//var processed = parseInt(response.statusText.start)+parseInt(response.statusText.processed)
 		
 		if(!status)
 		{
-			document.dispatchEvent(new CustomEvent("xcloner_restore_display_status_text", {detail: {status: 'error', message: response.status+" "+response.statusText }}));
-			document.dispatchEvent(new CustomEvent("xcloner_restore_update_progress", {detail: {percent: 100 }}));
+			this.start = response.statusText.start;
+			document.dispatchEvent(new CustomEvent("xcloner_restore_display_query_box", {detail: { query: response.statusText.query }}));
+			
+			document.dispatchEvent(new CustomEvent("xcloner_restore_display_status_text", {detail: {status: 'error', message: response.status+" "+response.statusText.message }}));
+			//document.dispatchEvent(new CustomEvent("xcloner_restore_update_progress", {detail: {percent: 100 }}));
 			document.dispatchEvent(new CustomEvent("remote_restore_mysql_backup_finish"));
 			return;
 		}
+		
+		document.dispatchEvent(new CustomEvent("xcloner_restore_display_query_box", {detail: { query: "" }}));
+		params.query = "";
 		
 		var processed = parseInt(response.statusText.start)+parseInt(response.statusText.processed)
 		
@@ -336,6 +358,42 @@ class Xcloner_Restore{
 		document.dispatchEvent(new CustomEvent("remote_restore_mysql_backup_finish"));
 		this.cancel = false;
 		
+	}
+	
+	remote_restore_mysql_backup_file(mysqldump_file)
+	{
+		this.ajaxurl = this.restore_script_url;
+		this.set_cancel(false);
+		
+		var params = new Object()
+		
+		params.remote_mysql_host 	= jQuery(".xcloner-restore #remote_mysql_host").val();
+		params.remote_mysql_db 		= jQuery(".xcloner-restore #remote_mysql_db").val();
+		params.remote_mysql_user 	= jQuery(".xcloner-restore #remote_mysql_user").val();
+		params.remote_mysql_pass 	= jQuery(".xcloner-restore #remote_mysql_pass").val();
+		params.remote_path 			= jQuery(".xcloner-restore #remote_restore_path").val();
+		params.remote_restore_url 	= jQuery(".xcloner-restore #remote_restore_url").val();
+		params.mysqldump_file 		= mysqldump_file
+		params.query 				= ""
+		params.start 			= 0
+		
+		if(jQuery(".xcloner-restore .query-box .query-list").val())
+		{
+			params.query = jQuery(".xcloner-restore .query-box .query-list").val();
+			params.start = this.start
+		}
+
+		document.dispatchEvent(new CustomEvent("xcloner_restore_display_query_box", {detail: { query: "" }}));
+		
+		if(this.resume.callback == "remote_restore_mysql_backup_file_callback")
+		{
+			console.log("do resume mysql backup restore");
+			this.do_ajax(this.resume.callback, this.resume.action, this.resume.params);
+			this.resume = new Object();
+			return;
+		}
+		
+		this.do_ajax('remote_restore_mysql_backup_file_callback', 'restore_mysql_backup', params)
 	}
 	
 	restore_finish_callback(response, status, params = new Object())
@@ -375,33 +433,6 @@ class Xcloner_Restore{
 
 		this.do_ajax('restore_finish_callback', 'restore_finish', params)
 	
-	}
-	
-	remote_restore_mysql_backup_file(mysqldump_file)
-	{
-		this.ajaxurl = this.restore_script_url;
-		this.set_cancel(false);
-		
-		var params = new Object()
-		
-		params.remote_mysql_host 	= jQuery(".xcloner-restore #remote_mysql_host").val();
-		params.remote_mysql_db 		= jQuery(".xcloner-restore #remote_mysql_db").val();
-		params.remote_mysql_user 	= jQuery(".xcloner-restore #remote_mysql_user").val();
-		params.remote_mysql_pass 	= jQuery(".xcloner-restore #remote_mysql_pass").val();
-		params.remote_path 			= jQuery(".xcloner-restore #remote_restore_path").val();
-		params.remote_restore_url 	= jQuery(".xcloner-restore #remote_restore_url").val();
-		params.mysqldump_file 		= mysqldump_file
-
-		
-		if(this.resume.callback == "remote_restore_mysql_backup_file_callback")
-		{
-			console.log("do resume mysql backup restore");
-			this.do_ajax(this.resume.callback, this.resume.action, this.resume.params);
-			this.resume = new Object();
-			return;
-		}
-		
-		this.do_ajax('remote_restore_mysql_backup_file_callback', 'restore_mysql_backup', params)
 	}
 	
 	upload_backup_file(file)

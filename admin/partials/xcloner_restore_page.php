@@ -33,6 +33,9 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 							<li>
 							<?php echo __("Provide url below to the <u>xcloner_restore.php</u> restore script","xcloner")?>
 							</li>
+							<li>
+							<?php echo __("If your host is not web accessible directly, like a localhost computer, you can use a DynDNS service or install a blank copy of Wordpress with XCloner and start the restore from there.","xcloner")?>
+							</li>
 							
 						</ul>	
 						
@@ -182,7 +185,10 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 							</div>
 
 							 <div class="status"></div>
-							 <div class="files-list"></div>
+							 <div class="query-box">
+								 <h6>Use the field below to fix your mysql query and Retry again the Restore</h6>
+								<textarea class="query-list" cols="5"></textarea>
+							 </div>
 				        </div>
 				       
 				        <div class="col s12 m3 right-align">
