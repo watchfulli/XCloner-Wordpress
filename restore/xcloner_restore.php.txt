@@ -262,7 +262,7 @@ class Xcloner_Restore
 		
 		$return['start'] = ftell($fp);
 		
-		$this->logger->info(sprintf("Executed %s queries or size %s", $line_count, ($return['start']-$start)));
+		$this->logger->info(sprintf("Executed %s queries of size %s bytes", $line_count, ($return['start']-$start)));
 		
 		if(!feof($fp))
 		{
