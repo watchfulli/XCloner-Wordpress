@@ -153,9 +153,12 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 					<i class="material-icons right" title="Refresh Database Backup Files List" id="refresh_database_file">cached</i>
 				</div>
 				<div class="collapsible-body row">
-												
+						
+						<div class="col s12">
+							<a class="btn-floating tooltipped btn-small right" data-position="left" data-delay="50" data-tooltip="<?php echo __('Please provide below the mysql connection details for the remote host database.','xcloner')?>" data-tooltip-id="92c95730-94e9-7b59-bd52-14adc30d5e3e"><i class="material-icons">help_outline</i></a>	
+							<h5><?php echo __('Remote Mysql Details','xcloner')?></h5>
+						</div>						
 						<div class=" col s12">
-							
 							<div class="input-field col s12 m6">
 								<input type="text" name="remote_mysql_host" id="remote_mysql_host" class="validate" placeholder="Remote Mysql Hostname" value="localhost">
 								<label><?php echo __("Remote Mysql Hostname","xcloner")?></label>
@@ -178,32 +181,34 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 							</div>
 							
 						</div>	
-						
+						<div class="col s12">
+						<a class="btn-floating tooltipped btn-small right" data-position="left" data-delay="50" data-html="true" data-tooltip="<?php echo __('I will attempt to replace all mysql backup records matching the provided Source Url with the provided Target Url. <br />Leave blank the Target Url if you would like to skip this option. <br />As a bonus, I will also replace all matching serialized data and fix it\'s parsing.','xcloner')?>" data-tooltip-id="92c95730-94e9-7b59-bd52-14adc30d5e3e"><i class="material-icons">help_outline</i></a>	
+							<h5><?php echo __('Remote Mysql Search and Replace','xcloner')?></h5>
+						</div>
 						<div class="col s12">  
-							<div class="input-field col s6 ">
+							<div class="input-field col s12 m6 ">
 									<input type="text" name="wp_home_url" id="wp_home_url" class="validate" placeholder="WP Home Url" value="<?php echo home_url();?>">
-									<label><?php echo __("Replace Home Url","xcloner")?></label>
+									<label><?php echo __("Source Home Url","xcloner")?></label>
 							</div>	
 							
-							<div class="input-field col s6 ">
+							<div class="input-field col s12 m6 ">
 									<input type="text" name="remote_restore_url" id="remote_restore_url" class="validate" placeholder="Restore Target Url">
 									<label><?php echo __("With Target Home Url","xcloner")?></label>
 							</div>
-						</div>
 						
-						<?php if(site_url() != home_url()) : ?>
-						<div class="col s12">  
-							<div class="input-field col s6 ">
+						<?php if( site_url() != home_url()) : ?>
+							<div class="input-field col s12 m6 ">
 									<input type="text" name="wp_site_url" id="wp_site_url" class="validate" placeholder="WP Site Url" value="<?php echo site_url();?>">
-									<label><?php echo __("Replace Site Url","xcloner")?></label>
+									<label><?php echo __("Source Site Url","xcloner")?></label>
 							</div>	
 							
-							<div class="input-field col s6 ">
-									<input type="text" name="remote_restore_url" id="remote_restore_url" class="validate" placeholder="Restore Target Url">
+							<div class="input-field col s12 m6 ">
+									<input type="text" name="remote_restore_site_url" id="remote_restore_site_url" class="validate" placeholder="Restore Target Url">
 									<label><?php echo __("With Target Site Url","xcloner")?></label>
 							</div>
-						</div>
+						
 						<?php endif;?>
+						</div>
 						
 						<div class=" col s12 m9">
 							<div class="input-field row">
@@ -220,7 +225,7 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 
 							 <div class="status"></div>
 							 <div class="query-box">
-								 <h6>Use the field below to fix your mysql query and Retry again the Restore</h6>
+								 <h6><?php echo __('Use the field below to fix your mysql query and Retry again the Restore', 'xcloner')?></h6>
 								<textarea class="query-list" cols="5"></textarea>
 							 </div>
 				        </div>

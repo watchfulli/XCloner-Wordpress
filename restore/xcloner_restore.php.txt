@@ -82,7 +82,7 @@ class Xcloner_Restore
 
 	}
 	
-	private function exception_handler() {
+	public function exception_handler() {
 		
 		$error = error_get_last();
 		
@@ -166,7 +166,9 @@ class Xcloner_Restore
 	public function mysql_connect($remote_mysql_host, $remote_mysql_user, $remote_mysql_pass, $remote_mysql_db )
 	{
 		$this->logger->info(sprintf('Connecting to mysql database %s with %s@%s', $remote_mysql_db, $remote_mysql_user, $remote_mysql_host));
+
 		$mysqli = new mysqli($remote_mysql_host, $remote_mysql_user, $remote_mysql_pass, $remote_mysql_db);
+
 		if ($mysqli->connect_error) {
 			throw new Exception('Connect Error (' . $mysqli->connect_errno . ') '
 				. $mysqli->connect_error);
@@ -193,6 +195,12 @@ class Xcloner_Restore
 		$execute_query 		= $_POST['query'];
 		$error_line			= filter_input(INPUT_POST, 'error_line', FILTER_SANITIZE_NUMBER_INT);
 		$start			 	= filter_input(INPUT_POST, 'start', FILTER_SANITIZE_NUMBER_INT);
+		
+		$wp_home_url 		= filter_input(INPUT_POST, 'wp_home_url', FILTER_SANITIZE_STRING);
+		$remote_restore_url = filter_input(INPUT_POST, 'remote_restore_url', FILTER_SANITIZE_STRING);
+		
+		$wp_site_url 		= filter_input(INPUT_POST, 'wp_site_url', FILTER_SANITIZE_STRING);
+		$restore_site_url 	= filter_input(INPUT_POST, 'restore_site_url', FILTER_SANITIZE_STRING);
 		
 		$mysql_backup_file = $remote_path.DS.$mysqldump_file;
 		
@@ -236,8 +244,25 @@ class Xcloner_Restore
 					$execute_query = "";
 				}	
 				
+				//Doing serialized url replace here
 				
-				//echo "###".$query."###";
+				if($wp_site_url and $wp_home_url and strlen($wp_home_url) < strlen($wp_site_url))
+				{
+					list($wp_home_url,$wp_site_url) 			= array($wp_site_url,$wp_home_url);
+					list($remote_restore_url,$restore_site_url) = array($restore_site_url,$remote_restore_url);
+					
+				}
+				
+				if($wp_home_url and $remote_restore_url and strpos($query, $wp_home_url) !== false)
+				{
+					$query = $this->url_replace($wp_home_url, $remote_restore_url, $query);
+				}
+				
+				if($wp_site_url and $restore_site_url and strpos($query, $wp_site_url) !== false)
+				{
+					$query = $this->url_replace($wp_site_url, $restore_site_url, $query);
+				}
+				
 				if(!$mysqli->query($query))
 				{
 					//$return['error_line'] = $line_count;
@@ -248,7 +273,7 @@ class Xcloner_Restore
 					
 					$this->logger->error($return['message']);
 					
-					$this->send_response(417, $return);
+					$this->send_response(418, $return);
 					//throw new Exception(sprintf("Mysql Error: %s\n Mysql Query: %s", $mysqli->error, $query));
 				}
 				//else echo $line;
@@ -276,10 +301,35 @@ class Xcloner_Restore
 		$this->send_response(200, $return);
 	}
 	
+	private function url_replace($search, $replace, $query)
+	{
+		$this->logger->info(sprintf("Doing url replace on query with length %s", strlen($query)), array("QUERY_REPLACE"));
+		$query = str_replace($search, $replace, $query);
+		$original_query = $query;
+		
+		if($this->has_serialized($query))
+		{
+			$this->logger->info(sprintf("Query contains serialized data, doing serialized size fix"), array("QUERY_REPLACE"));
+			$query = $this->do_serialized_fix($query);
+			
+			if(!$query)
+			{
+				$this->logger->info(sprintf("Serialization probably failed here..."), array("QUERY_REPLACE"));
+				$query = $original_query;
+			}
+		}
+		$this->logger->info(sprintf("New query length is %s", strlen($query)), array("QUERY_REPLACE"));
+		
+		return $query;
+	}
+	
 	public function restore_finish_action()
 	{
 		$remote_path 		= filter_input(INPUT_POST, 'remote_path', FILTER_SANITIZE_STRING);
+		
+		$wp_home_url 		= filter_input(INPUT_POST, 'wp_home_url', FILTER_SANITIZE_STRING);
 		$remote_restore_url = filter_input(INPUT_POST, 'remote_restore_url', FILTER_SANITIZE_STRING);
+		
 		$remote_mysql_user 	= filter_input(INPUT_POST, 'remote_mysql_user', FILTER_SANITIZE_STRING);
 		$remote_mysql_pass 	= filter_input(INPUT_POST, 'remote_mysql_pass', FILTER_SANITIZE_STRING);
 		$remote_mysql_db 	= filter_input(INPUT_POST, 'remote_mysql_db', FILTER_SANITIZE_STRING);
@@ -741,6 +791,12 @@ class Xcloner_Restore
 		$return['status'] = $status;
 		$return['statusText'] = $response;
 		
+		if($status != 200 and $status != 418)
+		{
+			$return['error'] = true;
+			$return['message'] = $response;
+		}
+		
 		echo json_encode($return);
 		exit;
 	}
@@ -749,10 +805,21 @@ class Xcloner_Restore
 	 * Serialize fix methods below for mysql query lines
 	 */ 
 	 
-	private function do_serialized_fix($query)
+	function do_serialized_fix($query)
 	{
+		//return preg_replace('!s:(\d+):([\\\\]?"[\\\\]?"|[\\\\]?"((.*?)[^\\\\])[\\\\]?");!e', "'s:'.strlen(unescape_mysql('$3')).':\"'.unescape_quotes('$3').'\";'", $query);
 		
-		return preg_replace('!s:(\d+):([\\\\]?"[\\\\]?"|[\\\\]?"((.*?)[^\\\\])[\\\\]?");!e', "'s:'.strlen(unescape_mysql('$3')).':\"'.unescape_quotes('$3').'\";'", $query);
+		return preg_replace_callback('!s:(\d+):([\\\\]?"[\\\\]?"|[\\\\]?"((.*?)[^\\\\])[\\\\]?");!', function ($m) {
+				  $data = "";
+				  	
+				  if(!isset($m[3]))
+					$m[3] = "";
+					
+					$data = 's:'.strlen(($m[3])).':\"'.($m[3]).'\";';
+	              //return $this->unescape_quotes($data);
+	              
+	              return $data;
+	            }, $query);
 	}
 	
 	private function unescape_quotes($value) {
@@ -766,7 +833,7 @@ class Xcloner_Restore
 	}	
 	
 	
-	private function is_serialized($s)
+	private function has_serialized($s)
 	{
 		if(
 		    stristr($s, '{' ) != false &&

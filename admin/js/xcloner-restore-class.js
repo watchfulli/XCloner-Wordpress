@@ -132,6 +132,9 @@ class Xcloner_Restore{
 			{
 				if(!jQuery(".xcloner-restore #remote_restore_url").val())
 					jQuery(".xcloner-restore #remote_restore_url").val(e.detail.restore_script_url);
+				
+				if(!jQuery(".xcloner-restore #remote_restore_site_url").val())
+					jQuery(".xcloner-restore #remote_restore_site_url").val(e.detail.restore_script_url);	
 			}
 				
 		}, false);
@@ -376,6 +379,12 @@ class Xcloner_Restore{
 		params.wp_home_url 			= jQuery(".xcloner-restore #wp_home_url").val();
 		params.remote_restore_url 	= jQuery(".xcloner-restore #remote_restore_url").val();
 		
+		if(jQuery(".xcloner-restore #wp_site_url").length)
+		{
+			params.wp_site_url 			= jQuery(".xcloner-restore #wp_site_url").val();
+			params.restore_site_url 	= jQuery(".xcloner-restore #remote_restore_site_url").val();
+		}
+		
 		//console.log(params)
 		
 		params.mysqldump_file 		= mysqldump_file
@@ -587,9 +596,13 @@ class Xcloner_Restore{
 				
 				if(json.status != 200){
 						if(json.error)
+						{
 							document.dispatchEvent(new CustomEvent("xcloner_restore_display_status_text", {detail: {status: 'error', message: json.message}}));
+						}
 						else
+						{
 							$this[callback](json, false, params);
+						}
 							
 						return;
 				}
@@ -721,11 +734,15 @@ jQuery(document).ready(function(){
 	})
 	
 	jQuery(".xcloner-restore #refresh_remote_backup_file").on("click", function(e){
+		document.dispatchEvent(new CustomEvent("xcloner_restore_update_progress", {detail: {percent: 0 }}));
+		xcloner_restore.resume = new Object();
 		xcloner_restore.get_remote_backup_files();
 		e.stopPropagation();
 	})
 	
 	jQuery(".xcloner-restore #refresh_database_file").on("click", function(e){
+		document.dispatchEvent(new CustomEvent("xcloner_restore_update_progress", {detail: {percent: 0 }}));
+		xcloner_restore.resume = new Object();
 		xcloner_restore.get_remote_mysqldump_files();
 		e.stopPropagation();
 	})
