@@ -91,7 +91,10 @@ class XCloner_Requirements
 		{
 			if(!file_exists($path))
 				return false;
-				
+			
+			if(!is_writeable($path))	
+				@chmod($path, 0777);
+					
 			return is_writeable($path);
 		}
 		
@@ -106,6 +109,9 @@ class XCloner_Requirements
 		{
 			if(!file_exists($path))
 				return false;
+			
+			if(!is_writeable($path))	
+				@chmod($path, 0777);
 				
 			return is_writeable($path);
 		}

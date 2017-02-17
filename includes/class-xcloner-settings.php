@@ -51,7 +51,7 @@ class Xcloner_Settings
 	
 	public function get_xcloner_tmp_path_suffix()
 	{
-		return "xcloner".$this->get_hash();
+		return "xcloner-".$this->get_server_unique_hash(5);
 	}
 	
 	
@@ -59,7 +59,10 @@ class Xcloner_Settings
 	{
 		$path = sys_get_temp_dir().DS.".".$this->get_xcloner_tmp_path_suffix();
 		if(!is_dir($path))
+		{
 			mkdir($path);
+			chmod($path, 0777);
+		}
 		
 		return $path;
 	}
@@ -175,7 +178,7 @@ class Xcloner_Settings
 	
 	public function get_server_unique_hash($strlen = 0)
 	{
-		$hash = md5(gethostname().__DIR__);
+		$hash = md5(get_home_url().__DIR__);
 		
 		if($strlen)
 			$hash = substr($hash, 0, $strlen);
