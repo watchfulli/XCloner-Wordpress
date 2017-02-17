@@ -93,7 +93,16 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 			
 			<li data-step="3" class="restore-remote-backup-step steps active">
 				<div class="collapsible-header"><i class="material-icons">folder_open</i><?php echo __("Restore Files Backup Available On Remote Host","xcloner")?>
-					<i class="material-icons right" title="Refresh Remote Backup Files List" id="refresh_remote_backup_file">cached</i>
+						<i class="material-icons right" title="Refresh Remote Backup Files List" id="refresh_remote_backup_file">cached</i>
+
+						<div class="switch right">
+							<label>
+							<?php echo __('Verbose Output', "xcloner")?>
+							<input type="checkbox" id="toggle_file_restore_display" name="toggle_file_restore_display" checked value="1">
+							<span class="lever"></span>
+							
+							</label>
+						</div>
 				</div>
 				<div class="collapsible-body row">
 						

@@ -725,6 +725,10 @@ jQuery(document).ready(function(){
 		e.stopPropagation();
 	})
 	
+	jQuery(".xcloner-restore #toggle_file_restore_display").on("click", function(){
+		jQuery(".xcloner-restore .restore-remote-backup-step .files-list").toggle();
+	})
+	
 	jQuery(".xcloner-restore .restore_remote_mysqldump").on("click", function(e){
 		if(jQuery(this).hasClass('cancel'))
 			xcloner_restore.set_cancel(true);

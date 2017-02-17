@@ -189,6 +189,7 @@ $tab = 1;
 										 <?php if(sizeof($available_storages)):?>
 											<a href="#" class="cloud-upload" title="<?php echo __("Send Backup To Remote Storage",'xcloner')?>"><i class="material-icons">cloud_upload</i></a>
 										 <?php endif?>
+										 <a href="#" class="download" title="<?php echo __("Download Backup",'xcloner')?>"><i class="material-icons">file_download</i></a>
 									</p>
 									
 									<div class="progress">
@@ -331,12 +332,20 @@ jQuery(function () {
 	
 	jQuery('select').material_select();
 	jQuery("select[required]").css({display: "block", height: 0, padding: 0, width: 0, position: 'absolute'});
-	jQuery(".cloud-upload").on("click", function(){
+	jQuery(".backup-done .cloud-upload").on("click", function(){
 		var xcloner_manage_backups = new Xcloner_Manage_Backups();
 		var hash = jQuery(this).attr('href');
 		var id = hash.substr(1)
 						
 		xcloner_manage_backups.cloud_upload(id)
+	})
+	
+	jQuery(".backup-done .download").on("click", function(){
+		var xcloner_manage_backups = new Xcloner_Manage_Backups();
+		var hash = jQuery(this).attr('href');
+		var id = hash.substr(1)
+						
+		xcloner_manage_backups.download_backup_by_name(id)
 	})
 	
 	jQuery('.timepicker').pickatime({

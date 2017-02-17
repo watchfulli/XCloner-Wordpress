@@ -51,7 +51,7 @@ class Xcloner_Settings
 	
 	public function get_xcloner_tmp_path_suffix()
 	{
-		return "xcloner-".$this->get_server_unique_hash(5);
+		return "xcloner".$this->get_hash();
 	}
 	
 	
@@ -90,7 +90,7 @@ class Xcloner_Settings
 	public function get_hash()
 	{
 		if(!$this->hash){
-			$this->set_hash();
+			$this->set_hash("-".$this->get_server_unique_hash(5));
 		}
 		
 		//echo $this->hash;	

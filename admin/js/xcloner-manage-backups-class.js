@@ -7,7 +7,7 @@
 			//this.edit_modal = jQuery('.modal').modal();
 		}
 		
-		download_backup_by_name(id, elem, dataTable)
+		download_backup_by_name(id)
 		{
 			window.open(ajaxurl+"?action=download_backup_by_name&name="+id);
 			return false;
@@ -197,7 +197,7 @@ jQuery(document).ready(function(){
 					jQuery(this).off("click").on("click", function(e){
 						var hash = jQuery(this).attr('href');
 						var id = hash.substr(1)
-						var data = xcloner_manage_backups.download_backup_by_name(id, (this), dataTable);
+						var data = xcloner_manage_backups.download_backup_by_name(id);
 						
 					})
 				})

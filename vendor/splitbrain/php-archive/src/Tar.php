@@ -154,7 +154,13 @@ class Tar extends Archive
         }
 
         $outdir = rtrim($outdir, '/');
-        @mkdir($outdir, 0777, true);
+        if(!is_dir($outdir))
+				@mkdir($outdir, 0777, true);
+			else
+				@chmod($outdir, 0777);
+        
+        //@mkdir($outdir, 0777, true);
+        
         if (!is_dir($outdir)) {
             throw new ArchiveIOException("Could not create directory '$outdir'");
         }
@@ -194,7 +200,10 @@ class Tar extends Archive
             // create output directory
             $output    = $outdir.'/'.$fileinfo->getPath();
             $directory = ($fileinfo->getIsdir()) ? $output : dirname($output);
-            @mkdir($directory, 0777, true);
+            if(!is_dir($directory))
+				@mkdir($directory, 0777, true);
+			else
+				@chmod($directory, 0777);
 
             // extract data
             if (!$fileinfo->getIsdir()) {

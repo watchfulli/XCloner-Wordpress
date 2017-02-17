@@ -37,7 +37,7 @@ class Xcloner_File_Transfer extends Xcloner_File_System{
 		
 		$data = http_build_query($send_array);
 		
-		$this->get_logger()->debug(sprintf("Sending curl request to %s with %s data of file %s starting position %s", $this->target_url, $this->transfer_limit, $file, $start));
+		$this->get_logger()->info(sprintf("Sending curl request to %s with %s data of file %s starting position %s", $this->target_url, $this->transfer_limit, $file, $start));
 		
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL,$this->target_url);
@@ -64,7 +64,10 @@ class Xcloner_File_Transfer extends Xcloner_File_System{
 		}
 		
 		if(ftell($fp) >= $this->get_storage_filesystem()->getSize($file))
+		{
+			$this->get_logger()->info(sprintf("Upload done for file %s to target url %s, transferred a total of %s bytes", $file, $this->target_url, ftell($fp)));
 			return false;
+		}
 		
 		return ftell($fp);
 	}
