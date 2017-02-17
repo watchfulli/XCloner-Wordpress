@@ -744,5 +744,41 @@ class Xcloner_Restore
 		echo json_encode($return);
 		exit;
 	}
+	
+	/*
+	 * Serialize fix methods below for mysql query lines
+	 */ 
+	 
+	private function do_serialized_fix($query)
+	{
+		
+		return preg_replace('!s:(\d+):([\\\\]?"[\\\\]?"|[\\\\]?"((.*?)[^\\\\])[\\\\]?");!e', "'s:'.strlen(unescape_mysql('$3')).':\"'.unescape_quotes('$3').'\";'", $query);
+	}
+	
+	private function unescape_quotes($value) {
+		return str_replace('\"', '"', $value);
+	}
+	
+	private function unescape_mysql($value) {
+		return str_replace(array("\\\\", "\\0", "\\n", "\\r", "\Z",  "\'", '\"'),
+						   array("\\",   "\0",  "\n",  "\r",  "\x1a", "'", '"'), 
+						   $value);
+	}	
+	
+	
+	private function is_serialized($s)
+	{
+		if(
+		    stristr($s, '{' ) != false &&
+		    stristr($s, '}' ) != false &&
+		    stristr($s, ';' ) != false &&
+		    stristr($s, ':' ) != false
+		    ){
+		    return true;
+		}else{
+		    return false;
+		}
+
+	}
 }
 

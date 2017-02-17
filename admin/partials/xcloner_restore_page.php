@@ -45,7 +45,7 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 						</ul>	
 						
 						<div class="input-field col m9 s12">
-							<input value="<?php echo (is_ssl())?"https://":"http://"?>" id="restore_script_url" type="text" class="validate" placeholder="Url to XCloner Restore Script, example http://myddns.com/xcloner/xcloner_restore.php" >
+							<input value="<?php echo (is_ssl())?"https://":"http://localhost/xcloner2/xcloner_restore.php"?>" id="restore_script_url" type="text" class="validate" placeholder="Url to XCloner Restore Script, example http://myddns.com/xcloner/xcloner_restore.php" >
 							<label for="restore_script_url"></label>
 							<div id="url_validation_status" class="status"></div>
 				        </div>
@@ -111,12 +111,6 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 				</div>
 				<div class="collapsible-body row">
 						
-						<div class=" col s12 ">
-							<div class="input-field row">
-								<input type="text" name="remote_restore_url" id="remote_restore_url" class="validate" placeholder="Restore Target Url">
-								<label><?php echo __("Remote Restore Target Url","xcloner")?></label>
-							</div>
-						</div>							
 						<div class=" col s12 m9">
 							<div class="input-field row">
 								<input type="text" name="remote_restore_path" id="remote_restore_path" class="validate" placeholder="Restore Target Path">
@@ -155,7 +149,7 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 			</li>
 			
 			<li data-step="4" class="restore-remote-database-step steps active">
-				<div class="collapsible-header"><i class="material-icons">list</i><?php echo __("Restore Remote Database Backup","xcloner")?>
+				<div class="collapsible-header"><i class="material-icons">list</i><?php echo __("Restore Remote Database - Search and Replace","xcloner")?>
 					<i class="material-icons right" title="Refresh Database Backup Files List" id="refresh_database_file">cached</i>
 				</div>
 				<div class="collapsible-body row">
@@ -185,6 +179,32 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 							
 						</div>	
 						
+						<div class="col s12">  
+							<div class="input-field col s6 ">
+									<input type="text" name="wp_home_url" id="wp_home_url" class="validate" placeholder="WP Home Url" value="<?php echo home_url();?>">
+									<label><?php echo __("Replace Home Url","xcloner")?></label>
+							</div>	
+							
+							<div class="input-field col s6 ">
+									<input type="text" name="remote_restore_url" id="remote_restore_url" class="validate" placeholder="Restore Target Url">
+									<label><?php echo __("With Target Home Url","xcloner")?></label>
+							</div>
+						</div>
+						
+						<?php if(site_url() != home_url()) : ?>
+						<div class="col s12">  
+							<div class="input-field col s6 ">
+									<input type="text" name="wp_site_url" id="wp_site_url" class="validate" placeholder="WP Site Url" value="<?php echo site_url();?>">
+									<label><?php echo __("Replace Site Url","xcloner")?></label>
+							</div>	
+							
+							<div class="input-field col s6 ">
+									<input type="text" name="remote_restore_url" id="remote_restore_url" class="validate" placeholder="Restore Target Url">
+									<label><?php echo __("With Target Site Url","xcloner")?></label>
+							</div>
+						</div>
+						<?php endif;?>
+						
 						<div class=" col s12 m9">
 							<div class="input-field row">
 								<select id="remote_database_file" name="remote_database_file" class="browser-default">
@@ -204,7 +224,7 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 								<textarea class="query-list" cols="5"></textarea>
 							 </div>
 				        </div>
-				       
+				      
 				        <div class="col s12 m3 right-align">
 							<div class="toggler">
 								<button class="btn waves-effect waves-light restore_remote_mysqldump normal " type="submit" id="" name="action"><?php echo __("Restore","xcloner")?>

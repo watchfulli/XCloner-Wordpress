@@ -372,7 +372,12 @@ class Xcloner_Restore{
 		params.remote_mysql_user 	= jQuery(".xcloner-restore #remote_mysql_user").val();
 		params.remote_mysql_pass 	= jQuery(".xcloner-restore #remote_mysql_pass").val();
 		params.remote_path 			= jQuery(".xcloner-restore #remote_restore_path").val();
+
+		params.wp_home_url 			= jQuery(".xcloner-restore #wp_home_url").val();
 		params.remote_restore_url 	= jQuery(".xcloner-restore #remote_restore_url").val();
+		
+		//console.log(params)
+		
 		params.mysqldump_file 		= mysqldump_file
 		params.query 				= ""
 		params.start 			= 0

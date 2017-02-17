@@ -6,13 +6,11 @@ Requires at least: 3.0.1
 Tested up to: 4.7
 Stable tag: 3.1.5
 
-XCloner is a full backup and restore plugin for Wordpress, it will backup and restore both files and database. www.xcloner.com
+Backup your site, restore to any web location, send your backups to Dropbox, Amazon S3, Azure, FTP, SFTP and many others with XCloner backup plugin.
 
 == Description ==
 
 <strong>Over 500,000+ downloads and counting</strong>
-
-www.XCloner.com
 
 XCloner is a Backup and Restore plugin that is perfectly integrated with Wordpress.
 
