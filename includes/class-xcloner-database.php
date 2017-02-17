@@ -44,11 +44,11 @@ class XCloner_Database extends wpdb{
 		$this->xcloner_settings 		= new Xcloner_Settings($hash);
 		$this->fs 						= new Xcloner_File_System($hash);
 		
-		if(isset($data['recordsPerSession']))
+		if($this->xcloner_settings->get_xcloner_option('xcloner_database_records_per_request'))
 			$this->recordsPerSession		= $this->xcloner_settings->get_xcloner_option('xcloner_database_records_per_request');
 		
 		if(!$this->recordsPerSession)
-			$this->recordsPerSession = 1;
+			$this->recordsPerSession = 100;
 		
 		$wp_host 	= $this->xcloner_settings->get_db_hostname();
 		$wp_user 	= $this->xcloner_settings->get_db_username();
@@ -56,6 +56,8 @@ class XCloner_Database extends wpdb{
 		$wp_db 		= $this->xcloner_settings->get_db_database();
 
 		parent::__construct($wp_user, $wp_pass, $wp_db, $wp_host);
+		
+		//$this->use_mysqli = true;
 	}
 	/*
 	 * Initialize the database connection
@@ -481,10 +483,20 @@ class XCloner_Database extends wpdb{
 		//exporting the table content now
 
 		$query = "SELECT * from `$databaseName`.`$tableName` Limit $start, $limit ;";
-		$result = mysqli_query($this->dbh, $query);
+		if($this->use_mysqli)
+		{
+			$result = mysqli_query($this->dbh, $query);
+			$mysql_fetch_function = "mysqli_fetch_array";
+		
+		}else{
+			$result = mysql_query($query, $this->dbh);
+			$mysql_fetch_function = "mysql_fetch_array";
+		}
+		//$result = $this->get_results($query, ARRAY_N);
+		//print_r($result); exit;
 		
 		if($result){
-			while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
+			while($row = $mysql_fetch_function($result, MYSQLI_ASSOC)){
 					
 					$this->fs->get_tmp_filesystem_append()->write($dumpfile, "INSERT INTO `$tableName` VALUES (");
 					$arr = $row;
@@ -492,7 +504,7 @@ class XCloner_Database extends wpdb{
 					$this->countRecords++;
 
 	                foreach ($arr as $key => $value) {
-						$value = mysqli_real_escape_string($this->dbh, $value);
+						$value = $this->_real_escape($value);
 						$buffer .= "'".$value."', ";
 					}
 					$buffer = rtrim($buffer, ', ') . ");\n";
@@ -523,10 +535,11 @@ class XCloner_Database extends wpdb{
 			$this->fs->get_tmp_filesystem_append()->write($dumpfile, $line);
 		}
 
-		$result = mysqli_query($this->dbh,"SHOW CREATE table `$databaseName`.`$tableName`;");
+		//$result = mysqli_query($this->dbh,"SHOW CREATE table `$databaseName`.`$tableName`;");
+		$result = $this->get_row("SHOW CREATE table `$databaseName`.`$tableName`;", ARRAY_N);
 		if($result){
-			$row = mysqli_fetch_row( $result);
-			$line = ($row[1].";\n");
+			//$row = mysqli_fetch_row( $result);
+			$line = ($result[1].";\n");
 			$this->fs->get_tmp_filesystem_append()->write($dumpfile, $line);
 		}
 

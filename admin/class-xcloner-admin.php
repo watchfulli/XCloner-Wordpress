@@ -78,7 +78,7 @@ class Xcloner_Admin {
 		
 		wp_enqueue_style( $this->plugin_name."_materialize", plugin_dir_url( __FILE__ ) . 'css/materialize.min.css', array(), $this->version, 'all' );
 		wp_enqueue_style( $this->plugin_name."_materialize.clockpicker", plugin_dir_url( __FILE__ ) . 'css/materialize.clockpicker.css', array(), $this->version, 'all' );
-		wp_enqueue_style( $this->plugin_name."_materialize.icons", 'http://fonts.googleapis.com/icon?family=Material+Icons', array(), $this->version, 'all' );
+		wp_enqueue_style( $this->plugin_name."_materialize.icons", 'https://fonts.googleapis.com/icon?family=Material+Icons', array(), $this->version, 'all' );
 		wp_enqueue_style( $this->plugin_name."_jquery.datatables", plugin_dir_url( __FILE__ ) . 'css/jquery.dataTables.min.css', array(), $this->version, 'all' );
 		wp_enqueue_style( $this->plugin_name."_jquery.datatables.responsive", plugin_dir_url( __FILE__ ) . 'css/responsive.dataTables.css', array(), $this->version, 'all' );
 		wp_enqueue_style( $this->plugin_name."_jstree", dirname(plugin_dir_url( __FILE__ )) . '/vendor/vakata/jstree/dist/themes/default/style.min.css', array(), '3.3', 'all' );
