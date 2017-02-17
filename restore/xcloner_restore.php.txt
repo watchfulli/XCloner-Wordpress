@@ -4,7 +4,7 @@ define('AUTH_KEY', '');
 
 define("DS", DIRECTORY_SEPARATOR);
 
-if(!AUTH_KEY or $_REQUEST['hash'] != AUTH_KEY){
+if(!AUTH_KEY or (isset($_REQUEST['hash']) and $_REQUEST['hash'] != AUTH_KEY)){
 	
 		Xcloner_Restore::send_response("404", "Could not run restore script, AUTH_KEY missing or invalid!");
 		exit;

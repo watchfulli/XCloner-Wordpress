@@ -36,11 +36,16 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 							<li>
 							<?php echo __("If your server is not web accessible, like a localhost computer, you can use a DynDNS service or install a blank copy of Wordpress with XCloner in the same environment and start the restore from there.","xcloner")?>
 							</li>
+							<?php if(is_ssl()):?>
+							<li>
+								<?php echo __("We have detected your connection to the site as being secure, so your restore script address must start with https://.")?>
+							</li>
+							<?php endif ?>
 							
 						</ul>	
 						
 						<div class="input-field col m9 s12">
-							<input value="http://localhost/xcloner/xcloner_restore.php" id="restore_script_url" type="text" class="validate" placeholder="Url to XCloner Restore Script, example http://myddns.com/xcloner/xcloner_restore.php" >
+							<input value="<?php echo (is_ssl())?"https://":"http://"?>" id="restore_script_url" type="text" class="validate" placeholder="Url to XCloner Restore Script, example http://myddns.com/xcloner/xcloner_restore.php" >
 							<label for="restore_script_url"></label>
 							<div id="url_validation_status" class="status"></div>
 				        </div>
