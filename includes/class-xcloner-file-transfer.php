@@ -29,12 +29,14 @@ class Xcloner_File_Transfer extends Xcloner_File_System{
 		$binary_data =  fread($fp, $this->transfer_limit);
 		
 		$send_array = array();
-		$send_array['blob'] 	= $binary_data;
+		
 		$send_array['file'] 	= $file;
 		$send_array['start'] 	= $start;
 		$send_array['action'] 	= "write_file";
 		$send_array['hash'] 	= $hash;
+		$send_array['blob'] 	= $binary_data;
 		
+		//print_r($send_array);exit;
 		$data = http_build_query($send_array);
 		
 		$this->get_logger()->info(sprintf("Sending curl request to %s with %s data of file %s starting position %s", $this->target_url, $this->transfer_limit, $file, $start));

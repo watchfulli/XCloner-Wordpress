@@ -269,6 +269,12 @@ class Xcloner_Remote_Storage{
 	{
 		$this->logger->info(sprintf("Creating the AWS remote storage connection"), array(""));
 		
+		if (version_compare(phpversion(), '5.5.0', '<')) 
+		{
+				throw new Exception("AWS S3 class requires PHP 5.5 to be installed!");
+		}
+		
+		
 		$client = new S3Client([
 		    'credentials' => [
 		        'key'    => get_option("xcloner_aws_key"),
