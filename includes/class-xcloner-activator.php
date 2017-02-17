@@ -1,7 +1,5 @@
 <?php
 
-$xcloner_db_version = '1.0';
-
 /**
  * Fired during plugin activation
  *
@@ -24,6 +22,7 @@ $xcloner_db_version = '1.0';
  */
 class Xcloner_Activator {
 
+	const xcloner_db_version = '1.1';
 	/**
 	 * Short Description. (use period)
 	 *
@@ -33,11 +32,13 @@ class Xcloner_Activator {
 	 */
 	public static function activate() {
 	
-		global $wpdb, $xcloner_db_version;
+		global $wpdb;
 		
 		$charset_collate = $wpdb->get_charset_collate();	
 		
 		$installed_ver = get_option( "xcloner_db_version" );
+		
+		$xcloner_db_version = Xcloner_Activator::xcloner_db_version;
 		
 		if($installed_ver != $xcloner_db_version)
 		{
@@ -96,5 +97,5 @@ class Xcloner_Activator {
 			update_option('xcloner_directories_to_scan_per_request', 25);
 
 	}
-
+	
 }
