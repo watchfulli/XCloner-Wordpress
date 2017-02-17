@@ -450,7 +450,11 @@ class Xcloner_File_System{
 			$files = $this->start_filesystem->listContents($folder);
 			foreach($files as $file)
 			{
-				if(!$matching_pattern = $this->is_excluded($file)){
+				if(!is_readable($this->xcloner_settings->get_xcloner_start_path().DS.$file['path']))
+				{
+					$this->logger->info(sprintf(__("Excluding %s from the filesystem list, file not readable"), $file['path']));
+				}
+				elseif(!$matching_pattern = $this->is_excluded($file) ){
 					$this->logger->info(sprintf(__("Adding %s to the filesystem list"), $file['path']));
 					$file['visibility'] = $this->start_filesystem->getVisibility($file['path']);
 					$this->store_file($file);

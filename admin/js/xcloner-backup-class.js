@@ -9,6 +9,7 @@ class Xcloner_Backup{
 		this.last_backup_file = ""
 		this.backup_part = 0
 		this.backup_size_total = 0;
+		this.resume = new Object();
 	}
 	
 	get_form_params()
@@ -91,7 +92,7 @@ class Xcloner_Backup{
 			
 		}
 			
-		if(!json.finished && !this.cancel){
+		if(!json.finished /*&& !this.cancel*/){
 			
 			this.do_ajax(elem, action);
 			return false;
@@ -113,8 +114,8 @@ class Xcloner_Backup{
 			return;
 		}
 			
-		if(this.cancel)
-			return false;
+		/*if(this.cancel)
+			return false;*/
 			
 		var elem = "#generate_backup ul.backup-status li.database-backup";
 		jQuery(elem).show();
@@ -136,6 +137,7 @@ class Xcloner_Backup{
 	
 	do_scan_filesystem_callback(elem, action, json )
 	{
+		
 		if(json.total_files_num)
 			jQuery(".file-system .file-counter").text(parseInt(json.total_files_num) + parseInt(jQuery(".file-system .file-counter").text()));
 		
@@ -147,9 +149,8 @@ class Xcloner_Backup{
 		if(json.last_logged_file)
 			jQuery(".file-system .last-logged-file").text(json.last_logged_file);
 		
-		if(!json.finished && !this.cancel){
+		if(!json.finished /*&& !this.cancel*/){
 			
-			//var xcloner_backup = new Xcloner_Backup()
 			this.do_ajax(elem, action);
 			return false;
 		}
@@ -164,8 +165,8 @@ class Xcloner_Backup{
 	}
 	do_scan_filesystem()
 	{
-		if(this.cancel)
-			return false;
+		/*if(this.cancel)
+			return false;*/
 			
 		var elem = "#generate_backup ul.backup-status li.file-system";
 		jQuery(elem).show();
@@ -184,8 +185,8 @@ class Xcloner_Backup{
 	
 	do_backup_files_callback(elem, action, json)
 	{
-		if(this.cancel)
-			return false;
+		/*if(this.cancel)
+			return false;*/
 			
 		if(json.extra)
 			this.params.extra = json.extra;
@@ -233,7 +234,7 @@ class Xcloner_Backup{
 			jQuery(elem).find('.progress .determinate').css('width', percent+'%');
 		}
 		
-		if(!json.finished && !this.cancel){
+		if(!json.finished /*&& !this.cancel*/){
 			
 			this.do_ajax(elem, action);
 			return false;
@@ -242,7 +243,7 @@ class Xcloner_Backup{
 		jQuery(elem).find(".last-logged-file").text('done');
 		jQuery(".cloud-upload").attr("href", "#"+json.extra.backup_parent);
 		
-		this.restart_backup();
+		//this.restart_backup();
 		this.do_backup_done()
 	}
 	
@@ -272,6 +273,10 @@ class Xcloner_Backup{
 		jQuery(elem).show();
 		jQuery(elem+' .status-body').show();
 		jQuery(elem).find('.collapsible-header').trigger('click');
+		
+		this.set_cancel(true)
+		jQuery('#generate_backup .action-buttons a').hide();
+		jQuery('#generate_backup .action-buttons .start').css('display', 'inline-block');
 			
 	}
 	
@@ -282,36 +287,79 @@ class Xcloner_Backup{
 	
 	cancel_backup()
 	{
-		this.cancel =  true;
+		this.set_cancel(true)
 		jQuery('#generate_backup .action-buttons a').hide();
 		jQuery('#generate_backup .action-buttons .start').css('display', 'inline-block');
+		jQuery('#generate_backup .action-buttons .restart').css('display', 'inline-block');
 		
-		this.restart_backup();
+		//this.restart_backup();
 	}
 	
 	restart_backup()
-	{
+	{	this.set_cancel(false);
+		
 		jQuery('#generate_backup .action-buttons a').hide();
-		jQuery('#generate_backup .action-buttons .restart').css('display', 'inline-block');
+		jQuery('#generate_backup .action-buttons .cancel').css('display', 'inline-block');
+		
+		if(this.resume.action)
+		{
+			//console.log(this.resume.action)
+			this.do_ajax(this.resume.elem, this.resume.action, this.resume.params);
+			this.resume = new Object();
+			return;
+		}
+				
+		this.start_backup()
 	}
 	
 	start_backup()
 	{		
+			
+			this.resume = new Object()
+			this.set_cancel(false);
+			jQuery('#generate_backup .action-buttons a').hide();
+			jQuery('#generate_backup .action-buttons .cancel').css('display', 'inline-block');
+			
+		
 			this.generate_hash = true;
-			this.cancel =  false;
+			//this.cancel =  false;
 			this.backup_size_total = 0;
 			this.last_backup_file = "";
 			this.backup_part = 0;
 			jQuery('#generate_backup ul.backup-name li').remove();
-			jQuery('#generate_backup .action-buttons a').hide();
-			jQuery('#generate_backup .action-buttons .cancel').css('display', 'inline-block');
+			
 			jQuery('#generate_backup ul.backup-status > li').hide();
 			jQuery('#generate_backup .backup-status').show();
 			
 			this.params = this.get_form_params();
 			
+			
+			
 			this.do_scan_filesystem();
 			
+	}
+	
+	set_cancel(status)
+	{
+		if(status)
+		{
+			//document.dispatchEvent(new CustomEvent("xcloner_restore_update_progress", {detail: {percent: 0, class: 'determinate' }}));
+			//jQuery("#generate_backup .collapsible-header.active .progress > div").add
+		}
+			
+		this.cancel = status
+	}
+	
+	get_cancel(status)
+	{
+		return this.cancel
+	}
+	
+	init_resume(elem, action, init)
+	{
+		this.resume.elem = elem
+		this.resume.action = action
+		this.resume.init = init
 	}
 	
 	do_ajax(elem, action, init = 0)
@@ -321,6 +369,13 @@ class Xcloner_Backup{
 			hash = this.params.hash;
 		else if(this.generate_hash)
 			hash = 'generate_hash';
+		
+		
+		if(this.cancel == true)
+		{
+			this.init_resume(elem, action, init);
+			return;
+		}
 			
 		var callback = 'do_'+action+'_callback';
 		var data = JSON.stringify(this.params);
@@ -333,6 +388,7 @@ class Xcloner_Backup{
 			data: {'action': action, 'data': data, 'init': init, 'hash': hash},
 			error: function(err) {
 				show_ajax_error("Communication Error", "", err)
+				$this.init_resume(elem, action, init);
 				//console.log(err);
 				}
 			}).done(function(json) {
@@ -342,8 +398,11 @@ class Xcloner_Backup{
 				}
 				if(json.error !== undefined){
 					show_ajax_error("Communication Error", "", json.error_message);
+					$this.init_resume(elem, action, init);
 					return;
 				}
+				
+				$this.resume = new Object();
 				
 				$this[callback](elem, action, json)
 				

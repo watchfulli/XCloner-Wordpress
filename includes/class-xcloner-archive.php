@@ -395,7 +395,7 @@ class Xcloner_Archive extends Tar
 		$this->logger->info(sprintf("Closing the backup archive %s with 2*512 zero bytes blocks.", $this->get_archive_name_with_extension()));
 		$this->backup_archive->close();
 		
-		
+		//$return['extra']['backup_size'] = $this->filesystem->get_storage_filesystem()->getSize($archive_info->getBasename());	
 		
 		if($return['extra']['backup_part'])
 			$this->write_multipart_file($this->get_archive_name_with_extension());

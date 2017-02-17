@@ -194,7 +194,17 @@ class Xcloner_Api{
 		
 		$return['finished'] = 1;
 
-		$return = $this->archive_system->start_incremental_backup($this->form_params['backup_params'], $this->form_params['extra'], $init);
+		//$return = $this->archive_system->start_incremental_backup($this->form_params['backup_params'], $this->form_params['extra'], $init);
+		try{
+			$return = $this->archive_system->start_incremental_backup($this->form_params['backup_params'], $this->form_params['extra'], $init);
+		}catch(Exception $e)
+		{
+			$return = array();
+			$return['error'] = true;
+			$return['status'] = 500;
+			$return['error_message'] = $e->getMessage();
+			return $this->send_response($return, $hash = 1);
+		}
 		
 		if($return['finished'])
 		{
