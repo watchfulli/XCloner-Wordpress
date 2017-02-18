@@ -177,16 +177,16 @@ class Xcloner_Archive extends Tar
 		
 		$attachments = $this->filesystem->get_backup_attachments();
 		
+		$attachments_archive = $this->xcloner_settings->get_xcloner_tmp_path().DS."info.tgz";
+		
+		$tar = new Tar();
+		$tar->create($attachments_archive);
+			
 		foreach($attachments as $key => $file)
 		{
-			$attachments_archive = $this->xcloner_settings->get_xcloner_tmp_path().DS."info.tgz";
-		
-			$tar = new Tar();
-			$tar->create($attachments_archive);
 			$tar->addFile($file, basename($file));
-			$tar->close();
-			
 		}
+		$tar->close();
 		
 		$this->logger->info(__(sprintf("Sending backup notification to %s", $to), "xcloner"));
 		
@@ -357,18 +357,10 @@ class Xcloner_Archive extends Tar
 				$start_byte = $last_position;
 			}
 			else{	
-				
-				//remove the tmp files
-				/*if($start_filesystem == "tmp_filesystem"){
-					$this->logger->info(sprintf("Deleting temporary file %s from the system", $file_info['path']));
-					$this->filesystem->get_filesystem($start_filesystem)->delete($file_info['path']);
-				}*/
-					
 				$extra_params['start_at_line']++;
 				$file->next();
 				$start_byte = 0;
 				$counter++;
-				//echo "Processing next file ".$extra_params['start_at_line']."\n";
 			}
 			
 			if($this->processed_size_bytes >= $this->file_size_per_request_limit)

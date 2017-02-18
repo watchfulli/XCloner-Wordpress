@@ -294,7 +294,7 @@ class Xcloner_Api{
 		$data["finished"] = !$return;
 		$data["total_files_num"] = $this->xcloner_file_system->get_scanned_files_num();
 		$data["last_logged_file"] = $this->xcloner_file_system->last_logged_file();
-		$data["total_files_size"] = number_format($this->xcloner_file_system->get_scanned_files_total_size()/(1024*1024), 2);
+		$data["total_files_size"] = sprintf("%.2f",$this->xcloner_file_system->get_scanned_files_total_size()/(1024*1024));
 		
 		return $this->send_response($data, $hash = 1);
 	}
@@ -833,7 +833,7 @@ class Xcloner_Api{
 	    header('Content-Type: application/octet-stream');
 	    header('Content-Length: ' . $metadata['size']);
 	    
-	    ob_end_clean();
+	    @ob_end_clean();
 	    
 	    $chunkSize = 1024 * 1024;
 	    while (!feof($read_stream))

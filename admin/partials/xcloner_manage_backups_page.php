@@ -54,7 +54,8 @@ foreach($backup_list as $file_info):?>
 				<?php #$download_file .= "|".$child[0];?>
 				<li>
 					<?php echo $child[0]?> (<?php echo size_format($child[2])?>) 
-					<a href="#<?php echo $child[0];?>" class="download" title="Download Backup"><i class="material-icons">file_download</i></a> 
+					<a href="#<?php echo $child[0];?>" class="download" title="Download Backup"><i class="material-icons">file_download</i></a>
+					<a href="#<?php echo $child[0]?>" class="list-backup-content" title="<?php echo __('List Backup Content','xcloner')?>"><i class="material-icons">folder_open</i></a> 
 				</li>
 				<?php endforeach;?>
 			</ul>
