@@ -452,10 +452,10 @@ class Xcloner_File_System{
 			{
 				if(!is_readable($this->xcloner_settings->get_xcloner_start_path().DS.$file['path']))
 				{
-					$this->logger->info(sprintf(__("Excluding %s from the filesystem list, file not readable"), $file['path']));
+					$this->logger->info(sprintf(__("Excluding %s from the filesystem list, file not readable"), $file['path']), array("FILESYSTEM SCAN","NOT READABLE"));
 				}
 				elseif(!$matching_pattern = $this->is_excluded($file) ){
-					$this->logger->info(sprintf(__("Adding %s to the filesystem list"), $file['path']));
+					$this->logger->info(sprintf(__("Adding %s to the filesystem list"), $file['path']), array("FILESYSTEM SCAN","INCLUDE"));
 					$file['visibility'] = $this->start_filesystem->getVisibility($file['path']);
 					$this->store_file($file);
 					$this->files_counter++;
@@ -463,7 +463,7 @@ class Xcloner_File_System{
 						$this->files_size += $file['size'];
 					
 				}else{
-					$this->logger->info(sprintf(__("Excluding %s from the filesystem list, matching pattern %s"), $file['path'], $matching_pattern));
+					$this->logger->info(sprintf(__("Excluding %s from the filesystem list, matching pattern %s"), $file['path'], $matching_pattern), array("FILESYSTEM SCAN","EXCLUDE"));
 					}
 			}
 			
@@ -640,6 +640,70 @@ class Xcloner_File_System{
 				
 			if(strstr("$".$file['path'], $needle)){
 				return $excluded_file_pattern;
+			}
+		}
+		
+		return false;
+	}
+	
+	/*REGEX examples
+	 * 
+	* exclude all except .php file
+	* PATTERN: ^(.*)\.(.+)$(?<!(php))
+	* 
+	* exclude all except .php and .txt
+	* PATTERN: ^(.*)\.(.+)$(?<!(php.txt))";
+	* 
+	* exclude all .svn and .git
+	* PATTERN: ^(.*)\.(svn|git)(.+)$";
+	* 
+	* exclude root directory /test
+	* PATTERN: "^\/test(.*)$";
+	* 
+	* exclude the wp-admin folder
+	* PATTERN: ^(\/wp-admin)(.*)$";
+	* 
+	* exclude the wp-admin, wp-includes and wp-config.php
+	* PATTERN: ^\/(wp-admin|wp-includes|wp-config.php)(.*)$";
+	* 
+	* exclude all .avi files
+	* PATTERN: ^(.*)$(?<=(avi))";
+	* 
+	* exclude all .jpg and gif files
+	* PATTERN: ^(.*)$(?<=(gif|jpg))";
+	* 
+	* exclude all cached folder from wp-content/
+	* PATTERN: ^\/wp-content(.*)\/cache($|\/)(.*)";
+	* 
+	* exclude the wp-admin folder
+	* PATTERN: (^|^\/)(wp-content\/backups|administrator\/backups)(.*)$";
+	*/
+	private function is_excluded_regex($file)
+	{
+		$this->logger->debug(sprintf(("Checking if %s is excluded"), $file['path']));
+		
+		if($xcloner_exclude_files_larger_than_mb = $this->xcloner_settings->get_xcloner_option('xcloner_exclude_files_larger_than_mb'))
+		{
+			if(isset($file['size']) and $file['size'] > $this->calc_to_bytes($xcloner_exclude_files_larger_than_mb))
+				return "> ".$xcloner_exclude_files_larger_than_mb."MB";
+		}
+		
+		if(is_array($this->excluded_files))
+		{
+			$this->excluded_files = array();
+			$this->excluded_files[] ="(.*)\.(git)(.*)$";
+			$this->excluded_files[] ="wp-content\/backups(.*)$";
+			
+			foreach($this->excluded_files as $excluded_file_pattern)
+			{
+				if($file['path'] == "/")
+					$needle = "/";
+				else
+					$needle = "/".$file['path'];
+					
+				if(preg_match("/(^|^\/)".$excluded_file_pattern."/i", $needle)){
+					return $excluded_file_pattern;
+				}
 			}
 		}
 		
