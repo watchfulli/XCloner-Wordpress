@@ -33,7 +33,7 @@ You can do it easily from the Wordpress backend.
 
 ## Frequently Asked Questions
 
-= Where does XCloner keep it's database backups? =
+<b>Where does XCloner keep it's database backups?</b>
 
 XCloner stores them in separate mysql dump files, inside a folder called xcloner-XXXXX inside the backup archive root path, where XXXXX is a hash number that is identical with the last 5 characters of the backup name,
 so if the backup name is backup_localhost-2017-02-16_15-36-sql-1c6c6.tgz , the mysql backup file will be stored in xcloner-1c6c6/ folder.
