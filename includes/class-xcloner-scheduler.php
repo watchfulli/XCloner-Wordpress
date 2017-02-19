@@ -76,6 +76,9 @@ class Xcloner_Scheduler{
 	
 	public function delete_schedule_by_id($id)
 	{
+		$hook =  'xcloner_scheduler_'.$id;
+		wp_clear_scheduled_hook( $hook, array($id) );
+		
 		$data = $this->db->delete( $this->scheduler_table , array( 'id' => $id ) );
 		
 		return $data;

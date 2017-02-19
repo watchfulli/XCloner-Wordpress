@@ -127,7 +127,7 @@ $available_storages = $xcloner_remote_storage->get_available_storages();
 				
 				<div class="row">
 					<div class="input-field col s12 l12">
-						<input placeholder="" name="email_notification" id="email_notification" type="text" required value="">
+						<input placeholder="" name="email_notification" id="email_notification" type="text" value="">
 						<label for="email_notification"><?php echo __('Email Notification Address', 'xcloner') ?></label>
 					</div>
 				</div>

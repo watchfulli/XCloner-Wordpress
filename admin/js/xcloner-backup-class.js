@@ -275,7 +275,7 @@ class Xcloner_Backup{
 		jQuery(elem+' .status-body').show();
 		jQuery(elem).find('.collapsible-header').trigger('click');
 		
-		this.set_cancel(true)
+		this.set_cancel(false)
 		jQuery('#generate_backup .action-buttons a').hide();
 		jQuery('#generate_backup .action-buttons .start').css('display', 'inline-block');
 			
@@ -347,7 +347,6 @@ class Xcloner_Backup{
 			//document.dispatchEvent(new CustomEvent("xcloner_restore_update_progress", {detail: {percent: 0, class: 'determinate' }}));
 			//jQuery("#generate_backup .collapsible-header.active .progress > div").add
 		}
-			
 		this.cancel = status
 	}
 	

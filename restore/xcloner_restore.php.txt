@@ -404,6 +404,13 @@ class Xcloner_Restore
 			$this->logger->info(sprintf('Deleting xcloner_restore.php'));
 			$this->filesystem->delete("xcloner_restore.php");
 		}
+		
+		if($this->filesystem->has("xcloner_restore.log"))
+		{
+			$this->logger->info(sprintf('Deleting xcloner_restore.log'));
+			$this->filesystem->delete("xcloner_restore.log");
+		}
+		
 		if($this->filesystem->has($this->get_logger_filename()))
 		{
 			$this->logger->info(sprintf('Deleting logger file %s', $this->get_logger_filename()));

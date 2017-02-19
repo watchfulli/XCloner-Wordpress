@@ -2,17 +2,6 @@
 	'use strict';
 
 	jQuery(document).ready(function(){
-		
-		
-		jQuery("#generate_backup_form").on("submit", function(){
-		
-			xcloner_backup.params = xcloner_backup.get_form_params();
-			var data = JSON.stringify(xcloner_backup.params);
-			
-			xcloner_backup.do_ajax(data, "save_schedule")
-			return false;
-		})
-	
 	
 		jQuery("span.shorten_string").click(function(){
 			jQuery(this).toggleClass("full");

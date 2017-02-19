@@ -168,7 +168,7 @@ class Xcloner_Archive extends Tar
 		
 		if(isset($params['backup_params']->backup_comments))
 		{
-			$body .= __("Backup Comments: ").$this->form_params['backup_params']->backup_comments;
+			$body .= __("Backup Comments: ").$params['backup_params']->backup_comments;
 			$body .= "<br /><br />";
 		}
 		

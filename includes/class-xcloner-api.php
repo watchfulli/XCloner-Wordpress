@@ -589,15 +589,19 @@ class Xcloner_Api{
 				//$next_run .=" ($date_text)";	
 			}
 			
-			
-			$metadata = $this->xcloner_file_system->get_storage_filesystem()->getMetadata($res->last_backup);
-			$backup_size  = size_format($metadata['size']);
-			$backup_time  = date(get_option('date_format')." ".get_option('time_format'), $metadata['timestamp']);
-				
 			$backup_text = "";
 			
 			if($res->last_backup)
+			{
+				if( $this->xcloner_file_system->get_storage_filesystem()->has($res->last_backup))
+				{
+					$metadata = $this->xcloner_file_system->get_storage_filesystem()->getMetadata($res->last_backup);
+					$backup_size  = size_format($metadata['size']);
+					$backup_time  = date(get_option('date_format')." ".get_option('time_format'), $metadata['timestamp']);
+				}
+			
 				$backup_text = "<span title='".$backup_time."' class='shorten_string'>".$res->last_backup." (".$backup_size.")</span>";
+			}
 				
 			$return['data'][] = array($res->id, $res->name, $res->recurrence,/*$res->start_at,*/ $next_run, $remote_storage, $backup_text, $status, $action);
 		}

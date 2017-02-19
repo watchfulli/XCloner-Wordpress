@@ -267,7 +267,7 @@ $tab = 1;
 			<?php endif?>
 			<div class="row">
 				<div class="col s12 m10 l6">
-					<button class="right btn waves-effect waves-light" type="submit" name="action"><?php echo __("Submit" ,'xcloner')?>
+					<button class="right btn waves-effect waves-light submit_schedule" type="submit" name="action"><?php echo __("Submit" ,'xcloner')?>
 						<i class="material-icons right">send</i>
 					</button>
 				</div>
@@ -339,6 +339,15 @@ jQuery(function () {
 						
 		xcloner_manage_backups.cloud_upload(id)
 	})
+	
+	jQuery("#generate_backup_form").on("submit", function(){
+	
+		xcloner_backup.params = xcloner_backup.get_form_params();
+		var data = JSON.stringify(xcloner_backup.params);
+
+		xcloner_backup.do_ajax(data, "save_schedule")
+		return false;
+		})
 	
 	jQuery(".backup-done .download").on("click", function(){
 		var xcloner_manage_backups = new Xcloner_Manage_Backups();
