@@ -18,6 +18,8 @@ XCloner design was specifically created to Generate custom backups of any LAMP w
 
 XCloner Backup tool uses Open Source standards like TAR, Mysql and CSV formats so you can rest assured your backups can be restored in a variety of ways, giving you more flexibility and full control.
 
+Project is actively maintained through github https://github.com/ovidiul/XCloner-Wordpress/ , all issues can be reported here https://github.com/ovidiul/XCloner-Wordpress/issues .
+
 Features:
 
    * Backup and Restore your Wordpress site easily
