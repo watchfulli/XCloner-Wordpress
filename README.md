@@ -1,11 +1,6 @@
-# XCloner-Wordpress
+# XCloner Wordpress Plugin - Backup and Restore
 
-=== XCloner - Backup and Restore===
 Backup your Wordpress site, restore to any web location, send your backups to Dropbox, Amazon S3, Azure, FTP, SFTP and many others with XCloner backup plugin.
-
-== Description ==
-
-<strong>Over 500,000+ downloads and counting</strong>
 
 XCloner is a Backup and Restore plugin that is perfectly integrated with Wordpress.
 
@@ -13,7 +8,7 @@ XCloner design was specifically created to Generate custom backups of any LAMP w
 
 XCloner Backup tool uses Open Source standards like TAR, Mysql and CSV formats so you can rest assured your backups can be restored in a variety of ways, giving you more flexibility and full control.
 
-Features:
+## Features
 
    * Backup and Restore your Wordpress site easily
    * Create compressed and uncompressed backups using TAR open source format
@@ -38,7 +33,7 @@ You can do it easily from the Wordpress backend.
 
 ## Frequently Asked Questions
 
-= Where does XCloner keep it's database backups? =
+<b>Where does XCloner keep it's database backups?</b>
 
 XCloner stores them in separate mysql dump files, inside a folder called xcloner-XXXXX inside the backup archive root path, where XXXXX is a hash number that is identical with the last 5 characters of the backup name,
 so if the backup name is backup_localhost-2017-02-16_15-36-sql-1c6c6.tgz , the mysql backup file will be stored in xcloner-1c6c6/ folder.
