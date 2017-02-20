@@ -620,7 +620,7 @@ class Xcloner_File_System{
 	    return true;
 	}
 	
-	private function is_excluded($file)
+	public function is_excluded($file)
 	{
 		$this->logger->debug(sprintf(("Checking if %s is excluded"), $file['path']));
 		
@@ -629,6 +629,9 @@ class Xcloner_File_System{
 			if(isset($file['size']) and $file['size'] > $this->calc_to_bytes($xcloner_exclude_files_larger_than_mb))
 				return "> ".$xcloner_exclude_files_larger_than_mb."MB";
 		}
+		
+		if(!isset($this->exclude_files))
+			$this->set_excluded_files();
 		
 		if(is_array($this->excluded_files))
 		foreach($this->excluded_files as $excluded_file_pattern)
@@ -643,6 +646,9 @@ class Xcloner_File_System{
 			}
 		}
 		
+		if( $regex = $this->is_excluded_regex($file))
+			return $regex;
+		
 		return false;
 	}
 	
@@ -652,10 +658,10 @@ class Xcloner_File_System{
 	* PATTERN: ^(.*)\.(.+)$(?<!(php))
 	* 
 	* exclude all except .php and .txt
-	* PATTERN: ^(.*)\.(.+)$(?<!(php.txt))";
+	* PATTERN: ^(.*)\.(.+)$(?<!(php|txt))";
 	* 
 	* exclude all .svn and .git
-	* PATTERN: ^(.*)\.(svn|git)(.+)$";
+	* PATTERN: ^(.*)\.(svn|git)(.*)$";
 	* 
 	* exclude root directory /test
 	* PATTERN: "^\/test(.*)$";
@@ -672,36 +678,39 @@ class Xcloner_File_System{
 	* exclude all .jpg and gif files
 	* PATTERN: ^(.*)$(?<=(gif|jpg))";
 	* 
-	* exclude all cached folder from wp-content/
+	* exclude all cache folders from wp-content/
 	* PATTERN: ^\/wp-content(.*)\/cache($|\/)(.*)";
 	* 
-	* exclude the wp-admin folder
+	* exclude the backup folders
 	* PATTERN: (^|^\/)(wp-content\/backups|administrator\/backups)(.*)$";
 	*/
 	private function is_excluded_regex($file)
 	{
-		$this->logger->debug(sprintf(("Checking if %s is excluded"), $file['path']));
+		//$this->logger->debug(sprintf(("Checking if %s is excluded"), $file['path']));
 		
-		if($xcloner_exclude_files_larger_than_mb = $this->xcloner_settings->get_xcloner_option('xcloner_exclude_files_larger_than_mb'))
-		{
-			if(isset($file['size']) and $file['size'] > $this->calc_to_bytes($xcloner_exclude_files_larger_than_mb))
-				return "> ".$xcloner_exclude_files_larger_than_mb."MB";
-		}
+		$regex_patterns = explode(PHP_EOL, $this->xcloner_settings->get_xcloner_option('xcloner_regex_exclude'));
 		
-		if(is_array($this->excluded_files))
+		//print_r($regex_patterns);exit;
+		
+		if(is_array($regex_patterns))
 		{
-			$this->excluded_files = array();
-			$this->excluded_files[] ="(.*)\.(git)(.*)$";
-			$this->excluded_files[] ="wp-content\/backups(.*)$";
+			//$this->excluded_files = array();
+			//$this->excluded_files[] ="(.*)\.(git)(.*)$";
+			//$this->excluded_files[] ="wp-content\/backups(.*)$";
 			
-			foreach($this->excluded_files as $excluded_file_pattern)
+			foreach($regex_patterns as $excluded_file_pattern)
 			{
+				
+				if( substr($excluded_file_pattern, strlen($excluded_file_pattern)-1, strlen($excluded_file_pattern)) == "\r")
+					$excluded_file_pattern = substr($excluded_file_pattern, 0, strlen($excluded_file_pattern)-1);
+					
 				if($file['path'] == "/")
 					$needle = "/";
 				else
 					$needle = "/".$file['path'];
-					
-				if(preg_match("/(^|^\/)".$excluded_file_pattern."/i", $needle)){
+				//echo $needle."---".$excluded_file_pattern."---\n";
+				
+				if(@preg_match("/(^|^\/)".$excluded_file_pattern."/i", $needle)){
 					return $excluded_file_pattern;
 				}
 			}

@@ -423,7 +423,9 @@ class Xcloner_Api{
 				else
 					 $text .= " (". $this->xcloner_requirements->file_format_size($file['size']).")";
 				
-				if(in_array($file['path'], $this->xcloner_file_system->get_excluded_files()))
+				//if(in_array($file['path'], $this->xcloner_file_system->get_excluded_files()))
+				//echo $file['path']."--".$this->xcloner_file_system->is_excluded($file);
+				if($excluded_pattern = $this->xcloner_file_system->is_excluded($file))
 					$selected = true;
 				else
 					$selected = false;
@@ -432,8 +434,9 @@ class Xcloner_Api{
 							'id' => $file['path'],
 							'parent' => $folder,
 							'text' => $text,
+							//'title' => "test",
 							'children' => $children,
-							'state' =>  array('selected' => $selected, 'opened' => false),
+							'state' =>  array('selected' => $selected, 'opened' => false, "checkbox_disabled" => $selected),
 							'icon' => plugin_dir_url(dirname(__FILE__))."/admin/assets/file-icon-".strtolower(substr($file['type'], 0, 1)).".png"
 							);
 			}

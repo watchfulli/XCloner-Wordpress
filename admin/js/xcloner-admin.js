@@ -12,6 +12,14 @@
 			doShortText(jQuery(this));
 		})
 		
+		jQuery("#xcloner_regex_exclude").on("focus", function(){
+			jQuery("ul.xcloner_regex_exclude_limit li").show();
+			})
+		
+		jQuery(".regex_pattern").click(function(){
+			jQuery(this).select();
+		})
+		
 		jQuery(".btn.system_info_toggle").click(function(){
 			jQuery(".additional_system_info").toggle();
 		})

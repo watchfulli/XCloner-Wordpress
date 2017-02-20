@@ -313,7 +313,7 @@ class Xcloner_Scheduler{
 			if(isset($schedule['backup_params']->email_notification) and $to=$schedule['backup_params']->email_notification)
 			{
 				$from = "XCloner Schedule - ".$schedule['name'];
-				$this->archive_system->send_notification($to, $from, "Scheduled backup error",$return['extra']['backup_parent'], "", $e->getMessage());
+				$this->archive_system->send_notification($to, $from, "Scheduled backup error","", "", $e->getMessage());
 			}
 			
 		}

@@ -87,7 +87,7 @@ $tab = 1;
 		
 		<div id="files_options" class="tab-content">
 			<h2><?php echo __('Select from below the files/folders you want to exclude from your Backup Archive','xcloner')?>:
-				<a class="btn-floating tooltipped btn-small" data-position="bottom" data-delay="50" data-tooltip="<?php echo __('You can navigate below through all your site structure(Backup Start Location) to exclude any file/folder you need by clicking the checkbox near it','xcloner');?>" data-tooltip-id=""><i class="material-icons">help_outline</i></a>
+				<a class="btn-floating tooltipped btn-small" data-position="bottom" data-delay="50" data-html="true" data-tooltip="<?php echo __('You can navigate below through all your site structure(Backup Start Location) to exclude any file/folder you need by clicking the checkbox near it. <br />If the checkobx is disabled, then it matches a Regex Exclude File option and it can\'t be unchecked','xcloner');?>" data-tooltip-id=""><i class="material-icons">help_outline</i></a>
 			</h2>
 			
 			<!-- Files System Container -->

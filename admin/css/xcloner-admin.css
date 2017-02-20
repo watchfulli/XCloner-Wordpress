@@ -327,6 +327,23 @@ a.expand-multipart.remove{
 }
 
 
+.regex_pattern{
+	cursor: pointer;
+	font-weight: bold;
+}
+
+.jstree-icon.jstree-checkbox.jstree-checkbox-disabled{
+	opacity: 0.3;
+}
+
+#xcloner_regex_exclude{
+	height: 5rem;
+}
+
+ul.xcloner_regex_exclude_limit li:nth-of-type(n+2) {
+    display:none;
+}
+
 
 @media only screen and (min-width: 993px){
 	.dashboard .backup-ready{

@@ -306,6 +306,20 @@ class Xcloner_Settings
 				sprintf(__('Enable the XCloner Backup log. You will find it stored unde the Backup Storage Location, file %s','xcloner'), $this->get_logger_filename())
 				)
 		);	
+		
+		register_setting('xcloner_general_settings_group', 'xcloner_regex_exclude', array($this->xcloner_sanitization, "sanitize_input_as_raw"));
+	    add_settings_field(
+	        'xcloner_regex_exclude',
+	        __('Regex Exclude Files','xcloner'),
+	        array($this, 'do_form_textarea_field'),
+	        'xcloner_settings_page',
+	        'xcloner_general_settings_group',
+	        array('xcloner_regex_exclude',
+				__('Regular expression match to exclude files and folders, example patterns provided below, one pattern per line','xcloner'),
+				//$this->get_xcloner_store_path(), 
+				//'disabled'
+				)
+	    );
 	 
 		//REGISTERING THE 'MYSQL SECTION' FIELDS
 		register_setting('xcloner_mysql_settings_group', 'xcloner_enable_mysql_backup', array($this->xcloner_sanitization, "sanitize_input_as_int"));
@@ -538,8 +552,51 @@ class Xcloner_Settings
 	          <input class="validate" <?php echo ($disabled)?"disabled":""?> name="<?php echo $fieldname?>" id="<?php echo $fieldname?>" type="text" class="validate" value="<?php echo isset($value) ? esc_attr($value) : ''; ?>">
 	        </div>
 	        <div class="col s2 m2 ">
-				<a class="btn-floating tooltipped btn-small" data-position="right" data-delay="50" data-tooltip="<?php echo $label?>" data-tooltip-id=""><i class="material-icons">help_outline</i></a>
+				<a class="btn-floating tooltipped btn-small" data-position="left" data-delay="50" data-tooltip="<?php echo $label?>" data-tooltip-id=""><i class="material-icons">help_outline</i></a>
 	        </div>
+	    </div>
+		
+
+	    <?php
+	}
+	
+	// textarea field content cb
+	public function do_form_textarea_field($params)
+	{
+		if(!isset($params['3']))
+			$params[3] = 0;
+		if(!isset($params['2']))
+			$params[2] = 0;	
+			
+		list($fieldname, $label, $value, $disabled) = $params;
+		
+		if(!$value)
+			$value = get_option($fieldname);
+	    // output the field
+	    ?>
+	    <div class="row">
+	        <div class="input-field col s10 m10 l6">
+	          <textarea class="validate" <?php echo ($disabled)?"disabled":""?> name="<?php echo $fieldname?>" id="<?php echo $fieldname?>" type="text" class="validate" value=""><?php echo isset($value) ? esc_attr($value) : ''; ?></textarea>
+	        </div>
+	        <div class="col s2 m2 ">
+				<a class="btn-floating tooltipped btn-small" data-position="left" data-html="true" data-delay="50" data-tooltip="<?php echo $label?>" data-tooltip-id=""><i class="material-icons">help_outline</i></a>
+	        </div>
+	        <div class="col s12">
+				<ul class="xcloner_regex_exclude_limit">
+					<li>Exclude all except .php file: <span class="regex_pattern"><?php echo htmlentities('(.*)\.(.+)$(?<!(php))')?></span></li>
+					<li>Exclude all except .php and .txt: <span class="regex_pattern"> <?php echo htmlentities('(.*)\.(.+)$(?<!(php|txt))')?></span></li>
+					<li>Exclude all .avi files: <span class="regex_pattern"> <?php echo htmlentities('(.*)\.(.+)$(?<=(avi))')?></span></li>
+					<li>Exclude all .jpg,.gif and .png files: <span class="regex_pattern"> <?php echo htmlentities('(.*)\.(.+)$(?<=(gif|png|jpg))')?></span></li>
+					<li>Exclude all .svn and .git: <span class="regex_pattern"> <?php echo htmlentities('(.*)\.(svn|git)(.*)$')?></span></li>
+					<li>Exclude root directory /test: <span class="regex_pattern"> <?php echo htmlentities('\/test(.*)$')?></span> or <span class="regex_pattern"> <?php echo htmlentities('test(.*)$')?></span></li>
+					<li>Exclude the wp-admin folder: <span class="regex_pattern"> <?php echo htmlentities('(\/wp-admin)(.*)$')?></span></li>
+					<li>Exclude the wp-content/uploads folder: <span class="regex_pattern"> <?php echo htmlentities('(\/wp-content\/uploads)(.*)$')?></span></li>
+					<li>Exclude the wp-admin, wp-includes and wp-config.php: <span class="regex_pattern"> <?php echo htmlentities('\/(wp-admin|wp-includes|wp-config.php)(.*)$')?></span></li>
+					<li>Exclude wp-content/updraft and wp/content/uploads/wp_all_backup folder :<span class="regex_pattern">\/(wp-content\/updraft|\/wp-content\/uploads\/wp_all_backup)(.*)$</span></li>
+					<li>Exclude all cache folders from wp-content/ and it's subdirectories: <span class="regex_pattern"> <?php echo htmlentities('\/wp-content(.*)\/cache($|\/)(.*)')?></span></li>
+					<li>Exclude wp-content/cache/ folder: <span class="regex_pattern"> <?php echo htmlentities('\/wp-content\/cache(.*)')?></span></li>
+				</ul>
+			</div>
 	    </div>
 		
 
@@ -565,7 +622,7 @@ class Xcloner_Settings
 	          <input class="validate" <?php echo ($disabled)?"disabled":""?> name="<?php echo $fieldname?>" id="<?php echo $fieldname?>" type="number" class="validate" value="<?php echo isset($value) ? esc_attr($value) : ''; ?>">
 	        </div>
 	        <div class="col s2 m2 ">
-				<a class="btn-floating tooltipped btn-small" data-position="right" data-delay="50" data-tooltip="<?php echo $label?>" data-tooltip-id=""><i class="material-icons">help_outline</i></a>
+				<a class="btn-floating tooltipped btn-small" data-position="left" data-delay="50" data-tooltip="<?php echo $label?>" data-tooltip-id=""><i class="material-icons">help_outline</i></a>
 	        </div>
 	    </div>
 		
@@ -588,7 +645,7 @@ class Xcloner_Settings
 			    </p>
 			</div>
 			<div class="col s2 m2 ">
-				<a class="btn-floating tooltipped btn-small" data-position="right" data-delay="50" data-tooltip="<?php echo $label?>" data-tooltip-id=""><i class="material-icons">help_outline</i></a>
+				<a class="btn-floating tooltipped btn-small" data-position="left" data-delay="50" data-tooltip="<?php echo $label?>" data-tooltip-id=""><i class="material-icons">help_outline</i></a>
 	        </div>    
 		</div>	
 	<?php
