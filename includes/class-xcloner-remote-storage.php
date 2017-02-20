@@ -172,6 +172,9 @@ class Xcloner_Remote_Storage{
 			
 		list($remote_storage_adapter, $remote_storage_filesystem) = $this->$method();
 		
+		//doing remote storage cleaning here
+		$this->clean_remote_storage($storage, $remote_storage_filesystem);
+		
 		$this->logger->info(sprintf("Transferring backup %s to remote storage %s", $file, strtoupper($storage)), array(""));
 		
 		if(!$this->xcloner_file_system->get_storage_filesystem()->has($file))
@@ -202,6 +205,16 @@ class Xcloner_Remote_Storage{
 				}
 		}
 		
+		$this->logger->info(sprintf("Upload done, disconnecting from remote storage %s", strtoupper($storage)));	
+		
+		//$remote_storage_adapter->disconnect();
+		
+		return true;
+		
+	}
+	
+	public function clean_remote_storage($storage, $remote_storage_filesystem)
+	{
 		$check_field = $this->storage_fields["option_prefix"].$storage."_cleanup_days";
 		if($expire_days = get_option($check_field))
 		{
@@ -223,13 +236,6 @@ class Xcloner_Remote_Storage{
 			
 			}
 		}
-		
-		$this->logger->info(sprintf("Upload done, disconnecting from remote storage %s", strtoupper($storage)));	
-		
-		//$remote_storage_adapter->disconnect();
-		
-		return true;
-		
 	}
 	
 	public function get_azure_filesystem()
