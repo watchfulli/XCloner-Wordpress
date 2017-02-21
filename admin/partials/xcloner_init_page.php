@@ -71,7 +71,7 @@ $latest_backup =  $xcloner_file_system->get_latest_backup();
 	<div class="col s12 m12 l7">
 			
 		<div class="row">
-			<?php if($xcloner_settings->get_xcloner_option('xcloner_enable_log')) :?>
+			
 			<ul class="collapsible xcloner-debugger" data-collapsible="accordion">
 				
 				<li class="active">
@@ -144,14 +144,14 @@ $latest_backup =  $xcloner_file_system->get_latest_backup();
 					</div>
 				</li>
 				
+				<?php if($xcloner_settings->get_xcloner_option('xcloner_enable_log')) :?>
 				<li class="active">
 					<div class="collapsible-header active"><i class="material-icons">bug_report</i>XCloner Debugger</div>
 					<div class="collapsible-body">
 						<div class="console" id="xcloner-console"><?php if($logger_content) echo implode("<br />\n", array_reverse($logger_content)); ?></div>
 					</div>
 				</li>
-			</ul>
-			<script>
+				<script>
 				jQuery(document).ready(function(){
 					var objDiv = document.getElementById("xcloner-console");
 					objDiv.scrollTop = objDiv.scrollHeight;
@@ -159,8 +159,11 @@ $latest_backup =  $xcloner_file_system->get_latest_backup();
 						getXclonerLog();
 					}, 2000);*/
 				})
-			</script>
-			<?php endif;?>
+				</script>
+				<?php endif;?>
+			
+			</ul>
+			
 		</div>
 	
 	
