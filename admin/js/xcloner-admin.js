@@ -13,7 +13,7 @@
 		})
 		
 		jQuery("#xcloner_regex_exclude").on("focus", function(){
-			jQuery("ul.xcloner_regex_exclude_limit li").show();
+			jQuery("ul.xcloner_regex_exclude_limit li").fadeIn();
 			})
 		
 		jQuery(".regex_pattern").click(function(){
