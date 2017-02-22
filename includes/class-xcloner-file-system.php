@@ -630,9 +630,9 @@ class Xcloner_File_System{
 				return "> ".$xcloner_exclude_files_larger_than_mb."MB";
 		}
 		
-		if(!isset($this->exclude_files))
+		if(!sizeof($this->excluded_files))
 			$this->set_excluded_files();
-		
+				
 		if(is_array($this->excluded_files))
 		foreach($this->excluded_files as $excluded_file_pattern)
 		{

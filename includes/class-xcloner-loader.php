@@ -57,7 +57,7 @@ class Xcloner_Loader {
 	{
 		if ( function_exists('add_menu_page') )
 			$hook_suffix = add_menu_page( __('Site Backup','xcloner'), __('Site Backup','xcloner'), 'manage_options', 'xcloner_init_page', 'xcloner_display', 'dashicons-backup');
-			
+
 		if ( function_exists('add_submenu_page') )
 		{
 			

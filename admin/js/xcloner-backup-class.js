@@ -243,6 +243,7 @@ class Xcloner_Backup{
 		jQuery(elem).find(".last-logged-file").text('done');
 		jQuery(".backup-done .cloud-upload").attr("href", "#"+json.extra.backup_parent);
 		jQuery(".backup-done .download").attr("href", "#"+json.extra.backup_parent);
+		jQuery(".backup-done .list-backup-content").attr("href", "#"+json.extra.backup_parent);
 		
 		//this.restart_backup();
 		this.do_backup_done()

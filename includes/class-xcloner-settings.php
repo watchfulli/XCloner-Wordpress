@@ -397,9 +397,9 @@ class Xcloner_Settings
 	        'xcloner_system_settings_page',
 	        'xcloner_system_settings_group',
 	        array('xcloner_size_limit_per_request',
-	         __('Use this option to set how much file data can XCloner backup in one AJAX request. Range 0-100 MB','xcloner'), 
+	         __('Use this option to set how much file data can XCloner backup in one AJAX request. Range 0-1024 MB','xcloner'), 
 	         0,
-	         100
+	         1024
 	         )
 	    );
 	    
@@ -579,7 +579,7 @@ class Xcloner_Settings
 	          <textarea class="validate" <?php echo ($disabled)?"disabled":""?> name="<?php echo $fieldname?>" id="<?php echo $fieldname?>" type="text" class="validate" value=""><?php echo isset($value) ? esc_attr($value) : ''; ?></textarea>
 	        </div>
 	        <div class="col s2 m2 ">
-				<a class="btn-floating tooltipped btn-small" data-position="left" data-html="true" data-delay="50" data-tooltip="<?php echo $label?>" data-tooltip-id=""><i class="material-icons">help_outline</i></a>
+				<a class="btn-floating tooltipped btn-small" data-position="center" data-html="true" data-delay="50" data-tooltip="<?php echo $label?>" data-tooltip-id=""><i class="material-icons">help_outline</i></a>
 	        </div>
 	        <div class="col s12">
 				<ul class="xcloner_regex_exclude_limit">
@@ -622,7 +622,7 @@ class Xcloner_Settings
 	          <input class="validate" <?php echo ($disabled)?"disabled":""?> name="<?php echo $fieldname?>" id="<?php echo $fieldname?>" type="number" class="validate" value="<?php echo isset($value) ? esc_attr($value) : ''; ?>">
 	        </div>
 	        <div class="col s2 m2 ">
-				<a class="btn-floating tooltipped btn-small" data-position="left" data-delay="50" data-tooltip="<?php echo $label?>" data-tooltip-id=""><i class="material-icons">help_outline</i></a>
+				<a class="btn-floating tooltipped btn-small" data-position="center" data-delay="50" data-tooltip="<?php echo $label?>" data-tooltip-id=""><i class="material-icons">help_outline</i></a>
 	        </div>
 	    </div>
 		
@@ -645,7 +645,7 @@ class Xcloner_Settings
 			    </p>
 			</div>
 			<div class="col s2 m2 ">
-				<a class="btn-floating tooltipped btn-small" data-position="left" data-delay="50" data-tooltip="<?php echo $label?>" data-tooltip-id=""><i class="material-icons">help_outline</i></a>
+				<a class="btn-floating tooltipped btn-small" data-position="center" data-delay="50" data-tooltip="<?php echo $label?>" data-tooltip-id=""><i class="material-icons">help_outline</i></a>
 	        </div>    
 		</div>	
 	<?php
@@ -671,7 +671,7 @@ class Xcloner_Settings
 			</div>
 		</div> 
 		<div class="col s2 m2">
-				<a class="btn-floating tooltipped btn-small" data-position="right" data-delay="50" data-tooltip="<?php echo $label?>" data-tooltip-id=""><i class="material-icons">help_outline</i></a>
+				<a class="btn-floating tooltipped btn-small" data-position="center" data-delay="50" data-tooltip="<?php echo $label?>" data-tooltip-id=""><i class="material-icons">help_outline</i></a>
 	        </div>   
 	</div>
 	<?php

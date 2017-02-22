@@ -190,6 +190,7 @@ $tab = 1;
 											<a href="#" class="cloud-upload" title="<?php echo __("Send Backup To Remote Storage",'xcloner')?>"><i class="material-icons">cloud_upload</i></a>
 										 <?php endif?>
 										 <a href="#" class="download" title="<?php echo __("Download Backup",'xcloner')?>"><i class="material-icons">file_download</i></a>
+										 <a href="#" class="list-backup-content" title="<?php echo __("List Backup Content",'xcloner')?>"><i class="material-icons">folder_open</i></a>
 									</p>
 									
 									<div class="progress">
@@ -290,6 +291,20 @@ $tab = 1;
 	</div>
 </div>
 
+<!-- List Backup Content Modal-->
+
+<div id="backup_cotent_modal" class="modal">
+	<div class="modal-content">
+		<h4><?php echo sprintf(__("Listing Backup Content ","xcloner"), "")?></h4>
+		<h5 class="backup-name"></h5>
+		
+		<div class="progress">
+			<div class="indeterminate"></div>
+		</div>
+		<div class="files-list"></div>
+	</div>	
+</div>
+
 <!-- Remote Storage Modal Structure -->
 <div id="remote_storage_modal" class="modal">
 	<form method="POST" class="remote-storage-form">
@@ -355,6 +370,14 @@ jQuery(function () {
 		var id = hash.substr(1)
 						
 		xcloner_manage_backups.download_backup_by_name(id)
+	})
+	
+	jQuery(".backup-done .list-backup-content").on("click", function(){
+		var xcloner_manage_backups = new Xcloner_Manage_Backups();
+		var hash = jQuery(this).attr('href');
+		var id = hash.substr(1)
+						
+		xcloner_manage_backups.list_backup_content(id)
 	})
 	
 	jQuery('.timepicker').pickatime({
