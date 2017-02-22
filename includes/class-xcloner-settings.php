@@ -548,7 +548,7 @@ class Xcloner_Settings
 	    // output the field
 	    ?>
 	    <div class="row">
-	        <div class="input-field col s10 m10 l6">
+	        <div class="input-field col s10 m10 l8">
 	          <input class="validate" <?php echo ($disabled)?"disabled":""?> name="<?php echo $fieldname?>" id="<?php echo $fieldname?>" type="text" class="validate" value="<?php echo isset($value) ? esc_attr($value) : ''; ?>">
 	        </div>
 	        <div class="col s2 m2 ">
@@ -575,7 +575,7 @@ class Xcloner_Settings
 	    // output the field
 	    ?>
 	    <div class="row">
-	        <div class="input-field col s10 m10 l6">
+	        <div class="input-field col s10 m10 l8">
 	          <textarea class="validate" <?php echo ($disabled)?"disabled":""?> name="<?php echo $fieldname?>" id="<?php echo $fieldname?>" type="text" class="validate" value=""><?php echo isset($value) ? esc_attr($value) : ''; ?></textarea>
 	        </div>
 	        <div class="col s2 m2 ">
@@ -639,7 +639,7 @@ class Xcloner_Settings
 		$value = get_option($fieldname);
 	?>
 		<div class="row">
-	        <div class="input-field col s10 m10 l6">
+	        <div class="input-field col s10 m10 l8">
 				<p class="range-field">
 			      <input <?php echo ($disabled)?"disabled":""?> type="range" name="<?php echo $fieldname?>" id="<?php echo $fieldname?>" min="<?php echo $range_start?>" max="<?php echo $range_end?>" value="<?php echo isset($value) ? esc_attr($value) : ''; ?>" />
 			    </p>
@@ -660,7 +660,7 @@ class Xcloner_Settings
 		$value = get_option($fieldname);
 	?>
 	<div class="row">
-		<div class="input-field col s10 m10 l6">	
+		<div class="input-field col s10 m10 l8">	
 			<div class="switch">
 				<label>
 				  Off

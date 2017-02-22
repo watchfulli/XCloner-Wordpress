@@ -66,6 +66,9 @@ class Xcloner_Activator {
 		if(!get_option('xcloner_backup_compression_level'))
 			update_option('xcloner_backup_compression_level', 0);
 		
+		if(!get_option('xcloner_enable_log'))
+			update_option('xcloner_enable_log', 1);
+			
 		if(!get_option('xcloner_enable_mysql_backup'))
 			update_option('xcloner_enable_mysql_backup', 1);
 		
