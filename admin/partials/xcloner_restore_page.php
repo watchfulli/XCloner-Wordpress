@@ -18,7 +18,7 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 </script>
 
 <div class="row xcloner-restore">
-	<div class="col s12 m10">
+	<div class="col s12">
 		<ul class="collapsible xcloner-restore " data-collapsible="accordion">
 			<li data-step="1" class="restore-script-upload-step steps active show">
 				<div class="collapsible-header active"><i class="material-icons">settings_remote</i><?php echo __("Restore Script Upload","xcloner")?></div>
@@ -45,7 +45,7 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 						</ul>	
 						
 						<div class="input-field col l7 s12">
-							<input value="<?php echo (is_ssl())?"https://":"http://localhost/xcloner2/xcloner_restore.php"?>" id="restore_script_url" type="text" class="validate" placeholder="Url to XCloner Restore Script, example http://myddns.com/xcloner/xcloner_restore.php" >
+							<input value="<?php echo (is_ssl())?"https://":"http://"?>" id="restore_script_url" type="text" class="validate" placeholder="Url to XCloner Restore Script, example http://myddns.com/xcloner/xcloner_restore.php" >
 							<label for="restore_script_url"></label>
 							<div id="url_validation_status" class="status"></div>
 				        </div>
@@ -62,7 +62,7 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 				</div>
 				<div class="collapsible-body row">
 					<p><?php echo __("You can skip this step if you want to transfer the archive in some other way, make sure you upload it in the same directory as the restore script from the previous step.","xcloner")?></p>
-					<div class="input-field col s12 l7">
+					<div class="input-field col s12 l8">
 						<select id="backup_file" name="backup_file" class="browser-default">
 					      <option value="" disabled selected><?php echo __("Please select a local backup archive to upload to remote host","xcloner")?></option>
 					      <?php if(is_array($backup_list)):?>
@@ -80,7 +80,7 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 						</div>
 						<div class="status"></div>
 					</div>
-					<div class="col s12 l5 right-align">
+					<div class="col s12 l4 right-align">
 						<div class="toggler">
 							<button class="btn waves-effect waves-light upload-backup normal" type="submit" id="" name="action"><?php echo __("Upload","xcloner")?>
 							    <i class="material-icons right">send</i>
@@ -111,7 +111,7 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 				</div>
 				<div class="collapsible-body row">
 						
-						<div class=" col s12 l7">
+						<div class=" col s12 l8">
 							<div class="input-field row">
 								<input type="text" name="remote_restore_path" id="remote_restore_path" class="validate" placeholder="Restore Target Path">
 								<label><?php echo __("Remote Restore Target Path","xcloner")?></label>
@@ -132,7 +132,7 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 							 <div class="files-list"></div>
 				        </div>
 				       
-				        <div class="col s12 l5 right-align">
+				        <div class="col s12 l4 right-align">
 							<div class="toggler">
 								<button class="btn waves-effect waves-light restore_remote_backup normal " type="submit" id="" name="action"><?php echo __("Restore","xcloner")?>
 								    <i class="material-icons right">send</i>
@@ -210,7 +210,7 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 						<?php endif;?>
 						</div>
 						
-						<div class=" col s12 l7">
+						<div class=" col s12 l8">
 							<div class="input-field row">
 								<select id="remote_database_file" name="remote_database_file" class="browser-default">
 									<option value="" disabled selected><?php echo __("Please select the remote database backup file to restore","xcloner")?></option>
@@ -230,7 +230,7 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 							 </div>
 				        </div>
 				      
-				        <div class="col s12 l5 right-align">
+				        <div class="col s12 l4 right-align">
 							<div class="toggler">
 								<button class="btn waves-effect waves-light restore_remote_mysqldump normal " type="submit" id="" name="action"><?php echo __("Restore","xcloner")?>
 								    <i class="material-icons right">send</i>
