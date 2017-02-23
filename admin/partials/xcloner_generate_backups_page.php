@@ -196,8 +196,15 @@ $tab = 1;
 									<div class="progress">
 										<div class="determinate" style="width:100%"></div>
 									</div>
+									
 								</div>	
-						      <div class="collapsible-body">
+						      <div class="collapsible-body center-align">
+									<div class="row">
+										<h5><?php echo __("Thank you for using XCloner.","xcloner")?></h5>
+										<h6><?php echo sprintf(__("We would love to hear about your experience in the %s.", "xcloner"),'<a href="https://wordpress.org/support/plugin/xcloner-backup-and-restore/reviews/" target="_blank">Wordpress XCloner Reviews Section</a>') ?></h6>
+										<a class="twitter-follow-button" href="https://twitter.com/thinkovi" data-show-count="false">Follow @thinkovi</a>
+										<script src="//platform.twitter.com/widgets.js" async="" charset="utf-8"></script>
+									</div>
 							  </div>
 					    </li>
 				  </ul>

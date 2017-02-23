@@ -109,8 +109,36 @@ class Xcloner_Api{
 			$this->form_params['backup_params']['start_at'] = strtotime($_POST['schedule_start_date']);
 			$this->form_params['backup_params']['schedule_frequency'] = $this->xcloner_sanitization->sanitize_input_as_string($_POST['schedule_frequency']);
 			$this->form_params['backup_params']['schedule_storage'] = $this->xcloner_sanitization->sanitize_input_as_string($_POST['schedule_storage']);
-			$this->form_params['database'] = json_decode(stripslashes($this->xcloner_sanitization->sanitize_input_as_raw($_POST['table_params'])));
-			$this->form_params['excluded_files'] = json_decode(stripslashes($this->xcloner_sanitization->sanitize_input_as_raw($_POST['excluded_files'])));
+			$this->form_params['database'] = (stripslashes($this->xcloner_sanitization->sanitize_input_as_raw($_POST['table_params'])));
+			$this->form_params['excluded_files'] = (stripslashes($this->xcloner_sanitization->sanitize_input_as_raw($_POST['excluded_files'])));
+			
+			$tables = explode(PHP_EOL, $this->form_params['database']);
+			$return = array();
+			
+			foreach($tables as $table)
+			{
+					$table = str_replace("\r","", $table);
+					$data = explode(".", $table);
+					if(isset($data[1]))
+						$return[$data[0]][] = $data[1];
+			}
+			
+			$this->form_params['database'] = ($return);
+			
+			$excluded_files = explode(PHP_EOL, $this->form_params['excluded_files']);
+			$return = array();
+			
+			foreach($excluded_files as $file)
+			{
+				$file = str_replace("\r","", $file);
+				if($file)
+					$return[] = $file;
+			}
+			
+			$this->form_params['excluded_files'] = ($return);
+			
+			//print_r($this->form_params['database'] );
+			//print_r($this->form_params['excluded_files']);
 			
 			$schedule['start_at'] = $this->form_params['backup_params']['start_at'] ;
 			

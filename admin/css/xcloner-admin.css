@@ -167,7 +167,8 @@ textarea.materialize-textarea{
 }
 
 #scheduled_backups .edit, #scheduled_backups .status.active, #scheduled_backups .delete,
-#manage_backups .download, #manage_backups .cloud-upload, #manage_backups .delete, #manage_backups .list-backup-content{
+#manage_backups .download, #manage_backups .cloud-upload, #manage_backups .delete, #manage_backups .list-backup-content,
+.backup-done .download, .backup-done .cloud-upload, .backup-done .delete, .backup-done .list-backup-content{
 	color: #4db6ac;
 }
 
@@ -342,6 +343,14 @@ a.expand-multipart.remove{
 
 ul.xcloner_regex_exclude_limit li:nth-of-type(n+2) {
     display:none;
+}
+
+.xcloner-restore .btn.waves-effect.waves-light.grey{
+	margin-top: -2px;
+}
+
+.xcloner-restore #xcloner_restore_finish{
+	display: none;
 }
 
 

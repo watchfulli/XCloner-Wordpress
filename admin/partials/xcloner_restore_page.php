@@ -89,7 +89,7 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 							    <i class="material-icons right">close</i>
 							</button>
 						</div>
-						<button class="btn waves-effect waves-light grey" type="submit" id="skip_upload_backup" name="action"><?php echo __("Next","xcloner")?>
+						<button class="btn waves-effect waves-light grey" type="submit" title="<?php echo __("Skip Next","xcloner")?>" id="skip_upload_backup" name="action"><?php echo __("Next","xcloner")?>
 						    <i class="material-icons right">navigate_next</i>
 						</button>
 					</div>
@@ -141,7 +141,7 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 								    <i class="material-icons right">close</i>
 								</button>
 							</div>
-							<button class="btn waves-effect waves-light grey" type="submit" id="skip_remote_backup_step" name="action"><?php echo __("Next","xcloner")?>
+							<button class="btn waves-effect waves-light grey" type="submit" title="<?php echo __("Skip Next","xcloner")?>" id="skip_remote_backup_step" name="action"><?php echo __("Next","xcloner")?>
 								<i class="material-icons right">navigate_next</i>
 							</button>
 				        </div>
@@ -240,7 +240,7 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 								</button>
 							</div>
 							
-							<button class="btn waves-effect waves-light grey" type="submit" id="skip_restore_remote_database_step" name="action"><?php echo __("Next","xcloner")?>
+							<button class="btn waves-effect waves-light grey" type="submit" title="<?php echo __("Skip Next","xcloner")?>" id="skip_restore_remote_database_step" name="action"><?php echo __("Next","xcloner")?>
 								<i class="material-icons right">navigate_next</i>
 							</button>
 							
@@ -305,6 +305,13 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 												
 						<div class=" row col s12">
 							 <div class="status"></div>
+				        </div>
+				        
+						<div class=" row col s12" id="xcloner_restore_finish">
+							<h5><?php echo __("Thank you for using XCloner.","xcloner")?></h5>
+							<h6><?php echo sprintf(__("We would love to hear about your experience in the %s.", "xcloner"),'<a href="https://wordpress.org/support/plugin/xcloner-backup-and-restore" target="_blank">Wordpress XCloner forums</a>') ?></h6>
+							<a class="twitter-follow-button" href="https://twitter.com/thinkovi" data-show-count="false">Follow @thinkovi</a>
+							<script src="//platform.twitter.com/widgets.js" async="" charset="utf-8"></script>
 				        </div>
 				        
 				        <div class="col s12 center-align">

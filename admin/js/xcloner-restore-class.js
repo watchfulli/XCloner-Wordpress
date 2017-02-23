@@ -164,6 +164,12 @@ class Xcloner_Restore{
 				
 		}, false);
 		
+		document.addEventListener("xcloner_restore_finish", function (e) {
+			
+			jQuery(".xcloner-restore #xcloner_restore_finish").show();
+				
+		}, false);
+		
 		
 	}
 	
@@ -417,7 +423,10 @@ class Xcloner_Restore{
 			document.dispatchEvent(new CustomEvent("xcloner_restore_display_status_text", {detail: {message: response.statusText, $this: this }}))
 		}else{
 			document.dispatchEvent(new CustomEvent("xcloner_restore_display_status_text", {detail: {status: "error", message: response.statusText, $this: this }}))
+			return false;
 		}
+		
+		document.dispatchEvent(new CustomEvent("xcloner_restore_finish", {detail: {message: response.statusText, $this: this }}))
 	}
 	
 	restore_finish()
@@ -518,6 +527,8 @@ class Xcloner_Restore{
 	verify_restore_url(response, status, params = new Object())
 	{
 		this.ajaxurl = this.restore_script_url;
+		
+		jQuery(".xcloner-restore #xcloner_restore_finish").hide();
 		
 		if(!response)
 		{	

@@ -241,12 +241,12 @@ jQuery(document).ready(function(){
 		}
 	})
 	
-	jQuery("#save_schedule").on("submit", function(){
+	/*jQuery("#save_schedule").on("submit", function(){
 
 		xcloner_scheduler.save_schedule(jQuery(this), dataTable)
 		
 		return false;
-	})
+	})*/
 	
 	jQuery("#remote_storage_modal").modal();
 	

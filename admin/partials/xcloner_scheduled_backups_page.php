@@ -102,7 +102,7 @@ $available_storages = $xcloner_remote_storage->get_available_storages();
 					<div class="input-field col s12 l6">
 						<select name="schedule_frequency" id="schedule_frequency" class="validate" required>
 							<option value="" disabled selected><?php echo __('Schedule Recurrence', 'xcloner') ?></option>
-							<option value="single"><?php echo __("Don't Repeat","xcloner")?><option>
+							<option value="single"><?php echo __("Don't Repeat","xcloner")?></option>
 							<option value="hourly"><?php echo __("Hourly","xcloner")?></option>
 							<option value="daily"><?php echo __("Daily","xcloner")?></option>
 							<option value="weekly"><?php echo __("Weekly","xcloner")?></option>

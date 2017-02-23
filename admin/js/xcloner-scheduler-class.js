@@ -68,8 +68,28 @@ jQuery(document).ready(function(){
 			this.edit_modal.find('#schedule_storage>option[value="' + response.remote_storage + '"]').prop('selected', true);
 			//var date = new Date(response.start_at);
 			this.edit_modal.find("#schedule_start_date").val(response.start_at)
-			this.edit_modal.find("#table_params").val(response.table_params)
-			this.edit_modal.find("#excluded_files").val(response.excluded_files)
+			
+			var tables  = jQuery.parseJSON(response.table_params)
+			
+			var tables_list = "";
+			
+			for(var db in tables)
+			{
+				for(var i in tables[db])
+					tables_list += db+"."+tables[db][i]+"\n";
+			}
+			
+			this.edit_modal.find("#table_params").val(tables_list)
+			
+			var files  = jQuery.parseJSON(response.excluded_files)
+			var exclude_files_list = "";
+			for(var i in files)
+			{
+				exclude_files_list += files[i]+"\n";
+				
+			}
+			
+			this.edit_modal.find("#excluded_files").val(exclude_files_list)
 			
 			jQuery('select').material_select();
 			
@@ -80,17 +100,17 @@ jQuery(document).ready(function(){
 		
 		save_schedule(form, dataTable)
 		{
-			if(!this.IsJsonString(jQuery("#table_params").val()) )
+			/*if(!this.IsJsonString(jQuery("#table_params").val()) )
 			{
-				alert("Database field is not a valid json data!");
-				return false;
+				//alert("Database field is not a valid json data!");
+				//return false;
 			}
 			
 			if(!this.IsJsonString(jQuery("#excluded_files").val()) )
 			{
 				alert("Exclude files field is not a valid json data!");
 				return false;
-			}
+			}*/			
 			
 			var data = jQuery(form).serialize();
 			var $this = this
