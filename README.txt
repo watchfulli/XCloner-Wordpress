@@ -20,7 +20,7 @@ XCloner Backup tool uses Open Source standards like TAR, Mysql and CSV formats s
 
 Project is actively maintained through github https://github.com/ovidiul/XCloner-Wordpress/ , all issues can be reported here https://github.com/ovidiul/XCloner-Wordpress/issues .
 
-Features:
+<h2>Features:</h2>
 
    * Backup and Restore your Wordpress site easily
    * Create compressed and uncompressed backups using TAR open source format
