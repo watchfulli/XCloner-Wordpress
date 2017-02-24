@@ -38,7 +38,7 @@ class Xcloner {
 	 * @var      Xcloner_Loader    $loader    Maintains and registers all hooks for the plugin.
 	 */
 	protected $loader;
-
+	
 	/**
 	 * The unique identifier of this plugin.
 	 *
@@ -109,9 +109,10 @@ class Xcloner {
 	
 	public function trigger_message($message, $status = "error", $message_param1 = "", $message_param2 = "", $message_param3 = "")
 	{
-		$message = sprintf(__($message), $message_param1, $message_param2, $message_param3);
-		add_action( 'xcloner_admin_notices', array($this,"trigger_message_notice"), 10, 2);
-		do_action( 'xcloner_admin_notices', $message, $status);
+			$this->messages[] = md5($message);
+			$message = sprintf(__($message), $message_param1, $message_param2, $message_param3);
+			add_action( 'xcloner_admin_notices', array($this,"trigger_message_notice"), 10, 2);
+			do_action( 'xcloner_admin_notices', $message, $status);
 	}
 	
 	public function trigger_message_notice($message, $status = "success")
