@@ -61,8 +61,8 @@ class Xcloner_File_System{
 				]));
 		}catch(Exception $e)	
 		{
-			$xcloner = new Xcloner();
-			$xcloner->trigger_message($e->getMessage(), "error");
+			//$xcloner = new Xcloner();
+			//$xcloner->trigger_message($e->getMessage(), "error");
 		}
 		
 		
@@ -266,7 +266,11 @@ class Xcloner_File_System{
 	
 	public function get_backup_archives_list()
 	{
-		$list = $this->get_storage_filesystem()->listContents();
+		$list = array();
+		
+		if(method_exists($this->get_storage_filesystem(), "listContents"))
+			$list = $this->get_storage_filesystem()->listContents();
+
 		
 		$backup_files = array();
 		$parents = array();
