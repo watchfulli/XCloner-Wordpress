@@ -678,6 +678,10 @@ class Xcloner_Api{
 	
 	public function list_backup_files()
 	{
+		if (!current_user_can('manage_options')) {
+			die("Not allowed access here!");
+		}
+		
 		$source_backup_file = $this->xcloner_sanitization->sanitize_input_as_string($_POST['file']);
 		$start = $this->xcloner_sanitization->sanitize_input_as_int($_POST['start']);
 		$return['part'] = $this->xcloner_sanitization->sanitize_input_as_int($_POST['part']);
@@ -746,6 +750,10 @@ class Xcloner_Api{
 	 */ 
 	public function upload_backup_to_remote()
 	{
+		if (!current_user_can('manage_options')) {
+			die("Not allowed access here!");
+		}
+		
 		$backup_file = $this->xcloner_sanitization->sanitize_input_as_string($_POST['file']);
 		$storage_type = $this->xcloner_sanitization->sanitize_input_as_string($_POST['storage_type']);
 		
@@ -797,6 +805,9 @@ class Xcloner_Api{
 	
 	public function download_restore_script()
 	{
+		if (!current_user_can('manage_options')) {
+			die("Not allowed access here!");
+		}
 		
 		$adapter = new Local(dirname(__DIR__) ,LOCK_EX, 'SKIP_LINKS');
 		$xcloner_plugin_filesystem = new Filesystem($adapter, new Config([
@@ -884,6 +895,10 @@ class Xcloner_Api{
 	
 	public function restore_upload_backup()
 	{
+		if (!current_user_can('manage_options')) {
+			die("Not allowed access here!");
+		}
+		
 		$return['part'] = 0;
 		$return['total_parts'] = 0;
 		$return['uploaded_size'] = 0;
