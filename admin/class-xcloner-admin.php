@@ -142,6 +142,13 @@ class Xcloner_Admin {
 	
 	public function xcloner_scheduled_backups_page()
 	{
+		$requirements 			= new XCloner_Requirements();
+		if(!$requirements->check_backup_ready_status())
+		{
+			require_once("partials/xcloner_init_page.php");
+			return false;
+		}
+		
 		require_once("partials/xcloner_scheduled_backups_page.php");
 		
 	}
