@@ -34,13 +34,13 @@ class Xcloner_File_System{
 
 		$this->xcloner_settings 		= new Xcloner_Settings($hash);
 		
-		$this->start_adapter = new Local($this->xcloner_settings->get_xcloner_start_path(),LOCK_EX, 'SKIP_LINKS');
-		$this->start_filesystem = new Filesystem($this->start_adapter, new Config([
-				'disable_asserts' => true,
-			]));
-			
 		try{
-						
+			
+			$this->start_adapter = new Local($this->xcloner_settings->get_xcloner_start_path(),LOCK_EX, 'SKIP_LINKS');
+			$this->start_filesystem = new Filesystem($this->start_adapter, new Config([
+					'disable_asserts' => true,
+				]));
+			
 			$this->tmp_adapter = new Local($this->xcloner_settings->get_xcloner_tmp_path(),LOCK_EX, 'SKIP_LINKS');
 			$this->tmp_filesystem = new Filesystem($this->tmp_adapter, new Config([
 					'disable_asserts' => true,
@@ -61,14 +61,13 @@ class Xcloner_File_System{
 				]));
 		}catch(Exception $e)	
 		{
-			//$xcloner = new Xcloner();
-			//$xcloner->trigger_message($e->getMessage(), "error");
+			return false;
 		}
 		
 		
 		if($value = get_option('xcloner_directories_to_scan_per_request'))
 			$this->folders_to_process_per_session = $value;
-		//echo $this->folders_to_process_per_session;	
+
 	}
 	
 	public function set_hash($hash)
