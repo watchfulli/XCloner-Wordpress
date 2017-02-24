@@ -99,17 +99,26 @@ class Xcloner {
 				$status = "error";
 				$message = sprintf(__("Unable to create the Backup Storage Location Folder %s . Please fix this before starting the backup process."), $backup_storage_path);
 				$this->trigger_message($message, $status, $backup_storage_path);
+				return;
 				//add_action( 'xcloner_admin_notices', array("Xcloner_Admin","trigger_message_notice"), 10, 2);
 				//do_action( 'xcloner_admin_notices', $message, $status);
 			}
 		}	
+		if(!is_writable($backup_storage_path))
+		{
+			$status = "error";
+			$message = sprintf(__("Unable to write to the Backup Storage Location Folder %s . Please fix this before starting the backup process."), $backup_storage_path);
+			$this->trigger_message($message, $status, $backup_storage_path);
+			
+			return;
+		}
+		
 		define("XCLONER_STORAGE_PATH", realpath($backup_storage_path));
 		
 	}
 	
 	public function trigger_message($message, $status = "error", $message_param1 = "", $message_param2 = "", $message_param3 = "")
 	{
-			$this->messages[] = md5($message);
 			$message = sprintf(__($message), $message_param1, $message_param2, $message_param3);
 			add_action( 'xcloner_admin_notices', array($this,"trigger_message_notice"), 10, 2);
 			do_action( 'xcloner_admin_notices', $message, $status);
