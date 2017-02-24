@@ -97,4 +97,9 @@ function run_xcloner()
 
 }
 
-run_xcloner();
+try{
+	run_xcloner();
+}catch(Exception $e)
+{
+	echo $e->getMessage();
+}

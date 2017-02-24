@@ -33,7 +33,7 @@ class Xcloner_File_System{
 		$this->xcloner_requirements = new Xcloner_Requirements();
 
 		$this->xcloner_settings 		= new Xcloner_Settings($hash);
-		
+
 		try{
 			
 			$this->start_adapter = new Local($this->xcloner_settings->get_xcloner_start_path(),LOCK_EX, 'SKIP_LINKS');
@@ -59,8 +59,7 @@ class Xcloner_File_System{
 			$this->storage_filesystem_append = new Filesystem($this->storage_adapter, new Config([
 					'disable_asserts' => true,
 				]));
-		}catch(Exception $e)	
-		{
+		}catch(Exception $e){
 			return false;
 		}
 		

@@ -10,7 +10,6 @@ class Xcloner_Logger extends Logger{
 	public function __construct($logger_name = "xcloner_logger", $hash="")
 	{
 		$xcloner_settings 	= new Xcloner_Settings($hash);
-		
 		$logger_path = $xcloner_settings->get_xcloner_store_path().DS.$xcloner_settings->get_logger_filename();
 		
 		if($hash)
