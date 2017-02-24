@@ -64,8 +64,8 @@ class Xcloner_Settings
 			@chmod($path, 0777);
 		}
 		
-		#if(!is_dir($path) or !is_writeable($path))
-		#	$path = $this->get_xcloner_store_path().DS.".".$this->get_xcloner_tmp_path_suffix();
+		if(!is_dir($path) or !is_writeable($path))
+			$path = $this->get_xcloner_store_path().DS.".".$this->get_xcloner_tmp_path_suffix();
 		
 		return $path;
 	}
