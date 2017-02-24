@@ -3,7 +3,7 @@
 class XCloner_Requirements
 {
 	
-	var $min_php_version 	= "5.3.0";
+	var $min_php_version 	= "5.4.0";
 	var $safe_mode			= "Off";
 	
 	public function __construct()

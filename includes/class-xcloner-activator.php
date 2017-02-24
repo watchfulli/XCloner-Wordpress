@@ -34,6 +34,12 @@ class Xcloner_Activator {
 	
 		global $wpdb;
 		
+		if(version_compare(phpversion(), "5.4.0", '<'))
+		{
+			wp_die('<p>XCloner requires minimum PHP version 5.3 in order to run correctly. We have detected your version as '.phpversion().'</p>',  "XCloner Activation Error", array( 'response'=>500, 'back_link'=>TRUE ) );
+
+		}
+		
 		$charset_collate = $wpdb->get_charset_collate();	
 		
 		$installed_ver = get_option( "xcloner_db_version" );
