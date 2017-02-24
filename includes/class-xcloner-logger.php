@@ -21,7 +21,10 @@ class Xcloner_Logger extends Logger{
 		//$this->logger_path_tmp = $logger_path_tmp;
 		
 		if(!is_dir($xcloner_settings->get_xcloner_store_path()) or !is_writable($xcloner_settings->get_xcloner_store_path()))
-			return;
+		{
+			$logger_path = "php://stderr";
+			$logger_path_tmp = "";
+		}
 		
 		if(!$xcloner_settings->get_xcloner_option('xcloner_enable_log'))
 		{

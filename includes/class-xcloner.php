@@ -91,6 +91,8 @@ class Xcloner {
 	public function check_dependencies(){
 		
 		$backup_storage_path = realpath(__DIR__.DS."..".DS."..".DS."..").DS."backups".DS;
+		
+		define("XCLONER_STORAGE_PATH", realpath($backup_storage_path));
 
 		if(!is_dir($backup_storage_path))
 		{
@@ -112,8 +114,6 @@ class Xcloner {
 			
 			return;
 		}
-		
-		define("XCLONER_STORAGE_PATH", realpath($backup_storage_path));
 		
 	}
 	
