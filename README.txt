@@ -1,7 +1,7 @@
 === XCloner - Backup and Restore===
 Contributors: xcloner
 Donate link: http://www.xcloner.com/
-Tags: backup, restore, plugin, database, full backup, cloner, xcloner, theme, files, upload, wordpress backup, backup plugin, database backup, database restore, site move, transfer, blog transfer, BuddyPress
+Tags: backup plugin, restore plugin, database backup, full site backup, xcloner, website cloner, wordpress backup, database restore, blog transfer
 Requires at least: 3.0.1
 Tested up to: 4.7
 Stable tag: 4.0.1
@@ -10,11 +10,11 @@ Backup your site, restore to any web location, send your backups to Dropbox, Ama
 
 == Description ==
 
-<strong>Over 500,000+ downloads and counting</strong>
-
 XCloner is a Backup and Restore plugin that is perfectly integrated with Wordpress.
 
-XCloner design was specifically created to Generate custom backups of any LAMP website through custom admin inputs, and to be able to Restore the clone on any other location with the help of the automatic Restore script we provide!
+[youtube http://www.youtube.com/watch?v=V9iWpPyG1EE]
+
+XCloner design was specifically created to Generate custom backups of any Wordpress website through custom admin inputs, and to be able to Restore the backup on any other location with the help of the automatic Restore script we provide!
 
 XCloner Backup tool uses Open Source standards like TAR, Mysql and CSV formats so you can rest assured your backups can be restored in a variety of ways, giving you more flexibility and full control.
 
@@ -80,6 +80,7 @@ Yes, if XCloner Logger option is enabled, it will store a log file inside the xc
 8. Generate Backup ->Files Options tab
 9. Restore Backup Panel
 10. Generate Backup Process
+11. Generate Backup Screen
 
 == Changelog ==
 

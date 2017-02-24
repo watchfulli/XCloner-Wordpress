@@ -307,7 +307,7 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 							 <div class="status"></div>
 				        </div>
 				        
-						<div class=" row col s12" id="xcloner_restore_finish">
+						<div class=" row col s12 center-align" id="xcloner_restore_finish">
 							<h5><?php echo __("Thank you for using XCloner.","xcloner")?></h5>
 							<h6><?php echo sprintf(__("We would love to hear about your experience in the %s.", "xcloner"),'<a href="https://wordpress.org/support/plugin/xcloner-backup-and-restore" target="_blank">Wordpress XCloner forums</a>') ?></h6>
 							<a class="twitter-follow-button" href="https://twitter.com/thinkovi" data-show-count="false">Follow @thinkovi</a>

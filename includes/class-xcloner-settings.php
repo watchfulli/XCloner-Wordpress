@@ -618,7 +618,7 @@ class Xcloner_Settings
 	    // output the field
 	    ?>
 	    <div class="row">
-	        <div class="input-field col s5 m5 l3">
+	        <div class="input-field col s10 m5 l3">
 	          <input class="validate" <?php echo ($disabled)?"disabled":""?> name="<?php echo $fieldname?>" id="<?php echo $fieldname?>" type="number" class="validate" value="<?php echo isset($value) ? esc_attr($value) : ''; ?>">
 	        </div>
 	        <div class="col s2 m2 ">
