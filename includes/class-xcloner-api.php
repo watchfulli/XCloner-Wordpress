@@ -26,6 +26,11 @@ class Xcloner_Api{
 	{
 		global $wpdb;
 		
+		error_reporting(0);
+		if( ob_get_length() )
+			ob_end_clean();
+		ob_start();
+		
 		$wpdb->show_errors		= false;
 		
 		$this->xcloner_settings 		= new Xcloner_Settings();
@@ -966,6 +971,7 @@ class Xcloner_Api{
 	 */
 	private function send_response($data, $attach_hash = 1)
 	{
+		
 		if($attach_hash and null !== $this->xcloner_settings->get_hash())
 		{
 			$data['hash'] = $this->xcloner_settings->get_hash();

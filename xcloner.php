@@ -63,12 +63,6 @@ register_deactivation_hook( __FILE__, 'deactivate_xcloner' );
  * The core plugin class that is used to define internationalization,
  * admin-specific hooks, and public-facing site hooks.
  */
- 
- 
- 	
-require_once(plugin_dir_path( __FILE__ )  . '/vendor/autoload.php');
-require plugin_dir_path( __FILE__ ) . 'includes/class-xcloner.php';
-
 
 function xcloner_display()
 {	
@@ -81,8 +75,8 @@ function xcloner_display()
 	$plugin = new Xcloner();
 	if($page)
 		$plugin->display($page);
+	
 }
-
 
 /**
  * Begins execution of the plugin.
@@ -102,9 +96,13 @@ function run_xcloner()
 
 }
 
+require_once(plugin_dir_path( __FILE__ )  . '/vendor/autoload.php');
+require plugin_dir_path( __FILE__ ) . 'includes/class-xcloner.php';
+
 try{
 	run_xcloner();
 }catch(Exception $e)
 {
 	echo $e->getMessage();
 }
+
