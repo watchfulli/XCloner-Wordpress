@@ -30,6 +30,9 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
+//i will not load the plugin outside admin or cron
+if(!is_admin() and !defined('DOING_CRON'))
+	return;
 
 define("DS", DIRECTORY_SEPARATOR);
 

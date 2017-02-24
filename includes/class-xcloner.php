@@ -73,7 +73,7 @@ class Xcloner {
 		register_shutdown_function(array($this, 'exception_handler'));
 		
 		$this->plugin_name = 'xcloner';
-		$this->version = '1.0.0';
+		$this->version = '4.0.1';
 		
 		$this->load_dependencies();
 		$this->set_locale();
@@ -102,8 +102,6 @@ class Xcloner {
 				$message = sprintf(__("Unable to create the Backup Storage Location Folder %s . Please fix this before starting the backup process."), $backup_storage_path);
 				$this->trigger_message($message, $status, $backup_storage_path);
 				return;
-				//add_action( 'xcloner_admin_notices', array("Xcloner_Admin","trigger_message_notice"), 10, 2);
-				//do_action( 'xcloner_admin_notices', $message, $status);
 			}
 		}	
 		if(!is_writable($backup_storage_path))
