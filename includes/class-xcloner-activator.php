@@ -22,7 +22,7 @@
  */
 class Xcloner_Activator {
 
-	const xcloner_db_version = '1.1';
+	const xcloner_db_version = '1.1.2';
 	const xcloner_minimum_version = '5.4.0';
 	/**
 	 * Short Description. (use period)
@@ -47,27 +47,26 @@ class Xcloner_Activator {
 		
 		$xcloner_db_version = Xcloner_Activator::xcloner_db_version;
 		
-		
-		$table_name = $wpdb->prefix . "xcloner_scheduler";
-	 
-		$xcloner_schedule_sql="CREATE TABLE IF NOT EXISTS `".$table_name."` (
-			  `id` int(11) NOT NULL AUTO_INCREMENT,
-			  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-			  `recurrence` varchar(10) CHARACTER SET latin1 NOT NULL,
-			  `params` text CHARACTER SET latin1 NOT NULL,
-			  `start_at` datetime,
-			  `remote_storage` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-			  `hash` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-			  `status` int(1) NOT NULL,
-			  `last_backup` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-			  PRIMARY KEY (`id`)
-			) ".$charset_collate.";
-			";
-		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-		dbDelta( $xcloner_schedule_sql );
-		
 		if($installed_ver != $xcloner_db_version)
-		{	
+		{
+			$table_name = $wpdb->prefix . "xcloner_scheduler";
+		 
+			$xcloner_schedule_sql="CREATE TABLE IF NOT EXISTS `".$table_name."` (
+				  `id` int(11) NOT NULL AUTO_INCREMENT,
+				  `name` varchar(255) NOT NULL,
+				  `recurrence` varchar(10) NOT NULL,
+				  `params` text NOT NULL,
+				  `start_at` datetime,
+				  `remote_storage` varchar(10) DEFAULT NULL,
+				  `hash` varchar(10) DEFAULT NULL,
+				  `status` int(1) NOT NULL,
+				  `last_backup` varchar(100) NOT NULL,
+				  PRIMARY KEY (`id`)
+				) ".$charset_collate.";
+				";
+			require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+			dbDelta( $xcloner_schedule_sql );
+			
 			update_option( "xcloner_db_version", $xcloner_db_version );
 		}
 	
