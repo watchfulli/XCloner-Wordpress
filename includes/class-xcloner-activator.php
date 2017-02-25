@@ -60,7 +60,7 @@ class Xcloner_Activator {
 				  `remote_storage` varchar(10) DEFAULT NULL,
 				  `hash` varchar(10) DEFAULT NULL,
 				  `status` int(1) NOT NULL,
-				  `last_backup` varchar(100) NOT NULL,
+				  `last_backup` varchar(100) DEFAULT NULL,
 				  PRIMARY KEY (`id`)
 				) ".$charset_collate.";
 				";
