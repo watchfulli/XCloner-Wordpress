@@ -11,6 +11,15 @@ if(!AUTH_KEY or (isset($_REQUEST['hash']) and $_REQUEST['hash'] != AUTH_KEY)){
 	
 }
 
+//check minimum PHP version
+
+if(version_compare(phpversion(), Xcloner_Restore::xcloner_minimum_version, '<'))
+		{
+			Xcloner_Restore::send_response(500, sprintf(("XCloner requires minimum PHP version %s in order to run correctly. We have detected your version as %s"),Xcloner_Restore::xcloner_minimum_version, phpversion()) );
+			exit;
+
+		}
+
 if(file_exists("vendor.phar") and extension_loaded('phar'))
 	require_once(__DIR__.DS."vendor.phar");
 else
@@ -52,6 +61,9 @@ try{
 
 class Xcloner_Restore
 {
+	
+	const 	xcloner_minimum_version = "5.4.0";
+	
 	private $backup_archive_extensions = array("zip", "tar", "tgz", "tar.gz", "gz", "csv");
 	private $process_files_limit = 150;
 	private $process_mysql_records_limit = 250;

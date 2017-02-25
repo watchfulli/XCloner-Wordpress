@@ -70,7 +70,7 @@ function xcloner_display()
     if (!current_user_can('manage_options')) {
         return;
     }
-	
+
 	$page = sanitize_key($_GET['page']);
 	$plugin = new Xcloner();
 	if($page)
