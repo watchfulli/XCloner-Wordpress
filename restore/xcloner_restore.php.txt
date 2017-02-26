@@ -367,7 +367,7 @@ class Xcloner_Restore
 			$this->delete_self();
 		}
 		
-		$return = "All good!";
+		$return = "Restore Process Finished.";
 		$this->send_response(200, $return);
 	}
 	
@@ -408,7 +408,7 @@ class Xcloner_Restore
 		if($this->filesystem->has("vendor"))
 		{
 			$this->logger->info(sprintf('Deleting vendor folder'));
-			$this->filesystem->delete("vendor");
+			$this->filesystem->deleteDir("vendor");
 		}
 		if($this->filesystem->has("xcloner_restore.php"))
 		{
@@ -693,7 +693,8 @@ class Xcloner_Restore
 		
 		$pathinfo = pathinfo( __FILE__);
 		
-		$suffix = "tmp";
+		$suffix = "";
+		//$suffix = "tmp";
 		
 		$return['dir'] = ($pathinfo['dirname']).DS.$suffix;
 		$return['restore_script_url'] = str_replace($pathinfo['basename'], "", $restore_script_url).$suffix;
