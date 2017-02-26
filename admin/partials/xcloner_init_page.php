@@ -15,8 +15,8 @@
 $requirements 			= new XCloner_Requirements();
 $xcloner_settings 		= new Xcloner_Settings();
 $xcloner_file_system 	= new Xcloner_File_System();
-$logger				= new Xcloner_Logger();
-$xcloner_scheduler 	= new Xcloner_Scheduler();
+$logger					= new Xcloner_Logger();
+$xcloner_scheduler 		= new Xcloner_Scheduler();
 
 $logger_content = $logger->getLastDebugLines();
 
@@ -24,10 +24,10 @@ $date_format = get_option( 'date_format' );
 $time_format = get_option( 'time_format' );
 
 if($requirements->check_backup_ready_status())
+{
 	$latest_backup =  $xcloner_file_system->get_latest_backup();
-
-//if($requirements->check_backup_ready_status())
-//	$xcloner_file_system->backup_storage_cleanup();
+	$xcloner_file_system->backup_storage_cleanup();
+}
 ?>
 
 <div class="row">
