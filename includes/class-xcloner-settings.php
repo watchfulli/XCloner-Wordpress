@@ -475,7 +475,7 @@ class Xcloner_Settings
 	    register_setting('xcloner_system_settings_group', 'xcloner_force_tmp_path_site_root');
 	    add_settings_field(
 	        'xcloner_force_tmp_path_site_root',
-	        __('Force Tempoarary Path Within XCloner Storage','xcloner'),
+	        __('Force Temporary Path Within XCloner Storage','xcloner'),
 	        array($this, 'do_form_switch_field'),
 	        'xcloner_system_settings_page',
 	        'xcloner_system_settings_group',
