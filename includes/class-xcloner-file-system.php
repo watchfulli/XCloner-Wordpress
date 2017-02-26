@@ -487,10 +487,8 @@ class Xcloner_File_System{
 	
 	public function estimate_read_write_time()
 	{
-		$tmp_file = tempnam('./', 'xcloner');
-		
-		//$this->xcloner_settings->get_xcloner_tmp_path().DS.$tmp_file;
-		
+		$tmp_file = xcloner.substr(md5(time), 0, 5);
+				
 		$start_time = microtime();
 		
 		$data = str_repeat(rand(0,9), 1024*1024); //write 1MB data
