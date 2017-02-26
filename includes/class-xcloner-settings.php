@@ -64,7 +64,7 @@ class Xcloner_Settings
 			@chmod($path, 0777);
 		}
 		
-		if(!is_dir($path) or !is_writeable($path))
+		if(!is_dir($path) or !is_writeable($path) or get_option('xcloner_force_tmp_path_site_root'))
 			$path = $this->get_xcloner_store_path().DS.".".$this->get_xcloner_tmp_path_suffix();
 		
 		return $path;
@@ -470,6 +470,18 @@ class Xcloner_Settings
 	        array('xcloner_split_backup_limit',
 	         __('Use this option to automatically split the backup archive into smaller parts. Range  0-10000 MB','xcloner'), 
 	         )
+	    );
+	    
+	    register_setting('xcloner_system_settings_group', 'xcloner_force_tmp_path_site_root');
+	    add_settings_field(
+	        'xcloner_force_tmp_path_site_root',
+	        __('Force Tempoarary Path Within XCloner Storage','xcloner'),
+	        array($this, 'do_form_switch_field'),
+	        'xcloner_system_settings_page',
+	        'xcloner_system_settings_group',
+	        array('xcloner_force_tmp_path_site_root',
+				sprintf(__('Enable this option if you want the XCloner Temporary Path to be within your XCloner Storage Location','xcloner'), $this->get_table_prefix())
+				)
 	    );
 		
 		//REGISTERING THE 'CLEANUP SECTION' FIELDS
