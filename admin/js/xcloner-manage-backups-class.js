@@ -189,8 +189,6 @@ jQuery(document).ready(function(){
 				} ,
 		    "fnDrawCallback": function( oSettings ) {
 
-				//jQuery("#manage_backups").find(".delete").each(function(){
-
 					jQuery(this).off("click", ".delete").on("click", ".delete", function(){
 						
 						var hash = jQuery(this).attr('href');
@@ -199,36 +197,29 @@ jQuery(document).ready(function(){
 							var data = xcloner_manage_backups.delete_backup_by_name(id, (this), dataTable);
 						else	
 							var data = xcloner_manage_backups.delete_backup_by_name(id, (this), dataTable);
+						e.preventDefault();	
 					})
-				//})
 				
-				//jQuery("#manage_backups").find(".download").each(function(){
 					jQuery(this).off("click", ".download").on("click", ".download", function(e){
 						var hash = jQuery(this).attr('href');
 						var id = hash.substr(1)
 						var data = xcloner_manage_backups.download_backup_by_name(id);
-						
+						e.preventDefault();
 					})
-				//})
-				
-				//jQuery("#manage_backups").find(".cloud-upload").each(function(){
+
 					jQuery(this).off("click", ".cloud-upload").on("click", ".cloud-upload", function(e){
 						var hash = jQuery(this).attr('href');
 						var id = hash.substr(1)
 						var data = xcloner_manage_backups.cloud_upload(id);
-						
+						e.preventDefault();
 					})
-				//})
-				
-				//jQuery("#manage_backups").find(".list-backup-content").each(function(){
+
 					jQuery(this).off("click", ".list-backup-content").on("click", ".list-backup-content", function(e){
 						var hash = jQuery(this).attr('href');
 						var id = hash.substr(1)
 						var data = xcloner_manage_backups.list_backup_content(id);
-						
+						e.preventDefault();
 					})
-				//})
-				
 			}
 		});
 	

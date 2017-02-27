@@ -514,12 +514,6 @@ class Xcloner_Archive extends Tar
 			if($last_position == -1)
 			{
 				$bytes_wrote = $file_info['size'] - $start_at_byte;
-				
-				if($this->filesystem->get_tmp_filesystem_adapter()->has($tmp_file))
-				{
-					$this->logger->info(sprintf("Deleting %s from the tmp filesystem", $tmp_file));
-					$this->filesystem->get_tmp_filesystem_adapter()->delete($tmp_file);
-				}
 			}
 			else
 			{
@@ -529,10 +523,20 @@ class Xcloner_Archive extends Tar
 			
 			if($is_tmp)
 			{
-				$this->logger->info(sprintf("Appending %s bytes, starting position %s, of tmp file %s (%s) to archive %s ", $bytes_wrote, $start_at_byte, $tmp_file, $file_info['target_path'], $this->get_archive_name()));
+				$this->logger->info(sprintf("Appended %s bytes, starting position %s, of tmp file %s (%s) to archive %s ", $bytes_wrote, $start_at_byte, $tmp_file, $file_info['target_path'], $this->get_archive_name()));
 			}
 			else{
-				$this->logger->info(sprintf("Appending %s bytes, starting position %s, of original file %s to archive %s ", $bytes_wrote, $start_at_byte, $file_info['target_path'], $tmp_file, $this->get_archive_name()));
+				$this->logger->info(sprintf("Appended %s bytes, starting position %s, of original file %s to archive %s ", $bytes_wrote, $start_at_byte, $file_info['target_path'], $tmp_file, $this->get_archive_name()));
+			}
+			
+			//we delete here the isolated tmp file
+			if($last_position == -1)
+			{
+				if($this->filesystem->get_tmp_filesystem_adapter()->has($tmp_file))
+				{
+					$this->logger->info(sprintf("Deleting %s from the tmp filesystem", $tmp_file));
+					$this->filesystem->get_tmp_filesystem_adapter()->delete($tmp_file);
+				}
 			}
 			
 		}

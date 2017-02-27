@@ -354,11 +354,12 @@ jQuery(function () {
 	
 	jQuery('select').material_select();
 	jQuery("select[required]").css({display: "block", height: 0, padding: 0, width: 0, position: 'absolute'});
-	jQuery(".backup-done .cloud-upload").on("click", function(){
+	jQuery(".backup-done .cloud-upload").on("click", function(e){
 		var xcloner_manage_backups = new Xcloner_Manage_Backups();
 		var hash = jQuery(this).attr('href');
 		var id = hash.substr(1)
-						
+		
+		e.preventDefault();				
 		xcloner_manage_backups.cloud_upload(id)
 	})
 	
@@ -371,19 +372,21 @@ jQuery(function () {
 		return false;
 		})
 	
-	jQuery(".backup-done .download").on("click", function(){
+	jQuery(".backup-done .download").on("click", function(e){
 		var xcloner_manage_backups = new Xcloner_Manage_Backups();
 		var hash = jQuery(this).attr('href');
 		var id = hash.substr(1)
-						
+		
+		e.preventDefault();				
 		xcloner_manage_backups.download_backup_by_name(id)
 	})
 	
-	jQuery(".backup-done .list-backup-content").on("click", function(){
+	jQuery(".backup-done .list-backup-content").on("click", function(e){
 		var xcloner_manage_backups = new Xcloner_Manage_Backups();
 		var hash = jQuery(this).attr('href');
 		var id = hash.substr(1)
-						
+		
+		e.preventDefault();				
 		xcloner_manage_backups.list_backup_content(id)
 	})
 	
