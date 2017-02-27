@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2017-02-24 19:46+0200\n"
-"PO-Revision-Date: 2017-02-24 19:47+0200\n"
+"POT-Creation-Date: 2017-02-27 12:32+0200\n"
+"PO-Revision-Date: 2017-02-27 12:33+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ro_RO\n"
@@ -688,10 +688,12 @@ msgid "Extract the files on your new host"
 msgstr "Scrieti fisierele in noua locatie"
 
 #: admin/partials/xcloner_restore_page.php:34
-msgid "Provide url below to the <u>xcloner_restore.php</u> restore script"
+msgid ""
+"Provide url below to the <u>xcloner_restore.php</u> restore script, like "
+"http://my_restore_site.com/xcloner_restore.php"
 msgstr ""
-"Furnizati adresa web catre script-ul de restaurare <u>xcloner_restore.php</"
-"u> "
+"Introduceti adresa web catre script-ul de restaurare <u>xcloner_restore.php</"
+"u>  , examplu format  http://my_restore_site.com/xcloner_restore.php"
 
 #: admin/partials/xcloner_restore_page.php:37
 msgid ""
@@ -970,7 +972,7 @@ msgstr ""
 msgid "XCloner Activation Error"
 msgstr "Eroare Activare XCloner"
 
-#: includes/class-xcloner-api.php:617
+#: includes/class-xcloner-api.php:622
 msgid "executed"
 msgstr "executat"
 
@@ -1293,38 +1295,48 @@ msgid ""
 "parts. Range  0-10000 MB"
 msgstr ""
 
-#: includes/class-xcloner-settings.php:479
+#: includes/class-xcloner-settings.php:478
+msgid "Force Temporary Path Within XCloner Storage"
+msgstr ""
+
+#: includes/class-xcloner-settings.php:483
+msgid ""
+"Enable this option if you want the XCloner Temporary Path to be within your "
+"XCloner Storage Location"
+msgstr ""
+
+#: includes/class-xcloner-settings.php:491
 msgid "Cleanup by Date(days)"
 msgstr "Limita Zile"
 
-#: includes/class-xcloner-settings.php:484
+#: includes/class-xcloner-settings.php:496
 msgid ""
 "Specify the maximum number of days a backup archive can be kept on the "
 "server. 0 disables this option"
 msgstr ""
 
-#: includes/class-xcloner-settings.php:491
+#: includes/class-xcloner-settings.php:503
 msgid "Cleanup by Quantity"
 msgstr "Limita Fisiere"
 
-#: includes/class-xcloner-settings.php:496
+#: includes/class-xcloner-settings.php:508
 msgid ""
 "Specify the maximum number of backup archives to keep on the server. 0 "
 "disables this option"
 msgstr ""
 
-#: includes/class-xcloner-settings.php:503
+#: includes/class-xcloner-settings.php:515
 msgid "Cleanup by Capacity(MB)"
 msgstr "Capacitate Stocare Maxima(MB)"
 
-#: includes/class-xcloner-settings.php:508
+#: includes/class-xcloner-settings.php:520
 msgid ""
 "Remove oldest backups if all created backups exceed the configured limit in "
 "Megabytes. 0 disables this option"
 msgstr ""
 
-#: includes/class-xcloner-settings.php:516
-#: includes/class-xcloner-settings.php:521
+#: includes/class-xcloner-settings.php:528
+#: includes/class-xcloner-settings.php:533
 msgid "Cron frequency"
 msgstr "Frecventa Cron"
 
@@ -1349,6 +1361,11 @@ msgstr "O data pe saptamana"
 #: includes/class-xcloner.php:405
 msgid "Once a month"
 msgstr "O data pe luna"
+
+#~ msgid "Provide url below to the <u>xcloner_restore.php</u> restore script"
+#~ msgstr ""
+#~ "Furnizati adresa web catre script-ul de restaurare <u>xcloner_restore."
+#~ "php</u> "
 
 #~ msgid ""
 #~ "XCloner requires minimum PHP version 5.3 in order to run correctly. We "
