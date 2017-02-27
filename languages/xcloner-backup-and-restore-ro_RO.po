@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2017-02-27 12:32+0200\n"
-"PO-Revision-Date: 2017-02-27 12:33+0200\n"
+"PO-Revision-Date: 2017-02-27 12:35+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ro_RO\n"
@@ -1073,7 +1073,7 @@ msgstr "Exclud %s din lista de fisiere, pattern gasit %s"
 
 #: includes/class-xcloner-loader.php:59
 msgid "Site Backup"
-msgstr ""
+msgstr "Backup Site"
 
 #: includes/class-xcloner-loader.php:64
 msgid "XCloner Dashboard"
