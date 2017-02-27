@@ -24,7 +24,7 @@ class Xcloner_File_System{
 	private $files_size;
 	private $last_logged_file;
 	private $folders_to_process_per_session = 25;
-	private $backup_archive_extensions = array("zip", "tar", "tgz", "tar.gz", "gz", "csv");
+	private $backup_archive_extensions = array("tar", "tgz", "tar.gz", "gz", "csv");
 	private $backup_name_tags = array('[time]', '[hostname]', '[domain]');
 	
 	public function __construct($hash = "")
