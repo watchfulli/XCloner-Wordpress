@@ -308,7 +308,7 @@ $tab = 1;
 		<div class="progress">
 			<div class="indeterminate"></div>
 		</div>
-		<div class="files-list"></div>
+		<ul class="files-list"></ul>
 	</div>	
 </div>
 

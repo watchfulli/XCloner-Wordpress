@@ -8,8 +8,8 @@ class Xcloner_Archive extends Tar
 	/*
 	 * bytes
 	 */ 
-	private $file_size_per_request_limit	= 1048576; //1MB
-	private $files_to_process_per_request 	= 100; //block of 512 bytes
+	private $file_size_per_request_limit	= 52428800 ; //50MB = 52428800; 1MB = 1048576
+	private $files_to_process_per_request 	= 250; //block of 512 bytes
 	private $compression_level 				= 0; //0-9 , 0 uncompressed
 	private $xcloner_split_backup_limit		= 2048; //2048MB
 	
@@ -292,7 +292,7 @@ class Xcloner_Archive extends Tar
 				$start_filesystem = $line[4];
 			}
 			
-			$adapter = $this->filesystem->get_adapter($start_filesystem);
+			//$adapter = $this->filesystem->get_adapter($start_filesystem);
 			
 			if(!$this->filesystem->get_filesystem($start_filesystem)->has($relative_path))
 			{
@@ -345,7 +345,7 @@ class Xcloner_Archive extends Tar
 				return $return;
 			}
 			
-			list($bytes_wrote, $last_position) = $this->add_file_to_archive( $file_info, $start_byte, $byte_limit, $append, $adapter);
+			list($bytes_wrote, $last_position) = $this->add_file_to_archive( $file_info, $start_byte, $byte_limit, $append, $start_filesystem);
 			$this->processed_size_bytes += $bytes_wrote;
 			
 			//echo" - processed ".$this->processed_size_bytes." bytes ".$this->file_size_per_request_limit." last_position:".$last_position." \n";
@@ -368,7 +368,7 @@ class Xcloner_Archive extends Tar
 				$return['finished'] = 0;
 				$return['extra']['start_at_line'] = $extra_params['start_at_line'];
 				$return['extra']['start_at_byte'] = $last_position;
-				$this->logger->info(sprintf("Reached the maximum %s request limit, returning response", $this->file_size_per_request_limit));
+				$this->logger->info(sprintf("Reached the maximum %s request data limit, returning response", $this->file_size_per_request_limit));
 				return $return;
 			}
 		}
@@ -464,8 +464,12 @@ class Xcloner_Archive extends Tar
 	 * Add file to archive
 	 * 
 	 */ 
-	public function add_file_to_archive($file_info, $start_at_byte, $byte_limit = 0, $append, $start_adapter)
+	public function add_file_to_archive($file_info, $start_at_byte, $byte_limit = 0, $append, $filesystem)
 	{
+		
+		$start_adapter = $this->filesystem->get_adapter($filesystem);
+		$start_filesystem = $this->filesystem->get_adapter($filesystem);
+		
 		if(!$file_info['path'])
 			return;
 		
@@ -484,13 +488,52 @@ class Xcloner_Archive extends Tar
 			$this->backup_archive->addFile($start_adapter->applyPathPrefix($file_info['path']), $file_info['target_path']);
 		}
 		else{	
-			$last_position = $this->backup_archive->appendFileData($start_adapter->applyPathPrefix($file_info['path']), $file_info['target_path'], $start_at_byte, $byte_limit);
-			if($last_position == -1)
-				$bytes_wrote = $file_info['size'] - $start_at_byte;
-			else
-				$bytes_wrote = $last_position - $start_at_byte;
+			$tmp_file = md5($file_info['path']);
 			
-			$this->logger->info(sprintf("Appending %s bytes, starting position %s, of file %s to archive %s ", $bytes_wrote, $start_at_byte, $file_info['target_path'], $this->get_archive_name()));
+			//we isolate file to tmp if we are at byte 0, the starting point of file reading
+			if(!$start_at_byte)
+			{
+				$this->logger->info(sprintf("Adding %s file to tmp filesystem %s to prevent reading changes", $file_info['path'], $tmp_file));
+				$file_stream = $start_filesystem->readStream($file_info['path']);
+				
+				if(is_resource($file_stream['stream']))
+					$this->filesystem->get_tmp_filesystem()->writeStream($tmp_file, $file_stream['stream']);
+			}
+			
+			if($this->filesystem->get_tmp_filesystem()->has($tmp_file))
+			{
+				$is_tmp = 1;
+				$last_position = $this->backup_archive->appendFileData($this->filesystem->get_tmp_filesystem_adapter()->applyPathPrefix($tmp_file), $file_info['target_path'], $start_at_byte, $byte_limit);
+			}
+			else{
+				$is_tmp = 0;
+				$last_position = $this->backup_archive->appendFileData($start_adapter->applyPathPrefix($file_info['path']), $file_info['target_path'], $start_at_byte, $byte_limit);
+			}
+				
+			
+			if($last_position == -1)
+			{
+				$bytes_wrote = $file_info['size'] - $start_at_byte;
+				
+				if($this->filesystem->get_tmp_filesystem_adapter()->has($tmp_file))
+				{
+					$this->logger->info(sprintf("Deleting %s from the tmp filesystem", $tmp_file));
+					$this->filesystem->get_tmp_filesystem_adapter()->delete($tmp_file);
+				}
+			}
+			else
+			{
+				$bytes_wrote = $last_position - $start_at_byte;
+			}
+			
+			
+			if($is_tmp)
+			{
+				$this->logger->info(sprintf("Appending %s bytes, starting position %s, of tmp file %s (%s) to archive %s ", $bytes_wrote, $start_at_byte, $tmp_file, $file_info['target_path'], $this->get_archive_name()));
+			}
+			else{
+				$this->logger->info(sprintf("Appending %s bytes, starting position %s, of original file %s to archive %s ", $bytes_wrote, $start_at_byte, $file_info['target_path'], $tmp_file, $this->get_archive_name()));
+			}
 			
 		}
 		

@@ -49,7 +49,7 @@ class Xcloner_File_System{
 			$this->tmp_filesystem_append = new Filesystem($adapter, new Config([
 					'disable_asserts' => true,
 				]));
-	
+
 			$adapter = new Local($this->xcloner_settings->get_xcloner_store_path(),LOCK_EX, 'SKIP_LINKS');
 			$this->storage_filesystem = new Filesystem($adapter, new Config([
 					'disable_asserts' => true,
@@ -102,6 +102,11 @@ class Xcloner_File_System{
 	public function get_start_adapter()
 	{
 		return $this->start_adapter;
+	}
+	
+	public function get_start_filesystem()
+	{
+		return $this->start_filesystem;
 	}
 	
 	public function get_logger()
