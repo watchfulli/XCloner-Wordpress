@@ -816,6 +816,8 @@ class Xcloner_Api{
 			die("Not allowed access here!");
 		}
 		
+		@ob_end_clean();
+		
 		$adapter = new Local(dirname(__DIR__) ,LOCK_EX, 'SKIP_LINKS');
 		$xcloner_plugin_filesystem = new Filesystem($adapter, new Config([
 				'disable_asserts' => true,
@@ -867,6 +869,8 @@ class Xcloner_Api{
 		if (!current_user_can('manage_options')) {
 			die("Not allowed access here!");
 		}
+		
+		@ob_end_clean();
 		
 		$backup_name = $this->xcloner_sanitization->sanitize_input_as_string($_GET['name']);
 		
