@@ -493,7 +493,7 @@ class Xcloner_Archive extends Tar
 			//we isolate file to tmp if we are at byte 0, the starting point of file reading
 			if(!$start_at_byte)
 			{
-				$this->logger->info(sprintf("Adding %s file to tmp filesystem %s to prevent reading changes", $file_info['path'], $tmp_file));
+				$this->logger->info(sprintf("Copying %s file to tmp filesystem file %s to prevent reading changes", $file_info['path'], $tmp_file));
 				$file_stream = $start_filesystem->readStream($file_info['path']);
 				
 				if(is_resource($file_stream['stream']))
