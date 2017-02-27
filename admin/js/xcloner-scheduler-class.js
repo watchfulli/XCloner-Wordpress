@@ -180,22 +180,22 @@ jQuery(document).ready(function(){
 	    },
 	    "ajax": ajaxurl+"?action=get_scheduler_list",
 	    "fnDrawCallback": function( oSettings ) {
-			jQuery("#scheduled_backups").find(".edit").each(function(){
-				jQuery(this).off("click").on("click", function(){
+			//jQuery("#scheduled_backups").find(".edit").each(function(){
+				jQuery(this).off("click", ".edit").on("click", ".edit",function(){
 					var hash = jQuery(this).attr('href');
 					var id = hash.substr(1)
 					var data = xcloner_scheduler.get_schedule_by_id(id);
 				})
-			})
+			//})
 			
-			jQuery("#scheduled_backups").find(".delete").each(function(){
-				jQuery(this).off("click").on("click", function(){
+			//jQuery("#scheduled_backups").find(".delete").each(function(){
+				jQuery(this).off("click", ".delete").on("click", ".delete", function(){
 					var hash = jQuery(this).attr('href');
 					var id = hash.substr(1)
 					if(confirm('Are you sure you want to delete it?'))
 						var data = xcloner_scheduler.delete_schedule_by_id(id, (this), dataTable);
 				})
-			})
+			//})
 			
 			jQuery("span.shorten_string").each(function(){
 				doShortText(jQuery(this));
