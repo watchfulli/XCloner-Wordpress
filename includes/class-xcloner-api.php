@@ -626,6 +626,8 @@ class Xcloner_Api{
 			}
 			
 			$backup_text = "";
+			$backup_size = "";
+			$backup_time = "";
 			
 			if($res->last_backup)
 			{

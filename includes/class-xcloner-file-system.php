@@ -487,7 +487,7 @@ class Xcloner_File_System{
 	
 	public function estimate_read_write_time()
 	{
-		$tmp_file = xcloner.substr(md5(time), 0, 5);
+		$tmp_file = ".xcloner".substr(md5(time()), 0, 5);
 				
 		$start_time = microtime();
 		
