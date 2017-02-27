@@ -353,6 +353,10 @@ ul.xcloner_regex_exclude_limit li:nth-of-type(n+2) {
 	display: none;
 }
 
+#manage_backups_wrapper #manage_backups_filter{
+	min-width: 250px;
+}
+
 
 @media only screen and (min-width: 993px){
 	.dashboard .backup-ready{

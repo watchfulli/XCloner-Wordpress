@@ -155,14 +155,18 @@ jQuery(document).ready(function(){
 		})
 	var dataTable = jQuery('#manage_backups').DataTable( {
 			'responsive': true,
-			'bFilter': false,
+			'bFilter': true,
 			"order": [[ 2, "desc" ]],
 			buttons: [
 				'selectAll',
 				'selectNone'
 			],
 			"language": {
-				"emptyTable": "No backups available"
+				"emptyTable": "No backups available",
+		        buttons: {
+		            selectAll: "Select all items",
+		            selectNone: "Select none"
+		        }
 			},
 			columnDefs: [
 				{ targets: 'no-sort', orderable: false }
@@ -174,12 +178,10 @@ jQuery(document).ready(function(){
 			    { "width": "5%" },
 			    { "width": "5%" },
 			  ],
-			language: {
-		        buttons: {
-		            selectAll: "Select all items",
-		            selectNone: "Select none"
-		        }
-		    },
+			"oLanguage": { 
+				"sSearch": "",  
+				"sSearchPlaceholder" : 'Search Backups',
+				} ,
 		    "fnDrawCallback": function( oSettings ) {
 
 				//jQuery("#manage_backups").find(".delete").each(function(){
