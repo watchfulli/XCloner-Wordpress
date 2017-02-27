@@ -113,7 +113,7 @@ class Xcloner_Archive extends Tar
 		
 		$body  = $error_message; 
 		
-		$this->logger->info(__(sprintf("Sending backup error notification to %s", $to), "xcloner"));
+		$this->logger->info(sprintf("Sending backup error notification to %s", $to));
 		
 		$admin_email = get_option("admin_email");
 		
@@ -188,7 +188,7 @@ class Xcloner_Archive extends Tar
 		}
 		$tar->close();
 		
-		$this->logger->info(__(sprintf("Sending backup notification to %s", $to), "xcloner"));
+		$this->logger->info(sprintf("Sending backup notification to %s", $to));
 		
 		$admin_email = get_option("admin_email");
 		

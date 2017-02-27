@@ -21,7 +21,7 @@
  * Author URI:        http://www.thinkovi.com
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
- * Text Domain:       xcloner
+ * Text Domain:       xcloner-backup-and-restore
  * Domain Path:       /languages
  */
 

@@ -115,14 +115,14 @@ class Xcloner_Remote_Storage{
 				update_option($check_field, $sanitized_value);
 			}
 			
-			$this->xcloner->trigger_message(__("%s storage settings saved.", "xcloner"), "success", ucfirst($action));
+			$this->xcloner->trigger_message(__("%s storage settings saved.", 'xcloner-backup-and-restore'), "success", ucfirst($action));
 		}
 		
 		if(isset($_POST['connection_check']) && $_POST['connection_check'])
 		{
 			try{
 				$this->verify_filesystem($action);
-				$this->xcloner->trigger_message(__("%s connection is valid.", "xcloner"), "success", ucfirst($action));
+				$this->xcloner->trigger_message(__("%s connection is valid.", 'xcloner-backup-and-restore'), "success", ucfirst($action));
 				$this->logger->debug(sprintf("Connection to remote storage %s is valid", strtoupper($action)));	
 			}catch(Exception $e){
 				$this->xcloner->trigger_message("%s connection error: ".$e->getMessage(), "error", ucfirst($action));
@@ -146,17 +146,17 @@ class Xcloner_Remote_Storage{
 			
 		//testing write access
 		if(!$filesystem->write($test_file, "data"))
-			throw new Exception(__("Could not write data","xcloner"));
+			throw new Exception(__("Could not write data",'xcloner-backup-and-restore'));
 		$this->logger->debug(sprintf("I can write data to remote storage %s", strtoupper($storage_type)));	
 		
 		//testing read access
 		if(!$filesystem->read($test_file))
-			throw new Exception(__("Could not read data","xcloner"));
+			throw new Exception(__("Could not read data",'xcloner-backup-and-restore'));
 		$this->logger->debug(sprintf("I can read data to remote storage %s", strtoupper($storage_type)));		
 		
 		//delete test file
 		if(!$filesystem->delete($test_file))
-			throw new Exception(__("Could not delete data","xcloner"));
+			throw new Exception(__("Could not delete data",'xcloner-backup-and-restore'));
 		$this->logger->debug(sprintf("I can delete data to remote storage %s", strtoupper($storage_type)));		
 	}
 	

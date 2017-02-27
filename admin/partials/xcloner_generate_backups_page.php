@@ -10,13 +10,13 @@ $tab = 1;
 <h1><?= esc_html(get_admin_page_title()); ?></h1>
          
 <ul class="nav-tab-wrapper content row">
-	<li><a href="#backup_options" class="nav-tab col s12 m3 l2 nav-tab-active"><?php echo $tab.". ".__('Backup Options','xcloner')?></a></li>
+	<li><a href="#backup_options" class="nav-tab col s12 m3 l2 nav-tab-active"><?php echo $tab.". ".__('Backup Options','xcloner-backup-and-restore')?></a></li>
 	<?php if($xcloner_settings->get_enable_mysql_backup()):?>
-		<li><a href="#database_options" class="nav-tab col s12 m3 l2 "><?php echo ++$tab.". ".__('Database Options','xcloner')?></a></li>
+		<li><a href="#database_options" class="nav-tab col s12 m3 l2 "><?php echo ++$tab.". ".__('Database Options','xcloner-backup-and-restore')?></a></li>
 	<?php endif?>
-	<li><a href="#files_options" class="nav-tab col s12 m3 l2 "><?php echo ++$tab.". ".__('Files Options','xcloner')?></a></li>
-	<li><a href="#generate_backup" class="nav-tab col s12 m3 l2 "><?php echo ++$tab.". ".__('Generate Backup','xcloner')?></a></li>
-	<li><a href="#schedule_backup" class="nav-tab col s12 m3 l2 "><?php echo ++$tab.". ".__('Schedule Backup','xcloner')?></a></li>
+	<li><a href="#files_options" class="nav-tab col s12 m3 l2 "><?php echo ++$tab.". ".__('Files Options','xcloner-backup-and-restore')?></a></li>
+	<li><a href="#generate_backup" class="nav-tab col s12 m3 l2 "><?php echo ++$tab.". ".__('Generate Backup','xcloner-backup-and-restore')?></a></li>
+	<li><a href="#schedule_backup" class="nav-tab col s12 m3 l2 "><?php echo ++$tab.". ".__('Schedule Backup','xcloner-backup-and-restore')?></a></li>
 </ul>
 
 <form action="" method="POST" id="generate_backup_form">
@@ -27,10 +27,10 @@ $tab = 1;
 		        <div class="input-field inline col s12 m10 l6">
 					<i class="material-icons prefix">input</i>
 					<input name="backup_name" id="backup_name" type="text" value=<?php echo $xcloner_settings->get_default_backup_name() ?> >
-					<label for="backup_name"><?php echo __('Backup Name','xcloner')?></label>
+					<label for="backup_name"><?php echo __('Backup Name','xcloner-backup-and-restore')?></label>
 				</div>
 				<div class="hide-on-small-only m2">
-					<a class="btn-floating tooltipped btn-small" data-position="right" data-delay="50" data-tooltip="<?php echo __('The default backup name, supported tags [time], [hostname], [domain]','xcloner')?>" data-tooltip-id=""><i class="material-icons">help_outline</i></a>
+					<a class="btn-floating tooltipped btn-small" data-position="right" data-delay="50" data-tooltip="<?php echo __('The default backup name, supported tags [time], [hostname], [domain]','xcloner-backup-and-restore')?>" data-tooltip-id=""><i class="material-icons">help_outline</i></a>
 				</div>
 		     </div>
 		     
@@ -38,10 +38,10 @@ $tab = 1;
 		        <div class="input-field inline col s12 m10 l6">
 					<i class="material-icons prefix">input</i>
 					<input name="email_notification" id="email_notification" type="text" value="<?php echo get_option('admin_email');?>" >
-					<label for="email_notification"><?php echo __('Send Email Notification To','xcloner')?></label>
+					<label for="email_notification"><?php echo __('Send Email Notification To','xcloner-backup-and-restore')?></label>
 				</div>
 				<div class="hide-on-small-only m2">
-					<a class="btn-floating tooltipped btn-small" data-position="right" data-delay="50" data-tooltip="<?php echo __('If left blank, no notification will be sent','xcloner')?>" data-tooltip-id=""><i class="material-icons">help_outline</i></a>
+					<a class="btn-floating tooltipped btn-small" data-position="right" data-delay="50" data-tooltip="<?php echo __('If left blank, no notification will be sent','xcloner-backup-and-restore')?>" data-tooltip-id=""><i class="material-icons">help_outline</i></a>
 				</div>
 		     </div>
 		     
@@ -49,10 +49,10 @@ $tab = 1;
 				<div class="input-field col s12 m10 l6">
 					<i class="material-icons prefix">input</i>
 					<textarea name="backup_comments" id="backup_comments" class="materialize-textarea"></textarea>
-					<label for="backup_comments"><?php echo __('Backup Comments','xcloner')?></label>
+					<label for="backup_comments"><?php echo __('Backup Comments','xcloner-backup-and-restore')?></label>
 				</div>
 				<div class="hide-on-small-only m2">
-					<a class="btn-floating tooltipped btn-small" data-position="right" data-delay="50" data-tooltip="<?php echo __('Some default backup comments that will be stored inside the backup archive','xcloner')?>" data-tooltip-id=""><i class="material-icons">help_outline</i></a>
+					<a class="btn-floating tooltipped btn-small" data-position="right" data-delay="50" data-tooltip="<?php echo __('Some default backup comments that will be stored inside the backup archive','xcloner-backup-and-restore')?>" data-tooltip-id=""><i class="material-icons">help_outline</i></a>
 				</div>
 		     </div>
 		     
@@ -65,8 +65,8 @@ $tab = 1;
 		
 		<?php if($xcloner_settings->get_enable_mysql_backup()):?>
 		<div id="database_options" class="tab-content">
-			<h2><?php echo __('Select database data to include in the backup', 'xcloner')?>:
-				<a class="btn-floating tooltipped btn-small" data-position="right" data-delay="50" data-tooltip="<?php echo __('Enable the \'Backup only WP tables\' setting if you don\'t want to show all other databases and tables not related to this Wordpress install','xcloner');?>" data-tooltip-id=""><i class="material-icons">help_outline</i></a>
+			<h2><?php echo __('Select database data to include in the backup', 'xcloner-backup-and-restore')?>:
+				<a class="btn-floating tooltipped btn-small" data-position="right" data-delay="50" data-tooltip="<?php echo __('Enable the \'Backup only WP tables\' setting if you don\'t want to show all other databases and tables not related to this Wordpress install','xcloner-backup-and-restore');?>" data-tooltip-id=""><i class="material-icons">help_outline</i></a>
 			</h2>
 			
 			<!-- database/tables tree -->
@@ -86,8 +86,8 @@ $tab = 1;
 		<?php endif ?>
 		
 		<div id="files_options" class="tab-content">
-			<h2><?php echo __('Select from below the files/folders you want to exclude from your Backup Archive','xcloner')?>:
-				<a class="btn-floating tooltipped btn-small" data-position="bottom" data-delay="50" data-html="true" data-tooltip="<?php echo __('You can navigate below through all your site structure(Backup Start Location) to exclude any file/folder you need by clicking the checkbox near it. <br />If the checkobx is disabled, then it matches a Regex Exclude File option and it can\'t be unchecked','xcloner');?>" data-tooltip-id=""><i class="material-icons">help_outline</i></a>
+			<h2><?php echo __('Select from below the files/folders you want to exclude from your Backup Archive','xcloner-backup-and-restore')?>:
+				<a class="btn-floating tooltipped btn-small" data-position="bottom" data-delay="50" data-html="true" data-tooltip="<?php echo __('You can navigate below through all your site structure(Backup Start Location) to exclude any file/folder you need by clicking the checkbox near it. <br />If the checkobx is disabled, then it matches a Regex Exclude File option and it can\'t be unchecked','xcloner-backup-and-restore');?>" data-tooltip-id=""><i class="material-icons">help_outline</i></a>
 			</h2>
 			
 			<!-- Files System Container -->
@@ -115,9 +115,9 @@ $tab = 1;
 					<ul class="backup-status collapsible" data-collapsible="accordion">
 					    <li class="file-system">
 						      <div class="collapsible-header">
-									<i class="material-icons">folder</i><?php echo __('Scanning The File System...','xcloner')?>
+									<i class="material-icons">folder</i><?php echo __('Scanning The File System...','xcloner-backup-and-restore')?>
 									
-									<p class="right"><?php echo sprintf(__('Found %s files (%s)', 'xcloner'), '<span class="file-counter">0</span>', '<span  class="file-size-total">0</span>MB')?></p>
+									<p class="right"><?php echo sprintf(__('Found %s files (%s)', 'xcloner-backup-and-restore'), '<span class="file-counter">0</span>', '<span  class="file-size-total">0</span>MB')?></p>
 
 									<div>
 										<p class="right"><span class="last-logged-file"></span></p>
@@ -132,9 +132,9 @@ $tab = 1;
 					    <?php if($xcloner_settings->get_enable_mysql_backup()):?>
 					    <li class="database-backup">
 						      <div class="collapsible-header">
-									<i class="material-icons">storage</i><?php echo __('Generating the Mysql Backup...','xcloner')?>
+									<i class="material-icons">storage</i><?php echo __('Generating the Mysql Backup...','xcloner-backup-and-restore')?>
 									
-									<p class="right"><?php echo sprintf(__('Found %s tables in %s databases (%s)', 'xcloner'), '<span class="table-counter">0</span>', '<span class="database-counter">0</span>', '<span data-processed="0" class="total-records">0</span> records','xcloner')?></p>
+									<p class="right"><?php echo sprintf(__('Found %s tables in %s databases (%s)', 'xcloner-backup-and-restore'), '<span class="table-counter">0</span>', '<span class="database-counter">0</span>', '<span data-processed="0" class="total-records">0</span> records','xcloner-backup-and-restore')?></p>
 									
 									<div>
 										<p class="right"><span class="last-logged-table"></span></p>
@@ -158,9 +158,9 @@ $tab = 1;
 					    <?php endif?>
 					    <li class="files-backup">
 						      <div class="collapsible-header">
-									<i class="material-icons">archive</i><?php echo __('Adding Files to Archive...','xcloner')?>
+									<i class="material-icons">archive</i><?php echo __('Adding Files to Archive...','xcloner-backup-and-restore')?>
 									
-									<p class="right"><?php echo sprintf(__('Adding %s files (%s)','xcloner'), '<span class="file-counter">0</span>', '<span  data-processed="0" class="file-size-total">0</span>MB')?></p>
+									<p class="right"><?php echo sprintf(__('Adding %s files (%s)','xcloner-backup-and-restore'), '<span class="file-counter">0</span>', '<span  data-processed="0" class="file-size-total">0</span>MB')?></p>
 
 									<div>
 										<p class="right"><span class="last-logged-file"></span></p>
@@ -173,7 +173,7 @@ $tab = 1;
 						      <div class="collapsible-body status-body">
 									<div class="row">
 										<div class="col l3 s12">
-											<h2><?php echo __("Backup Parts","xcloner")?>: </h2>
+											<h2><?php echo __("Backup Parts",'xcloner-backup-and-restore')?>: </h2>
 										</div>	
 										<div class="col l9 s12">
 											<ul class="backup-name"></ul>
@@ -183,14 +183,14 @@ $tab = 1;
 					    </li>
 					    <li class="backup-done">
 						      <div class="collapsible-header">
-									<i class="material-icons">done</i><?php echo __('Backup Done','xcloner')?>
+									<i class="material-icons">done</i><?php echo __('Backup Done','xcloner-backup-and-restore')?>
 									
 									<p class="right">
 										 <?php if(sizeof($available_storages)):?>
-											<a href="#" class="cloud-upload" title="<?php echo __("Send Backup To Remote Storage",'xcloner')?>"><i class="material-icons">cloud_upload</i></a>
+											<a href="#" class="cloud-upload" title="<?php echo __("Send Backup To Remote Storage",'xcloner-backup-and-restore')?>"><i class="material-icons">cloud_upload</i></a>
 										 <?php endif?>
-										 <a href="#" class="download" title="<?php echo __("Download Backup",'xcloner')?>"><i class="material-icons">file_download</i></a>
-										 <a href="#" class="list-backup-content" title="<?php echo __("List Backup Content",'xcloner')?>"><i class="material-icons">folder_open</i></a>
+										 <a href="#" class="download" title="<?php echo __("Download Backup",'xcloner-backup-and-restore')?>"><i class="material-icons">file_download</i></a>
+										 <a href="#" class="list-backup-content" title="<?php echo __("List Backup Content",'xcloner-backup-and-restore')?>"><i class="material-icons">folder_open</i></a>
 									</p>
 									
 									<div class="progress">
@@ -200,8 +200,8 @@ $tab = 1;
 								</div>	
 						      <div class="collapsible-body center-align">
 									<div class="row">
-										<h5><?php echo __("Thank you for using XCloner.","xcloner")?></h5>
-										<h6><?php echo sprintf(__("We would love to hear about your experience in the %s.", "xcloner"),'<a href="https://wordpress.org/support/plugin/xcloner-backup-and-restore/reviews/" target="_blank">Wordpress XCloner Reviews Section</a>') ?></h6>
+										<h5><?php echo __("Thank you for using XCloner.",'xcloner-backup-and-restore')?></h5>
+										<h6><?php echo sprintf(__("We would love to hear about your experience in the %s.", 'xcloner-backup-and-restore'),'<a href="https://wordpress.org/support/plugin/xcloner-backup-and-restore/reviews/" target="_blank">Wordpress XCloner Reviews Section</a>') ?></h6>
 										<a class="twitter-follow-button" href="https://twitter.com/thinkovi" data-show-count="false">Follow @thinkovi</a>
 										<script src="//platform.twitter.com/widgets.js" async="" charset="utf-8"></script>
 									</div>
@@ -217,46 +217,46 @@ $tab = 1;
 			
 			<div class="row">
 				<div id="schedule_backup_success" class="col s12 l6 updated settings-error notice is-dismissible"> 
-					<p><strong><?php echo __('Schedule Saved', 'xcloner')?></strong></p>
-					<button type="button" class="notice-dismiss"><span class="screen-reader-text"><?php echo __('(Dismiss this notice.','xcloner')?></span></button>
+					<p><strong><?php echo __('Schedule Saved', 'xcloner-backup-and-restore')?></strong></p>
+					<button type="button" class="notice-dismiss"><span class="screen-reader-text"><?php echo __('(Dismiss this notice.','xcloner-backup-and-restore')?></span></button>
 				</div>
 			</div>
 			
 			<!--<div class="row server-time">
 				<div class="col s12 m10 l6 teal lighten-1">
-					<h2><?php echo __('Current Server Time', 'xcloner')?>: <span class="right"><?php echo date("Y/m/d H:i")?></span></h2>
+					<h2><?php echo __('Current Server Time', 'xcloner-backup-and-restore')?>: <span class="right"><?php echo date("Y/m/d H:i")?></span></h2>
 				</div>
 			</div>
 			-->
 			<div class="row">
 				 <div class="input-field inline col s12 m10 l6">
 					  <input type="text" id="schedule_name" class="" name="schedule_name" required>
-					  <label for="schedule_name"><?php echo __('Schedule Name', 'xcloner') ?></label>
+					  <label for="schedule_name"><?php echo __('Schedule Name', 'xcloner-backup-and-restore') ?></label>
 				</div>
 			</div>
 			
 			<div class="row">
 				 <div class="input-field inline col s12 m6 l4">
 					  <input type="datetime-local" id="datepicker" class="datepicker" name="schedule_start_date" >
-					  <label for="datepicker"><?php echo __('Schedule Backup To Start On:','xcloner')?></label>
+					  <label for="datepicker"><?php echo __('Schedule Backup To Start On:','xcloner-backup-and-restore')?></label>
 				</div>
 				 <div class="input-field inline col s12 m4 l2">
 					  <input id="timepicker_ampm_dark" class="timepicker" type="time" name="schedule_start_time">
-					  <label for="timepicker_ampm_dark"><?php echo __('At:','xcloner')?></label>
+					  <label for="timepicker_ampm_dark"><?php echo __('At:','xcloner-backup-and-restore')?></label>
 				</div>
 			</div>
 			
 			<div class="row">
 				<div class="input-field col s12 m10 l6">
 					<select name="schedule_frequency" id="schedule_frequency" class="validate" required>
-						<option value="" disabled selected><?php echo __('please select', 'xcloner') ?></option>
-						<option value="single"><?php echo __("Don't Repeat","xcloner")?></option>
-						<option value="hourly"><?php echo __("Hourly","xcloner")?></option>
-						<option value="daily"><?php echo __("Daily","xcloner")?></option>
-						<option value="weekly"><?php echo __("Weekly","xcloner")?></option>
-						<option value="monthly"><?php echo __("Monthly","xcloner")?></option>
+						<option value="" disabled selected><?php echo __('please select', 'xcloner-backup-and-restore') ?></option>
+						<option value="single"><?php echo __("Don't Repeat",'xcloner-backup-and-restore')?></option>
+						<option value="hourly"><?php echo __("Hourly",'xcloner-backup-and-restore')?></option>
+						<option value="daily"><?php echo __("Daily",'xcloner-backup-and-restore')?></option>
+						<option value="weekly"><?php echo __("Weekly",'xcloner-backup-and-restore')?></option>
+						<option value="monthly"><?php echo __("Monthly",'xcloner-backup-and-restore')?></option>
 						</select>
-						<label><?php echo __('Please Select Frequency to run', 'xcloner') ?></label>
+						<label><?php echo __('Please Select Frequency to run', 'xcloner-backup-and-restore') ?></label>
 				</div>
 			</div>	
 
@@ -264,18 +264,18 @@ $tab = 1;
 			<div class="row">
 				<div class="input-field col s12 m10 l6">
 					<select name="schedule_storage" id="schedule_storage" class="validate">
-						<option value="" selected><?php echo __('none', 'xcloner') ?></option>
+						<option value="" selected><?php echo __('none', 'xcloner-backup-and-restore') ?></option>
 						<?php foreach($available_storages as $storage=>$text):?>
 							<option value="<?php echo $storage?>"><?php echo $text?></option>
 						<?php endforeach?>
 						</select>
-						<label><?php echo __('Send To Remote Storage', 'xcloner') ?></label>
+						<label><?php echo __('Send To Remote Storage', 'xcloner-backup-and-restore') ?></label>
 				</div>
 			</div>
 			<?php endif?>
 			<div class="row">
 				<div class="col s12 m10 l6">
-					<button class="right btn waves-effect waves-light submit_schedule" type="submit" name="action"><?php echo __("Submit" ,'xcloner')?>
+					<button class="right btn waves-effect waves-light submit_schedule" type="submit" name="action"><?php echo __("Submit" ,'xcloner-backup-and-restore')?>
 						<i class="material-icons right">send</i>
 					</button>
 				</div>
@@ -290,11 +290,11 @@ $tab = 1;
 	<div class="modal-content">
 		<h4 class="title_line"><span class="title"></span></h4>
 		<!--<h5 class="title_line"><?php echo __('Message')?>: <span class="msg.old"></span></h5>-->
-		<h5><?php echo __('Response Code', 'xcloner')?>: <span class="status"></span></h5>
+		<h5><?php echo __('Response Code', 'xcloner-backup-and-restore')?>: <span class="status"></span></h5>
 		<textarea  class="body" rows="5"></textarea>
 	</div>
 	<div class="modal-footer">
-		<a class=" modal-action modal-close waves-effect waves-green btn-flat  red darken-2"><?php echo __('Close','xcloner')?></a>
+		<a class=" modal-action modal-close waves-effect waves-green btn-flat  red darken-2"><?php echo __('Close','xcloner-backup-and-restore')?></a>
 	</div>
 </div>
 
@@ -302,7 +302,7 @@ $tab = 1;
 
 <div id="backup_cotent_modal" class="modal">
 	<div class="modal-content">
-		<h4><?php echo sprintf(__("Listing Backup Content ","xcloner"), "")?></h4>
+		<h4><?php echo sprintf(__("Listing Backup Content ",'xcloner-backup-and-restore'), "")?></h4>
 		<h5 class="backup-name"></h5>
 		
 		<div class="progress">
@@ -317,16 +317,16 @@ $tab = 1;
 	<form method="POST" class="remote-storage-form">
 	<input type="hidden" name="file" class="backup_name">	  
 	<div class="modal-content">
-	  <h4><?php echo __("Remote Storage Transfer","xcloner")?></h4>
+	  <h4><?php echo __("Remote Storage Transfer",'xcloner-backup-and-restore')?></h4>
 	  <p>
 	  <?php if(sizeof($available_storages)):?>
 			<div class="row">
 				<div class="col s12 label">
-					<label><?php echo __(sprintf('Send %s to remote storage', "<span class='backup_name'></span>"), 'xcloner') ?></label>
+					<label><?php echo __(sprintf('Send %s to remote storage', "<span class='backup_name'></span>"), 'xcloner-backup-and-restore') ?></label>
 				</div>
 				<div class="input-field col s8 m10">
 					<select name="transfer_storage" id="transfer_storage" class="validate" required >
-						<option value="" selected><?php echo __('please select...', 'xcloner') ?></option>
+						<option value="" selected><?php echo __('please select...', 'xcloner-backup-and-restore') ?></option>
 						<?php foreach($available_storages as $storage=>$text):?>
 							<option value="<?php echo $storage?>"><?php echo $text?></option>
 						<?php endforeach?>
@@ -338,7 +338,7 @@ $tab = 1;
 				</div>
 			</div>
 			<div class="row status">
-				<?php echo __("Uploading backup to the selected remote storage...","xcloner")?> <span class="status-text"></span>
+				<?php echo __("Uploading backup to the selected remote storage...",'xcloner-backup-and-restore')?> <span class="status-text"></span>
 				<div class="progress">
 					<div class="indeterminate"></div>
 				</div>

@@ -126,7 +126,7 @@ class Xcloner {
 	{
 		?>
 		<div class="notice notice-<?php echo $status?> is-dismissible">
-	        <p><?php _e( $message, 'xcloner' ); ?></p>
+	        <p><?php _e( $message, 'xcloner-backup-and-restore' ); ?></p>
 	    </div>
 		<?php
 	}
@@ -363,8 +363,8 @@ class Xcloner {
 	function add_plugin_action_links($links, $file) {
         if ($file == plugin_basename(dirname(dirname(__FILE__)) . '/xcloner.php'))
 		{	
-			$links[] = '<a href="admin.php?page=xcloner_settings_page">'.__('Settings', 'xcloner').'</a>';
-			$links[] = '<a href="admin.php?page=xcloner_generate_backups_page">'.__('Generate Backup', 'xcloner').'</a>';
+			$links[] = '<a href="admin.php?page=xcloner_settings_page">'.__('Settings', 'xcloner-backup-and-restore').'</a>';
+			$links[] = '<a href="admin.php?page=xcloner_generate_backups_page">'.__('Generate Backup', 'xcloner-backup-and-restore').'</a>';
 		}
         
         return $links;

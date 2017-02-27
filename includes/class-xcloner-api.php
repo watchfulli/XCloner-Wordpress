@@ -619,7 +619,7 @@ class Xcloner_Api{
 				if($next_run_time >= time())
 					$next_run = "in ".human_time_diff($next_run_time, time());
 				else
-					$next_run = __("executed", "xcloner");
+					$next_run = __("executed", 'xcloner-backup-and-restore');
 				
 				$next_run = "<a href='#' title='".$date_text."'>".$next_run."</a>";
 				//$next_run .=" ($date_text)";	
