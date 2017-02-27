@@ -58,8 +58,11 @@
 							return;
 						  }
 						  
+						  var files_text = [];
+						  
 						  for(var i in response.files)
 						  {
+							  
 							  if(response.total_size !== undefined)
 							  {
 								var percent = parseInt(response.start*100)/parseInt(response.total_size)
@@ -68,8 +71,10 @@
 							
 							$this.file_counter++
 							
-							jQuery("#backup_cotent_modal .modal-content .files-list").prepend($this.file_counter +". <span title='"+response.files[i].mtime+"'>"+response.files[i].path+"</span> ("+response.files[i].size+" bytes)<br />\n");
+							files_text[i] = "<li>"+($this.file_counter +". <span title='"+response.files[i].mtime+"'>"+response.files[i].path+"</span> ("+response.files[i].size+" bytes)")+"</li>";
 						  }
+
+						  jQuery("#backup_cotent_modal .modal-content .files-list").prepend(files_text.reverse().join("\n"));
 						  
 						  if(!response.finished && jQuery('#backup_cotent_modal').is(':visible'))
 							$this.list_backup_content_callback(backup_file, response.start, response.part)

@@ -143,10 +143,15 @@ class Xcloner_Restore{
 			
 			if(e.detail.files !== undefined && e.detail.files.length)
 			{
+				var files_text = [];
 				for(var i=0; i<e.detail.files.length;i++)
-				jQuery('.xcloner-restore .restore-remote-backup-step .files-list').prepend(e.detail.files[i]+"<br />")
-			}else
+				{
+					files_text[i] = "<li>"+(e.detail.files[i])+"</li>";
+				}
+				jQuery('.xcloner-restore .restore-remote-backup-step .files-list').prepend(files_text.reverse().join("\n"));
+			}else{
 				jQuery('.xcloner-restore .restore-remote-backup-step .files-list').html("");
+			}
 				
 		}, false);
 		

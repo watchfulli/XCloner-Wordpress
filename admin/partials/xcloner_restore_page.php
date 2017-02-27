@@ -129,7 +129,7 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 							</div>
 								
 							 <div class="status"></div>
-							 <div class="files-list"></div>
+							 <ul class="files-list"></ul>
 				        </div>
 				       
 				        <div class="col s12 l5 right-align">

@@ -92,7 +92,7 @@ foreach($backup_list as $file_info):?>
 		<div class="progress">
 			<div class="indeterminate"></div>
 		</div>
-		<div class="files-list"></div>
+		<ul class="files-list"></ul>
 	</div>	
 </div>
 
