@@ -365,6 +365,9 @@ class Xcloner_Archive extends Tar
 			
 			if($this->processed_size_bytes >= $this->file_size_per_request_limit)
 			{
+				clearstatcache();
+				$return['extra']['backup_size'] = $archive_info->getSize();
+				
 				$return['finished'] = 0;
 				$return['extra']['start_at_line'] = $extra_params['start_at_line'];
 				$return['extra']['start_at_byte'] = $last_position;
@@ -375,6 +378,9 @@ class Xcloner_Archive extends Tar
 		
 		if(!$file->eof())
 		{
+			clearstatcache();
+			$return['extra']['backup_size'] = $archive_info->getSize();
+				
 			$return['finished'] = 0;
 			$return['extra']['start_at_line'] = $extra_params['start_at_line'];
 			$return['extra']['start_at_byte'] = $last_position;
@@ -386,16 +392,17 @@ class Xcloner_Archive extends Tar
 		//close the backup archive by adding 2*512 blocks of zero bytes
 		$this->logger->info(sprintf("Closing the backup archive %s with 2*512 zero bytes blocks.", $this->get_archive_name_with_extension()));
 		$this->backup_archive->close();
-		
-		//$return['extra']['backup_size'] = $this->filesystem->get_storage_filesystem()->getSize($archive_info->getBasename());	
-		
+				
 		if($return['extra']['backup_part'])
 			$this->write_multipart_file($this->get_archive_name_with_extension());
 		
 		$return['extra']['start_at_line'] = $extra_params['start_at_line']-1;
 		$return['extra']['processed_file'] = $file_info['path'];
 		$return['extra']['processed_file_size'] = $file_info['size'];
+		
+		clearstatcache();
 		$return['extra']['backup_size'] = $archive_info->getSize();
+		
 		$return['finished'] = 1;
 		return $return;
 	}
