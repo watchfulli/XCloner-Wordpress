@@ -189,7 +189,7 @@ jQuery(document).ready(function(){
 				} ,
 		    "fnDrawCallback": function( oSettings ) {
 
-					jQuery(this).off("click", ".delete").on("click", ".delete", function(){
+					jQuery(this).off("click", ".delete").on("click", ".delete", function(e){
 						
 						var hash = jQuery(this).attr('href');
 						var id = hash.substr(1)
