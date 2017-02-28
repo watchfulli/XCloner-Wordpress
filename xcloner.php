@@ -64,6 +64,15 @@ register_deactivation_hook( __FILE__, 'deactivate_xcloner' );
  * admin-specific hooks, and public-facing site hooks.
  */
 
+function stop_heartbeat() {
+	wp_deregister_script('heartbeat');
+}
+
+if(isset($_GET['page']) and stristr($_GET['page'] ,  "xcloner_"))
+{
+	add_action( 'init', 'stop_heartbeat', 1 );
+}	
+
 function xcloner_display()
 {	
 	// check user capabilities
@@ -74,7 +83,9 @@ function xcloner_display()
 	$page = sanitize_key($_GET['page']);
 	$plugin = new Xcloner();
 	if($page)
+	{
 		$plugin->display($page);
+	}
 	
 }
 

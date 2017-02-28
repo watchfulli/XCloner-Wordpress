@@ -50,6 +50,10 @@ class Xcloner_Api{
 		$this->xcloner_database 		= new XCloner_Database($this->xcloner_settings->get_hash());
 		$this->logger 					= new XCloner_Logger("xcloner_api", $this->xcloner_settings->get_hash());
 		
+		if(isset($_POST['ID'])){
+			$this->logger->info("Processing ajax request ID ".substr($this->xcloner_sanitization->sanitize_input_as_string($_POST['ID']), 0 , 15));
+		}
+		
 	}
 	
 	public function init_db()

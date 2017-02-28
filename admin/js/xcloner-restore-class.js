@@ -578,8 +578,9 @@ class Xcloner_Restore{
 	
 	do_ajax(callback, action="", params= new Object())
 	{
-		params.action = action
-		params.hash = this.hash
+		params.action 	= action
+		params.hash 	= this.hash
+		params.ID 		= ID()
 		
 		if(this.cancel == true)
 		{

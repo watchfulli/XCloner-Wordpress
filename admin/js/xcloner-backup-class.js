@@ -206,7 +206,12 @@ class Xcloner_Backup{
 		
 		if(json.extra.processed_file)
 		{
-			jQuery(elem).find(".last-logged-file").text(json.extra.processed_file+" ("+this.getSize(json.extra.processed_file_size, 1024)+" KB)");	
+			if(json.extra.start_at_byte !== undefined && json.extra.start_at_byte)	
+				var processed_size = json.extra.start_at_byte;
+			else
+				var processed_size = json.extra.processed_file_size;
+				
+			jQuery(elem).find(".last-logged-file").text(json.extra.processed_file+" ("+this.getSize(processed_size, 1024)+" KB)");	
 		}
 		
 		if(json.extra.processed_file !== undefined){
@@ -386,7 +391,7 @@ class Xcloner_Backup{
 			url: ajaxurl,
 			dataType: 'json',
 			type: 'POST',
-			data: {'action': action, 'data': data, 'init': init, 'hash': hash},
+			data: {'action': action, 'data': data, 'init': init, 'hash': hash, 'ID': ID()},
 			error: function(err) {
 				show_ajax_error("Communication Error", "", err)
 				$this.init_resume(elem, action, init);
