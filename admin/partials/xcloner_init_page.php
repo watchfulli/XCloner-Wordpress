@@ -148,7 +148,10 @@ if($requirements->check_backup_ready_status())
 				
 				<?php if($xcloner_settings->get_xcloner_option('xcloner_enable_log')) :?>
 				<li class="active">
-					<div class="collapsible-header active"><i class="material-icons">bug_report</i>XCloner Debugger</div>
+					<div class="collapsible-header active">
+						<i class="material-icons">bug_report</i><?php echo __('XCloner Debugger', 'xcloner-backup-and-restore')?>
+						<span class="right"><?php echo basename($logger->get_main_logger_url())?></span>
+					</div>
 					<div class="collapsible-body">
 						<div class="console" id="xcloner-console"><?php if($logger_content) echo implode("<br />\n", array_reverse($logger_content)); ?></div>
 					</div>

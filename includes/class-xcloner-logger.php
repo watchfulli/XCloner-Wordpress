@@ -2,10 +2,13 @@
 
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
+use Monolog\Handler\RotatingFileHandler;
 
 class Xcloner_Logger extends Logger{
 	
 	private $logger_path ;
+	private $max_logger_files = 15;
+	private $main_logger_url;
 	
 	public function __construct($logger_name = "xcloner_logger", $hash="")
 	{
@@ -36,12 +39,15 @@ class Xcloner_Logger extends Logger{
 		
 		$debug_level = Logger::INFO;
 		
-		/*if(WP_DEBUG)
+		if(WP_DEBUG)
 			$debug_level = Logger::DEBUG;
-		*/
-		
+
+	
 		if($logger_path)
-			$this->pushHandler(new StreamHandler($logger_path, $debug_level));
+			$this->pushHandler($stream = new RotatingFileHandler($logger_path, $this->max_logger_files, $debug_level));
+			
+		
+		$this->main_logger_url =  $stream->getUrl();
 		
 		if($hash and $logger_path_tmp)
 			$this->pushHandler(new StreamHandler($logger_path_tmp, $debug_level));
@@ -49,14 +55,21 @@ class Xcloner_Logger extends Logger{
 		return $this;
 	}
 	
+	function get_main_logger_url()
+	{
+		return $this->main_logger_url;
+	}
+	
 	function getLastDebugLines($totalLines = 200) 
 	{
 		$lines = array();
 		
-		if(!file_exists($this->logger_path) or !is_readable($this->logger_path))
+		//if(!file_exists($this->logger_path) or !is_readable($this->logger_path))
+		if(!file_exists($this->main_logger_url) or !is_readable($this->main_logger_url))
 			return false;
 		
-		$fp = fopen($this->logger_path, 'r');
+		//$fp = fopen($this->logger_path, 'r');
+		$fp = fopen($this->main_logger_url, 'r');
 		fseek($fp, -1, SEEK_END);
 		$pos = ftell($fp);
 		$lastLine = "";
