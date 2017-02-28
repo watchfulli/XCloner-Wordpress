@@ -580,7 +580,7 @@ class Xcloner_Restore{
 	{
 		params.action 	= action
 		params.hash 	= this.hash
-		params.ID 		= ID()
+		params.API_ID 	= ID()
 		
 		if(this.cancel == true)
 		{

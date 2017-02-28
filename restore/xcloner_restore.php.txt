@@ -91,8 +91,8 @@ class Xcloner_Restore
 		
 		$this->logger->pushHandler(new StreamHandler($logger_path, Logger::DEBUG));
 		
-		if(isset($_POST['ID'])){
-			$this->logger->info("Processing ajax request ID ".substr(filter_input(INPUT_POST, 'ID', FILTER_SANITIZE_STRING), 0 , 15));
+		if(isset($_POST['API_ID'])){
+			$this->logger->info("Processing ajax request ID ".substr(filter_input(INPUT_POST, 'API_ID', FILTER_SANITIZE_STRING), 0 , 15));
 		}
 
 	}

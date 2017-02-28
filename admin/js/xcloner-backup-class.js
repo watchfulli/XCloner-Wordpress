@@ -391,7 +391,7 @@ class Xcloner_Backup{
 			url: ajaxurl,
 			dataType: 'json',
 			type: 'POST',
-			data: {'action': action, 'data': data, 'init': init, 'hash': hash, 'ID': ID()},
+			data: {'action': action, 'data': data, 'init': init, 'hash': hash, 'API_ID': ID()},
 			error: function(err) {
 				show_ajax_error("Communication Error", "", err)
 				$this.init_resume(elem, action, init);

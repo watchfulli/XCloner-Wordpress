@@ -50,8 +50,8 @@ class Xcloner_Api{
 		$this->xcloner_database 		= new XCloner_Database($this->xcloner_settings->get_hash());
 		$this->logger 					= new XCloner_Logger("xcloner_api", $this->xcloner_settings->get_hash());
 		
-		if(isset($_POST['ID'])){
-			$this->logger->info("Processing ajax request ID ".substr($this->xcloner_sanitization->sanitize_input_as_string($_POST['ID']), 0 , 15));
+		if(isset($_POST['API_ID'])){
+			$this->logger->info("Processing ajax request ID ".substr($this->xcloner_sanitization->sanitize_input_as_string($_POST['API_ID']), 0 , 15));
 		}
 		
 	}
