@@ -12,8 +12,6 @@
  * @subpackage Xcloner/admin/partials
  */
 
-activate_xcloner();
- 
 $requirements 			= new XCloner_Requirements();
 $xcloner_settings 		= new Xcloner_Settings();
 $xcloner_file_system 	= new Xcloner_File_System();

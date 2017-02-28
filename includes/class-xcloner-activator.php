@@ -22,7 +22,7 @@
  */
 class Xcloner_Activator {
 
-	const xcloner_db_version = '1.1.2';
+	const xcloner_db_version = '1.1.4';
 	const xcloner_minimum_version = '5.4.0';
 	/**
 	 * Short Description. (use period)
