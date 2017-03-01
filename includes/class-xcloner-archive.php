@@ -397,8 +397,12 @@ class Xcloner_Archive extends Tar
 			$this->write_multipart_file($this->get_archive_name_with_extension());
 		
 		$return['extra']['start_at_line'] = $extra_params['start_at_line']-1;
-		$return['extra']['processed_file'] = $file_info['path'];
-		$return['extra']['processed_file_size'] = $file_info['size'];
+		
+		if(isset($file_info))
+		{
+			$return['extra']['processed_file'] = $file_info['path'];
+			$return['extra']['processed_file_size'] = $file_info['size'];
+		}
 		
 		clearstatcache();
 		$return['extra']['backup_size'] = $archive_info->getSize();
