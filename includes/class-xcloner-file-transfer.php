@@ -35,7 +35,6 @@ class Xcloner_File_Transfer extends Xcloner_File_System{
 		$send_array['action'] 	= "write_file";
 		$send_array['hash'] 	= $hash;
 		$send_array['blob'] 	= $binary_data;
-		$send_array['file2'] 	= "@index.php";
 		
 		//print_r($send_array);exit;
 		$data = http_build_query($send_array);
