@@ -166,10 +166,26 @@ class Xcloner_Restore
 			
 			fseek($fp, $_POST['start']);
 			
-			$this->logger->debug(sprintf('Writing %s bytes to file %s starting position %s', strlen($_POST['blob']), $target_file, $_POST['start']));
-			
-			if(!$bytes_written = fwrite($fp, $_POST['blob']))
-				throw new Exception("Unable to write data to file $target_file");
+			if(isset($_FILES['blob']))
+			{
+				$this->logger->debug(sprintf('Writing %s bytes to file %s starting position %s using FILES blob', filesize($_FILES['blob']['tmp_name']), $target_file, $_POST['start']));
+				
+				$blob = file_get_contents($_FILES['blob']['tmp_name']);
+				
+				if(!$bytes_written = fwrite($fp, $blob))
+					throw new Exception("Unable to write data to file $target_file");
+				
+				@unlink($_FILES['blob']['tmp_name']);
+			}elseif(isset($_POST['blob'])){
+				$this->logger->debug(sprintf('Writing %s bytes to file %s starting position %s using POST blob', strlen($_POST['blob']), $target_file, $_POST['start']));
+				
+				$blob = $_POST['blob'];
+
+				if(!$bytes_written = fwrite($fp, $blob))
+					throw new Exception("Unable to write data to file $target_file");
+			}else{
+				throw new Exception("Upload failed, did not receive any binary data");
+			}
 			
 			fclose($fp);
 		}

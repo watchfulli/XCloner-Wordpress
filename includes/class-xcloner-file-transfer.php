@@ -3,7 +3,7 @@
 class Xcloner_File_Transfer extends Xcloner_File_System{
 	
 	private $target_url;
-	private $transfer_limit = 358400; //bytes
+	private $transfer_limit = 1048576; //bytes 1MB= 1048576 300KB = 358400
 	
 	public function set_target($target_url)
 	{
@@ -28,31 +28,42 @@ class Xcloner_File_Transfer extends Xcloner_File_System{
 		
 		$binary_data =  fread($fp, $this->transfer_limit);
 		
+		$tmp_filename = "xcloner_upload_".substr(md5(time()), 0, 5);
+		$tmp_file = $this->get_tmp_filesystem()->write($tmp_filename, $binary_data);
+		
+		$tmp_file_path = $this->get_tmp_filesystem_adapter()->applyPathPrefix($tmp_filename);
+
 		$send_array = array();
 		
 		$send_array['file'] 	= $file;
 		$send_array['start'] 	= $start;
 		$send_array['action'] 	= "write_file";
 		$send_array['hash'] 	= $hash;
-		$send_array['blob'] 	= $binary_data;
+		#$send_array['blob'] 	= $binary_data;
+		$send_array['blob'] 	= $this->curl_file_create($tmp_file_path,'application/x-binary',$tmp_filename);
+		//var_dump($send_array);exit;
 		
-		//print_r($send_array);exit;
 		$data = http_build_query($send_array);
 		
-		$this->get_logger()->info(sprintf("Sending curl request to %s with %s data of file %s starting position %s", $this->target_url, $this->transfer_limit, $file, $start));
+		$this->get_logger()->info(sprintf("Sending curl request to %s with %s data of file %s starting position %s using temporary file %s", $this->target_url, $this->transfer_limit, $file, $start, $tmp_filename));
+		
 		
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL,$this->target_url);
-		curl_setopt($ch,CURLOPT_POST, 1);
+		
+		curl_setopt($ch, CURLOPT_POST, 1);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0); 
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 60);
         curl_setopt($ch, CURLOPT_TIMEOUT, 1200);
-		curl_setopt($ch,CURLOPT_POSTFIELDS, $data );
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $send_array );
 		curl_setopt($ch, CURLOPT_VERBOSE, true);
 		
 		$original_result = curl_exec ($ch);
+		
+		$this->get_tmp_filesystem()->delete($tmp_filename);
 		
 		$result = json_decode($original_result);
 				
@@ -72,5 +83,19 @@ class Xcloner_File_Transfer extends Xcloner_File_System{
 		}
 		
 		return ftell($fp);
+	}
+	
+	function curl_file_create($filename, $mimetype = '', $postname = '') {
+		if (!function_exists('curl_file_create')) {
+	        
+	        return "@$filename;filename="
+	            . ($postname ?: basename($filename))
+	            . ($mimetype ? ";type=$mimetype" : '');
+		
+		}else{
+			
+			return curl_file_create($filename, $mimetype, $postname);	
+				
+		}
 	}
 }

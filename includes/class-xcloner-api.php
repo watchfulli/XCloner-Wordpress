@@ -36,7 +36,8 @@ class Xcloner_Api{
 		$this->xcloner_settings 		= new Xcloner_Settings();
 		
 		//generating the hash suffix for tmp xcloner store folder
-		if(isset($_POST['hash'])){
+		if(isset($_POST['hash']) and !isset($_POST['API_ID'])){
+			
 			if($_POST['hash'] == "generate_hash")
 				$this->xcloner_settings->generate_new_hash();
 			else
@@ -860,6 +861,7 @@ class Xcloner_Api{
 		    
 		}
 		
+		@unlink($tmp_file);
 		exit;
 	}
 	

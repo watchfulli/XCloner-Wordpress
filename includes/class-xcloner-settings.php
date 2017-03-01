@@ -111,6 +111,9 @@ class Xcloner_Settings
 	
 	public function set_hash($hash = "")
 	{
+		if(substr($hash, 0, 1) != "-" and strlen($hash))
+			$hash = "-".$hash;
+			
 		$this->hash = substr( $hash, 0, 6);
 		
 		return $this;
