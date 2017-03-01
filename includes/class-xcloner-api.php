@@ -36,20 +36,21 @@ class Xcloner_Api{
 		$this->xcloner_settings 		= new Xcloner_Settings();
 		
 		//generating the hash suffix for tmp xcloner store folder
-		if(isset($_POST['hash']) and !isset($_POST['API_ID'])){
+		if(isset($_POST['hash'])){
 			
 			if($_POST['hash'] == "generate_hash")
 				$this->xcloner_settings->generate_new_hash();
 			else
 				$this->xcloner_settings->set_hash($_POST['hash']);
 		}
-		
+
+		$this->logger 					= new XCloner_Logger("xcloner_api", $this->xcloner_settings->get_hash());
 		$this->xcloner_file_system 		= new Xcloner_File_System($this->xcloner_settings->get_hash());
 		$this->xcloner_sanitization 	= new Xcloner_Sanitization();
 		$this->xcloner_requirements 	= new XCloner_Requirements();
 		$this->archive_system 			= new Xcloner_Archive($this->xcloner_settings->get_hash());
 		$this->xcloner_database 		= new XCloner_Database($this->xcloner_settings->get_hash());
-		$this->logger 					= new XCloner_Logger("xcloner_api", $this->xcloner_settings->get_hash());
+		
 		
 		if(isset($_POST['API_ID'])){
 			$this->logger->info("Processing ajax request ID ".substr($this->xcloner_sanitization->sanitize_input_as_string($_POST['API_ID']), 0 , 15));

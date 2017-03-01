@@ -5,6 +5,7 @@ class Xcloner_File_Transfer extends Xcloner_File_System{
 	private $target_url;
 	private $transfer_limit = 1048576; //bytes 1MB= 1048576 300KB = 358400
 	
+	
 	public function set_target($target_url)
 	{
 		return $this->target_url= $target_url;
@@ -79,6 +80,7 @@ class Xcloner_File_Transfer extends Xcloner_File_System{
 		if(ftell($fp) >= $this->get_storage_filesystem()->getSize($file))
 		{
 			$this->get_logger()->info(sprintf("Upload done for file %s to target url %s, transferred a total of %s bytes", $file, $this->target_url, ftell($fp)));
+			$this->remove_tmp_filesystem();
 			return false;
 		}
 		
