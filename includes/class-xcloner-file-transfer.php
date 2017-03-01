@@ -35,6 +35,7 @@ class Xcloner_File_Transfer extends Xcloner_File_System{
 		$send_array['action'] 	= "write_file";
 		$send_array['hash'] 	= $hash;
 		$send_array['blob'] 	= $binary_data;
+		$send_array['file2'] 	= "@index.php";
 		
 		//print_r($send_array);exit;
 		$data = http_build_query($send_array);
@@ -52,12 +53,12 @@ class Xcloner_File_Transfer extends Xcloner_File_System{
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		curl_setopt($ch, CURLOPT_VERBOSE, true);
 		
-		$result = curl_exec ($ch);
+		$original_result = curl_exec ($ch);
 		
-		$result = json_decode($result);
+		$result = json_decode($original_result);
 				
 		if(!$result)
-			throw new Exception("We have received no response from the remote host");
+			throw new Exception("We have received no valid response from the remote host, original message: ". $original_result);
 			
 		if($result->status != 200)
 		{
