@@ -367,7 +367,9 @@ jQuery(function () {
 	
 		xcloner_backup.params = xcloner_backup.get_form_params();
 		var data = JSON.stringify(xcloner_backup.params);
-
+		
+		xcloner_backup.set_cancel(false);
+		
 		xcloner_backup.do_ajax(data, "save_schedule")
 		return false;
 		})
