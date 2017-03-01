@@ -60,6 +60,13 @@ register_activation_hook( __FILE__, 'activate_xcloner' );
 register_deactivation_hook( __FILE__, 'deactivate_xcloner' );
 
 require_once plugin_dir_path( __FILE__ ) . 'includes/class-xcloner-activator.php';	
+
+if(version_compare(phpversion(), Xcloner_Activator::xcloner_minimum_version, '<'))
+{
+	return;
+
+}		
+		
 $db_installed_ver = get_option( "xcloner_db_version" );
 $xcloner_db_version = Xcloner_Activator::xcloner_db_version;
 
