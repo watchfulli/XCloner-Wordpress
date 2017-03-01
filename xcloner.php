@@ -63,8 +63,14 @@ require_once plugin_dir_path( __FILE__ ) . 'includes/class-xcloner-activator.php
 
 if(version_compare(phpversion(), Xcloner_Activator::xcloner_minimum_version, '<'))
 {
+	?>
+	<div class="error notice">
+		<p><?php echo sprintf(__("XCloner requires minimum PHP version %s in order to run correctly. We have detected your version as %s. Plugin is now deactivated."),Xcloner_Activator::xcloner_minimum_version, phpversion())?></p>
+	</div>
+	<?php	
+	require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+	deactivate_plugins( plugin_basename( __FILE__ ) );
 	return;
-
 }		
 		
 $db_installed_ver = get_option( "xcloner_db_version" );

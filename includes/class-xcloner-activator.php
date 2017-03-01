@@ -38,7 +38,6 @@ class Xcloner_Activator {
 		if(version_compare(phpversion(), Xcloner_Activator::xcloner_minimum_version, '<'))
 		{
 			wp_die('<p>'.sprintf(__("XCloner requires minimum PHP version %s in order to run correctly. We have detected your version as %s"),Xcloner_Activator::xcloner_minimum_version, phpversion()).'</p>',  __("XCloner Activation Error"), array( 'response'=>500, 'back_link'=>TRUE ) );
-
 		}
 		
 		$charset_collate = $wpdb->get_charset_collate();	
