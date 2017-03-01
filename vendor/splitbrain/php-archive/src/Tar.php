@@ -585,18 +585,12 @@ class Tar extends Archive
      */
     protected function writeFileHeader(FileInfo $fileinfo)
     {
-		if($fileinfo->getIsdir())
-			$size = 0;
-		else
-			$size = $fileinfo->getSize();
-			
         $this->writeRawFileHeader(
             $fileinfo->getPath(),
             $fileinfo->getUid(),
             $fileinfo->getGid(),
             $fileinfo->getMode(),
-            //$fileinfo->getSize(),
-            $size,
+            $fileinfo->getSize(),
             $fileinfo->getMtime(),
             $fileinfo->getIsdir() ? '5' : '0'
         );
