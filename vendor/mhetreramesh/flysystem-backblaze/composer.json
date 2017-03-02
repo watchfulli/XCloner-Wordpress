@@ -1,0 +1,43 @@
+{
+    "name": "mhetreramesh/flysystem-backblaze",
+    "type": "library",
+    "description": "Backblaze adapter for the flysystem filesystem abstraction library",
+    "keywords": ["flysystem", "filesystem", "api", "backblaze", "client"],
+    "homepage": "https://github.com/mhetreramesh/flysystem-backblaze",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ramesh Mhetre",
+            "email": "mhetreramesh@gmail.com",
+            "homepage": "https://about.me/rameshmhetre",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.5.0",
+        "league/flysystem": "~1.0",
+        "cwhite92/b2-sdk-php" : "^1.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit" : "~4.0||~5.0",
+        "scrutinizer/ocular": "~1.1",
+        "squizlabs/php_codesniffer": "~2.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Mhetreramesh\\Flysystem\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Mhetreramesh\\Flysystem\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "phpunit",
+        "format": "phpcbf --standard=psr2 src/"
+    },
+    "config": {
+        "sort-packages": true
+    }
+}

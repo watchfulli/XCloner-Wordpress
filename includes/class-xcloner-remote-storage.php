@@ -15,6 +15,9 @@ use League\Flysystem\Azure\AzureAdapter;
 use Aws\S3\S3Client;
 use League\Flysystem\AwsS3v3\AwsS3Adapter;
 
+use Mhetreramesh\Flysystem\BackblazeAdapter;
+use ChrisWhite\B2\Client as B2Client;
+
 class Xcloner_Remote_Storage{
 	
 	private $storage_fields = array(
@@ -68,7 +71,15 @@ class Xcloner_Remote_Storage{
 						"azure_api_key"			=> "string",
 						"azure_container"		=> "string",
 						"azure_cleanup_days"	=> "float",
-						),	
+						),
+					"backblaze" => array(
+						"text"						=> "BackBlaze",
+						"backblaze_enable"			=> "int",
+						"backblaze_account_id"		=> "string",
+						"backblaze_application_key"	=> "string",
+						"backblaze_bucket_name"		=> "string",
+						"backblaze_cleanup_days"	=> "float",		
+						),		
 						
 					);
 	
@@ -294,6 +305,24 @@ class Xcloner_Remote_Storage{
 		$filesystem = new Filesystem($adapter, new Config([
 				'disable_asserts' => true,
 			]));
+
+		return array($adapter, $filesystem);
+	}
+	
+	public function get_backblaze_filesystem()
+	{
+		$this->logger->info(sprintf("Creating the BACKBLAZE remote storage connection"), array(""));
+		
+		if (version_compare(phpversion(), '5.5.0', '<')) 
+		{
+				throw new Exception("BACKBLAZE API requires PHP 5.5 to be installed!");
+		}
+		
+		
+		$client = new B2Client(get_option("xcloner_backblaze_account_id"), get_option("xcloner_backblaze_application_key"));
+		$adapter = new BackblazeAdapter($client, get_option("xcloner_backblaze_bucket_name"));
+		
+		$filesystem = new Filesystem($adapter);
 
 		return array($adapter, $filesystem);
 	}

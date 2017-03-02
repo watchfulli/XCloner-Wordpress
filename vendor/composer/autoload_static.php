@@ -33,6 +33,7 @@ class ComposerStaticInit571f9d19802717f7be61d57b40d60b28
         array (
             'Monolog\\' => 8,
             'MicrosoftAzure\\Storage\\' => 23,
+            'Mhetreramesh\\Flysystem\\' => 23,
         ),
         'L' => 
         array (
@@ -51,6 +52,10 @@ class ComposerStaticInit571f9d19802717f7be61d57b40d60b28
             'GuzzleHttp\\Psr7\\' => 16,
             'GuzzleHttp\\Promise\\' => 19,
             'GuzzleHttp\\' => 11,
+        ),
+        'C' => 
+        array (
+            'ChrisWhite\\B2\\' => 14,
         ),
         'A' => 
         array (
@@ -82,6 +87,10 @@ class ComposerStaticInit571f9d19802717f7be61d57b40d60b28
         'MicrosoftAzure\\Storage\\' => 
         array (
             0 => __DIR__ . '/..' . '/microsoft/azure-storage/src',
+        ),
+        'Mhetreramesh\\Flysystem\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/mhetreramesh/flysystem-backblaze/src',
         ),
         'League\\Flysystem\\Sftp\\' => 
         array (
@@ -118,6 +127,10 @@ class ComposerStaticInit571f9d19802717f7be61d57b40d60b28
         'GuzzleHttp\\' => 
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/guzzle/src',
+        ),
+        'ChrisWhite\\B2\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/cwhite92/b2-sdk-php/src',
         ),
         'Aws\\' => 
         array (

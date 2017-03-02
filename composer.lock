@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "3082b6ea258745fbffe983477458a572",
+    "content-hash": "110b361da5eda4768bff2464dbf6a9d1",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -125,6 +125,56 @@
             "description": "jQuery JavaScript Library",
             "homepage": "http://jquery.com",
             "time": "2016-09-23T06:06:29+00:00"
+        },
+        {
+            "name": "cwhite92/b2-sdk-php",
+            "version": "v1.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cwhite92/b2-sdk-php.git",
+                "reference": "3a83aedbb5d9c85b33524defef5f1ec7895ed9ac"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cwhite92/b2-sdk-php/zipball/3a83aedbb5d9c85b33524defef5f1ec7895ed9ac",
+                "reference": "3a83aedbb5d9c85b33524defef5f1ec7895ed9ac",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^6.1",
+                "php": ">=5.5.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.8.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "ChrisWhite\\B2\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Chris White",
+                    "email": "chris@cwhite.me",
+                    "homepage": "https://cwhite.me"
+                }
+            ],
+            "description": "A SDK for working with B2 cloud storage.",
+            "homepage": "https://github.com/cwhite92/b2-sdk-php",
+            "keywords": [
+                "b2",
+                "backblaze",
+                "backup",
+                "cloud",
+                "filesystem",
+                "storage"
+            ],
+            "time": "2016-07-21T02:38:03+00:00"
         },
         {
             "name": "dropbox/dropbox-sdk",
@@ -605,6 +655,59 @@
             ],
             "description": "Flysystem adapter for SFTP",
             "time": "2016-12-08T21:28:01+00:00"
+        },
+        {
+            "name": "mhetreramesh/flysystem-backblaze",
+            "version": "1.0.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mhetreramesh/flysystem-backblaze.git",
+                "reference": "a5579267ea8fe602008329b8697a2cda822735a1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mhetreramesh/flysystem-backblaze/zipball/a5579267ea8fe602008329b8697a2cda822735a1",
+                "reference": "a5579267ea8fe602008329b8697a2cda822735a1",
+                "shasum": ""
+            },
+            "require": {
+                "cwhite92/b2-sdk-php": "^1.2",
+                "league/flysystem": "~1.0",
+                "php": ">=5.5.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.0||~5.0",
+                "scrutinizer/ocular": "~1.1",
+                "squizlabs/php_codesniffer": "~2.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Mhetreramesh\\Flysystem\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ramesh Mhetre",
+                    "email": "mhetreramesh@gmail.com",
+                    "homepage": "https://about.me/rameshmhetre",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Backblaze adapter for the flysystem filesystem abstraction library",
+            "homepage": "https://github.com/mhetreramesh/flysystem-backblaze",
+            "keywords": [
+                "Flysystem",
+                "api",
+                "backblaze",
+                "client",
+                "filesystem"
+            ],
+            "time": "2016-08-27T07:24:32+00:00"
         },
         {
             "name": "microsoft/azure-storage",

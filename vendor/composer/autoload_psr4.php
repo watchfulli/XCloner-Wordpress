@@ -12,6 +12,7 @@ return array(
     'Psr\\Http\\Message\\' => array($vendorDir . '/psr/http-message/src'),
     'Monolog\\' => array($vendorDir . '/monolog/monolog/src/Monolog'),
     'MicrosoftAzure\\Storage\\' => array($vendorDir . '/microsoft/azure-storage/src'),
+    'Mhetreramesh\\Flysystem\\' => array($vendorDir . '/mhetreramesh/flysystem-backblaze/src'),
     'League\\Flysystem\\Sftp\\' => array($vendorDir . '/league/flysystem-sftp/src'),
     'League\\Flysystem\\Dropbox\\' => array($vendorDir . '/league/flysystem-dropbox/src'),
     'League\\Flysystem\\Azure\\' => array($vendorDir . '/league/flysystem-azure/src'),
@@ -21,5 +22,6 @@ return array(
     'GuzzleHttp\\Psr7\\' => array($vendorDir . '/guzzlehttp/psr7/src'),
     'GuzzleHttp\\Promise\\' => array($vendorDir . '/guzzlehttp/promises/src'),
     'GuzzleHttp\\' => array($vendorDir . '/guzzlehttp/guzzle/src'),
+    'ChrisWhite\\B2\\' => array($vendorDir . '/cwhite92/b2-sdk-php/src'),
     'Aws\\' => array($vendorDir . '/aws/aws-sdk-php/src'),
 );
