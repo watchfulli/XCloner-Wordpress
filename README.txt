@@ -32,7 +32,7 @@ PHP 5.4+ with mod CURL installed
    * Received email notifications of created backups
    * Generate automatic backups based on cronjobs, it can run daily, weekly, monthly or even hourly
    * Restore your backups on any other location, XCloner will attempt to extract the backup archive files for you, as well as import the mysql dump and update the Wordpress config details
-   * Upload your backups to Remote Storage locations supporting FTP, SFTP, Dropbox, AWS, Azure Blog and many more to come
+   * Upload your backups to Remote Storage locations supporting FTP, SFTP, Dropbox, AWS, Azure Blog, BackBlaze and many more to come
    * Watch every step of XCloner through it's built in debugger
    * Althrough we have optimized XCloner to run properly on most hosts, we give Developers options to customize it's running speed and avoid backup timeouts, all from the XCloner Config-> System Options
    * Ability to split backups into multiple smaller parts if a certain size limit is reached
