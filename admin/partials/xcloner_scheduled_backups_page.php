@@ -3,7 +3,7 @@ $xcloner_scheduler = new Xcloner_Scheduler();
 $xcloner_remote_storage = new Xcloner_Remote_Storage();
 $available_storages = $xcloner_remote_storage->get_available_storages();
 ?>
-<?php if(!defined("DISABLE_WP_CRON") or !DISABLE_WP_CRON): ?>
+<?php if(!defined("DISABLE_WP_CRON") || !DISABLE_WP_CRON): ?>
 	<div id="setting-error-" class="error settings-error notice is-dismissible"> 
 		<p><strong>
 			<?php echo sprintf(__('We have noticed that DISABLE_WP_CRON is disabled, we recommend enabling that and setting up wp-cron.php to run manually through your hosting account scheduler as explained <a href="%s" target="_blank">here</a>', 'xcloner-backup-and-restore'), "http://www.inmotionhosting.com/support/website/wordpress/disabling-the-wp-cronphp-in-wordpress") ?>
