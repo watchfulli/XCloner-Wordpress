@@ -1,4 +1,5 @@
 /** global: CustomEvent */
+/** global: Event */
 
 class Xcloner_Restore{
 
@@ -97,14 +98,23 @@ class Xcloner_Restore{
 				jQuery(".xcloner-restore .steps.active .progress").show();
 				
 				if(e.detail.class == "indeterminate")
+				{
 					jQuery(".xcloner-restore .steps.active .progress > div").addClass(e.detail.class).removeClass('determinate')
+				}
+				
 				if(e.detail.class == "determinate")
+				{
 					jQuery(".xcloner-restore .steps.active .progress > div").addClass(e.detail.class).removeClass('indeterminate')
+				}
 				
 				if(e.detail.percent == 100)
+				{
 					jQuery(".xcloner-restore .steps.active .progress > div").removeClass('indeterminate').addClass('determinate').css("width", e.detail.percent+"%")	
-				else	
+				}
+				else
+				{	
 					jQuery(".xcloner-restore .steps.active .progress .determinate").css("width", e.detail.percent+"%")
+				}
 			}
 				
 		}, false);
@@ -282,7 +292,6 @@ class Xcloner_Restore{
 		
 		if(response.statusText.extracted_files)
 		{
-			//console.log(response.statusText.extracted_files);
 			document.dispatchEvent(new CustomEvent("remote_restore_update_files_list", {detail: {files: response.statusText.extracted_files}}));
 		}
 			
@@ -328,8 +337,6 @@ class Xcloner_Restore{
 	
 	remote_restore_mysql_backup_file_callback(response, status, params = new Object())
 	{
-		//var processed = parseInt(response.statusText.start)+parseInt(response.statusText.processed)
-		
 		if(!status)
 		{
 			this.start = response.statusText.start;
@@ -345,12 +352,6 @@ class Xcloner_Restore{
 		params.query = "";
 		
 		var processed = parseInt(response.statusText.start)+parseInt(response.statusText.processed)
-		
-		if(response.statusText.extracted_files)
-		{
-			//console.log(response.statusText.extracted_files);
-			//document.dispatchEvent(new CustomEvent("remote_restore_update_files_list", {detail: {files: response.statusText.extracted_files}}));
-		}
 			
 		if(!response.statusText.finished)
 		{
@@ -597,7 +598,9 @@ class Xcloner_Restore{
 		}
 		
 		if(!this.restore_script_url)
+		{
 			return false;
+		}
 		
 		var $this = this;
 		
