@@ -164,18 +164,16 @@ jQuery(document).ready(function(){
 			'selectNone'
 		],
 		"language": {
-				"emptyTable": "No schedules available"
+				"emptyTable": "No schedules available",
+				"buttons": {
+					selectAll: "Select all items",
+					selectNone: "Select none"
+				}
 		},
 		columnDefs: [
 			{ targets: 'no-sort', orderable: false },
 			{ className: "hide-on-med-and-down", "targets": [ 3, 5 ] }
 		],
-		language: {
-	        buttons: {
-	            selectAll: "Select all items",
-	            selectNone: "Select none"
-	        }
-	    },
 	    "ajax": ajaxurl+"?action=get_scheduler_list",
 	    "fnDrawCallback": function( oSettings ) {
 			

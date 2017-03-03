@@ -401,8 +401,7 @@ class XCloner_Database extends wpdb{
 						$return['tableName'] 		= $tableName;
 						$return['totalRecords'] 	= $tableInfo[1];
 
-						//if(intval($return['totalRecords']) != 0)
-						//print_r($tableInfo);
+						$processed_records = 0;
 						
 						if(trim($tableName) !=""  and !$tableInfo[2])
 							$processed_records = $this->export_table($databaseName, $tableName, $startAtRecord, $this->recordsPerSession, $dumpfile);

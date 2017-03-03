@@ -55,7 +55,7 @@ class Xcloner_Logger extends Logger{
 		if($hash and $logger_path_tmp)
 			$this->pushHandler(new StreamHandler($logger_path_tmp, $debug_level));
 		
-		return $this;
+		//return $this;
 	}
 	
 	function get_main_logger_url()
