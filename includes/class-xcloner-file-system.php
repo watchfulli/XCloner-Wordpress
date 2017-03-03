@@ -161,7 +161,7 @@ class Xcloner_File_System{
 	public function get_latest_backups()
 	{
 		$files = $this->get_backup_archives_list();
-		
+
 		if(is_array($files))
 			$this->sort_by($files, "timestamp","desc");
 		
@@ -614,21 +614,31 @@ class Xcloner_File_System{
 		return $name;	
 	}
 	
+	private function sort_by_usort($a, $b)
+	{
+		global $field, $direction;
+		
+		$a = $a["' . $field . '"];
+        $b = $b["' . $field . '"];
+
+        if ($a == $b)
+        {
+            return 0;
+        }
+		
+		if(strlower($direction) == 'desc' )
+			return ($a > $b) ? -1 : 1;
+		else	
+			return ($a < $b) ? -1 : 1;
+			
+        //return ($a ($direction == 'desc' ? '>' : '<')  $b) ? -1 : 1;
+	}
+	
 	public function sort_by( &$array, $field, $direction = 'asc')
 	{
 		$direction = strtolower($direction);
 		
-	    usort($array, create_function('$a, $b', '
-	        $a = $a["' . $field . '"];
-	        $b = $b["' . $field . '"];
-	
-	        if ($a == $b)
-	        {
-	            return 0;
-	        }
-	
-	        return ($a ' . ($direction == 'desc' ? '>' : '<') .' $b) ? -1 : 1;
-	    '));
+	    usort($array, array($this, sort_by_usort));
 	
 	    return true;
 	}
