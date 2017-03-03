@@ -13,7 +13,8 @@ class Xcloner_Logger extends Logger{
 	public function __construct($logger_name = "xcloner_logger", $hash="")
 	{
 		$xcloner_settings 	= new Xcloner_Settings($hash);
-		$logger_path = $xcloner_settings->get_xcloner_store_path().DS.$xcloner_settings->get_logger_filename();
+		$logger_path 		= $xcloner_settings->get_xcloner_store_path().DS.$xcloner_settings->get_logger_filename();
+		$logger_path_tmp 	= "";
 		
 		if($hash)
 			$logger_path_tmp = $xcloner_settings->get_xcloner_tmp_path().DS.$xcloner_settings->get_logger_filename(1);
@@ -44,11 +45,13 @@ class Xcloner_Logger extends Logger{
 
 	
 		if($logger_path)
-			$this->pushHandler($stream = new RotatingFileHandler($logger_path, $this->max_logger_files, $debug_level));
+		{
+			$stream = new RotatingFileHandler($logger_path, $this->max_logger_files, $debug_level);
+			$this->pushHandler($stream);
 			
-		
-		$this->main_logger_url =  $stream->getUrl();
-		
+			$this->main_logger_url =  $stream->getUrl();
+		}
+			
 		if($hash and $logger_path_tmp)
 			$this->pushHandler(new StreamHandler($logger_path_tmp, $debug_level));
 		

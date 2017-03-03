@@ -14,12 +14,13 @@ class Xcloner_File_System{
 	public  $tmp_filesystem;
 	public  $storage_filesystem;
 	private $xcloner_settings_append;
-	private $logger;
 	
+	private $logger;
 	private $start_adapter;
 	private $tmp_adapter;
 	private $storage_adapter;
 	private $xcloner_requirements;
+	private $xcloner_settings;
 	
 	private $files_counter;
 	private $files_size;
