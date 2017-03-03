@@ -199,11 +199,13 @@ jQuery(document).ready(function(){
 						
 						var hash = jQuery(this).attr('href');
 						var id = hash.substr(1)
+						var data = "";
+						
 						if(show_delete_alert && confirm('Are you sure you want to delete it?'))
 						{
-							var data = xcloner_manage_backups.delete_backup_by_name(id, (this), dataTable);
+							data = xcloner_manage_backups.delete_backup_by_name(id, (this), dataTable);
 						}else{	
-							var data = xcloner_manage_backups.delete_backup_by_name(id, (this), dataTable);
+							data = xcloner_manage_backups.delete_backup_by_name(id, (this), dataTable);
 						}
 						
 						e.preventDefault();	
