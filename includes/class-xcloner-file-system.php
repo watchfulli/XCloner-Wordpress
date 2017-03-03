@@ -27,6 +27,9 @@ class Xcloner_File_System{
 	private $backup_archive_extensions = array("tar", "tgz", "tar.gz", "gz", "csv");
 	private $backup_name_tags = array('[time]', '[hostname]', '[domain]');
 	
+	private $sort_direction;
+	private $sort_field;
+	
 	public function __construct($hash = "")
 	{
 		$this->logger = new XCloner_Logger('xcloner_file_system', $hash);
