@@ -238,8 +238,10 @@ class XCloner_Database extends wpdb{
 	/*
 	 * Returns an array of tables from a database and mark $excluded ones
 	 *
-	 * name: lisTables
-	 * @param array $excluded array of tables to mark as excluded
+	 * name: list_tables
+	 * @param string $database
+	 * @param array $include
+	 * @param int $get_num_records
 	 * @return array $tablesList
 	 */
 	public function list_tables($database = "", $included = array(), $get_num_records = 0)
