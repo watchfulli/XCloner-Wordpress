@@ -11,12 +11,6 @@ $xcloner_file_transfer = new Xcloner_File_Transfer();
 $xcloner_file_transfer->set_target("http://thinkovi.com/xcloner/xcloner_restore.php");
 
 $start = 0 ;
-while( $start = $xcloner_file_transfer->transfer_file("backup_localhost-2017-02-07_13-29-sql-ac9b0.tgz", $start))
-{
-	//echo $start."--";
-}
-
-echo "done";
 ?>
 <div class="col s12 ">
 	<div>
