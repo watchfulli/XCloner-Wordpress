@@ -576,6 +576,7 @@ class Xcloner_Restore{
 		document.dispatchEvent(new CustomEvent("remote_restore_update_files_list", {detail: {files: ""}}));
 	}
 	
+	/** global: ajaxurl */
 	do_ajax(callback, action="", params= new Object())
 	{
 		params.action 	= action

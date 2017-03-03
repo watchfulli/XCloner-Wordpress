@@ -6,6 +6,7 @@ class Xcloner_Remote_Storage
 		
 	}
 	
+	/** global: ajaxurl */
 	toggle_status(elem)
 	{
 		var field = jQuery(elem).attr("name")
