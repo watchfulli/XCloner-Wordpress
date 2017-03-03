@@ -1,3 +1,5 @@
+/** global: CustomEvent */
+
 class Xcloner_Restore{
 
 	constructor(hash)
