@@ -104,16 +104,22 @@ function show_ajax_error(title, msg, json){
 	//var json = jQuery.parseJSON( body )
 	
 	if(typeof xcloner_backup !== 'undefined')
+	{
 		xcloner_backup.cancel_backup();
+	}
 	
 	if(json.responseText)
+	{
 		msg = msg+": "+json.responseText;
+	}
 		
 	jQuery("#error_modal .title").text(title);
 	jQuery("#error_modal .msg").text(msg);
 	
 	if(json.status)
+	{
 		jQuery("#error_modal .status").text(json.status+" "+json.statusText);
+	}
 		
 	jQuery("#error_modal .body").text(JSON.stringify(json));
 	var error_modal = jQuery("#error_modal").modal();
