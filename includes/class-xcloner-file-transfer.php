@@ -30,7 +30,8 @@ class Xcloner_File_Transfer extends Xcloner_File_System{
 		$binary_data =  fread($fp, $this->transfer_limit);
 		
 		$tmp_filename = "xcloner_upload_".substr(md5(time()), 0, 5);
-		$tmp_file = $this->get_tmp_filesystem()->write($tmp_filename, $binary_data);
+		
+		$this->get_tmp_filesystem()->write($tmp_filename, $binary_data);
 		
 		$tmp_file_path = $this->get_tmp_filesystem_adapter()->applyPathPrefix($tmp_filename);
 
@@ -42,9 +43,8 @@ class Xcloner_File_Transfer extends Xcloner_File_System{
 		$send_array['hash'] 	= $hash;
 		#$send_array['blob'] 	= $binary_data;
 		$send_array['blob'] 	= $this->curl_file_create($tmp_file_path,'application/x-binary',$tmp_filename);
-		//var_dump($send_array);exit;
 		
-		$data = http_build_query($send_array);
+		//$data = http_build_query($send_array);
 		
 		$this->get_logger()->info(sprintf("Sending curl request to %s with %s data of file %s starting position %s using temporary file %s", $this->target_url, $this->transfer_limit, $file, $start, $tmp_filename));
 		
@@ -74,7 +74,6 @@ class Xcloner_File_Transfer extends Xcloner_File_System{
 		if($result->status != 200)
 		{
 			throw new Exception($result->response);
-			return false;
 		}
 		
 		if(ftell($fp) >= $this->get_storage_filesystem()->getSize($file))
