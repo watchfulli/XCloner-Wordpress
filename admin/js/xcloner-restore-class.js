@@ -50,10 +50,10 @@ class Xcloner_Restore{
 			
 			for( var key in files)
 			{
+				var selected = "not-selected";
+				
 				if(files[key].selected)
-					var selected = "selected";
-				else
-					var selected = "not-selected";
+					selected = "selected";
 					
 				jQuery('.xcloner-restore #remote_backup_file').append("<option value='"+files[key].path+"' "+selected+">"+files[key].path+"("+e.detail.$this.getSize(files[key].size)+" MB)"+"</option>").addClass("file");
 			}
