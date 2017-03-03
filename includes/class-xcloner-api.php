@@ -17,7 +17,6 @@ class Xcloner_Api{
 	private $xcloner_settings;
 	private $xcloner_file_system;
 	private $xcloner_requirements;
-	private $_file_system;
 	private $archive_system;
 	private $form_params;
 	private $logger;
