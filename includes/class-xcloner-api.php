@@ -17,6 +17,7 @@ class Xcloner_Api{
 	private $xcloner_settings;
 	private $xcloner_file_system;
 	private $xcloner_requirements;
+	private $xcloner_sanitization;
 	private $archive_system;
 	private $form_params;
 	private $logger;
@@ -104,6 +105,7 @@ class Xcloner_Api{
 		$scheduler = new Xcloner_Scheduler();
 		$params = array();
 		$schedule = array();
+		$response = array();
 		
 		if(isset($_POST['data']))
 			$params = json_decode(stripslashes($_POST['data']));
@@ -147,9 +149,6 @@ class Xcloner_Api{
 			
 			$this->form_params['excluded_files'] = ($return);
 			
-			//print_r($this->form_params['database'] );
-			//print_r($this->form_params['excluded_files']);
-			
 			$schedule['start_at'] = $this->form_params['backup_params']['start_at'] ;
 			
 			if(!isset($_POST['status']))
@@ -176,7 +175,7 @@ class Xcloner_Api{
 		
 		if(!isset($_POST['id']))
 		{
-			$insert = $wpdb->insert( 
+			$wpdb->insert( 
 				$wpdb->prefix.'xcloner_scheduler', 
 				$schedule, 
 				array( 
@@ -185,7 +184,7 @@ class Xcloner_Api{
 				) 
 			);
 		}else		{
-			$insert = $wpdb->update( 
+			$wpdb->update( 
 				$wpdb->prefix.'xcloner_scheduler', 
 				$schedule, 
 				array( 'id' => $_POST['id'] ), 
@@ -463,7 +462,7 @@ class Xcloner_Api{
 				
 				//if(in_array($file['path'], $this->xcloner_file_system->get_excluded_files()))
 				//echo $file['path']."--".$this->xcloner_file_system->is_excluded($file);
-				if($excluded_pattern = $this->xcloner_file_system->is_excluded($file))
+				if($this->xcloner_file_system->is_excluded($file))
 					$selected = true;
 				else
 					$selected = false;
@@ -693,6 +692,8 @@ class Xcloner_Api{
 		if (!current_user_can('manage_options')) {
 			die("Not allowed access here!");
 		}
+		
+		$backup_parts = array();
 		
 		$source_backup_file = $this->xcloner_sanitization->sanitize_input_as_string($_POST['file']);
 		$start = $this->xcloner_sanitization->sanitize_input_as_int($_POST['start']);
