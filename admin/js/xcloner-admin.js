@@ -76,8 +76,6 @@
 
 
 jQuery( document ).ajaxError(function(err, request) {
-		//console.log( err );
-		//console.log( request );
 		//show_ajax_error("dd", "dd12", request)
 });
 
@@ -100,6 +98,7 @@ function doShortText(elem)
 	elem.attr("data-text", text).text(first+"..."+last);
 }
 
+/** global: xcloner_backup */
 function show_ajax_error(title, msg, json){
 	
 	//var json = jQuery.parseJSON( body )
