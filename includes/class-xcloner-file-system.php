@@ -616,7 +616,8 @@ class Xcloner_File_System{
 	
 	private function sort_by_usort($a, $b)
 	{
-		global $field, $direction;
+		$field = $this->sort_field;
+		$direction = $this->sort_direction;
 		
 		$a = $a["' . $field . '"];
         $b = $b["' . $field . '"];
@@ -636,7 +637,8 @@ class Xcloner_File_System{
 	
 	public function sort_by( &$array, $field, $direction = 'asc')
 	{
-		$direction = strtolower($direction);
+		$this->sort_direction = strtolower($direction);
+		$this->sort_field = $field;
 		
 	    usort($array, array($this, sort_by_usort));
 	
