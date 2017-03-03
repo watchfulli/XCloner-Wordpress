@@ -285,10 +285,10 @@ class Xcloner_File_System{
 		
 		foreach($list as $file_info)
 		{
-			$data = array();
-			
 			if(isset($file_info['extension']) and $file_info['extension'] == "csv")
 			{
+				$data = array();
+				
 				$lines = explode(PHP_EOL, $this->get_storage_filesystem()->read($file_info['path']));
 				foreach($lines as $line)
 					if($line)
