@@ -65,7 +65,7 @@ class Xcloner_File_System{
 					'disable_asserts' => true,
 				]));
 		}catch(Exception $e){
-			return false;
+			$this->logger->error("Filesystem Initialization Error: ".$e->getMessage());
 		}
 		
 		
@@ -121,7 +121,7 @@ class Xcloner_File_System{
 	
 	public function get_start_path_file_info($file)
 	{
-		//$info= $this->getMetadataFull('start_adapter', $file);
+		$info= $this->getMetadataFull('start_adapter', $file);
 		return $this->start_filesystem->normalizeFileInfo($info);
 	}
 	
@@ -587,7 +587,7 @@ class Xcloner_File_System{
 		
 		$start_time = microtime();
 		
-		$data = $this->tmp_filesystem->read($tmp_file);
+		$this->tmp_filesystem->read($tmp_file);
 		
 		$end_time = microtime() - $start_time;
 		
