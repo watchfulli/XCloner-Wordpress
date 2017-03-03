@@ -79,9 +79,13 @@ class Xcloner_Manage_Backups{
 						  jQuery("#backup_cotent_modal .modal-content .files-list").prepend(files_text.reverse().join("\n"));
 						  
 						  if(!response.finished && jQuery('#backup_cotent_modal').is(':visible'))
+						  {
 							$this.list_backup_content_callback(backup_file, response.start, response.part)
+						  }
 						  else
+						  {
 							jQuery("#backup_cotent_modal .progress > div").addClass('determinate').removeClass(".indeterminate").css('width', "100%")
+						  }
 						  
 					  },
 					  error: function(xhr, textStatus, error){
@@ -196,9 +200,12 @@ jQuery(document).ready(function(){
 						var hash = jQuery(this).attr('href');
 						var id = hash.substr(1)
 						if(show_delete_alert && confirm('Are you sure you want to delete it?'))
+						{
 							var data = xcloner_manage_backups.delete_backup_by_name(id, (this), dataTable);
-						else	
+						}else{	
 							var data = xcloner_manage_backups.delete_backup_by_name(id, (this), dataTable);
+						}
+						
 						e.preventDefault();	
 					})
 				
@@ -243,12 +250,6 @@ jQuery(document).ready(function(){
 		}
 	})
 	
-	/*jQuery("#save_schedule").on("submit", function(){
-
-		xcloner_scheduler.save_schedule(jQuery(this), dataTable)
-		
-		return false;
-	})*/
 	
 	jQuery("#remote_storage_modal").modal();
 	
