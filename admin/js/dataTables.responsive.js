@@ -20,6 +20,8 @@
  *
  * For details please refer to: http://www.datatables.net
  */
+ /** global: define */
+ 
 (function( factory ){
 	if ( typeof define === 'function' && define.amd ) {
 		// AMD
