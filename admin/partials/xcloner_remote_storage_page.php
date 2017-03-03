@@ -10,7 +10,7 @@
 			<!-- FTP STORAGE-->
 			<li id="ftp">
 				<div class="collapsible-header">
-					<i class="material-icons">computer</i><?php echo __("Ftp Storage",'xcloner-backup-and-restore')?>
+					<i class="material-icons">computer</i><?php echo __("FTP Storage",'xcloner-backup-and-restore')?>
 					<div class="right">
 						<div class="switch">
 							<label>

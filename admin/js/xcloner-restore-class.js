@@ -218,7 +218,7 @@ class Xcloner_Restore{
 		
 		if(this.resume.callback == "get_remote_mysqldump_files_callback")
 		{
-			console.log("do resume");
+			//console.log("do resume");
 			this.do_ajax(this.resume.callback, this.resume.action, this.resume.params);
 			this.resume = new Object();
 			return;
@@ -313,7 +313,7 @@ class Xcloner_Restore{
 		
 		if(this.resume.callback == "remote_restore_backup_file_callback")
 		{
-			console.log("do resume");
+			//console.log("do resume");
 			this.do_ajax(this.resume.callback, this.resume.action, this.resume.params);
 			this.resume = new Object();
 			return;
@@ -412,7 +412,7 @@ class Xcloner_Restore{
 		
 		if(this.resume.callback == "remote_restore_mysql_backup_file_callback")
 		{
-			console.log("do resume mysql backup restore");
+			//console.log("do resume mysql backup restore");
 			this.do_ajax(this.resume.callback, this.resume.action, this.resume.params);
 			this.resume = new Object();
 			return;

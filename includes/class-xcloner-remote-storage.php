@@ -23,7 +23,7 @@ class Xcloner_Remote_Storage{
 	private $storage_fields = array(
 					"option_prefix" => "xcloner_",
 					"ftp" => array(
-						"text"				=> "Ftp",
+						"text"				=> "FTP",
 						"ftp_enable"		=> "int",
 						"ftp_hostname" 		=> "string",
 						"ftp_port" 			=> "int",
