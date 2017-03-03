@@ -659,7 +659,7 @@ class Xcloner_File_System{
 		
 		if($xcloner_exclude_files_larger_than_mb = $this->xcloner_settings->get_xcloner_option('xcloner_exclude_files_larger_than_mb'))
 		{
-			if(isset($file['size']) and $file['size'] > $this->calc_to_bytes($xcloner_exclude_files_larger_than_mb))
+			if(isset($file['size']) && $file['size'] > $this->calc_to_bytes($xcloner_exclude_files_larger_than_mb))
 				return "> ".$xcloner_exclude_files_larger_than_mb."MB";
 		}
 		
