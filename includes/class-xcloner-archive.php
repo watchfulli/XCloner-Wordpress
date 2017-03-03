@@ -12,9 +12,13 @@ class Xcloner_Archive extends Tar
 	private $files_to_process_per_request 	= 250; //block of 512 bytes
 	private $compression_level 				= 0; //0-9 , 0 uncompressed
 	private $xcloner_split_backup_limit		= 2048; //2048MB
+	private $processed_size_bytes			= 0 ;
 	
 	private $archive_name;
 	private $backup_archive;
+	private $filesystem;
+	private $logger;
+	private $xcloner_settings;
 	
 	public function __construct($hash = "", $archive_name = "")
 	{
