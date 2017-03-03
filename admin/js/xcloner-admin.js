@@ -104,7 +104,7 @@ function show_ajax_error(title, msg, json){
 	
 	//var json = jQuery.parseJSON( body )
 	
-	if(xcloner_backup !== undefined)
+	if(typeof xcloner_backup !== 'undefined')
 		xcloner_backup.cancel_backup();
 	
 	if(json.responseText)
