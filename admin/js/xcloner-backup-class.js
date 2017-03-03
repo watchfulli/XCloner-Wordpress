@@ -55,13 +55,19 @@ class Xcloner_Backup{
 		if(json.extra.stats)
 		{	
 			if(json.extra.stats.tables_count !== undefined)
+			{
 				jQuery(elem).find(".table-counter").text(parseInt(json.extra.stats.tables_count));
+			}
 			
 			if(json.extra.stats.database_count !== undefined)
+			{
 				jQuery(elem).find(".database-counter").text(parseInt(json.extra.stats.database_count));
+			}
 
 			if(json.extra.stats.total_records !== undefined)
+			{
 				jQuery(elem).find(".total-records").text(parseInt(json.extra.stats.total_records));
+			}
 		}
 		
 		if(json.extra.tableName)
@@ -139,7 +145,9 @@ class Xcloner_Backup{
 	{
 		
 		if(json.total_files_num)
+		{
 			jQuery(".file-system .file-counter").text(parseInt(json.total_files_num) + parseInt(jQuery(".file-system .file-counter").text()));
+		}
 		
 		if(json.total_files_size)	{
 			var size = parseFloat(json.total_files_size) + parseFloat(jQuery(".file-system .file-size-total").text())
@@ -147,7 +155,9 @@ class Xcloner_Backup{
 		}
 		
 		if(json.last_logged_file)
+		{
 			jQuery(".file-system .last-logged-file").text(json.last_logged_file);
+		}
 		
 		if(!json.finished /*&& !this.cancel*/){
 			
@@ -189,12 +199,16 @@ class Xcloner_Backup{
 			return false;*/
 			
 		if(json.extra)
+		{
 			this.params.extra = json.extra;
+		}
 		
 		if(json.extra)
 		{	
 			if(json.extra.start_at_line !== undefined)
+			{
 				jQuery(elem).find(".file-counter").text(parseInt(json.extra.start_at_line));
+			}
 			
 			if(json.extra.start_at_line !== undefined){
 				//var prev_backup_size = parseInt(jQuery(elem).find(".file-size-total").attr('data-processed'));
@@ -207,9 +221,13 @@ class Xcloner_Backup{
 		if(json.extra.processed_file)
 		{
 			if(json.extra.start_at_byte !== undefined && json.extra.start_at_byte)	
+			{
 				var processed_size = json.extra.start_at_byte;
+			}
 			else
+			{
 				var processed_size = json.extra.processed_file_size;
+			}
 				
 			jQuery(elem).find(".last-logged-file").text(json.extra.processed_file+" ("+this.getSize(processed_size, 1024)+" KB)");	
 		}
@@ -368,6 +386,7 @@ class Xcloner_Backup{
 		this.resume.init = init
 	}
 	
+	/** global: ajaxurl */
 	do_ajax(elem, action, init = 0)
 	{
 		var hash = '';
