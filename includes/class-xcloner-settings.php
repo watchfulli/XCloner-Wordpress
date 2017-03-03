@@ -5,6 +5,7 @@ class Xcloner_Settings
 	private $logger_file = "xcloner_main_%s.log";
 	private $logger_file_hash = "xcloner%s.log";
 	private $hash ;
+	private $xcloner_sanitization;
 	
 	public function __construct($hash = "")
 	{
