@@ -22,7 +22,9 @@ jQuery(document).ready(function(){
 				  data: { action : 'get_schedule_by_id', id: id},
 				  success: function(response){
 					  if(response.id == id)
-						$this.create_modal(response)
+						{
+							$this.create_modal(response)
+						}
 					  },
 				  dataType: 'json'
 				});
@@ -55,9 +57,13 @@ jQuery(document).ready(function(){
 			this.edit_modal.find("#schedule_id").text(response.id)
 			
 			if(response.status == 1)
+			{
 				this.edit_modal.find("#status").attr("checked", "checked");
-			else	
+			}
+			else
+			{	
 				this.edit_modal.find("#status").removeAttr("checked");
+			}
 				
 			this.edit_modal.find("#schedule_id").text(response.id)
 			this.edit_modal.find("#schedule_id_hidden").val(response.id)
@@ -100,18 +106,6 @@ jQuery(document).ready(function(){
 		
 		save_schedule(form, dataTable)
 		{
-			/*if(!this.IsJsonString(jQuery("#table_params").val()) )
-			{
-				//alert("Database field is not a valid json data!");
-				//return false;
-			}
-			
-			if(!this.IsJsonString(jQuery("#excluded_files").val()) )
-			{
-				alert("Exclude files field is not a valid json data!");
-				return false;
-			}*/			
-			
 			var data = jQuery(form).serialize();
 			var $this = this
 			
@@ -180,22 +174,21 @@ jQuery(document).ready(function(){
 	    },
 	    "ajax": ajaxurl+"?action=get_scheduler_list",
 	    "fnDrawCallback": function( oSettings ) {
-			//jQuery("#scheduled_backups").find(".edit").each(function(){
-				jQuery(this).off("click", ".edit").on("click", ".edit",function(){
-					var hash = jQuery(this).attr('href');
-					var id = hash.substr(1)
-					var data = xcloner_scheduler.get_schedule_by_id(id);
-				})
-			//})
 			
-			//jQuery("#scheduled_backups").find(".delete").each(function(){
-				jQuery(this).off("click", ".delete").on("click", ".delete", function(){
-					var hash = jQuery(this).attr('href');
-					var id = hash.substr(1)
-					if(confirm('Are you sure you want to delete it?'))
-						var data = xcloner_scheduler.delete_schedule_by_id(id, (this), dataTable);
-				})
-			//})
+			jQuery(this).off("click", ".edit").on("click", ".edit",function(){
+				var hash = jQuery(this).attr('href');
+				var id = hash.substr(1)
+				var data = xcloner_scheduler.get_schedule_by_id(id);
+			})
+		
+			jQuery(this).off("click", ".delete").on("click", ".delete", function(){
+				var hash = jQuery(this).attr('href');
+				var id = hash.substr(1)
+				if(confirm('Are you sure you want to delete it?'))
+				{
+					var data = xcloner_scheduler.delete_schedule_by_id(id, (this), dataTable);
+				}
+			})
 			
 			jQuery("span.shorten_string").each(function(){
 				doShortText(jQuery(this));
