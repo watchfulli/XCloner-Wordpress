@@ -83,12 +83,17 @@ class Xcloner_Remote_Storage{
 						
 					);
 	
+	private $xcloner_sanitization;
+	private $xcloner_file_system;
+	private $logger;
+	private $xcloner;
+	
 	public function __construct($hash = "")
 	{
 		$this->xcloner_sanitization 	= new Xcloner_Sanitization($hash);
 		$this->xcloner_file_system 		= new Xcloner_File_System($hash);
 		$this->logger 					= new XCloner_Logger("xcloner_remote_storage", $hash);
-		$this->xcloner = new Xcloner();
+		$this->xcloner 					= new Xcloner();
 	}
 	
 	public function get_available_storages()
