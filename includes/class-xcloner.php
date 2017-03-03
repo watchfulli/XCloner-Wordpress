@@ -329,7 +329,7 @@ class Xcloner {
 		
 	private function define_ajax_hooks()
 	{
-		$plugin_public = new Xcloner_Public( $this->get_plugin_name(), $this->get_version() );
+		//$plugin_public = new Xcloner_Public( $this->get_plugin_name(), $this->get_version() );
 		//$this->loader->add_action( 'wp_ajax_get_database_tables_action', $plugin_public, array('Xcloner_Api','get_database_tables_action') );
 		
 		if(is_admin())
@@ -385,12 +385,12 @@ class Xcloner {
 		
 	}
 	
-	public function xcloner_scheduler_callback($schedule_id)
+	/*public function xcloner_scheduler_callback($schedule_id)
 	{
 		$cron = new Xcloner_Scheduler;
 		
 		$cron->run_schedule($schedule_id);
-	}
+	}*/
 	
 	function add_new_intervals($schedules) 
 	{
@@ -454,6 +454,6 @@ class Xcloner {
 		$plugin_admin = new Xcloner_Admin( $this->get_plugin_name(), $this->get_version() );
 		$this->plugin_admin = $plugin_admin;
 		
-		$view = call_user_func_array(array($this->plugin_admin, $page), array());
+		call_user_func_array(array($this->plugin_admin, $page), array());
 	}
 }
