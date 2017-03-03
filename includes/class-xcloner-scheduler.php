@@ -5,6 +5,11 @@ class Xcloner_Scheduler{
 	private $db;
 	private $scheduler_table = "xcloner_scheduler";
 	
+	private $xcloner_remote_storage;
+	private $archive_system;
+	private $xcloner_database;
+	private $xcloner_settings;
+	private $logger;
 	
 	/*public function __call($method, $args) {
 		echo "$method is not defined";
@@ -241,7 +246,6 @@ class Xcloner_Scheduler{
 		$this->logger->info(sprintf("Starting the database backup"), array("CRON"));
 		
 		$init = 1;
-		$extra = array();
 		$return['finished'] = 0;
 		
 		while(!$return['finished'])
@@ -255,7 +259,6 @@ class Xcloner_Scheduler{
 		$this->logger->info(sprintf("Starting file archive process"), array("CRON"));
 		
 		$init = 0;
-		$extra = array();
 		$return['finished'] = 0;
 		$return['extra'] = array();
 		
@@ -280,7 +283,7 @@ class Xcloner_Scheduler{
 			$this->logger->info(sprintf("Transferring backup to remote storage %s", strtoupper($schedule['remote_storage'])), array("CRON"));
 			
 			if(method_exists($this->xcloner_remote_storage, "upload_backup_to_storage"))
-				$return_storage = call_user_func_array(array($this->xcloner_remote_storage, "upload_backup_to_storage"), array($backup_file, $schedule['remote_storage']));
+				call_user_func_array(array($this->xcloner_remote_storage, "upload_backup_to_storage"), array($backup_file, $schedule['remote_storage']));
 		}
 		
 		
