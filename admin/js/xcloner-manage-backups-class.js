@@ -1,5 +1,7 @@
+/** global: ajaxurl */
+/** global: Materialize */
 
-	class Xcloner_Manage_Backups{
+class Xcloner_Manage_Backups{
 		
 		constructor()
 		{
