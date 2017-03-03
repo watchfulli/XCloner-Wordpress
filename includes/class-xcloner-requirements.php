@@ -6,6 +6,8 @@ class XCloner_Requirements
 	var $min_php_version 	= "5.4.0";
 	var $safe_mode			= "Off";
 	
+	private $xcloner_settings;
+	
 	public function __construct()
 	{
 		$this->xcloner_settings 		= new Xcloner_Settings();
