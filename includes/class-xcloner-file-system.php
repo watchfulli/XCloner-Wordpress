@@ -19,6 +19,7 @@ class Xcloner_File_System{
 	private $start_adapter;
 	private $tmp_adapter;
 	private $storage_adapter;
+	private $xcloner_requirements;
 	
 	private $files_counter;
 	private $files_size;
