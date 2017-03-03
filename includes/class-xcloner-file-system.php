@@ -28,9 +28,6 @@ class Xcloner_File_System{
 	private $backup_archive_extensions = array("tar", "tgz", "tar.gz", "gz", "csv");
 	private $backup_name_tags = array('[time]', '[hostname]', '[domain]');
 	
-	private $sort_direction;
-	private $sort_field;
-	
 	public function __construct($hash = "")
 	{
 		$this->logger = new XCloner_Logger('xcloner_file_system', $hash);
@@ -618,35 +615,41 @@ class Xcloner_File_System{
 		return $name;	
 	}
 	
-	private function sort_by_usort($a, $b)
-	{
-		$field = $this->sort_field;
-		$direction = $this->sort_direction;
-		
-		$a = $a["' . $field . '"];
-        $b = $b["' . $field . '"];
-
-        if ($a == $b)
-        {
-            return 0;
-        }
-		
-		if(strlower($direction) == 'desc' )
-			return ($a > $b) ? -1 : 1;
-		else	
-			return ($a < $b) ? -1 : 1;
-			
-        //return ($a ($direction == 'desc' ? '>' : '<')  $b) ? -1 : 1;
-	}
-	
 	public function sort_by( &$array, $field, $direction = 'asc')
 	{
-		$this->sort_direction = strtolower($direction);
-		$this->sort_field = $field;
-		
-	    usort($array, array($this, sort_by_usort));
+		if(strtolower($direction) == "desc" || $direction == SORT_DESC)
+			$direction = SORT_DESC;
+		else
+			$direction = SORT_ASC;
+					
+	   $array = $this->array_orderby($array, $field, $direction);
+	    
+	   return true;
+	}
 	
-	    return true;
+	private function array_orderby()
+	{
+	    $args = func_get_args();
+	    $data = array_shift($args);
+	    
+	    foreach ($args as $n => $field) {
+	        if (is_string($field)) {
+	            $tmp = array();
+	            foreach ($data as $key => $row)
+	            {
+					if(is_array($row))
+						$tmp[$key] = $row[$field];
+					else
+						$tmp[$key] = $row->$field;
+				}
+	            $args[$n] = $tmp;
+	            }
+	    }
+	    $args[] = &$data;
+	    
+	    call_user_func_array('array_multisort', $args);
+	    
+	    return array_pop($args);
 	}
 	
 	public function is_excluded($file)
