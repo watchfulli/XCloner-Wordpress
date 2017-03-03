@@ -86,7 +86,7 @@ class Xcloner_File_Transfer extends Xcloner_File_System{
 		return ftell($fp);
 	}
 	
-	function curl_file_create($filename, $mimetype = '', $postname = '') {
+	private function curl_file_create($filename, $mimetype = '', $postname = '') {
 		if (!function_exists('curl_file_create')) {
 	        
 	        return "@$filename;filename="
