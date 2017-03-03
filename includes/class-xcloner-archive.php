@@ -14,6 +14,7 @@ class Xcloner_Archive extends Tar
 	private $xcloner_split_backup_limit		= 2048; //2048MB
 	
 	private $archive_name;
+	private $backup_archive;
 	
 	public function __construct($hash = "", $archive_name = "")
 	{
@@ -206,6 +207,8 @@ class Xcloner_Archive extends Tar
 	 */ 
 	public function start_incremental_backup($backup_params, $extra_params, $init)
 	{
+		$return = array();
+		
 		if(!isset($extra_params['backup_part']))
 			$extra_params['backup_part'] = 0;
 		
@@ -228,8 +231,6 @@ class Xcloner_Archive extends Tar
 		{
 			$this->logger->info(sprintf(__("Initializing the backup archive %s"), $this->get_archive_name()));
 		
-			$this->backup_archive = new Tar();
-			$this->backup_archive->setCompression($this->compression_level);
 			$this->backup_archive->create($archive_info->getPath().DS.$archive_info->getFilename());
 			
 			$return['extra']['backup_init'] = 1;
@@ -276,8 +277,6 @@ class Xcloner_Archive extends Tar
 		
 		$start_byte = $extra_params['start_at_byte'];
 		
-		//$this->files_to_process_per_request = 10;
-		//$this->file_size_per_request_limit = 1024*1024;
 		$byte_limit = 0;
 		
 		while(!$file->eof() and $counter<=$this->files_to_process_per_request)
@@ -302,8 +301,6 @@ class Xcloner_Archive extends Tar
 			}
 			
 			$file_info = $this->filesystem->get_filesystem($start_filesystem)->getMetadata($relative_path);
-			
-			//echo "Processing ".$file_info['path']."(".$file_info['size'].")";
 			
 			if(!isset($file_info['size']))
 				$file_info['size'] = 0;
