@@ -1,3 +1,7 @@
+/** global: ajaxurl */
+/** global: Materialize */
+/** global: dataTable */
+
 jQuery(document).ready(function(){
 
 	class Xcloner_Scheduler{
