@@ -10,6 +10,7 @@ class Xcloner_Scheduler{
 	private $xcloner_database;
 	private $xcloner_settings;
 	private $logger;
+	private $xcloner_file_system;
 	
 	/*public function __call($method, $args) {
 		echo "$method is not defined";
