@@ -90,7 +90,7 @@ class Xcloner_Remote_Storage{
 						"webdav_url"			=> "string",
 						"webdav_username"		=> "string",
 						"webdav_password"		=> "string",
-						"webdav_folder"			=> "string",
+						"webdav_target_folder"	=> "string",
 						"webdav_cleanup_days"	=> "float",		
 						),		
 						
@@ -367,11 +367,11 @@ class Xcloner_Remote_Storage{
 		
 				
 		$client = new SabreClient($settings);
-		$adapter = new WebDAVAdapter($client);
+		$adapter = new WebDAVAdapter($client, get_option("xcloner_webdav_target_folder"));
 		$filesystem = new Filesystem($adapter, new Config([
 				'disable_asserts' => true,
 			]));
-		
+			
 		return array($adapter, $filesystem);
 	}
 	
