@@ -56,6 +56,14 @@ class WebDAVAdapter extends AbstractAdapter
         $this->setPathPrefix($prefix);
         $this->setUseStreamedCopy($useStreamedCopy);
     }
+    
+    protected function stream($path, $resource, Config $config, $fallback)
+    {
+		Util::rewindStream($resource);
+        $fallbackCall = [$this, $fallback];
+
+        return call_user_func($fallbackCall, $path, $resource, $config);
+	}
 
     /**
      * url encode a path
