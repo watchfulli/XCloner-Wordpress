@@ -214,7 +214,7 @@ class Xcloner_Remote_Storage{
 		
 		$backup_file_stream = $this->xcloner_file_system->get_storage_filesystem()->readStream($file);
 
-		if(!$remote_storage_filesystem->updateStream($file, $backup_file_stream))
+		if(!$remote_storage_filesystem->writeStream($file, $backup_file_stream))
 		{
 			$this->logger->info(sprintf("Could not transfer file %s", $file));
 			return false;
@@ -229,7 +229,7 @@ class Xcloner_Remote_Storage{
 					$this->logger->info(sprintf("Transferring backup %s to remote storage %s", $part_file, strtoupper($storage)), array(""));
 					
 					$backup_file_stream = $this->xcloner_file_system->get_storage_filesystem()->readStream($part_file);
-					if(!$remote_storage_filesystem->updateStream($part_file, $backup_file_stream))
+					if(!$remote_storage_filesystem->writeStream($part_file, $backup_file_stream))
 						return false;
 				}
 		}
