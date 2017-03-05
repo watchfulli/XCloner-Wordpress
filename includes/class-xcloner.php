@@ -73,7 +73,7 @@ class Xcloner {
 		register_shutdown_function(array($this, 'exception_handler'));
 		
 		$this->plugin_name = 'xcloner';
-		$this->version = '4.0.1';
+		$this->version = '4.0.2';
 		
 		$this->load_dependencies();
 		$this->set_locale();
