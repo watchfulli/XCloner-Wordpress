@@ -592,10 +592,10 @@
 			        
 			        <div class="row">
 						<div class="col s12 m3 label">
-							<label for="webdav_target_folder"><?php echo __("WebDAV Folder",'xcloner-backup-and-restore')?></label>
+							<label for="webdav_target_folder"><?php echo __("WebDAV Target Folder",'xcloner-backup-and-restore')?></label>
 						</div>	
 						<div class=" col s12 m6">
-							<input placeholder="<?php echo __("WebDAV Folder",'xcloner-backup-and-restore')?>" id="webdav_target_folder" type="text" name="xcloner_webdav_target_folder" class="validate" value="<?php echo get_option("xcloner_webdav_target_folder")?>" autocomplete="off" >
+							<input placeholder="<?php echo __("WebDAV Target Folder",'xcloner-backup-and-restore')?>" id="webdav_target_folder" type="text" name="xcloner_webdav_target_folder" class="validate" value="<?php echo get_option("xcloner_webdav_target_folder")?>" autocomplete="off" >
 				        </div>
 			        </div>
 			        
