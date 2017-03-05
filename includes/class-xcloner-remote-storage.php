@@ -18,6 +18,9 @@ use League\Flysystem\AwsS3v3\AwsS3Adapter;
 use Mhetreramesh\Flysystem\BackblazeAdapter;
 use ChrisWhite\B2\Client as B2Client;
 
+use Sabre\DAV\Client as SabreClient;
+use League\Flysystem\WebDAV\WebDAVAdapter;
+
 class Xcloner_Remote_Storage{
 	
 	private $storage_fields = array(
@@ -79,6 +82,16 @@ class Xcloner_Remote_Storage{
 						"backblaze_application_key"	=> "string",
 						"backblaze_bucket_name"		=> "string",
 						"backblaze_cleanup_days"	=> "float",		
+						),		
+						
+					"webdav" => array(
+						"text"						=> "WebDAV",
+						"webdav_enable"			=> "int",
+						"webdav_url"			=> "string",
+						"webdav_username"		=> "string",
+						"webdav_password"		=> "string",
+						"webdav_folder"			=> "string",
+						"webdav_cleanup_days"	=> "float",		
 						),		
 						
 					);
@@ -268,7 +281,9 @@ class Xcloner_Remote_Storage{
 		
 		$adapter = new AzureAdapter($blobRestProxy, get_option("xcloner_azure_container"));
 		
-		$filesystem = new Filesystem($adapter);
+		$filesystem = new Filesystem($adapter, new Config([
+				'disable_asserts' => true,
+			]));
 
 		return array($adapter, $filesystem);
 	}
@@ -327,8 +342,36 @@ class Xcloner_Remote_Storage{
 		$client = new B2Client(get_option("xcloner_backblaze_account_id"), get_option("xcloner_backblaze_application_key"));
 		$adapter = new BackblazeAdapter($client, get_option("xcloner_backblaze_bucket_name"));
 		
-		$filesystem = new Filesystem($adapter);
+		$filesystem = new Filesystem($adapter, new Config([
+				'disable_asserts' => true,
+			]));
 
+		return array($adapter, $filesystem);
+	}
+	
+	public function get_webdav_filesystem()
+	{
+		$this->logger->info(sprintf("Creating the WEBDAV remote storage connection"), array(""));
+		
+		if (version_compare(phpversion(), '5.5.0', '<')) 
+		{
+				throw new Exception("WEBDAV API requires PHP 5.5 to be installed!");
+		}
+		
+		$settings = array(
+			'baseUri' 	=> get_option("xcloner_webdav_url"),
+			'userName' 	=> get_option("xcloner_webdav_username"),
+			'password' 	=> get_option("xcloner_webdav_password"),
+			//'proxy' => 'locahost:8888',
+		);
+		
+				
+		$client = new SabreClient($settings);
+		$adapter = new WebDAVAdapter($client);
+		$filesystem = new Filesystem($adapter, new Config([
+				'disable_asserts' => true,
+			]));
+		
 		return array($adapter, $filesystem);
 	}
 	
