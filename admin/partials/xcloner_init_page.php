@@ -150,7 +150,7 @@ if($requirements->check_backup_ready_status())
 				<li class="active">
 					<div class="collapsible-header active">
 						<i class="material-icons">bug_report</i><?php echo __('XCloner Debugger', 'xcloner-backup-and-restore')?>
-						<span class="right"><?php echo basename($logger->get_main_logger_url())?></span>
+						<span class="right"><a href="#<?php echo basename($logger->get_main_logger_url())?>" class="download-logger"><?php echo basename($logger->get_main_logger_url())?></a></span>
 					</div>
 					<div class="collapsible-body">
 						<div class="console" id="xcloner-console"><?php if($logger_content) echo implode("<br />\n", array_reverse($logger_content)); ?></div>

@@ -16,15 +16,29 @@
 			jQuery("ul.xcloner_regex_exclude_limit li").fadeIn();
 			})
 		
-		jQuery(".regex_pattern").click(function(){
+		jQuery(".regex_pattern").on("click", function(){
 			jQuery(this).select();
 		})
 		
-		jQuery(".btn.system_info_toggle").click(function(){
+		jQuery(".btn.system_info_toggle").on("click", function(){
 			jQuery(".additional_system_info").toggle();
 		})
 		
-		jQuery(".nav-tab-wrapper.content li").click(function(e){
+		jQuery("a.download-logger").on("click", function(e){
+			var xcloner_manage_backups = new Xcloner_Manage_Backups();
+			
+			var hash = jQuery(this).attr('href');
+			var id = hash.substr(1)
+			
+			if(id)
+			{
+				xcloner_manage_backups.download_backup_by_name(id);
+			}
+			
+			e.preventDefault();
+		})
+		
+		jQuery(".nav-tab-wrapper.content li").on("click", function(e){
 				jQuery(".nav-tab-wrapper li a").removeClass("nav-tab-active");
 				jQuery(this).find('a').addClass("nav-tab-active");
 				jQuery(".nav-tab-wrapper-content .tab-content").removeClass('active');
