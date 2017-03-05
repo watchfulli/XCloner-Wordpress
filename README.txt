@@ -1,7 +1,7 @@
 === XCloner - Backup and Restore===
 Contributors: xcloner
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=AAPE8PLAE554S
-Tags: backup plugin, restore plugin, database backup, full site backup, xcloner, website cloner, wordpress backup, database restore, blog transfer
+Tags: backup plugin, restore plugin, database backup, full site backup, website cloner, wordpress backup, database restore, webdav, azure, ftp, sftp, amazon s3, dropbox
 Requires at least: 3.0.1
 Tested up to: 4.7
 Stable tag: 4.0.1
