@@ -17,11 +17,11 @@ $available_storages = $xcloner_remote_storage->get_available_storages();
 ?>
 
 <div class="row">
-	<div class="col s12 m9">
+	<div class="col s12 m6 l9">
 		<h1><?= esc_html(get_admin_page_title()); ?></h1>
 	</div>	
 	<?php if(sizeof($available_storages)):?>
-		<div class="col s12 m3 remote-storage-selection">
+		<div class="col s12 m6 l3 remote-storage-selection">
 				<select name="storage_selection" id="storage_selection" class="validate" required >
 					
 					<?php if($storage_selection):?>
