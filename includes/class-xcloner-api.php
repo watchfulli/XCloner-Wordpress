@@ -681,8 +681,9 @@ class Xcloner_Api{
 		}
 		
 		$backup_name = $this->xcloner_sanitization->sanitize_input_as_string($_POST['name']);
+		$storage_selection = $this->xcloner_sanitization->sanitize_input_as_string($_POST['storage_selection']);
 		
-		$data['finished']  = $this->xcloner_file_system->delete_backup_by_name($backup_name);
+		$data['finished']  = $this->xcloner_file_system->delete_backup_by_name($backup_name, $storage_selection);
 		
 		return $this->send_response($data);
 	}
@@ -754,6 +755,43 @@ class Xcloner_Api{
 		}	
 		
 		$this->send_response($return, 0);
+	}
+	
+	public function copy_backup_remote_to_local()
+	{
+	
+		if (!current_user_can('manage_options')) {
+			die("Not allowed access here!");
+		}
+		
+		$backup_file = $this->xcloner_sanitization->sanitize_input_as_string($_POST['file']);
+		$storage_type = $this->xcloner_sanitization->sanitize_input_as_string($_POST['storage_type']);
+		
+		$xcloner_remote_storage = new Xcloner_Remote_Storage();
+		
+		$return = array();
+		
+		try
+		{
+			if(method_exists($xcloner_remote_storage, "copy_backup_remote_to_local"))
+			{
+				$return = call_user_func_array(array($xcloner_remote_storage, "copy_backup_remote_to_local"), array($backup_file, $storage_type));
+			}
+		}catch(Exception $e){
+		
+			$return['error'] = 1;
+			$return['message'] = $e->getMessage();
+		}
+		
+		if(!$return)
+		{
+			$return['error'] = 1;
+			$return['message'] = "Upload failed, please check the error log for more information!";
+		}
+			
+		
+		$this->send_response($return, 0);
+		
 	}
 	
 	/*

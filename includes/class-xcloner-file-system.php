@@ -89,8 +89,21 @@ class Xcloner_File_System{
 		return $this->tmp_filesystem;
 	}
 	
-	public function get_storage_filesystem()
+	public function get_storage_filesystem($remote_storage_selection = "")
 	{
+		if($remote_storage_selection != "")
+		{
+			$remote_storage = new Xcloner_Remote_Storage();
+			$method = "get_".$remote_storage_selection."_filesystem";
+			
+			if(!method_exists($remote_storage, $method))
+				return false;
+				
+			list($adapter, $filesystem) = $remote_storage->$method();	
+			
+			return $filesystem;
+		}
+
 		return $this->storage_filesystem;
 	}
 	
@@ -220,13 +233,13 @@ class Xcloner_File_System{
 		return $backup_size;
 	}
 	
-	public function get_multipart_files($backup_name)
+	public function get_multipart_files($backup_name, $storage_selection = "")
 	{
 		$files = array();
 		
 		if($this->is_multipart($backup_name))
 		{
-			$lines = explode(PHP_EOL, $this->get_storage_filesystem()->read($backup_name));
+			$lines = explode(PHP_EOL, $this->get_storage_filesystem($storage_selection)->read($backup_name));
 			foreach($lines as $line)
 			{
 				if($line)
@@ -240,22 +253,22 @@ class Xcloner_File_System{
 		return $files;
 	}
 	
-	public function delete_backup_by_name($backup_name)
+	public function delete_backup_by_name($backup_name, $storage_selection = "")
 	{
 		if($this->is_multipart($backup_name))
 		{
-			$lines = explode(PHP_EOL, $this->get_storage_filesystem()->read($backup_name));
+			$lines = explode(PHP_EOL, $this->get_storage_filesystem($storage_selection)->read($backup_name));
 			foreach($lines as $line)
 			{
 				if($line)
 				{
 					$data = str_getcsv($line);
-					$this->get_storage_filesystem()->delete($data[0]);
+					$this->get_storage_filesystem($storage_selection)->delete($data[0]);
 				}
 			}
 		}
 		
-		if($this->get_storage_filesystem()->delete($backup_name))
+		if($this->get_storage_filesystem($storage_selection)->delete($backup_name))
 			$return = true;
 		else
 			$return = false;
@@ -272,12 +285,13 @@ class Xcloner_File_System{
     }
 	
 	
-	public function get_backup_archives_list()
+	public function get_backup_archives_list($storage_selection = "")
 	{
 		$list = array();
 		
-		if(method_exists($this->get_storage_filesystem(), "listContents"))
-			$list = $this->get_storage_filesystem()->listContents();
+
+		if(method_exists($this->get_storage_filesystem($storage_selection), "listContents"))
+			$list = $this->get_storage_filesystem($storage_selection)->listContents();
 
 		
 		$backup_files = array();
@@ -289,7 +303,7 @@ class Xcloner_File_System{
 			{
 				$data = array();
 				
-				$lines = explode(PHP_EOL, $this->get_storage_filesystem()->read($file_info['path']));
+				$lines = explode(PHP_EOL, $this->get_storage_filesystem($storage_selection)->read($file_info['path']));
 				foreach($lines as $line)
 					if($line)
 					{

@@ -6,6 +6,8 @@ class Xcloner_Manage_Backups{
 		constructor()
 		{
 			this.file_counter = 0
+			this.storage_selection = "";
+			
 			//this.edit_modal = jQuery('.modal').modal();
 		}
 		
@@ -23,7 +25,7 @@ class Xcloner_Manage_Backups{
 				jQuery.ajax({
 				  url: ajaxurl,
 				  method: 'post',
-				  data: { action : 'delete_backup_by_name', name: id},
+				  data: { action : 'delete_backup_by_name', name: id, storage_selection: this.storage_selection},
 				  success: function(response){
 					  if(response.finished)
 					  {
@@ -152,12 +154,44 @@ class Xcloner_Manage_Backups{
 			})
 		}
 		
+		copy_remote_to_local(backup_file)
+		{
+			jQuery("#local_storage_upload_modal").modal('open');
+			jQuery("#local_storage_upload_modal .modal-content .backup-name").text(backup_file);
+			
+			if(backup_file)
+			{
+				jQuery.ajax({
+				  url: ajaxurl,
+				  method: 'post',
+				  data: { action : 'copy_backup_remote_to_local', file: backup_file, storage_type: this.storage_selection},
+				  success: function(response){
+					  if(response.error)
+					  {
+						jQuery("#local_storage_upload_modal .status-text").addClass("error").text(response.message)
+					  }else{
+						jQuery("#local_storage_upload_modal .status-text").removeClass("error").text("done")
+					  }
+					  
+					  jQuery("#local_storage_upload_modal .status .progress .indeterminate").addClass("determinate").css("width", "100%");
+				  },
+				  error: function(xhr, textStatus, error){
+				      jQuery("#local_storage_upload_modal .status-text").addClass("error").text(textStatus+error)
+				  },
+				  dataType: 'json'
+				});
+			}
+			
+		}
+		
 	//end class
 	}
 	
 jQuery(document).ready(function(){
 	
 	var xcloner_manage_backups = new Xcloner_Manage_Backups();
+	
+	xcloner_manage_backups.storage_selection = getUrlParam('storage_selection');
 	
 	jQuery("a.expand-multipart").on("click", function(){
 		jQuery(this).parent().find("ul.multipart").toggle();
@@ -193,20 +227,25 @@ jQuery(document).ready(function(){
 				"sSearch": "",  
 				"sSearchPlaceholder" : 'Search Backups',
 				} ,
+			//"ajax": ajaxurl+"?action=get_backup_list",	
 		    "fnDrawCallback": function( oSettings ) {
 
 					jQuery(this).off("click", ".delete").on("click", ".delete", function(e){
-						
+
 						var hash = jQuery(this).attr('href');
 						var id = hash.substr(1)
 						var data = "";
 						
-						if(show_delete_alert && confirm('Are you sure you want to delete it?'))
+						if(show_delete_alert)
 						{
-							data = xcloner_manage_backups.delete_backup_by_name(id, (this), dataTable);
-						}else{	
-							data = xcloner_manage_backups.delete_backup_by_name(id, (this), dataTable);
+							if(confirm('Are you sure you want to delete it?'))
+							{
+								xcloner_manage_backups.delete_backup_by_name(id, (this), dataTable);
+							}
+						}else{
+							xcloner_manage_backups.delete_backup_by_name(id, (this), dataTable);
 						}
+						
 						
 						e.preventDefault();	
 					})
@@ -214,21 +253,28 @@ jQuery(document).ready(function(){
 					jQuery(this).off("click", ".download").on("click", ".download", function(e){
 						var hash = jQuery(this).attr('href');
 						var id = hash.substr(1)
-						var data = xcloner_manage_backups.download_backup_by_name(id);
+						xcloner_manage_backups.download_backup_by_name(id);
 						e.preventDefault();
 					})
 
 					jQuery(this).off("click", ".cloud-upload").on("click", ".cloud-upload", function(e){
 						var hash = jQuery(this).attr('href');
 						var id = hash.substr(1)
-						var data = xcloner_manage_backups.cloud_upload(id);
+						xcloner_manage_backups.cloud_upload(id);
+						e.preventDefault();
+					})
+					
+					jQuery(this).off("click", ".copy-remote-to-local").on("click", ".copy-remote-to-local", function(e){
+						var hash = jQuery(this).attr('href');
+						var id = hash.substr(1)
+						xcloner_manage_backups.copy_remote_to_local(id);
 						e.preventDefault();
 					})
 
 					jQuery(this).off("click", ".list-backup-content").on("click", ".list-backup-content", function(e){
 						var hash = jQuery(this).attr('href');
 						var id = hash.substr(1)
-						var data = xcloner_manage_backups.list_backup_content(id);
+						xcloner_manage_backups.list_backup_content(id);
 						e.preventDefault();
 					})
 			}
@@ -252,8 +298,13 @@ jQuery(document).ready(function(){
 		}
 	})
 	
-	
 	jQuery("#remote_storage_modal").modal();
+	jQuery("#local_storage_upload_modal").modal();
+	
+	jQuery("#storage_selection").on("change", function(){
+		console.log(jQuery(this).val());
+		window.location = window.location.href.split('&storage_selection')[0]+"&storage_selection="+jQuery(this).val();
+	})
 	
 	
 	var show_delete_alert=1;

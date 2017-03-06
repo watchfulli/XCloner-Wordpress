@@ -192,7 +192,10 @@ class Xcloner_Remote_Storage{
 	public function upload_backup_to_storage($file, $storage)
 	{
 		if(!$this->xcloner_file_system->get_storage_filesystem()->has($file))
+		{
+			$this->logger->info(sprintf("File not found %s in local storage", $file));
 			return false;
+		}
 			
 		$method = "get_".$storage."_filesystem";	
 		
@@ -206,11 +209,11 @@ class Xcloner_Remote_Storage{
 		
 		$this->logger->info(sprintf("Transferring backup %s to remote storage %s", $file, strtoupper($storage)), array(""));
 		
-		if(!$this->xcloner_file_system->get_storage_filesystem()->has($file))
+		/*if(!$this->xcloner_file_system->get_storage_filesystem()->has($file))
 		{
 			$this->logger->info(sprintf("File not found %s in local storage", $file));
 			return false;
-		}
+		}*/
 		
 		$backup_file_stream = $this->xcloner_file_system->get_storage_filesystem()->readStream($file);
 
@@ -235,9 +238,52 @@ class Xcloner_Remote_Storage{
 		}
 		
 		$this->logger->info(sprintf("Upload done, disconnecting from remote storage %s", strtoupper($storage)));	
+				
+		return true;
 		
-		//$remote_storage_adapter->disconnect();
+	}
+	
+	public function copy_backup_remote_to_local($file, $storage)
+	{
+		$method = "get_".$storage."_filesystem";	
 		
+		if(!method_exists($this, $method))
+			return false;
+			
+		list($remote_storage_adapter, $remote_storage_filesystem) = $this->$method();
+		
+		if(!$remote_storage_filesystem->has($file))
+		{
+			$this->logger->info(sprintf("File not found %s in remote storage %s", $file, strtoupper($storage)));
+			return false;
+		}
+		
+		$this->logger->info(sprintf("Transferring backup %s to local storage from %s storage", $file, strtoupper($storage)), array(""));
+		
+		$backup_file_stream = $remote_storage_filesystem->readStream($file);
+
+		if(!$this->xcloner_file_system->get_storage_filesystem()->writeStream($file, $backup_file_stream))
+		{
+			$this->logger->info(sprintf("Could not transfer file %s", $file));
+			return false;
+		}
+		
+		if($this->xcloner_file_system->is_multipart($file))
+		{
+			$parts = $this->xcloner_file_system->get_multipart_files($file, $storage);
+			if(is_array($parts))
+				foreach($parts as $part_file)
+				{
+					$this->logger->info(sprintf("Transferring backup %s to local storage from %s storage", $part_file, strtoupper($storage)), array(""));
+					
+					$backup_file_stream = $remote_storage_filesystem->readStream($part_file);
+					if(!$this->xcloner_file_system->get_storage_filesystem()->writeStream($part_file, $backup_file_stream))
+						return false;
+				}
+		}
+		
+		$this->logger->info(sprintf("Upload done, disconnecting from remote storage %s", strtoupper($storage)));	
+				
 		return true;
 		
 	}

@@ -83,6 +83,9 @@ class FileInfo
      */
     public function getSize()
     {
+		if($this->isdir) 
+			return 0;
+			
         return $this->size;
     }
 

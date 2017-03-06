@@ -367,6 +367,14 @@ ul.files-list li{
     height: 4px !important;
 }
 
+i.backup_warning{
+	color: red;
+}
+
+.col.remote-storage-selection{
+	padding-top: 20px;
+}
+
 @media only screen and (min-width: 993px){
 	.dashboard .backup-ready{
 		float: right;
