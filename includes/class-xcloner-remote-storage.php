@@ -455,7 +455,7 @@ class Xcloner_Remote_Storage{
 	public function gdrive_construct()
 	{
 
-		if(!is_plugin_active("xcloner-google-drive/xcloner-google-drive.php") || !file_exists(__DIR__ . "/../../xcloner-google-drive/vendor/autoload.php"))
+		if((function_exists("is_plugin_active") && !is_plugin_active("xcloner-google-drive/xcloner-google-drive.php")) || !file_exists(__DIR__ . "/../../xcloner-google-drive/vendor/autoload.php"))
 		{
 			return false;
 		}
