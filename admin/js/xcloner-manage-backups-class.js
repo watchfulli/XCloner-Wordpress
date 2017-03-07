@@ -158,6 +158,8 @@ class Xcloner_Manage_Backups{
 		{
 			jQuery("#local_storage_upload_modal").modal('open');
 			jQuery("#local_storage_upload_modal .modal-content .backup-name").text(backup_file);
+			jQuery("#local_storage_upload_modal .status-text").removeClass("error").text("");
+			jQuery("#local_storage_upload_modal .status .progress .indeterminate").removeClass("determinate").css("width", "0%");
 			
 			if(backup_file)
 			{

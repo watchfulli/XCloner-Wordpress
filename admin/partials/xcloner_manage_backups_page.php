@@ -97,10 +97,21 @@ foreach($backup_list as $file_info):?>
 			<?php foreach($file_info['childs'] as $child):?>
 				<li>
 					<?php echo $child[0]?> (<?php echo size_format($child[2])?>) 
+					<?php
+					$child_exists_on_local_storage = true;
+					if($storage_selection)
+					{
+						if(!$xcloner_file_system->get_storage_filesystem()->has($child[0]))
+							$child_exists_on_local_storage = false;
+					}
+					?>
+					<?php if(!$child_exists_on_local_storage): ?>
+						<a href="#" title="<?php echo __("File does not exists on local storage","xcloner-backup-and-restore")?>"><i class="material-icons backup_warning">warning</i></a>
+					<?php endif?>
 					<?php if(!$storage_selection) :?>
 						<a href="#<?php echo $child[0];?>" class="download" title="Download Backup"><i class="material-icons">file_download</i></a>
 						<a href="#<?php echo $child[0]?>" class="list-backup-content" title="<?php echo __('List Backup Content','xcloner-backup-and-restore')?>"><i class="material-icons">folder_open</i></a> 
-					<?php elseif(!$xcloner_file_system->get_storage_filesystem()->has($child[0])): ?>
+					<?php elseif($storage_selection != "gdrive" && !$xcloner_file_system->get_storage_filesystem()->has($child[0])): ?>
 						<a href="#<?php echo $child[0]?>" class="copy-remote-to-local" title="<?php echo __('Push Backup To Local Storage','xcloner-backup-and-restore')?>"><i class="material-icons">file_upload</i></a>
 					<?php endif?>
 				</li>

@@ -298,7 +298,7 @@ class Xcloner_Remote_Storage{
 			return false;
 		}
 		
-		if($this->xcloner_file_system->is_multipart($file))
+		if($this->xcloner_file_system->is_multipart($target_filename))
 		{
 			$parts = $this->xcloner_file_system->get_multipart_files($file, $storage);
 			if(is_array($parts))

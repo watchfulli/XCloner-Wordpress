@@ -309,7 +309,7 @@ class Xcloner_File_System{
 					{
 						$data = str_getcsv($line);
 						if(is_array($data)){
-							$parents[$data[0]] = $file_info['path'];
+							$parents[$data[0]] = $file_info['basename'];
 							$file_info['childs'][] = $data;
 							$file_info['size'] += $data[2];
 						}
@@ -323,10 +323,15 @@ class Xcloner_File_System{
 		
 		foreach($backup_files as $key=>$file_info)
 		{
-			if(isset($parents[$file_info['path']]))
-				$backup_files[$key]['parent'] = $parents[$file_info['path']];
+			if($storage_selection == "gdrive")
+			{
+				//$file_info['basename'] = $file_info['filename'].".".$file_info['extension'];
+			}
+			
+			if(isset($parents[$file_info['basename']]))
+				$backup_files[$key]['parent'] = $parents[$file_info['basename']];
 		}
-		
+
 		return $backup_files;
 	}
 	
