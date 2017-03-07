@@ -131,6 +131,12 @@ class Xcloner_Admin {
 	
 	public function xcloner_remote_storage_page()
 	{
+		if(isset($_GET['action']) && $_GET['action'] == "set_gdrive_code")
+		{
+			$remote_storage = new Xcloner_Remote_Storage();
+			$remote_storage->set_access_token($_GET['code']);
+		}
+		
 		if(isset($_POST['action']))
 		{
 			$remote_storage = new Xcloner_Remote_Storage();

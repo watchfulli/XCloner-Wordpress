@@ -10,6 +10,8 @@ if(isset($_GET['storage_selection']) and $_GET['storage_selection'])
 
 $backup_list = $xcloner_file_system->get_backup_archives_list($storage_selection);
 
+//print_r($backup_list);
+
 $xcloner_remote_storage = new Xcloner_Remote_Storage();
 $available_storages = $xcloner_remote_storage->get_available_storages();
 
@@ -61,7 +63,8 @@ $available_storages = $xcloner_remote_storage->get_available_storages();
 $i = 0;
 foreach($backup_list as $file_info):?>
 <?php 
-	
+	if($storage_selection == "gdrive")
+		$file_info['path'] = $file_info['filename'].".".$file_info['extension'];
 	$file_exists_on_local_storage = true;
 	
 	if($storage_selection)
@@ -81,7 +84,7 @@ foreach($backup_list as $file_info):?>
 			</p>
 		</td>
 		<td>
-			<span class=""><?php echo $file_info['basename']?></span>
+			<span class=""><?php echo $file_info['path']?></span>
 			<?php if(!$file_exists_on_local_storage): ?>
 				<a href="#" title="<?php echo __("File does not exists on local storage","xcloner-backup-and-restore")?>"><i class="material-icons backup_warning">warning</i></a>
 			<?php endif?>

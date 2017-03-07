@@ -23,6 +23,10 @@ use League\Flysystem\WebDAV\WebDAVAdapter;
 
 class Xcloner_Remote_Storage{
 	
+	private $gdrive_client_id 		= "526116423832-4048277vsfee859nsr5d7020175jqkqr.apps.googleusercontent.com";
+	private $gdrive_client_secret 	= "_YWZjvSRj5BAEI3RRbwzezCS";
+	private $gdrive_app_name 		= "XCloner Backup and Restore";
+	
 	private $storage_fields = array(
 					"option_prefix" => "xcloner_",
 					"ftp" => array(
@@ -93,7 +97,14 @@ class Xcloner_Remote_Storage{
 						"webdav_target_folder"	=> "string",
 						"webdav_cleanup_days"	=> "float",		
 						),		
-						
+					
+					"gdrive" => array(
+						"text"						=> "Google Drive",
+						"gdrive_enable"				=> "int",
+						"gdrive_access_code"		=> "string",
+						"gdrive_target_folder"		=> "string",
+						"gdrive_cleanup_days"		=> "float",		
+						),	
 					);
 	
 	private $xcloner_sanitization;
@@ -172,6 +183,15 @@ class Xcloner_Remote_Storage{
 		list($adapter, $filesystem) = $this->$method();
 		
 		$test_file = substr(".xcloner_".md5(time()), 0, 15);
+		
+		if($storage_type == "gdrive")
+		{
+			if(!is_array($filesystem->listContents()))
+				throw new Exception(__("Could not read data",'xcloner-backup-and-restore'));
+			$this->logger->debug(sprintf("I can list data from remote storage %s", strtoupper($storage_type)));	
+			
+			return true;
+		}
 			
 		//testing write access
 		if(!$filesystem->write($test_file, "data"))
@@ -187,6 +207,8 @@ class Xcloner_Remote_Storage{
 		if(!$filesystem->delete($test_file))
 			throw new Exception(__("Could not delete data",'xcloner-backup-and-restore'));
 		$this->logger->debug(sprintf("I can delete data to remote storage %s", strtoupper($storage_type)));		
+		
+		return true;
 	}
 	
 	public function upload_backup_to_storage($file, $storage)
@@ -247,6 +269,8 @@ class Xcloner_Remote_Storage{
 	{
 		$method = "get_".$storage."_filesystem";	
 		
+		$target_filename = $file;
+		
 		if(!method_exists($this, $method))
 			return false;
 			
@@ -258,11 +282,17 @@ class Xcloner_Remote_Storage{
 			return false;
 		}
 		
+		if($storage == "gdrive")
+		{
+			$metadata = $remote_storage_filesystem->getMetadata($file);
+			$target_filename = $metadata['filename'].".".$metadata['extension'];
+		}
+		
 		$this->logger->info(sprintf("Transferring backup %s to local storage from %s storage", $file, strtoupper($storage)), array(""));
 		
 		$backup_file_stream = $remote_storage_filesystem->readStream($file);
 
-		if(!$this->xcloner_file_system->get_storage_filesystem()->writeStream($file, $backup_file_stream))
+		if(!$this->xcloner_file_system->get_storage_filesystem()->writeStream($target_filename, $backup_file_stream))
 		{
 			$this->logger->info(sprintf("Could not transfer file %s", $file));
 			return false;
@@ -419,6 +449,72 @@ class Xcloner_Remote_Storage{
 			]));
 			
 		return array($adapter, $filesystem);
+	}
+	
+	
+	private function gdrive_construct()
+	{
+		$client = new \Google_Client();
+		$client->setApplicationName($this->gdrive_app_name);
+		$client->setClientId($this->gdrive_client_id);
+		$client->setClientSecret($this->gdrive_client_secret);
+		
+		$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF']."?page=xcloner_remote_storage_page&action=set_gdrive_code";
+
+		$client->setRedirectUri($redirect_uri); //urn:ietf:wg:oauth:2.0:oob
+		$client->addScope("https://www.googleapis.com/auth/drive");
+		$client->setAccessType('offline');
+		
+		return $client;
+	}
+	
+	public function get_gdrive_auth_url()
+	{
+		$client = $this->gdrive_construct();
+		return $authUrl = $client->createAuthUrl();
+	}
+	
+	public function set_access_token($code)
+	{
+		$client = $this->gdrive_construct();
+		
+		$token = $client->fetchAccessTokenWithAuthCode($code);
+		$client->setAccessToken($token);
+		
+		update_option("xcloner_gdrive_access_token", $token['access_token']);
+		update_option("xcloner_gdrive_refresh_token", $token['refresh_token']);
+		
+		$redirect_url = ('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF']."?page=xcloner_remote_storage_page#gdrive");
+		
+		?>
+		<script>
+			window.location='<?php echo $redirect_url?>';
+		</script>
+		<?php
+		
+	}
+	
+	/*
+	 * php composer.phar remove nao-pon/flysystem-google-drive 
+	 *
+	 */
+	public function get_gdrive_filesystem()
+	{
+	
+		$client = $this->gdrive_construct();
+				
+		$client->refreshToken(get_option("xcloner_gdrive_refresh_token"));
+	
+		$service = new \Google_Service_Drive($client);
+		
+		$adapter = new \Hypweb\Flysystem\GoogleDrive\GoogleDriveAdapter($service, get_option("xcloner_gdrive_target_folder"));
+		
+		$filesystem = new \League\Flysystem\Filesystem($adapter, new Config([
+				'disable_asserts' => true,
+			]));
+			
+		
+		return array($adapter, $filesystem);	
 	}
 	
 	public function get_ftp_filesystem()

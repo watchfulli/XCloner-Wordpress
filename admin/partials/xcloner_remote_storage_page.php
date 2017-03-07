@@ -1,3 +1,7 @@
+<?php 
+$remote_storage = new Xcloner_Remote_Storage();
+$gdrive_auth_url = $remote_storage->get_gdrive_auth_url();
+?>
 <h1><?= esc_html(get_admin_page_title()); ?></h1>
 
 <form class="remote-storage-form" method="POST">
@@ -642,15 +646,70 @@
 				</div>
 			</li>
 			
-			<!--<li>
-				<div class="collapsible-header"><i class="material-icons">cloud</i>Amazon S3 Storage</div>
-				<div class="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
-			</li>
-			<li>
-				<div class="collapsible-header"><i class="material-icons">cloud</i>Dropbox Storage</div>
-				<div class="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
+			<!-- Google DRIVE STORAGE-->
+			<!--<li id="gdrive">
+				<div class="collapsible-header">
+					<i class="material-icons">computer</i><?php echo __("Google Drive Storage",'xcloner-backup-and-restore')?>
+					<div class="right">
+						<div class="switch">
+							<label>
+							Off
+							<input type="checkbox" name="xcloner_gdrive_enable" class="status" value="1" <?php if(get_option("xcloner_gdrive_enable")) echo "checked"?> \>
+							<span class="lever"></span>
+							On
+							</label>
+						</div>
+					</div>
+				</div>
+				<div class="collapsible-body">
+			        
+			        <div class="row">
+						<div class="col s12 m3 label">
+							&nbsp;
+						</div>	
+						<div class=" col s12 m6">
+							<p>
+								<a class="btn" href="<?php echo $gdrive_auth_url?>"><?php echo sprintf(__('Click here to authorize Google Drive with XCloner','xcloner-backup-and-restore'))?></a>
+							</p>
+				        </div>
+			        </div>
+			        
+			        <div class="row">
+						<div class="col s12 m3 label">
+							<label for="gdrive_target_folder"><?php echo __("Target Folder ID",'xcloner-backup-and-restore')?></label>
+						</div>	
+						<div class=" col s12 m6">
+							<input placeholder="<?php echo __("Target Folder ID",'xcloner-backup-and-restore')?>" id="gdrive_target_folder" type="text" name="xcloner_gdrive_target_folder" class="validate" value="<?php echo get_option("xcloner_gdrive_target_folder")?>" autocomplete="off" >
+				        </div>
+			        </div>
+			        
+			        <div class="row">
+						<div class="col s12 m3 label">
+							<label for="gdrive_cleanup_days"><?php echo __("Google Drive Cleanup (days)",'xcloner-backup-and-restore')?></label>
+						</div>
+						<div class=" col s12 m6">
+							<input placeholder="<?php echo __("how many days to keep the backups for",'xcloner-backup-and-restore')?>" id="gdrive_cleanup_days" type="text" name="xcloner_gdrive_cleanup_days" class="validate" value="<?php echo get_option("xcloner_gdrive_cleanup_days")?>">
+				        </div>
+			        </div>
+			        
+			        <div class="row">
+						<div class="col s6 m4">
+							<button class="btn waves-effect waves-light" type="submit" name="action" id="action"  value="gdrive"><?php echo __("Save Settings",'xcloner-backup-and-restore')?>
+								<i class="material-icons right">save</i>
+							</button>
+						</div>	
+						<div class="col s6 m4">
+							<button class="btn waves-effect waves-light orange" type="submit" name="action" id="action"  value="gdrive" onclick="jQuery('#connection_check').val('1')"><?php echo __("Verify",'xcloner-backup-and-restore')?>
+								<i class="material-icons right">import_export</i>
+							</button>
+						</div>
+					</div>
+			        
+				</div>
 			</li>
 			-->
+			
+
 		</ul>
 	</div>
 </div>  
