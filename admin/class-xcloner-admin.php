@@ -131,6 +131,11 @@ class Xcloner_Admin {
 	
 	public function xcloner_remote_storage_page()
 	{
+		$xcloner_sanitization = new Xcloner_Sanitization();
+		
+		$_GET['action'] = $xcloner_sanitization->sanitize_input_as_string($_GET['action']);
+		$_POST['action'] = $xcloner_sanitization->sanitize_input_as_string($_POST['action']);
+		
 		if(isset($_GET['action']) && $_GET['action'] == "set_gdrive_code")
 		{
 			$remote_storage = new Xcloner_Remote_Storage();

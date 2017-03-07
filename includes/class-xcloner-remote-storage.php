@@ -452,8 +452,16 @@ class Xcloner_Remote_Storage{
 	}
 	
 	
-	private function gdrive_construct()
+	public function gdrive_construct()
 	{
+
+		if(!is_plugin_active("xcloner-google-drive/xcloner-google-drive.php") || !file_exists(__DIR__ . "/../../xcloner-google-drive/vendor/autoload.php"))
+		{
+			return false;
+		}
+		
+		require_once(__DIR__ . "/../../xcloner-google-drive/vendor/autoload.php");
+		
 		$client = new \Google_Client();
 		$client->setApplicationName($this->gdrive_app_name);
 		$client->setClientId($this->gdrive_client_id);
@@ -471,12 +479,19 @@ class Xcloner_Remote_Storage{
 	public function get_gdrive_auth_url()
 	{
 		$client = $this->gdrive_construct();
+		
+		if(!$client)
+			return false;
+			
 		return $authUrl = $client->createAuthUrl();
 	}
 	
 	public function set_access_token($code)
 	{
 		$client = $this->gdrive_construct();
+		
+		if(!$client)
+			return false;
 		
 		$token = $client->fetchAccessTokenWithAuthCode($code);
 		$client->setAccessToken($token);
@@ -500,14 +515,55 @@ class Xcloner_Remote_Storage{
 	 */
 	public function get_gdrive_filesystem()
 	{
-	
+		if (version_compare(phpversion(), '5.5.0', '<')) 
+		{
+				throw new Exception("Google Drive API requires PHP 5.5 to be installed!");
+		}
+		
+		$this->logger->info(sprintf("Creating the Google Drive remote storage connection"), array(""));
+		
 		$client = $this->gdrive_construct();
+		
+		if(!$client)
+			return false;
 				
 		$client->refreshToken(get_option("xcloner_gdrive_refresh_token"));
 	
 		$service = new \Google_Service_Drive($client);
 		
-		$adapter = new \Hypweb\Flysystem\GoogleDrive\GoogleDriveAdapter($service, get_option("xcloner_gdrive_target_folder"));
+		$parent = 'root';
+		$dir = basename( get_option("xcloner_gdrive_target_folder"));
+		
+		$folderID = get_option("xcloner_gdrive_target_folder");
+		
+		$tmp = parse_url($folderID);
+		
+		if(isset($tmp['query']))
+		{
+			$folderID = str_replace("id=", "", $tmp['query']);
+		}
+		
+		if(stristr($folderID, "/"))
+		{
+			$query = sprintf('mimeType = \'application/vnd.google-apps.folder\' and \'%s\' in parents and name contains \'%s\'', $parent, $dir);
+			$response = $service->files->listFiles([
+	                'pageSize' => 1,
+	                'q' => $query
+	            ]);
+			
+			if(sizeof($response))
+			{
+				foreach ($response as $obj) {
+					$folderID =  $obj->getId();
+				}
+			}else{
+				$this->xcloner->trigger_message(sprintf(__("Could not find folder ID by name %s", 'xcloner-backup-and-restore'), $folderID), "error");
+			}
+		}
+		
+		$this->logger->info(sprintf("Using target folder with ID %s on the remote storage", $folderID));
+		
+		$adapter = new \Hypweb\Flysystem\GoogleDrive\GoogleDriveAdapter($service, $folderID);
 		
 		$filesystem = new \League\Flysystem\Filesystem($adapter, new Config([
 				'disable_asserts' => true,
