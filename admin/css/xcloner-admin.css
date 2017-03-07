@@ -376,6 +376,10 @@ i.backup_warning{
 	padding-top: 20px;
 }
 
+.remote-storage #authentification_code {
+	display: none;
+}
+
 @media only screen and (min-width: 993px){
 	.dashboard .backup-ready{
 		float: right;

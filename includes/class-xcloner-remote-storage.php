@@ -467,8 +467,9 @@ class Xcloner_Remote_Storage{
 		$client->setClientId($this->gdrive_client_id);
 		$client->setClientSecret($this->gdrive_client_secret);
 		
-		$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF']."?page=xcloner_remote_storage_page&action=set_gdrive_code";
-
+		//$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF']."?page=xcloner_remote_storage_page&action=set_gdrive_code";
+		$redirect_uri = "urn:ietf:wg:oauth:2.0:oob";
+		
 		$client->setRedirectUri($redirect_uri); //urn:ietf:wg:oauth:2.0:oob
 		$client->addScope("https://www.googleapis.com/auth/drive");
 		$client->setAccessType('offline');

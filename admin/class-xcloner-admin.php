@@ -133,13 +133,13 @@ class Xcloner_Admin {
 	{
 		$xcloner_sanitization = new Xcloner_Sanitization();
 		
-		$_GET['action'] = $xcloner_sanitization->sanitize_input_as_string($_GET['action']);
+		$_POST['authentification_code'] = $xcloner_sanitization->sanitize_input_as_string($_POST['authentification_code']);
 		$_POST['action'] = $xcloner_sanitization->sanitize_input_as_string($_POST['action']);
 		
-		if(isset($_GET['action']) && $_GET['action'] == "set_gdrive_code")
+		if(isset($_POST['authentification_code']) && $_POST['authentification_code'] != "")
 		{
 			$remote_storage = new Xcloner_Remote_Storage();
-			$remote_storage->set_access_token($_GET['code']);
+			$remote_storage->set_access_token($_POST['authentification_code']);
 		}
 		
 		if(isset($_POST['action']))

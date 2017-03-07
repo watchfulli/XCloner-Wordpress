@@ -677,9 +677,10 @@ $gdrive_construct = $remote_storage->gdrive_construct();
 								&nbsp;
 							</div>	
 							<div class=" col s12 m6">
-								<p>
-									<a class="btn" href="<?php echo $gdrive_auth_url?>"><?php echo sprintf(__('Click here to authorize Google Drive with XCloner','xcloner-backup-and-restore'))?></a>
-								</p>
+									<p class="center">
+										<a class="btn" target="_blank" onclick="jQuery('#authentification_code').show()" href="<?php echo $gdrive_auth_url?>"><?php echo sprintf(__('Authorize Google Drive','xcloner-backup-and-restore'))?></a>
+									</p>
+									<input type="text" name="authentification_code" id="authentification_code" placeholder="<?php echo __("Paste Authorization Code Here","xcloner-backup-and-restore")?>">
 					        </div>
 				        </div>
 				        
