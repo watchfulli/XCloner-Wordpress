@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2017-03-04 20:08+0200\n"
-"PO-Revision-Date: 2017-03-04 20:08+0200\n"
+"POT-Creation-Date: 2017-03-07 07:35+0200\n"
+"PO-Revision-Date: 2017-03-07 07:39+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ro_RO\n"
@@ -61,7 +61,7 @@ msgid "Files Options"
 msgstr "Optiuni Fisiere"
 
 #: admin/partials/xcloner_generate_backups_page.php:18
-#: includes/class-xcloner.php:367
+#: includes/class-xcloner.php:368
 msgid "Generate Backup"
 msgstr "Creare Backup"
 
@@ -71,7 +71,7 @@ msgstr "Programare Backup"
 
 #: admin/partials/xcloner_generate_backups_page.php:30
 #: admin/partials/xcloner_init_page.php:88
-#: admin/partials/xcloner_manage_backups_page.php:22
+#: admin/partials/xcloner_manage_backups_page.php:49
 #: admin/partials/xcloner_scheduled_backups_page.php:141
 msgid "Backup Name"
 msgstr "Nume Backup"
@@ -166,18 +166,18 @@ msgid "Backup Done"
 msgstr "Backup Terminat"
 
 #: admin/partials/xcloner_generate_backups_page.php:190
-#: admin/partials/xcloner_manage_backups_page.php:69
+#: admin/partials/xcloner_manage_backups_page.php:115
 msgid "Send Backup To Remote Storage"
 msgstr "Trimite Backup In Stocare La Distanta "
 
 #: admin/partials/xcloner_generate_backups_page.php:192
-#: admin/partials/xcloner_manage_backups_page.php:67
+#: admin/partials/xcloner_manage_backups_page.php:112
 msgid "Download Backup"
 msgstr "Descarcare Backup"
 
 #: admin/partials/xcloner_generate_backups_page.php:193
-#: admin/partials/xcloner_manage_backups_page.php:58
-#: admin/partials/xcloner_manage_backups_page.php:71
+#: admin/partials/xcloner_manage_backups_page.php:99
+#: admin/partials/xcloner_manage_backups_page.php:117
 msgid "List Backup Content"
 msgstr "Afiseaza Continutul Backup"
 
@@ -280,22 +280,22 @@ msgid "Close"
 msgstr "Inchide"
 
 #: admin/partials/xcloner_generate_backups_page.php:305
-#: admin/partials/xcloner_manage_backups_page.php:89
+#: admin/partials/xcloner_manage_backups_page.php:140
 msgid "Listing Backup Content "
 msgstr "Continutul Fisierului De Backup"
 
 #: admin/partials/xcloner_generate_backups_page.php:320
-#: admin/partials/xcloner_manage_backups_page.php:104
+#: admin/partials/xcloner_manage_backups_page.php:170
 msgid "Remote Storage Transfer"
 msgstr "Transfer In Stocare Externa"
 
 #: admin/partials/xcloner_generate_backups_page.php:329
-#: admin/partials/xcloner_manage_backups_page.php:113
+#: admin/partials/xcloner_manage_backups_page.php:179
 msgid "please select..."
 msgstr "faceti o selectie…"
 
 #: admin/partials/xcloner_generate_backups_page.php:341
-#: admin/partials/xcloner_manage_backups_page.php:125
+#: admin/partials/xcloner_manage_backups_page.php:191
 msgid "Uploading backup to the selected remote storage..."
 msgstr "Incarc backup-ul in spatiul de stocare selectat"
 
@@ -363,7 +363,7 @@ msgstr "Neprogramat"
 
 #: admin/partials/xcloner_init_page.php:152
 msgid "XCloner Debugger"
-msgstr ""
+msgstr "Depanator XCloner"
 
 #: admin/partials/xcloner_init_page.php:180
 msgid "System Check"
@@ -432,29 +432,54 @@ msgstr "Spatiul Disc Liber"
 msgid "Toggle Additional System Info"
 msgstr "Arata Informatii Sistem Aditionale"
 
-#: admin/partials/xcloner_manage_backups_page.php:23
+#: admin/partials/xcloner_manage_backups_page.php:28
+msgid "Change To Local Storage..."
+msgstr "Vizualizare Backup Din Sistemul Local…"
+
+#: admin/partials/xcloner_manage_backups_page.php:30
+msgid "Change To Remote Storage..."
+msgstr "Vizualizare Backup Din Sistemul De Stocare Extern…"
+
+#: admin/partials/xcloner_manage_backups_page.php:50
 msgid "Created Time"
 msgstr "Timpul Creat"
 
-#: admin/partials/xcloner_manage_backups_page.php:24
+#: admin/partials/xcloner_manage_backups_page.php:51
 msgid "Size"
 msgstr "Marime"
 
-#: admin/partials/xcloner_manage_backups_page.php:25
+#: admin/partials/xcloner_manage_backups_page.php:52
 #: admin/partials/xcloner_scheduled_backups_page.php:28
 #: admin/partials/xcloner_scheduled_backups_page.php:40
 msgid "Action"
 msgstr "Actiune"
 
-#: admin/partials/xcloner_manage_backups_page.php:72
+#: admin/partials/xcloner_manage_backups_page.php:86
+msgid "File does not exists on local storage"
+msgstr "Fisierul nu exista in sistemul de fisierere local"
+
+#: admin/partials/xcloner_manage_backups_page.php:101
+#: admin/partials/xcloner_manage_backups_page.php:122
+msgid "Push Backup To Local Storage"
+msgstr "Trimite Backup Catre Sistemul De Fisiere Local"
+
+#: admin/partials/xcloner_manage_backups_page.php:120
 msgid "Delete Backup"
 msgstr "Stergere Backup"
 
-#: admin/partials/xcloner_manage_backups_page.php:83
+#: admin/partials/xcloner_manage_backups_page.php:135
 msgid "Delete"
 msgstr "Sterge"
 
-#: admin/partials/xcloner_manage_backups_page.php:109
+#: admin/partials/xcloner_manage_backups_page.php:153
+msgid "Transfer Remote Backup To Local Storage"
+msgstr "Transferati Fisierul Backup In Sistemul De Fisiere Local"
+
+#: admin/partials/xcloner_manage_backups_page.php:160
+msgid "Uploading backup to the local storage filesystem..."
+msgstr "Incarc fisierul de backup in sistemul local de fisierere…"
+
+#: admin/partials/xcloner_manage_backups_page.php:175
 #, php-format
 msgid "Send %s to remote storage"
 msgstr "Trimite %s in spatiul de stocare extern"
@@ -526,6 +551,7 @@ msgstr "Curatare Ftp(zile)"
 #: admin/partials/xcloner_remote_storage_page.php:374
 #: admin/partials/xcloner_remote_storage_page.php:455
 #: admin/partials/xcloner_remote_storage_page.php:536
+#: admin/partials/xcloner_remote_storage_page.php:625
 msgid "how many days to keep the backups for"
 msgstr "pentru cate zile sa pastrez fisierele de backup"
 
@@ -535,6 +561,7 @@ msgstr "pentru cate zile sa pastrez fisierele de backup"
 #: admin/partials/xcloner_remote_storage_page.php:380
 #: admin/partials/xcloner_remote_storage_page.php:461
 #: admin/partials/xcloner_remote_storage_page.php:542
+#: admin/partials/xcloner_remote_storage_page.php:631
 msgid "Save Settings"
 msgstr "Salveaza Setari"
 
@@ -544,6 +571,7 @@ msgstr "Salveaza Setari"
 #: admin/partials/xcloner_remote_storage_page.php:385
 #: admin/partials/xcloner_remote_storage_page.php:466
 #: admin/partials/xcloner_remote_storage_page.php:547
+#: admin/partials/xcloner_remote_storage_page.php:636
 msgid "Verify"
 msgstr "Verifica"
 
@@ -704,6 +732,34 @@ msgstr ""
 
 #: admin/partials/xcloner_remote_storage_page.php:533
 msgid "BackBlaze Cleanup (days)"
+msgstr ""
+
+#: admin/partials/xcloner_remote_storage_page.php:559
+msgid "WebDAV Storage"
+msgstr ""
+
+#: admin/partials/xcloner_remote_storage_page.php:586
+#: admin/partials/xcloner_remote_storage_page.php:589
+msgid "WebDAV Base Url"
+msgstr ""
+
+#: admin/partials/xcloner_remote_storage_page.php:595
+#: admin/partials/xcloner_remote_storage_page.php:598
+msgid "WebDAV Username"
+msgstr ""
+
+#: admin/partials/xcloner_remote_storage_page.php:604
+#: admin/partials/xcloner_remote_storage_page.php:607
+msgid "WebDAV Password"
+msgstr ""
+
+#: admin/partials/xcloner_remote_storage_page.php:613
+#: admin/partials/xcloner_remote_storage_page.php:616
+msgid "WebDAV Target Folder"
+msgstr ""
+
+#: admin/partials/xcloner_remote_storage_page.php:622
+msgid "WebDAV Cleanup (days)"
 msgstr ""
 
 #: admin/partials/xcloner_restore_page.php:24
@@ -1086,22 +1142,22 @@ msgstr "Salvez structura pentru tabela %s.%s"
 msgid "Writing %s database dump headers"
 msgstr "Scrie %s capul bazei de date"
 
-#: includes/class-xcloner-file-system.php:323
+#: includes/class-xcloner-file-system.php:337
 #, php-format
 msgid "Starting the filesystem scanner on root folder %s"
 msgstr "Incep scanarea sistemului de fisiere din %s"
 
-#: includes/class-xcloner-file-system.php:475
+#: includes/class-xcloner-file-system.php:489
 #, php-format
 msgid "Excluding %s from the filesystem list, file not readable"
 msgstr "Exclud %s din sistemul de fisiere, fisierul nu este accesibil"
 
-#: includes/class-xcloner-file-system.php:478
+#: includes/class-xcloner-file-system.php:492
 #, php-format
 msgid "Adding %s to the filesystem list"
 msgstr "Adaug %s in lista de fisiere"
 
-#: includes/class-xcloner-file-system.php:486
+#: includes/class-xcloner-file-system.php:500
 #, php-format
 msgid "Excluding %s from the filesystem list, matching pattern %s"
 msgstr "Exclud %s din lista de fisiere, pattern gasit %s"
@@ -1122,7 +1178,7 @@ msgstr "Panou Start"
 msgid "XCloner Backup Settings"
 msgstr "XCloner Setari Backup"
 
-#: includes/class-xcloner-loader.php:65 includes/class-xcloner.php:366
+#: includes/class-xcloner-loader.php:65 includes/class-xcloner.php:367
 msgid "Settings"
 msgstr "Setari"
 
@@ -1146,25 +1202,25 @@ msgstr "Generare Backup"
 msgid "Restore Backups"
 msgstr "Restaurare Backup"
 
-#: includes/class-xcloner-remote-storage.php:134
+#: includes/class-xcloner-remote-storage.php:147
 #, php-format
 msgid "%s storage settings saved."
 msgstr "%s setarile de stocare au fost salvate."
 
-#: includes/class-xcloner-remote-storage.php:141
+#: includes/class-xcloner-remote-storage.php:154
 #, php-format
 msgid "%s connection is valid."
 msgstr "%s conexiunea este valida."
 
-#: includes/class-xcloner-remote-storage.php:165
+#: includes/class-xcloner-remote-storage.php:178
 msgid "Could not write data"
 msgstr "Nu pot scrie data"
 
-#: includes/class-xcloner-remote-storage.php:170
+#: includes/class-xcloner-remote-storage.php:183
 msgid "Could not read data"
 msgstr "Nu pot citi data"
 
-#: includes/class-xcloner-remote-storage.php:175
+#: includes/class-xcloner-remote-storage.php:188
 msgid "Could not delete data"
 msgstr "Nu pot sterge data"
 
@@ -1389,11 +1445,11 @@ msgid ""
 "before starting the backup process."
 msgstr ""
 
-#: includes/class-xcloner.php:400
+#: includes/class-xcloner.php:401
 msgid "Once Weekly"
 msgstr "O data pe saptamana"
 
-#: includes/class-xcloner.php:405
+#: includes/class-xcloner.php:406
 msgid "Once a month"
 msgstr "O data pe luna"
 
