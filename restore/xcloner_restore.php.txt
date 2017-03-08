@@ -4,25 +4,37 @@ define('AUTH_KEY', '');
 
 define("DS", DIRECTORY_SEPARATOR);
 
-if(!AUTH_KEY or !isset($_REQUEST['hash']) or  $_REQUEST['hash'] != AUTH_KEY)
+if(!AUTH_KEY)
 {
-		Xcloner_Restore::send_response("404", "Could not run restore script, AUTH_KEY missing or invalid!");
+		Xcloner_Restore::send_response("404", "Could not run restore script, AUTH_KEY not set!");
+		exit;
+}
+
+if(!isset($_REQUEST['hash']))
+{
+		Xcloner_Restore::send_response("404", "Could not run restore script, sent HASH is empty!");
+		exit;
+}
+
+if($_REQUEST['hash'] != AUTH_KEY)
+{
+		Xcloner_Restore::send_response("404", "Could not run restore script, AUTH_KEY doesn't match the sent HASH!");
 		exit;
 }
 
 //check minimum PHP version
-
 if(version_compare(phpversion(), Xcloner_Restore::xcloner_minimum_version, '<'))
-		{
-			Xcloner_Restore::send_response(500, sprintf(("XCloner requires minimum PHP version %s in order to run correctly. We have detected your version as %s"),Xcloner_Restore::xcloner_minimum_version, phpversion()) );
-			exit;
+{
+	Xcloner_Restore::send_response(500, sprintf(("XCloner requires minimum PHP version %s in order to run correctly. We have detected your version as %s"),Xcloner_Restore::xcloner_minimum_version, phpversion()) );
+	exit;
 
-		}
+}
 
 if(file_exists("vendor.phar") and extension_loaded('phar'))
+{
 	require_once(__DIR__.DS."vendor.phar");
-else
-{	
+}else{	
+	
 	$file = dirname( __FILE__ )  . DS.'vendor'.DS.'autoload.php';
 	
 	if(!file_exists($file))
