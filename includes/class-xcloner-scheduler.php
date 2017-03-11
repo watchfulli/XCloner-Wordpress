@@ -16,18 +16,24 @@ class Xcloner_Scheduler{
 		echo "$method is not defined";
 	}*/
 
-	public function __construct()
+	public function __construct(Xcloner $xcloner_container)
 	{
 		global $wpdb;
-		$this->db = $wpdb;
 		
-		$wpdb->show_errors				= false;
+		$this->db 					= $wpdb;
+		$wpdb->show_errors			= false;
 		
-		$this->xcloner_settings 		= new Xcloner_Settings();
+		$this->xcloner_container	= $xcloner_container;
+		$this->xcloner_settings 	= $xcloner_container->get_xcloner_settings();
 		
-		$this->scheduler_table 			= $this->db->prefix.$this->scheduler_table;
+		$this->scheduler_table 		= $this->db->prefix.$this->scheduler_table;
 	}
-
+	
+	private function get_xcloner_container()
+	{
+		return $this->xcloner_container;
+	}
+	
 	public function get_scheduler_list($return_only_enabled = 0 )
 	{
 		$list = $this->db->get_results("SELECT * FROM ".$this->scheduler_table);
@@ -205,16 +211,12 @@ class Xcloner_Scheduler{
 	{
 		set_time_limit(0);
 		
-		$this->xcloner_settings->generate_new_hash();
-		
-		$this->xcloner_file_system 		= new Xcloner_File_System($this->xcloner_settings->get_hash());
-		$this->xcloner_database 		= new XCloner_Database($this->xcloner_settings->get_hash());
-		$this->archive_system 			= new Xcloner_Archive($this->xcloner_settings->get_hash());
-		$this->logger 					= new XCloner_Logger('xcloner_scheduler', $this->xcloner_settings->get_hash());
-		$this->xcloner_remote_storage 	= new Xcloner_Remote_Storage($this->xcloner_settings->get_hash());
-		
-		//$schedule = $this->get_schedule_by_id($id);
-		
+		$this->xcloner_file_system 		= $this->get_xcloner_container()->get_xcloner_filesystem();
+		$this->xcloner_database 		= $this->get_xcloner_container()->get_xcloner_database();
+		$this->archive_system 			= $this->get_xcloner_container()->get_archive_system();
+		$this->logger 					= $this->get_xcloner_container()->get_xcloner_logger()->withName("xcloner_scheduler");
+		$this->xcloner_remote_storage 	= $this->get_xcloner_container()->get_xcloner_remote_storage();
+				
 		if($schedule['recurrence'] == "single")
 		{
 			$this->disable_single_cron($schedule['id']);

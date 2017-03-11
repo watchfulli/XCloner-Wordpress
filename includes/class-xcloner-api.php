@@ -21,41 +21,47 @@ class Xcloner_Api{
 	private $archive_system;
 	private $form_params;
 	private $logger;
+	private $xcloner_container;
 	
-	public function __construct()
+	public function __construct(Xcloner $xcloner_container)
 	{
 		global $wpdb;
 		
-		error_reporting(0);
+		//error_reporting(0);
 		if( ob_get_length() )
 			ob_end_clean();
 		ob_start();
 		
-		$wpdb->show_errors		= false;
-		
-		$this->xcloner_settings 		= new Xcloner_Settings();
-		
-		//generating the hash suffix for tmp xcloner store folder
-		if(isset($_POST['hash'])){
+		$wpdb->show_errors			= false;
 			
-			if($_POST['hash'] == "generate_hash")
-				$this->xcloner_settings->generate_new_hash();
-			else
-				$this->xcloner_settings->set_hash($_POST['hash']);
-		}
-
-		$this->logger 					= new XCloner_Logger("xcloner_api", $this->xcloner_settings->get_hash());
-		$this->xcloner_file_system 		= new Xcloner_File_System($this->xcloner_settings->get_hash());
-		$this->xcloner_sanitization 	= new Xcloner_Sanitization();
-		$this->xcloner_requirements 	= new XCloner_Requirements();
-		$this->archive_system 			= new Xcloner_Archive($this->xcloner_settings->get_hash());
-		$this->xcloner_database 		= new XCloner_Database($this->xcloner_settings->get_hash());
+		$this->xcloner_container	= $xcloner_container;
+				
+		$this->xcloner_settings 	= $xcloner_container->get_xcloner_settings();
+		$this->logger				= $xcloner_container->get_xcloner_logger()->withName("xcloner_api");
+		$this->xcloner_file_system 	= $xcloner_container->get_xcloner_filesystem();
+		$this->xcloner_sanitization = $xcloner_container->get_xcloner_sanitization();
+		$this->xcloner_requirements = $xcloner_container->get_xcloner_requirements();
+		$this->archive_system 		=  $xcloner_container->get_archive_system();
+		$this->xcloner_database 	=  $xcloner_container->get_xcloner_database();
+		$this->xcloner_scheduler 	=  $xcloner_container->get_xcloner_scheduler();
 		
 		
 		if(isset($_POST['API_ID'])){
 			$this->logger->info("Processing ajax request ID ".substr($this->xcloner_sanitization->sanitize_input_as_string($_POST['API_ID']), 0 , 15));
 		}
 		
+	}
+	
+	private function get_xcloner_container()
+	{
+		return $this->xcloner_container;
+	}
+	
+	private function check_access()
+	{
+		if (function_exists('current_user_can') && !current_user_can('manage_options')) {
+			die("Not allowed access here!");
+		}
 	}
 	
 	public function init_db()
@@ -75,11 +81,10 @@ class Xcloner_Api{
 		
 		try
 		{
-			//$xcloner_db = new XCloner_Database($data['dbUsername'], $data['dbPassword'], $data['dbDatabase'], $data['dbHostname']);
 			$this->xcloner_database->init($data);
 
-		}catch(Exception $e)
-		{
+		}catch(Exception $e){
+			
 			$this->send_response($e->getMessage());
 			$this->logger->error($e->getMessage());
 			
@@ -98,11 +103,9 @@ class Xcloner_Api{
 	{
 		global $wpdb; 
 		
-		if (!current_user_can('manage_options')) {
-			die("Not allowed access here!");
-		}
+		$this->check_access();
 		
-		$scheduler = new Xcloner_Scheduler();
+		$scheduler = $this->xcloner_scheduler;
 		$params = array();
 		$schedule = array();
 		$response = array();
@@ -216,9 +219,7 @@ class Xcloner_Api{
 	 */ 
 	public function backup_files()
 	{
-		if (!current_user_can('manage_options')) {
-			die("Not allowed access here!");
-		}
+		$this->check_access();
 		
 		$params = json_decode(stripslashes($_POST['data']));
 		
@@ -279,9 +280,7 @@ class Xcloner_Api{
 	 */ 
 	public function backup_database()
 	{
-		if (!current_user_can('manage_options')) {
-			die("Not allowed access here!");
-		}
+		$this->check_access();
 		
 		$params = json_decode(stripslashes($_POST['data']));
 		
@@ -312,9 +311,7 @@ class Xcloner_Api{
 	 */ 
 	public function scan_filesystem()
 	{
-		if (!current_user_can('manage_options')) {
-			die("Not allowed access here!");
-		}
+		$this->check_access();
 		
 		$params = json_decode(stripslashes($_POST['data']));
 		$init 	= (int)$_POST['init'];
@@ -411,9 +408,7 @@ class Xcloner_Api{
 	 */ 
 	public function get_file_system_action()
 	{
-		if (!current_user_can('manage_options')) {
-			die("Not allowed access here!");
-		}
+		$this->check_access();
 		
 		$folder = $this->xcloner_sanitization->sanitize_input_as_relative_path($_POST['id']);
 		
@@ -422,7 +417,6 @@ class Xcloner_Api{
 		if($folder == "#"){
 			
 			$folder = "/";
-			//$list_directory = $this->xcloner_settings->get_xcloner_start_path();
 			$data[] = array(
 						'id' => $folder,
 						'parent' => '#',
@@ -460,8 +454,6 @@ class Xcloner_Api{
 				else
 					 $text .= " (". $this->xcloner_requirements->file_format_size($file['size']).")";
 				
-				//if(in_array($file['path'], $this->xcloner_file_system->get_excluded_files()))
-				//echo $file['path']."--".$this->xcloner_file_system->is_excluded($file);
 				if($this->xcloner_file_system->is_excluded($file))
 					$selected = true;
 				else
@@ -489,9 +481,7 @@ class Xcloner_Api{
 	 */ 
 	public function get_database_tables_action()
 	{
-		if (!current_user_can('manage_options')) {
-			die("Not allowed access here!");
-		}
+		$this->check_access();
 		
 		$database = $this->xcloner_sanitization->sanitize_input_as_raw($_POST['id']);
 		
@@ -572,12 +562,10 @@ class Xcloner_Api{
 	 */ 
 	public function get_schedule_by_id()
 	{
-		if (!current_user_can('manage_options')) {
-			die("Not allowed access here!");
-		}
+		$this->check_access();
 		
 		$schedule_id = $this->xcloner_sanitization->sanitize_input_as_int($_GET['id']);
-		$scheduler = new Xcloner_Scheduler();
+		$scheduler = $this->xcloner_scheduler;
 		$data  = $scheduler->get_schedule_by_id($schedule_id);
 		
 		return $this->send_response($data);
@@ -590,11 +578,9 @@ class Xcloner_Api{
 	 */ 
 	public function get_scheduler_list()
 	{
-		if (!current_user_can('manage_options')) {
-			die("Not allowed access here!");
-		}
+		$this->check_access();
 		
-		$scheduler = new Xcloner_Scheduler();
+		$scheduler = $this->xcloner_scheduler;
 		$data  = $scheduler->get_scheduler_list();
 		$return['data'] = array();
 		
@@ -658,12 +644,10 @@ class Xcloner_Api{
 	 */
 	public function delete_schedule_by_id()
 	{
-		if (!current_user_can('manage_options')) {
-			die("Not allowed access here!");
-		}
+		$this->check_access();
 		
 		$schedule_id = $this->xcloner_sanitization->sanitize_input_as_int($_GET['id']);
-		$scheduler = new Xcloner_Scheduler();
+		$scheduler = $this->xcloner_scheduler;
 		$data['finished']  = $scheduler->delete_schedule_by_id($schedule_id);
 		
 		return $this->send_response($data);
@@ -676,9 +660,7 @@ class Xcloner_Api{
 	 */ 
 	public function delete_backup_by_name()
 	{
-		if (!current_user_can('manage_options')) {
-			die("Not allowed access here!");
-		}
+		$this->check_access();
 		
 		$backup_name = $this->xcloner_sanitization->sanitize_input_as_string($_POST['name']);
 		$storage_selection = $this->xcloner_sanitization->sanitize_input_as_string($_POST['storage_selection']);
@@ -690,9 +672,7 @@ class Xcloner_Api{
 	
 	public function list_backup_files()
 	{
-		if (!current_user_can('manage_options')) {
-			die("Not allowed access here!");
-		}
+		$this->check_access();
 		
 		$backup_parts = array();
 		
@@ -760,14 +740,12 @@ class Xcloner_Api{
 	public function copy_backup_remote_to_local()
 	{
 	
-		if (!current_user_can('manage_options')) {
-			die("Not allowed access here!");
-		}
+		$this->check_access();
 		
 		$backup_file = $this->xcloner_sanitization->sanitize_input_as_string($_POST['file']);
 		$storage_type = $this->xcloner_sanitization->sanitize_input_as_string($_POST['storage_type']);
 		
-		$xcloner_remote_storage = new Xcloner_Remote_Storage();
+		$xcloner_remote_storage = $this->get_xcloner_container()->get_xcloner_remote_storage();
 		
 		$return = array();
 		
@@ -801,14 +779,12 @@ class Xcloner_Api{
 	 */ 
 	public function upload_backup_to_remote()
 	{
-		if (!current_user_can('manage_options')) {
-			die("Not allowed access here!");
-		}
+		$this->check_access();
 		
 		$backup_file = $this->xcloner_sanitization->sanitize_input_as_string($_POST['file']);
 		$storage_type = $this->xcloner_sanitization->sanitize_input_as_string($_POST['storage_type']);
 		
-		$xcloner_remote_storage = new Xcloner_Remote_Storage();
+		$xcloner_remote_storage = $this->get_xcloner_container()->get_xcloner_remote_storage();
 		
 		$return = array();
 		
@@ -842,11 +818,9 @@ class Xcloner_Api{
 	 */ 
 	public function remote_storage_save_status()
 	{
-		if (!current_user_can('manage_options')) {
-			die("Not allowed access here!");
-		}
+		$this->check_access();
 		
-		$xcloner_remote_storage = new Xcloner_Remote_Storage();
+		$xcloner_remote_storage = $this->get_xcloner_container()->get_xcloner_remote_storage();
 		
 		$return['finished'] = $xcloner_remote_storage->change_storage_status($_POST['id'], $_POST['value']);
 		
@@ -856,9 +830,7 @@ class Xcloner_Api{
 	
 	public function download_restore_script()
 	{
-		if (!current_user_can('manage_options')) {
-			die("Not allowed access here!");
-		}
+		$this->check_access();
 		
 		@ob_end_clean();
 		
@@ -911,9 +883,7 @@ class Xcloner_Api{
 	 */ 
 	public function download_backup_by_name()
 	{
-		if (!current_user_can('manage_options')) {
-			die("Not allowed access here!");
-		}
+		$this->check_access();
 		
 		@ob_end_clean();
 		
@@ -951,9 +921,7 @@ class Xcloner_Api{
 	
 	public function restore_upload_backup()
 	{
-		if (!current_user_can('manage_options')) {
-			die("Not allowed access here!");
-		}
+		$this->check_access();
 		
 		$return['part'] = 0;
 		$return['total_parts'] = 0;
@@ -990,7 +958,7 @@ class Xcloner_Api{
 		
 		try{
 		
-			$xcloner_file_transfer = new Xcloner_File_Transfer();
+			$xcloner_file_transfer = $this->get_xcloner_container()->get_xcloner_file_transfer();
 			$xcloner_file_transfer->set_target($target_url);
 			$return['start'] = $xcloner_file_transfer->transfer_file($file, $start, $hash);
 		

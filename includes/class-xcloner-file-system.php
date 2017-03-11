@@ -14,6 +14,7 @@ class Xcloner_File_System{
 	public  $tmp_filesystem;
 	public  $storage_filesystem;
 	private $xcloner_settings_append;
+	private $xcloner_container;
 	
 	private $logger;
 	private $start_adapter;
@@ -32,12 +33,12 @@ class Xcloner_File_System{
 	private $backup_archive_extensions = array("tar", "tgz", "tar.gz", "gz", "csv");
 	private $backup_name_tags = array('[time]', '[hostname]', '[domain]');
 	
-	public function __construct($hash = "")
+	public function __construct(Xcloner $xcloner_container, $hash = "")
 	{
-		$this->logger = new XCloner_Logger('xcloner_file_system', $hash);
-		$this->xcloner_requirements = new Xcloner_Requirements();
-
-		$this->xcloner_settings 		= new Xcloner_Settings($hash);
+		$this->xcloner_container = $xcloner_container;
+		
+		$this->logger 				= $xcloner_container->get_xcloner_logger()->withName("xcloner_file_system");
+		$this->xcloner_settings 	= $xcloner_container->get_xcloner_settings();
 
 		try{
 			
@@ -74,6 +75,12 @@ class Xcloner_File_System{
 
 	}
 	
+	private function get_xcloner_container()
+	{
+		return $this->xcloner_container;
+	}
+	
+	
 	public function set_hash($hash)
 	{
 		$this->xcloner_settings->set_hash($hash);
@@ -93,7 +100,7 @@ class Xcloner_File_System{
 	{
 		if($remote_storage_selection != "")
 		{
-			$remote_storage = new Xcloner_Remote_Storage();
+			$remote_storage = $this->get_xcloner_container()->get_xcloner_remote_storage();
 			$method = "get_".$remote_storage_selection."_filesystem";
 			
 			if(!method_exists($remote_storage, $method))

@@ -6,11 +6,18 @@ class Xcloner_Settings
 	private $logger_file_hash = "xcloner%s.log";
 	private $hash ;
 	private $xcloner_sanitization;
+	private $xcloner_container;
 	
-	public function __construct($hash = "")
+	public function __construct(Xcloner $xcloner_container, $hash = "")
 	{
+		$this->xcloner_container = $xcloner_container;
 		if(isset($hash))
 			$this->set_hash($hash);
+	}
+	
+	private function get_xcloner_container()
+	{
+		return $this->xcloner_container;
 	}
 	
 	public function get_logger_filename($include_hash = 0)
@@ -196,7 +203,7 @@ class Xcloner_Settings
 	public function settings_init()
 	{
 	    global $wpdb;
-	    $this->xcloner_sanitization = new Xcloner_Sanitization();
+	    $this->xcloner_sanitization = $this->get_xcloner_container()->get_xcloner_sanitization();
 	    
 	    //ADDING MISSING OPTIONS
 	    if( false == get_option( 'xcloner_mysql_settings_page' ) ) {  
@@ -460,7 +467,7 @@ class Xcloner_Settings
 	        'xcloner_system_settings_page',
 	        'xcloner_system_settings_group',
 	        array('xcloner_exclude_files_larger_than_mb',
-	         __('Use this option to automatically exclude files larger than a certain size in MB, or set to -1 to include all. Range 0-1000 MB','xcloner-backup-and-restore'), 
+	         __('Use this option to automatically exclude files larger than a certain size in MB, or set to 0 to include all. Range 0-1000 MB','xcloner-backup-and-restore'), 
 	         )
 	    );
 	    

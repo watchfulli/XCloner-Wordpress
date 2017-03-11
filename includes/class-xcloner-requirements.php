@@ -1,16 +1,23 @@
 <?php
 
-class XCloner_Requirements
+class Xcloner_Requirements
 {
 	
 	var $min_php_version 	= "5.4.0";
 	var $safe_mode			= "Off";
 	
 	private $xcloner_settings;
+	private $xcloner_container;
 	
-	public function __construct()
+	public function __construct(Xcloner $xcloner_container)
 	{
-		$this->xcloner_settings 		= new Xcloner_Settings();
+		$this->xcloner_container = $xcloner_container;
+		$this->xcloner_settings = $xcloner_container->get_xcloner_settings();
+	}
+	
+	private function get_xcloner_container()
+	{
+		return $this->xcloner_container;
 	}
 	
 	public function check_backup_ready_status()

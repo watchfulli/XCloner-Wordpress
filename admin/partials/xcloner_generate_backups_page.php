@@ -1,6 +1,6 @@
 <?php 
-$xcloner_settings = new Xcloner_Settings();
-$xcloner_remote_storage = new Xcloner_Remote_Storage();
+$xcloner_settings = $this->get_xcloner_container()->get_xcloner_settings();
+$xcloner_remote_storage = $this->get_xcloner_container()->get_xcloner_remote_storage();
 $available_storages = $xcloner_remote_storage->get_available_storages();
 $tab = 1;
 ?>

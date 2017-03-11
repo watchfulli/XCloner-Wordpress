@@ -1,5 +1,5 @@
 <?php 
-$remote_storage = new Xcloner_Remote_Storage();
+$remote_storage = $this->get_xcloner_container()->get_xcloner_remote_storage();
 
 $gdrive_auth_url = "";
 

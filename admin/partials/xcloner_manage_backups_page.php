@@ -1,18 +1,17 @@
 <?php
 
-$xcloner_file_system 		= new Xcloner_File_System();
-$xcloner_sanitization 		= new Xcloner_Sanitization();
-
+$xcloner_file_system 		= $this->get_xcloner_container()->get_xcloner_filesystem();
+$xcloner_sanitization 		= $this->get_xcloner_container()->get_xcloner_sanitization();
+$xcloner_remote_storage 	= $this->get_xcloner_container()->get_xcloner_remote_storage();
 $storage_selection 			= "";
 
 if(isset($_GET['storage_selection']) and $_GET['storage_selection'])
+{
 	$storage_selection = $xcloner_sanitization->sanitize_input_as_string($_GET['storage_selection']);
+}
 
 $backup_list = $xcloner_file_system->get_backup_archives_list($storage_selection);
 
-//print_r($backup_list);
-
-$xcloner_remote_storage = new Xcloner_Remote_Storage();
 $available_storages = $xcloner_remote_storage->get_available_storages();
 
 

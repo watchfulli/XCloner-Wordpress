@@ -1,16 +1,8 @@
 <?php
 
-$xcloner_settings 		= new Xcloner_Settings();
-$logger				= new Xcloner_Logger();
-
-
-$xcloner_scheduler = new Xcloner_Scheduler();
-
-$xcloner_file_transfer = new Xcloner_File_Transfer();
-
-$xcloner_file_transfer->set_target("http://thinkovi.com/xcloner/xcloner_restore.php");
-
-$start = 0 ;
+$xcloner_settings 	= $this->get_xcloner_container()->get_xcloner_settings();
+$logger				= $this->get_xcloner_container()->get_xcloner_logger();
+$logger_content 	= $logger->getLastDebugLines();
 ?>
 <div class="col s12 ">
 	<div>

@@ -10,18 +10,30 @@ class Xcloner_Logger extends Logger{
 	private $max_logger_files = 15;
 	private $main_logger_url;
 	
-	public function __construct($logger_name = "xcloner_logger", $hash="")
+	public function __construct(Xcloner $xcloner_container, $logger_name = "xcloner_logger")
 	{
-		$xcloner_settings 	= new Xcloner_Settings($hash);
+		if(!$xcloner_container->get_xcloner_settings())
+		{
+			$xcloner_settings 	= new Xcloner_Settings($xcloner_container);
+		}else{
+			$xcloner_settings 	= $xcloner_container->get_xcloner_settings();
+		}
+		
+		$hash = $xcloner_settings->get_hash();
+		if($hash == "-".$xcloner_settings->get_server_unique_hash(5))
+		{
+			$hash = "";
+		}
+		
 		$logger_path 		= $xcloner_settings->get_xcloner_store_path().DS.$xcloner_settings->get_logger_filename();
 		$logger_path_tmp 	= "";
 		
 		if($hash)
+		{
 			$logger_path_tmp = $xcloner_settings->get_xcloner_tmp_path().DS.$xcloner_settings->get_logger_filename(1);
-		
+		}
 		
 		$this->logger_path = $logger_path;
-		//$this->logger_path_tmp = $logger_path_tmp;
 		
 		if(!is_dir($xcloner_settings->get_xcloner_store_path()) or !is_writable($xcloner_settings->get_xcloner_store_path()))
 		{
@@ -41,7 +53,9 @@ class Xcloner_Logger extends Logger{
 		$debug_level = Logger::INFO;
 		
 		if(WP_DEBUG)
+		{
 			$debug_level = Logger::DEBUG;
+		}
 
 	
 		if($logger_path)
@@ -53,7 +67,9 @@ class Xcloner_Logger extends Logger{
 		}
 			
 		if($hash and $logger_path_tmp)
+		{
 			$this->pushHandler(new StreamHandler($logger_path_tmp, $debug_level));
+		}
 		
 		//return $this;
 	}
@@ -67,11 +83,9 @@ class Xcloner_Logger extends Logger{
 	{
 		$lines = array();
 		
-		//if(!file_exists($this->logger_path) or !is_readable($this->logger_path))
 		if(!file_exists($this->main_logger_url) or !is_readable($this->main_logger_url))
 			return false;
 		
-		//$fp = fopen($this->logger_path, 'r');
 		$fp = fopen($this->main_logger_url, 'r');
 		fseek($fp, -1, SEEK_END);
 		$pos = ftell($fp);

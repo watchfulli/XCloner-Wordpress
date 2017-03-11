@@ -21,7 +21,7 @@
  */
 
 
-class XCloner_Database extends wpdb{
+class Xcloner_Database extends wpdb{
 
 
 	public  $debug 						= 0;
@@ -38,11 +38,11 @@ class XCloner_Database extends wpdb{
 	private   $TEMP_DBPROCESS_FILE = ".database";
 	private   $TEMP_DUMP_FILE = "database-backup.sql";
 	
-	public function __construct($hash="", $wp_user="", $wp_pass="", $wp_db="", $wp_host="")
+	public function __construct(Xcloner $xcloner_container, $wp_user="", $wp_pass="", $wp_db="", $wp_host="")
 	{
-		$this->logger 					= new XCloner_Logger("xcloner_database", $hash);
-		$this->xcloner_settings 		= new Xcloner_Settings($hash);
-		$this->fs 						= new Xcloner_File_System($hash);
+		$this->logger 					= $xcloner_container->get_xcloner_logger()->withName("xcloner_database");
+		$this->xcloner_settings 		= $xcloner_container->get_xcloner_settings();
+		$this->fs 						= $xcloner_container->get_xcloner_filesystem();
 		
 		if($this->xcloner_settings->get_xcloner_option('xcloner_database_records_per_request'))
 			$this->recordsPerSession		= $this->xcloner_settings->get_xcloner_option('xcloner_database_records_per_request');

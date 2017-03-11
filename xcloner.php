@@ -96,22 +96,6 @@ if(isset($_GET['page']) and stristr($_GET['page'] ,  "xcloner_"))
 	add_action( 'init', 'stop_heartbeat', 1 );
 }	
 
-function xcloner_display()
-{	
-	// check user capabilities
-    if (!current_user_can('manage_options')) {
-        return;
-    }
-
-	$page = sanitize_key($_GET['page']);
-	$plugin = new Xcloner();
-	if($page)
-	{
-		$plugin->display($page);
-	}
-	
-}
-
 /**
  * Begins execution of the plugin.
  *
@@ -127,6 +111,8 @@ function run_xcloner()
 	$plugin->check_dependencies();
 	$plugin->init();
 	$plugin->run();
+	
+	return $plugin;
 
 }
 
@@ -134,9 +120,12 @@ require_once(plugin_dir_path( __FILE__ )  . '/vendor/autoload.php');
 require plugin_dir_path( __FILE__ ) . 'includes/class-xcloner.php';
 
 try{
-	run_xcloner();
-}catch(Exception $e)
-{
+	
+	$xcloner_plugin = run_xcloner();
+	
+}catch(Exception $e){
+	
 	echo $e->getMessage();
+	
 }
 

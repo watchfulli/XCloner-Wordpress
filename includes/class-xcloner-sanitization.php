@@ -3,6 +3,8 @@ use League\Flysystem\Util;
 
 class Xcloner_Sanitization {
 	
+	public function __construct(){}
+	
 	public function sanitize_input_as_int($option)
 	{
 		return filter_var($option, FILTER_SANITIZE_NUMBER_INT);

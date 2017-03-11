@@ -58,7 +58,17 @@ class Xcloner {
 	 * @var      string    $version    The current version of the plugin.
 	 */
 	protected $version;
-
+		
+	private $xcloner_settings;	
+	private $xcloner_logger;
+	private $xcloner_sanitization;
+	private $xcloner_requirements;
+	private $xcloner_filesystem;
+	private $archive_system;
+	private $xcloner_database;
+	private $xcloner_scheduler;
+	private $xcloner_remote_storage;
+	private $xcloner_file_transfer;
 	/**
 	 * Define the core functionality of the plugin.
 	 *
@@ -86,6 +96,56 @@ class Xcloner {
 		$this->define_ajax_hooks();
 		$this->define_cron_hooks();
 		
+	}
+	
+	public function get_xcloner_settings()
+	{
+		return $this->xcloner_settings;
+	}
+	
+	public function get_xcloner_filesystem()
+	{
+		return $this->xcloner_filesystem;
+	}
+	
+	public function get_xcloner_logger()
+	{
+		return $this->xcloner_logger;
+	}
+	
+	public function get_xcloner_sanitization()
+	{
+		return $this->xcloner_sanitization;
+	}
+	
+	public function get_xcloner_requirements()
+	{
+		return $this->xcloner_requirements;
+	}
+	
+	public function get_archive_system()
+	{
+		return $this->archive_system;
+	}
+	
+	public function get_xcloner_database()
+	{
+		return $this->xcloner_database;
+	}
+	
+	public function get_xcloner_scheduler()
+	{
+		return $this->xcloner_scheduler;
+	}
+	
+	public function get_xcloner_remote_storage()
+	{
+		return $this->xcloner_remote_storage;
+	}
+	
+	public function get_xcloner_file_transfer()
+	{
+		return $this->xcloner_file_transfer;
 	}
 	
 	public function check_dependencies(){
@@ -227,7 +287,7 @@ class Xcloner {
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-xcloner-public.php';
 		
-		$this->loader = new Xcloner_Loader();
+		$this->loader = new Xcloner_Loader($this);
 
 	}
 
@@ -260,7 +320,7 @@ class Xcloner {
 	 */
 	private function define_admin_hooks() {
 	
-		$plugin_admin = new Xcloner_Admin( $this->get_plugin_name(), $this->get_version() );
+		$plugin_admin = new Xcloner_Admin( $this );
 		$this->plugin_admin = $plugin_admin;
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
@@ -283,8 +343,25 @@ class Xcloner {
 		/**
 		* register wporg_settings_init to the admin_init action hook
 		*/
-		$settings = new Xcloner_Settings();
-		add_action('admin_init', array($settings, 'settings_init'));
+
+		$this->xcloner_settings = new XCloner_Settings($this);
+		
+		if(defined('DOING_CRON') || isset($_POST['hash'])){
+			
+			if(defined('DOING_CRON') || $_POST['hash'] == "generate_hash"){
+				$this->xcloner_settings->generate_new_hash();
+			}else{
+				$this->xcloner_settings->set_hash($_POST['hash']);
+			}
+		}
+		
+		$this->xcloner_sanitization 	= new Xcloner_Sanitization();
+		$this->xcloner_requirements 	= new Xcloner_Requirements($this);
+		
+		add_action('admin_init', array($this->xcloner_settings, 'settings_init'));
+		
+		//adding links to the Manage Plugins Wordpress page for XCloner
+		add_filter('plugin_action_links', array($this, 'add_plugin_action_links'), 10, 2);
 	}
 
 	/**
@@ -296,7 +373,7 @@ class Xcloner {
 	 */
 	private function define_public_hooks() {
 
-		$plugin_public = new Xcloner_Public( $this->get_plugin_name(), $this->get_version() );
+		$plugin_public = new Xcloner_Public( $this );
 
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
@@ -305,7 +382,7 @@ class Xcloner {
 	
 	public function exception_handler() {
 		
-		$logger = new XCloner_Logger("php_system");
+		$logger = new XCloner_Logger($this, "php_system");
 		$error = error_get_last();
 		
 		if($error['type'] and $logger)
@@ -329,34 +406,37 @@ class Xcloner {
 		
 	private function define_ajax_hooks()
 	{
-		//$plugin_public = new Xcloner_Public( $this->get_plugin_name(), $this->get_version() );
-		//$this->loader->add_action( 'wp_ajax_get_database_tables_action', $plugin_public, array('Xcloner_Api','get_database_tables_action') );
-		
-		if(is_admin())
+		if(is_admin() || defined('DOING_CRON'))
 		{
-			$xcloner_api = new Xcloner_Api();
+			$this->xcloner_logger 			= new XCloner_Logger($this, "xcloner_api");
+			$this->xcloner_filesystem 		= new Xcloner_File_System($this);
+			$this->archive_system 			= new Xcloner_Archive($this);
+			$this->xcloner_database 		= new Xcloner_Database($this);
+			$this->xcloner_scheduler 		= new Xcloner_Scheduler($this);
+			$this->xcloner_remote_storage 	= new Xcloner_Remote_Storage($this);
+			$this->xcloner_file_transfer 	= new Xcloner_File_Transfer($this);
+			
+			$xcloner_api 					= new Xcloner_Api($this);
 
-			add_action( 'wp_ajax_get_database_tables_action'	, array($xcloner_api,'get_database_tables_action')  );
-			add_action( 'wp_ajax_get_file_system_action'		, array($xcloner_api,'get_file_system_action')  );
-			add_action( 'wp_ajax_scan_filesystem'		, array($xcloner_api,'scan_filesystem')  );
-			add_action( 'wp_ajax_backup_database'		, array($xcloner_api,'backup_database')  );
-			add_action( 'wp_ajax_backup_files'		, array($xcloner_api,'backup_files')  );
-			add_action( 'wp_ajax_save_schedule'		, array($xcloner_api,'save_schedule')  );
-			add_action( 'wp_ajax_get_schedule_by_id'		, array($xcloner_api,'get_schedule_by_id')  );
-			add_action( 'wp_ajax_get_scheduler_list'		, array($xcloner_api,'get_scheduler_list')  );
-			add_action( 'wp_ajax_delete_schedule_by_id'		, array($xcloner_api,'delete_schedule_by_id')  );
-			add_action( 'wp_ajax_delete_backup_by_name'		, array($xcloner_api,'delete_backup_by_name')  );
-			add_action( 'wp_ajax_download_backup_by_name'		, array($xcloner_api,'download_backup_by_name')  );
-			add_action( 'wp_ajax_remote_storage_save_status'		, array($xcloner_api,'remote_storage_save_status')  );
-			add_action( 'wp_ajax_upload_backup_to_remote'		, array($xcloner_api,'upload_backup_to_remote')  );
-			add_action( 'wp_ajax_list_backup_files'		, array($xcloner_api,'list_backup_files')  );
-			add_action( 'wp_ajax_restore_upload_backup'		, array($xcloner_api,'restore_upload_backup')  );
-			add_action( 'wp_ajax_download_restore_script'		, array($xcloner_api,'download_restore_script')  );
-			add_action( 'wp_ajax_copy_backup_remote_to_local'		, array($xcloner_api,'copy_backup_remote_to_local')  );
-			add_action( 'admin_notices', array($this, 'xcloner_error_admin_notices' ));
-		
-		//if (is_admin()) {
-            add_filter('plugin_action_links', array($this, 'add_plugin_action_links'), 10, 2);
+			add_action( 'wp_ajax_get_database_tables_action', 	array($xcloner_api,'get_database_tables_action')  );
+			add_action( 'wp_ajax_get_file_system_action', 		array($xcloner_api,'get_file_system_action')  );
+			add_action( 'wp_ajax_scan_filesystem', 				array($xcloner_api,'scan_filesystem')  );
+			add_action( 'wp_ajax_backup_database', 				array($xcloner_api,'backup_database')  );
+			add_action( 'wp_ajax_backup_files'	, 				array($xcloner_api,'backup_files')  );
+			add_action( 'wp_ajax_save_schedule'	, 				array($xcloner_api,'save_schedule')  );
+			add_action( 'wp_ajax_get_schedule_by_id',	 		array($xcloner_api,'get_schedule_by_id')  );
+			add_action( 'wp_ajax_get_scheduler_list',	 		array($xcloner_api,'get_scheduler_list')  );
+			add_action( 'wp_ajax_delete_schedule_by_id'	, 		array($xcloner_api,'delete_schedule_by_id')  );
+			add_action( 'wp_ajax_delete_backup_by_name'	, 		array($xcloner_api,'delete_backup_by_name')  );
+			add_action( 'wp_ajax_download_backup_by_name', 		array($xcloner_api,'download_backup_by_name')  );
+			add_action( 'wp_ajax_remote_storage_save_status', 	array($xcloner_api,'remote_storage_save_status')  );
+			add_action( 'wp_ajax_upload_backup_to_remote', 		array($xcloner_api,'upload_backup_to_remote')  );
+			add_action( 'wp_ajax_list_backup_files'	,			array($xcloner_api,'list_backup_files')  );
+			add_action( 'wp_ajax_restore_upload_backup'	, 		array($xcloner_api,'restore_upload_backup')  );
+			add_action( 'wp_ajax_download_restore_script', 		array($xcloner_api,'download_restore_script')  );
+			add_action( 'wp_ajax_copy_backup_remote_to_local', 	array($xcloner_api,'copy_backup_remote_to_local')  );
+			add_action( 'admin_notices', 						array($this, 'xcloner_error_admin_notices' ));
+            
         }
 		
 	}
@@ -381,17 +461,10 @@ class Xcloner {
 		add_filter( 'cron_schedules', array($this, 'add_new_intervals'));
 			
 		
-		$xcloner_scheduler = new Xcloner_Scheduler();
+		$xcloner_scheduler = $this->get_xcloner_scheduler();
 		$xcloner_scheduler->update_wp_cron_hooks();
 		
 	}
-	
-	/*public function xcloner_scheduler_callback($schedule_id)
-	{
-		$cron = new Xcloner_Scheduler;
-		
-		$cron->run_schedule($schedule_id);
-	}*/
 	
 	function add_new_intervals($schedules) 
 	{
@@ -450,9 +523,25 @@ class Xcloner {
 		return $this->version;
 	}
 	
+	function xcloner_display()
+	{	
+		// check user capabilities
+	    if (!current_user_can('manage_options')) {
+	        return;
+	    }
+	
+		$page = sanitize_key($_GET['page']);
+
+		if($page)
+		{
+			$this->display($page);
+		}
+		
+	}
+	
 	public function display($page)
 	{
-		$plugin_admin = new Xcloner_Admin( $this->get_plugin_name(), $this->get_version() );
+		$plugin_admin = new Xcloner_Admin($this);
 		$this->plugin_admin = $plugin_admin;
 		
 		call_user_func_array(array($this->plugin_admin, $page), array());

@@ -1,9 +1,9 @@
 <?php
 
-$xcloner_settings 		= new Xcloner_Settings();
-$logger					= new Xcloner_Logger();
-$xcloner_file_system 	= new Xcloner_File_System();
-$xcloner_file_transfer 	= new Xcloner_File_Transfer();
+$xcloner_settings 		= $this->get_xcloner_container()->get_xcloner_settings();
+$logger					= $this->get_xcloner_container()->get_xcloner_logger();
+$xcloner_file_system 	= $this->get_xcloner_container()->get_xcloner_filesystem();
+$xcloner_file_transfer 	= $this->get_xcloner_container()->get_xcloner_file_transfer();
 
 $start = 0 ;
 

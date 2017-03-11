@@ -1,6 +1,7 @@
 <?php
-$xcloner_scheduler = new Xcloner_Scheduler();
-$xcloner_remote_storage = new Xcloner_Remote_Storage();
+$xcloner_scheduler = $this->get_xcloner_container()->get_xcloner_scheduler();
+
+$xcloner_remote_storage = $this->get_xcloner_container()->get_xcloner_remote_storage();
 $available_storages = $xcloner_remote_storage->get_available_storages();
 ?>
 <?php if(!defined("DISABLE_WP_CRON") || !DISABLE_WP_CRON): ?>

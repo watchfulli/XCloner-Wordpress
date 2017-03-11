@@ -20,11 +20,11 @@ class Xcloner_Archive extends Tar
 	private $logger;
 	private $xcloner_settings;
 	
-	public function __construct($hash = "", $archive_name = "")
+	public function __construct(Xcloner $xcloner_container, $archive_name = "")
 	{
-		$this->filesystem 		= new Xcloner_File_System($hash);
-		$this->logger 			= new XCloner_Logger('xcloner_archive', $hash);
-		$this->xcloner_settings = new Xcloner_Settings($hash);
+		$this->filesystem 		= $xcloner_container->get_xcloner_filesystem();
+		$this->logger 			= $xcloner_container->get_xcloner_logger()->withName("xcloner_archive");
+		$this->xcloner_settings = $xcloner_container->get_xcloner_settings();
 		
 		if($value = $this->xcloner_settings->get_xcloner_option('xcloner_size_limit_per_request'))
 			$this->file_size_per_request_limit = $value*1024*1024; //MB

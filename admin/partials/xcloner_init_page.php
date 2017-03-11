@@ -12,11 +12,11 @@
  * @subpackage Xcloner/admin/partials
  */
 
-$requirements 			= new XCloner_Requirements();
-$xcloner_settings 		= new Xcloner_Settings();
-$xcloner_file_system 	= new Xcloner_File_System();
-$logger					= new Xcloner_Logger();
-$xcloner_scheduler 		= new Xcloner_Scheduler();
+$requirements	 		= $this->get_xcloner_container()->get_xcloner_requirements();
+$xcloner_settings 		= $this->get_xcloner_container()->get_xcloner_settings();
+$xcloner_file_system 	= $this->get_xcloner_container()->get_xcloner_filesystem();
+$logger					= $this->get_xcloner_container()->get_xcloner_logger();
+$xcloner_scheduler 		= $this->get_xcloner_container()->get_xcloner_scheduler();
 
 $logger_content = $logger->getLastDebugLines();
 

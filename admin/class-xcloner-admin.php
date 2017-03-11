@@ -40,6 +40,7 @@ class Xcloner_Admin {
 	 */
 	private $version;
 	
+	private $xcloner_container;
 	/**
 	 * Initialize the class and set its properties.
 	 *
@@ -47,11 +48,16 @@ class Xcloner_Admin {
 	 * @param      string    $plugin_name       The name of this plugin.
 	 * @param      string    $version    The version of this plugin.
 	 */
-	public function __construct( $plugin_name, $version ) {
+	public function __construct( Xcloner $xcloner_container) {
 
-		$this->plugin_name = $plugin_name;
-		$this->version = $version;
-		
+		$this->plugin_name 			= $xcloner_container->get_plugin_name();
+		$this->version				= $xcloner_container->get_version();
+		$this->xcloner_container 	= $xcloner_container;
+	}
+	
+	public function get_xcloner_container()
+	{
+		return $this->xcloner_container;
 	}
 
 	/**
@@ -131,20 +137,20 @@ class Xcloner_Admin {
 	
 	public function xcloner_remote_storage_page()
 	{
-		$xcloner_sanitization = new Xcloner_Sanitization();
-		
-		$_POST['authentification_code'] = $xcloner_sanitization->sanitize_input_as_string($_POST['authentification_code']);
-		$_POST['action'] = $xcloner_sanitization->sanitize_input_as_string($_POST['action']);
+		$xcloner_sanitization = $this->get_xcloner_container()->get_xcloner_sanitization();
+		$remote_storage = $this->get_xcloner_container()->get_xcloner_remote_storage();
 		
 		if(isset($_POST['authentification_code']) && $_POST['authentification_code'] != "")
 		{
-			$remote_storage = new Xcloner_Remote_Storage();
+			$_POST['authentification_code'] = $xcloner_sanitization->sanitize_input_as_string($_POST['authentification_code']);
+			
 			$remote_storage->set_access_token($_POST['authentification_code']);
 		}
 		
 		if(isset($_POST['action']))
 		{
-			$remote_storage = new Xcloner_Remote_Storage();
+			$_POST['action'] = $xcloner_sanitization->sanitize_input_as_string($_POST['action']);
+			
 			$remote_storage->save($_POST['action']);
 		}
 		require_once("partials/xcloner_remote_storage_page.php");
@@ -153,7 +159,8 @@ class Xcloner_Admin {
 	
 	public function xcloner_scheduled_backups_page()
 	{
-		$requirements 			= new XCloner_Requirements();
+		$requirements = $this->xcloner_container->get_xcloner_requirements();
+		
 		if(!$requirements->check_backup_ready_status())
 		{
 			require_once("partials/xcloner_init_page.php");
@@ -184,7 +191,8 @@ class Xcloner_Admin {
 	
 	public function xcloner_generate_backups_page()
 	{
-		$requirements 			= new XCloner_Requirements();
+		$requirements = $this->xcloner_container->get_xcloner_requirements();
+		
 		if(!$requirements->check_backup_ready_status())
 		{
 			require_once("partials/xcloner_init_page.php");
@@ -216,8 +224,10 @@ class Xcloner_Admin {
 	    ?>
 	   
 	    <?php
+			$xcloner_sanitization = $this->get_xcloner_container()->get_xcloner_sanitization();
+			
             if( isset( $_GET[ 'tab' ] ) ) {
-                $active_tab = $_GET[ 'tab' ];
+                $active_tab = $xcloner_sanitization->sanitize_input_as_string($_GET[ 'tab' ]);
             } // end if
             else{
 				$active_tab = "general_options";
@@ -231,8 +241,6 @@ class Xcloner_Admin {
             <li><a href="?page=xcloner_settings_page&tab=mysql_options" class="nav-tab col s12 m3 l2 <?php echo $active_tab == 'mysql_options' ? 'nav-tab-active' : ''; ?>"><?php echo __('Mysql Options', 'xcloner-backup-and-restore')?></a></li>
             <li><a href="?page=xcloner_settings_page&tab=system_options" class="nav-tab col s12 m3 l2 <?php echo $active_tab == 'system_options' ? 'nav-tab-active' : ''; ?>"><?php echo __('System Options', 'xcloner-backup-and-restore')?></a></li>
             <li><a href="?page=xcloner_settings_page&tab=cleanup_options" class="nav-tab col s12 m3 l2 <?php echo $active_tab == 'cleanup_options' ? 'nav-tab-active' : ''; ?>"><?php echo __('Cleanup Options', 'xcloner-backup-and-restore')?></a></li>
-            <!--<li><a href="?page=xcloner_settings_page&tab=cron_options" class="nav-tab col s12 m3 l2 <?php echo $active_tab == 'cron_options' ? 'nav-tab-active' : ''; ?>"><?php echo __('Cron Options', 'xcloner-backup-and-restore')?></a></li>
-            -->
         </ul>
 
 	    <div class="wrap">
@@ -257,11 +265,7 @@ class Xcloner_Admin {
 					
 					settings_fields('xcloner_cleanup_settings_group');
 					do_settings_sections('xcloner_cleanup_settings_page');
-				}/*else{
-
-					settings_fields('xcloner_cron_settings_group');
-					do_settings_sections('xcloner_cron_settings_page');
-				}*/
+				}
 
 	            // output save settings button
 	            submit_button('Save Settings');
