@@ -285,7 +285,13 @@ class Xcloner_Archive extends Tar
 		
 		while(!$file->eof() and $counter<=$this->files_to_process_per_request)
 		{
-			$line = str_getcsv($file->current());
+			$current_line_str = $file->current();
+			
+			if($file->key() == 0)
+			{
+				$current_line_str = str_replace("\xEF\xBB\xBF", "", $current_line_str);
+			}
+			$line = str_getcsv($current_line_str);
 
 			$relative_path = stripslashes($line[0]);
 			
@@ -297,8 +303,13 @@ class Xcloner_Archive extends Tar
 			
 			//$adapter = $this->filesystem->get_adapter($start_filesystem);
 			
-			if(!$this->filesystem->get_filesystem($start_filesystem)->has($relative_path))
+			if(!$relative_path || !$this->filesystem->get_filesystem($start_filesystem)->has($relative_path))
 			{
+				if($relative_path != "")
+				{
+					$this->logger->error(sprintf("Could not add file %b to backup archive, file not found", $relative_path));
+				}
+				
 				$extra_params['start_at_line']++;
 				$file->next();
 				continue;
@@ -309,8 +320,10 @@ class Xcloner_Archive extends Tar
 			if(!isset($file_info['size']))
 				$file_info['size'] = 0;
 			
-			if($start_filesystem == "tmp_filesystem")	
+			if($start_filesystem == "tmp_filesystem")
+			{	
 				$file_info['archive_prefix_path'] = $this->xcloner_settings->get_xcloner_tmp_path_suffix();
+			}
 			
 			$byte_limit = (int)$this->file_size_per_request_limit/512;
 			
