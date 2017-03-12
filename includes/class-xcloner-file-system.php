@@ -800,7 +800,8 @@ class Xcloner_File_System{
 			if(!$this->tmp_filesystem_append->has($this->get_included_files_handler()))
 			{
 				//adding fix for UTF-8 CSV preview
-				$this->tmp_filesystem_append->write($this->get_included_files_handler(), "\xEF\xBB\xBF");
+				$start_line = "\xEF\xBB\xBF".'"Filename","Timestamp","Size","Visibility","Storage"'.PHP_EOL;
+				$this->tmp_filesystem_append->write($this->get_included_files_handler(), $start_line);
 			}
 			
 			$this->tmp_filesystem_append->write($this->get_included_files_handler(), $line);

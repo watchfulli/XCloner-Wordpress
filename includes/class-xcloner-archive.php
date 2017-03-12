@@ -271,9 +271,15 @@ class Xcloner_Archive extends Tar
 		
 		$file->seek(PHP_INT_MAX);
 
-		$return['extra']['lines_total'] = ($file->key());
+		$return['extra']['lines_total'] = ($file->key()-1);
 		
-		$file->seek($extra_params['start_at_line']);
+		//we skip the first CSV line with headers 
+		if(!$extra_params['start_at_line'])
+		{
+			$file->seek(1);
+		}else{
+			$file->seek($extra_params['start_at_line']);
+		}
 		
 		$this->processed_size_bytes = 0;
 		
@@ -287,11 +293,6 @@ class Xcloner_Archive extends Tar
 		{
 			$current_line_str = $file->current();
 			
-			if($file->key() == 0)
-			{
-				//removing first line fix for UTF-8 CSV preview
-				$current_line_str = str_replace("\xEF\xBB\xBF", "", $current_line_str);
-			}
 			$line = str_getcsv($current_line_str);
 
 			$relative_path = stripslashes($line[0]);
