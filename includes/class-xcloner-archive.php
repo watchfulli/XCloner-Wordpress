@@ -289,6 +289,7 @@ class Xcloner_Archive extends Tar
 			
 			if($file->key() == 0)
 			{
+				//removing first line fix for UTF-8 CSV preview
 				$current_line_str = str_replace("\xEF\xBB\xBF", "", $current_line_str);
 			}
 			$line = str_getcsv($current_line_str);
