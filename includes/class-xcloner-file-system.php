@@ -795,6 +795,12 @@ class Xcloner_File_System{
 		$this->last_logged_file = $file['path'];
 		
 		try{
+			if(!$this->tmp_filesystem_append->has($this->get_included_files_handler()))
+			{
+				//adding fix for UTF-8 CSV preview
+				$this->tmp_filesystem_append->write($this->get_included_files_handler(), "\xEF\xBB\xBF");
+			}
+			
 			$this->tmp_filesystem_append->write($this->get_included_files_handler(), $line);
 		
 		}catch(Exception $e){
