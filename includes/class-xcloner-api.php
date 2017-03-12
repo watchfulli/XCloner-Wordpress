@@ -624,7 +624,7 @@ class Xcloner_Api{
 				if( $this->xcloner_file_system->get_storage_filesystem()->has($res->last_backup))
 				{
 					$metadata = $this->xcloner_file_system->get_storage_filesystem()->getMetadata($res->last_backup);
-					$backup_size  = size_format($metadata['size']);
+					$backup_size  = size_format($this->xcloner_file_system->get_backup_size($res->last_backup));
 					$backup_time  = date(get_option('date_format')." ".get_option('time_format'), $metadata['timestamp']);
 				}
 			
@@ -891,7 +891,6 @@ class Xcloner_Api{
 		
 		
 		$metadata  = $this->xcloner_file_system->get_storage_filesystem()->getMetadata($backup_name);
-		//$mimetype  = $this->xcloner_file_system->get_storage_filesystem()->getMimetype($backup_name);
 		$read_stream  = $this->xcloner_file_system->get_storage_filesystem()->readStream($backup_name);
 		
 		
@@ -901,7 +900,6 @@ class Xcloner_Api{
 	    header('Cache-Control: private', false);
 	    header('Content-Transfer-Encoding: binary');
 	    header('Content-Disposition: attachment; filename="'.$metadata['path'].'";');
-	    //header('Content-Type: ' . $mimetype);
 	    header('Content-Type: application/octet-stream');
 	    header('Content-Length: ' . $metadata['size']);
 	    

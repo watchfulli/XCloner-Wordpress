@@ -352,6 +352,11 @@ class Xcloner_Remote_Storage{
 	{
 		$this->logger->info(sprintf("Creating the AZURE BLOB remote storage connection"), array(""));
 		
+		if (version_compare(phpversion(), '5.5.0', '<')) 
+		{
+				throw new Exception("AZURE BLOB requires PHP 5.5 to be installed!");
+		}
+		
 		$endpoint = sprintf(
 		    'DefaultEndpointsProtocol=https;AccountName=%s;AccountKey=%s',
 		    get_option("xcloner_azure_account_name"),
