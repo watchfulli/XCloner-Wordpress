@@ -790,7 +790,9 @@ class Xcloner_File_System{
 		if(!isset($file['visibility']))	
 			$file['visibility'] = "private";
 		
-		$line = '"'.addslashes($file['path']).'","'.$file['timestamp'].'","'.$file['size'].'","'.$file['visibility'].'","'.$storage.'"'.PHP_EOL;
+		$csv_filename = str_replace('"','""', $file['path']);
+		
+		$line = '"'.($csv_filename).'","'.$file['timestamp'].'","'.$file['size'].'","'.$file['visibility'].'","'.$storage.'"'.PHP_EOL;
 		
 		$this->last_logged_file = $file['path'];
 		
