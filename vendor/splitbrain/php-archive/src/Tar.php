@@ -300,7 +300,10 @@ class Tar extends Archive
         }
 		
         // create file header
-        $archive_header_position = ftell($this->fh);
+        if(is_resource($this->fh))
+        {
+			$archive_header_position = ftell($this->fh);
+		}
         $this->writeFileHeader($fileinfo);
 			
         // write data
@@ -319,7 +322,7 @@ class Tar extends Archive
         $file_offset = ftell($fp);
         
         //rewrite header with new size if file size changed while reading
-        if($file_offset && $file_offset != $fileinfo->getSize())
+        if(is_resource($this->fh) && $file_offset && $file_offset != $fileinfo->getSize())
         {
 			$archive_current_position = ftell($this->fh);
 			fseek($this->fh, $archive_header_position);
@@ -724,7 +727,7 @@ class Tar extends Archive
         }
 
         // Handle Long-Link and PAX entries from GNU Tar
-        if ($return['typeflag'] == 'L' || $return['typeflag'] == 'x') {
+        if ($return['typeflag'] == 'L') {
             // following data block(s) is the filename
             $filename = trim($this->readbytes(ceil($header['size'] / 512) * 512));
             // next block is the real header
@@ -732,10 +735,13 @@ class Tar extends Archive
             $return = $this->parseHeader($block);
 
             // overwrite the filename
-            if($return['typeflag'] == 'L')
-            {
-				$return['filename'] = $filename;
-			}
+			$return['filename'] = $filename;
+		}elseif ($return['typeflag'] == 'x') {
+            // following data block(s) is the filename
+            $filename = trim($this->readbytes(ceil($header['size'] / 512) * 512));
+            // next block is the real header
+            $block  = $this->readbytes(512);
+            $return = $this->parseHeader($block);
         }
 
         return $return;
