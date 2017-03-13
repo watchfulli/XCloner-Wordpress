@@ -7,7 +7,7 @@ use Monolog\Handler\RotatingFileHandler;
 class Xcloner_Logger extends Logger{
 	
 	private $logger_path ;
-	private $max_logger_files = 15;
+	private $max_logger_files = 7;
 	private $main_logger_url;
 	
 	public function __construct(Xcloner $xcloner_container, $logger_name = "xcloner_logger")
