@@ -508,7 +508,11 @@ class Xcloner_Remote_Storage{
 		$client = $this->gdrive_construct();
 		
 		if(!$client)
+		{
+			$error_msg = "Could not initialize the Google Drive Class, please check that the xcloner-google-drive plugin is enabled...";
+			$this->logger->error($error_msg);
 			return false;
+		}
 		
 		$token = $client->fetchAccessTokenWithAuthCode($code);
 		$client->setAccessToken($token);
@@ -542,7 +546,11 @@ class Xcloner_Remote_Storage{
 		$client = $this->gdrive_construct();
 		
 		if(!$client)
-			return false;
+		{
+			$error_msg = "Could not initialize the Google Drive Class, please check that the xcloner-google-drive plugin is enabled...";
+			$this->logger->error($error_msg);
+			throw new Exception($error_msg);
+		}
 				
 		$client->refreshToken(get_option("xcloner_gdrive_refresh_token"));
 	

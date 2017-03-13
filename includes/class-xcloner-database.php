@@ -593,7 +593,7 @@ class Xcloner_Database extends wpdb{
 		$return .= "# Powered by XCloner Site Backup\n";
 		$return .= "# http://www.xcloner.com\n";
 		$return .= "#\n";
-		$return .= "# Host: " . $_SERVER['HTTP_HOST'] . "\n";
+		$return .= "# Host: " . get_site_url() . "\n";
 		$return .= "# Generation Time: " . date("M j, Y \a\\t H:i") . "\n";
 		$return .= "# PHP Version: " . phpversion() . "\n";
 		$return .= "# Database Charset: ". $this->charset . "\n";
