@@ -278,7 +278,7 @@ class Xcloner_Archive extends Tar
 		{
 			$file->seek(1);
 		}else{
-			$file->seek($extra_params['start_at_line']);
+			$file->seek($extra_params['start_at_line']+1);
 		}
 		
 		$this->processed_size_bytes = 0;
