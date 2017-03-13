@@ -27,7 +27,7 @@ class Xcloner_Api{
 	{
 		global $wpdb;
 		
-		//error_reporting(0);
+		error_reporting(0);
 		if( ob_get_length() )
 			ob_end_clean();
 		ob_start();
