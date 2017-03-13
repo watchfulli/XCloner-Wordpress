@@ -357,6 +357,11 @@ class Xcloner_Remote_Storage{
 				throw new Exception("AZURE BLOB requires PHP 5.5 to be installed!");
 		}
 		
+		if (!class_exists('XmlWriter')) 
+		{
+				throw new Exception("AZURE BLOB requires libxml PHP module to be installed with XmlWriter class enabled!");
+		}
+		
 		$endpoint = sprintf(
 		    'DefaultEndpointsProtocol=https;AccountName=%s;AccountKey=%s',
 		    get_option("xcloner_azure_account_name"),
