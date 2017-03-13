@@ -203,7 +203,7 @@ jQuery(document).ready(function(){
 	var dataTable = jQuery('#manage_backups').DataTable( {
 			'responsive': true,
 			'bFilter': true,
-			"order": [[ 2, "desc" ]],
+			"order": [[ 1, "desc" ]],
 			buttons: [
 				'selectAll',
 				'selectNone'
