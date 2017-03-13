@@ -89,7 +89,10 @@ Yes, if XCloner Logger option is enabled, it will store a log file inside the xc
 == Changelog ==
 
 = 4.0.2 =
-* adding WebDAV remote storage support
+* added WebDAV remote storage support
+* added Google Drive Suppor through XCloner-Google-Drive plugin
+* added depedency injection code refactoring
+* added TAR PAX support on restore
 * improving code quality scrutinizer
 * fixing phpversion requirement
 * adding BackBlaze remote storage support
