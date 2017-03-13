@@ -470,13 +470,13 @@ class Xcloner_Remote_Storage{
 	public function gdrive_construct()
 	{
 
-		if((function_exists("is_plugin_active") && !is_plugin_active("xcloner-google-drive/xcloner-google-drive.php")) || !file_exists(__DIR__ . "/../../xcloner-google-drive/vendor/autoload.php"))
-		//if(!class_exists('Google_Client'))
+		//if((function_exists("is_plugin_active") && !is_plugin_active("xcloner-google-drive/xcloner-google-drive.php")) || !file_exists(__DIR__ . "/../../xcloner-google-drive/vendor/autoload.php"))
+		if(!class_exists('Google_Client'))
 		{
 			return false;
 		}
 		
-		require_once(__DIR__ . "/../../xcloner-google-drive/vendor/autoload.php");
+		//require_once(__DIR__ . "/../../xcloner-google-drive/vendor/autoload.php");
 		
 		$client = new \Google_Client();
 		$client->setApplicationName($this->gdrive_app_name);
