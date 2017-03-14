@@ -838,6 +838,22 @@ class Xcloner_Api{
 		$xcloner_plugin_filesystem = new Filesystem($adapter, new Config([
 				'disable_asserts' => true,
 			]));
+		
+		/* Generate PHAR FILE
+		$file = 'restore/vendor.built';	
+
+		if(file_exists($file))
+			unlink($file);
+		$phar2 = new Phar($file, 0, 'vendor.phar');
+		
+		// add all files in the project, only include php files
+		$phar2->buildFromIterator(
+		    new RecursiveIteratorIterator(
+		     new RecursiveDirectoryIterator(__DIR__.'/vendor/')),
+		    __DIR__);
+		
+		$phar2->setStub($phar2->createDefaultStub('vendor/autoload.php', 'vendor/autoload.php')); 
+		 * */
 			
 		$tmp_file = $this->xcloner_settings->get_xcloner_tmp_path().DS."xcloner-restore.tgz";
 		
