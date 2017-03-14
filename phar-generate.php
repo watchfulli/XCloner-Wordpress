@@ -3,7 +3,7 @@
 if(!isset($argv))
 	die('Access denied from web.');
 
-$file = 'restore/vendor.phar';	
+$file = 'restore/vendor.built';	
 
 if(file_exists($file))
 	unlink($file);
