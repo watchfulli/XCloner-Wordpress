@@ -679,7 +679,7 @@ $gdrive_construct = $remote_storage->gdrive_construct();
 							</div>	
 							<div class=" col s12 m9">
 								<p>
-									<?php echo sprintf(__('Visit %s to create a new application and get your Client ID and Secret.','xcloner-backup-and-restore'), '<a href="https://console.developers.google.com" target="_blank">https://console.developers.google.com</a>')?>
+									<?php echo sprintf(__('Visit %s to create a new application and get your Client ID and Client Secret.','xcloner-backup-and-restore'), '<a href="https://console.developers.google.com" target="_blank">https://console.developers.google.com</a>')?>
 									<a href="https://youtu.be/YXUVPUVgG8k" target="_blank" class="btn-floating tooltipped btn-small" data-position="right" data-delay="50" data-html="true" 
 									data-tooltip="<?php echo sprintf(__('Click here to view a short video explaining how to create the Client ID and Client Secret as well as connecting XCloner with the Google Drive API %s','xcloner-backup-and-restore'),"<br />https://youtu.be/YXUVPUVgG8k")?>" data-tooltip-id="92c95730-94e9-7b59-bd52-14adc30d5e3e"><i class="material-icons">help_outline</i></a>	
 								</p>
