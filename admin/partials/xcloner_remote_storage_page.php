@@ -672,14 +672,45 @@ $gdrive_construct = $remote_storage->gdrive_construct();
 				<div class="collapsible-body">
 			        
 			        <?php if($gdrive_construct) : ?>
+			        
+				        <div class="row">
+							<div class="col s12 m3 label">
+								&nbsp;
+							</div>	
+							<div class=" col s12 m9">
+								<p>
+									<?php echo sprintf(__('Visit %s to create a new application and get your Client ID and Secret.','xcloner-backup-and-restore'), '<a href="https://console.developers.google.com" target="_blank">https://console.developers.google.com</a>')?>
+									<a href="https://youtu.be/YXUVPUVgG8k" target="_blank" class="btn-floating tooltipped btn-small" data-position="right" data-delay="50" data-html="true" 
+									data-tooltip="<?php echo sprintf(__('Click here to view a short video explaining how to create the Client ID and Client Secret as well as connecting XCloner with the Google Drive API %s','xcloner-backup-and-restore'),"<br />https://youtu.be/YXUVPUVgG8k")?>" data-tooltip-id="92c95730-94e9-7b59-bd52-14adc30d5e3e"><i class="material-icons">help_outline</i></a>	
+								</p>
+					        </div>
+				        </div>
+			        
+						<div class="row">
+							<div class="col s12 m3 label">
+								<label for="gdrive_client_id"><?php echo __("Client ID",'xcloner-backup-and-restore')?></label>
+							</div>
+							<div class=" col s12 m6">
+								<input placeholder="<?php echo __("Google Client ID",'xcloner-backup-and-restore')?>" id="gdrive_client_id" type="text" name="xcloner_gdrive_client_id" class="validate" value="<?php echo get_option("xcloner_gdrive_client_id")?>">
+					        </div>
+				        </div>
+				        
+				        <div class="row">
+							<div class="col s12 m3 label">
+								<label for="gdrive_client_secret"><?php echo __("Client Secret",'xcloner-backup-and-restore')?></label>
+							</div>
+							<div class=" col s12 m6">
+								<input placeholder="<?php echo __("Google Client Secret",'xcloner-backup-and-restore')?>" id="gdrive_client_secret" type="text" name="xcloner_gdrive_client_secret" class="validate" value="<?php echo get_option("xcloner_gdrive_client_secret")?>">
+					        </div>
+				        </div>
+				        
+				        	
 				        <div class="row">
 							<div class="col s12 m3 label">
 								&nbsp;
 							</div>	
 							<div class=" col s12 m6">
-									<p class="center">
-										<a class="btn" target="_blank" onclick="jQuery('#authentification_code').show()" href="<?php echo $gdrive_auth_url?>"><?php echo sprintf(__('Authorize Google Drive','xcloner-backup-and-restore'))?></a>
-									</p>
+									<a class="btn" target="_blank" id="gdrive_authorization_click" onclick="jQuery('#authentification_code').show()" href="<?php echo $gdrive_auth_url?>"><?php echo sprintf(__('Authorize Google Drive','xcloner-backup-and-restore'))?></a>
 									<input type="text" name="authentification_code" id="authentification_code" placeholder="<?php echo __("Paste Authorization Code Here","xcloner-backup-and-restore")?>">
 					        </div>
 				        </div>
@@ -721,11 +752,8 @@ $gdrive_construct = $remote_storage->gdrive_construct();
 					<?php else:?>
 				
 						<div class="row">
-							<div class="col s12 m3 label">
-								&nbsp;
-							</div>	
-							<div class=" col s12 m6">
-								<p>
+							<div class=" col s12">
+								<p class="center">
 									<a class="btn" href="https://github.com/ovidiul/XCloner-Google-Drive/archive/master.zip"><?php echo sprintf(__('Free Download XCloner-Google-Drive Wordpress Plugin','xcloner-backup-and-restore'))?></a>
 								</p>
 					        </div>
@@ -757,6 +785,16 @@ jQuery(document).ready(function(){
 		var tag = jQuery(this).val()
 		window.location.hash = "#"+tag;
 	})
+	
+	jQuery("#gdrive_authorization_click").on("click", function(e){
+		
+		var href = (jQuery(this).attr("href"))
+		
+		var new_href= href.replace(/(client_id=).*?(&)/,'$1' + jQuery("#gdrive_client_id").val() + '$2');
+		
+		jQuery(this).attr("href", new_href)
+		
+	});
 	
 	if(location.hash)
 		jQuery(location.hash+" div.collapsible-header").addClass("active");

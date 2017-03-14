@@ -23,8 +23,6 @@ use League\Flysystem\WebDAV\WebDAVAdapter;
 
 class Xcloner_Remote_Storage{
 	
-	private $gdrive_client_id 		= "526116423832-4048277vsfee859nsr5d7020175jqkqr.apps.googleusercontent.com";
-	private $gdrive_client_secret 	= "_YWZjvSRj5BAEI3RRbwzezCS";
 	private $gdrive_app_name 		= "XCloner Backup and Restore";
 	
 	private $storage_fields = array(
@@ -102,6 +100,8 @@ class Xcloner_Remote_Storage{
 						"text"						=> "Google Drive",
 						"gdrive_enable"				=> "int",
 						"gdrive_access_code"		=> "string",
+						"gdrive_client_id"			=> "string",
+						"gdrive_client_secret"		=> "string",
 						"gdrive_target_folder"		=> "string",
 						"gdrive_cleanup_days"		=> "float",		
 						),	
@@ -163,17 +163,17 @@ class Xcloner_Remote_Storage{
 			$this->xcloner->trigger_message(__("%s storage settings saved.", 'xcloner-backup-and-restore'), "success", ucfirst($action));
 		}
 		
-		if(isset($_POST['connection_check']) && $_POST['connection_check'])
-		{
-			try{
-				$this->verify_filesystem($action);
-				$this->xcloner->trigger_message(__("%s connection is valid.", 'xcloner-backup-and-restore'), "success", ucfirst($action));
-				$this->logger->debug(sprintf("Connection to remote storage %s is valid", strtoupper($action)));	
-			}catch(Exception $e){
-				$this->xcloner->trigger_message("%s connection error: ".$e->getMessage(), "error", ucfirst($action));
-			}
+	}
+	
+	public function check($action = "ftp")
+	{
+		try{
+			$this->verify_filesystem($action);
+			$this->xcloner->trigger_message(__("%s connection is valid.", 'xcloner-backup-and-restore'), "success", ucfirst($action));
+			$this->logger->debug(sprintf("Connection to remote storage %s is valid", strtoupper($action)));	
+		}catch(Exception $e){
+			$this->xcloner->trigger_message("%s connection error: ".$e->getMessage(), "error", ucfirst($action));
 		}
-		
 	}
 	
 	public function verify_filesystem($storage_type)
@@ -480,8 +480,8 @@ class Xcloner_Remote_Storage{
 		
 		$client = new \Google_Client();
 		$client->setApplicationName($this->gdrive_app_name);
-		$client->setClientId($this->gdrive_client_id);
-		$client->setClientSecret($this->gdrive_client_secret);
+		$client->setClientId(get_option("xcloner_gdrive_client_id"));
+		$client->setClientSecret(get_option("xcloner_gdrive_client_secret"));
 		
 		//$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF']."?page=xcloner_remote_storage_page&action=set_gdrive_code";
 		$redirect_uri = "urn:ietf:wg:oauth:2.0:oob";
@@ -513,7 +513,7 @@ class Xcloner_Remote_Storage{
 			$this->logger->error($error_msg);
 			return false;
 		}
-		
+
 		$token = $client->fetchAccessTokenWithAuthCode($code);
 		$client->setAccessToken($token);
 		

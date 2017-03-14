@@ -140,19 +140,25 @@ class Xcloner_Admin {
 		$xcloner_sanitization = $this->get_xcloner_container()->get_xcloner_sanitization();
 		$remote_storage = $this->get_xcloner_container()->get_xcloner_remote_storage();
 		
+		$_POST['action'] = $xcloner_sanitization->sanitize_input_as_string($_POST['action']);
+		
+		if(isset($_POST['action']))
+		{
+			$remote_storage->save($_POST['action']);
+		}
+		
 		if(isset($_POST['authentification_code']) && $_POST['authentification_code'] != "")
 		{
 			$_POST['authentification_code'] = $xcloner_sanitization->sanitize_input_as_string($_POST['authentification_code']);
 			
 			$remote_storage->set_access_token($_POST['authentification_code']);
 		}
-		
-		if(isset($_POST['action']))
-		{
-			$_POST['action'] = $xcloner_sanitization->sanitize_input_as_string($_POST['action']);
 			
-			$remote_storage->save($_POST['action']);
+		if(isset($_POST['connection_check']) && $_POST['connection_check'])
+		{
+			$remote_storage->check($_POST['action']);
 		}
+		
 		require_once("partials/xcloner_remote_storage_page.php");
 		
 	}
