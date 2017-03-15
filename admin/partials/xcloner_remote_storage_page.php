@@ -753,12 +753,15 @@ $gdrive_construct = $remote_storage->gdrive_construct();
 				
 						<div class="row">
 							<div class=" col s12">
-								<p class="center">
+								<div class="center">
 									<?php 
 										$url = wp_nonce_url(self_admin_url('update.php?action=install-plugin&plugin=xcloner-google-drive'), 'install-plugin_xcloner-google-drive');
 									?>
+									<h6><?php echo __("This storage option requires the XCloner-Google-Drive Wordpress Plugin to be installed and activated.")?></h6>
+									<h6><?php echo __("PHP 5.5 minimum version is required.")?></h6>
+									<br />
 									<a class="install-now btn" data-slug="xcloner-google-drive" href="<?php echo $url;?>" aria-label="Install XCloner Google Drive 1.0.0 now" data-name="XCloner Google Drive 1.0.0">
-										<?php echo sprintf(__('Install Now XCloner-Google-Drive Wordpress Plugin','xcloner-backup-and-restore'))?>
+										<?php echo sprintf(__('Install Now','xcloner-backup-and-restore'))?>
 									</a>
 									
 									<a href="<?php echo admin_url("plugin-install.php")?>?tab=plugin-information&amp;plugin=xcloner-google-drive&amp;TB_iframe=true&amp;width=772&amp;height=499" class="btn thickbox open-plugin-details-modal" aria-label="More information about Theme Check 20160523.1" data-title="Theme Check 20160523.1">
@@ -767,7 +770,7 @@ $gdrive_construct = $remote_storage->gdrive_construct();
 									-->
 										<?php echo sprintf(__('More Details','xcloner-backup-and-restore'))?>
 									</a>
-								</p>
+								</div>
 					        </div>
 				        </div>
 						
