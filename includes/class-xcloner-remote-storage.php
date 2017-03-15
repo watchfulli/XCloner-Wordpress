@@ -419,6 +419,11 @@ class Xcloner_Remote_Storage{
 				throw new Exception("AWS S3 class requires PHP 5.5 to be installed!");
 		}
 		
+		if (!class_exists('XmlWriter')) 
+		{
+				throw new Exception("AZURE BLOB requires libxml PHP module to be installed with XmlWriter class enabled!");
+		}
+		
 		
 		$client = new S3Client([
 		    'credentials' => [
