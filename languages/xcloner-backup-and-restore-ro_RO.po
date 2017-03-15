@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2017-03-14 11:47+0200\n"
-"PO-Revision-Date: 2017-03-14 11:50+0200\n"
+"PO-Revision-Date: 2017-03-15 20:47+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ro_RO\n"
@@ -832,7 +832,7 @@ msgstr ""
 
 #: admin/partials/xcloner_remote_storage_page.php:757
 msgid "Free Download XCloner-Google-Drive Wordpress Plugin"
-msgstr "Descarcati gratuit plugin-ul Wordpress XCloner-Google-Drive"
+msgstr "Descarcati gratuit plugin-ul XWordpress Cloner-Google-Drive"
 
 #: admin/partials/xcloner_restore_page.php:24
 msgid "Restore Script Upload"

@@ -293,7 +293,13 @@ class Tar extends Archive
         if ($this->closed) {
             throw new ArchiveIOException('Archive has been closed, files can no longer be added');
         }
-
+		
+		if(is_dir($file))
+		{
+			$this->writeFileHeader($fileinfo);
+			return;
+		}
+		
         $fp = fopen($file, 'rb');
         if (!$fp) {
             throw new ArchiveIOException('Could not open file for reading: '.$file);
@@ -504,6 +510,12 @@ class Tar extends Archive
         if ($this->closed) {
             throw new ArchiveIOException('Archive has been closed, files can no longer be added');
         }
+        
+        if(is_dir($file))
+		{
+			$this->writeFileHeader($fileinfo);
+			return;
+		}
 
         $fp = fopen($file, 'rb');
         
@@ -515,7 +527,9 @@ class Tar extends Archive
 
         // create file header
 		if(!$start)
+		{
 			$this->writeFileHeader($fileinfo);
+		}
 		
 		$bytes = 0;
         // write data
