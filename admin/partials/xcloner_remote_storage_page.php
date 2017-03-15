@@ -282,7 +282,18 @@ $gdrive_construct = $remote_storage->gdrive_construct();
 							<label for="aws_region"><?php echo __("AWS Region",'xcloner-backup-and-restore')?></label>
 						</div>	
 						<div class=" col s12 m6">
-							<input placeholder="<?php echo __("AWS Region",'xcloner-backup-and-restore')?>" id="aws_region" type="text" name="xcloner_aws_region" class="validate" value="<?php echo get_option("xcloner_aws_region")?>" autocomplete="off" >
+							<select placeholder="<?php echo __("example: us-east-1",'xcloner-backup-and-restore')?>" id="aws_region" type="text" name="xcloner_aws_region" class="validate" value="<?php echo get_option("xcloner_aws_region")?>" autocomplete="off" >
+							<option readonly value=""><?php echo __("Please Select AWS Region")?></option>
+							<?php 							
+							$aws_regions = $remote_storage->get_aws_regions();
+							
+							foreach($aws_regions as $key=>$region){
+								?>
+								<option value="<?php echo $key?>" <?php echo ($key == get_option('xcloner_aws_region')?"selected":"")?>><?php echo $region?> = <?php echo $key?></option>
+								<?php
+								}
+							?>
+							</select>
 				        </div>
 			        </div>
 			        
