@@ -81,7 +81,7 @@ class Xcloner_Admin {
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
-		
+
 		wp_enqueue_style( $this->plugin_name."_materialize", plugin_dir_url( __FILE__ ) . 'css/materialize.min.css', array(), $this->version, 'all' );
 		wp_enqueue_style( $this->plugin_name."_materialize.clockpicker", plugin_dir_url( __FILE__ ) . 'css/materialize.clockpicker.css', array(), $this->version, 'all' );
 		wp_enqueue_style( $this->plugin_name."_materialize.icons", '//fonts.googleapis.com/icon?family=Material+Icons', array(), $this->version, 'all' );
@@ -113,7 +113,10 @@ class Xcloner_Admin {
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
-
+		
+		add_thickbox();
+		wp_enqueue_script('plugin-install');
+		wp_enqueue_script('updates');
 		wp_enqueue_script( $this->plugin_name."_materialize", plugin_dir_url( __FILE__ ) . 'js/materialize.min.js', array( 'jquery' ), $this->version, false );
 		wp_enqueue_script( $this->plugin_name."_materialize.clockpicker", plugin_dir_url( __FILE__ ) . 'js/materialize.clockpicker.js', array( 'jquery' ), $this->version, false );
 		wp_enqueue_script( $this->plugin_name."_jquery.datatables", plugin_dir_url( __FILE__ ) . 'js/jquery.dataTables.min.js', array( 'jquery' ), $this->version, false );
