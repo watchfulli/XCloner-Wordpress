@@ -294,7 +294,8 @@ class Xcloner_Scheduler{
 		{	
 			try{
 				$from = "XCloner Schedule - ".$schedule['name'];
-				$this->archive_system->send_notification($to, $from, "", $return['extra']['backup_parent'], $schedule);
+				$additional['lines_total'] = $return['extra']['lines_total'];
+				$this->archive_system->send_notification($to, $from, "", $return['extra']['backup_parent'], $schedule, "", $additional);
 			}catch(Exception $e)
 			{
 				$this->logger->error($e->getMessage());

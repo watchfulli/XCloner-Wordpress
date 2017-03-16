@@ -137,7 +137,7 @@ class Xcloner_Archive extends Tar
 	 * Send backup archive notfication by E-Mail
 	 * 
 	 */ 
-	public function send_notification($to, $from, $subject, $backup_name, $params, $error_message="")
+	public function send_notification($to, $from, $subject, $backup_name, $params, $error_message="", $additional = array())
 	{
 		if(!$from)
 			$from = "XCloner Backup";
@@ -154,6 +154,12 @@ class Xcloner_Archive extends Tar
 			
 		$body = sprintf(__("Generated Backup Size: %s"), size_format($this->filesystem->get_backup_size($backup_name)));
 		$body .= "<br /><br />";
+		
+		if(isset($additional['lines_total']))
+		{
+			$body .= sprintf(__("Total files added: %s"), $additional['lines_total']);
+			$body .= "<br /><br />";
+		}
 		
 		$backup_parts = $this->filesystem->get_multipart_files($backup_name);
 		

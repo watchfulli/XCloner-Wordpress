@@ -261,7 +261,8 @@ class Xcloner_Api{
 				try{
 					$from = "";
 					$subject = "";
-					$this->archive_system->send_notification($to, $from, $subject, $return['extra']['backup_parent'], $this->form_params);
+					$additional['lines_total'] = $return['extra']['lines_total'];
+					$this->archive_system->send_notification($to, $from, $subject, $return['extra']['backup_parent'], $this->form_params,"", $additional);
 				}catch(Exception $e)
 				{
 					$this->logger->error($e->getMessage());
