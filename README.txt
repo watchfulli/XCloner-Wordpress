@@ -97,6 +97,8 @@ Yes, if XCloner Logger option is enabled, it will store a log file inside the xc
 * fixing phpversion requirement
 * adding BackBlaze remote storage support
 * added Remote Storage Manage Backups dropdown selection
+* fixed windows opendir error
+* added total archived files to notifications email
 
 
 = 4.0.1 =
