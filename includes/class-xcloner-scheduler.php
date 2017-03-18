@@ -45,7 +45,7 @@ class Xcloner_Scheduler{
 			foreach($list as $res)
 				if($res->status)
 				{
-					$res->next_run_time = wp_next_scheduled('xcloner_scheduler_'.$res->id, array($res->id));
+					$res->next_run_time = wp_next_scheduled('xcloner_scheduler_'.$res->id, array($res->id))+(get_option( 'gmt_offset' ) * HOUR_IN_SECONDS);
 					$new_list[] = $res;
 				}
 			$list = $new_list;	

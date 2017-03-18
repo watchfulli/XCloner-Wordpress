@@ -122,7 +122,7 @@ if($requirements->check_backup_ready_status())
 										
 										if(is_array($list))
 										{
-											$xcloner_file_system->sort_by($list, "next_run_time","desc");
+											$xcloner_file_system->sort_by($list, "next_run_time","asc");
 										}
 										
 										if(isset($list[0]))
