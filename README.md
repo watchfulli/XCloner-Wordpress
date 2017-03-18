@@ -1,7 +1,7 @@
 # XCloner Wordpress Plugin - Backup and Restore
 
 [![Author](http://img.shields.io/badge/author-@thinkovi-blue.svg?style=flat-square)](https://twitter.com/thinkovi)
-[![Software License](https://img.shields.io/badge/license-GPL-brightgreen.svg?style=flat-square)](LICENSE)
+[![Software License](https://img.shields.io/badge/license-GPL-brightgreen.svg?style=flat-square)](LICENSE.txt)
 [![Build Status](https://scrutinizer-ci.com/g/ovidiul/XCloner-Wordpress/badges/build.png?b=master)](https://scrutinizer-ci.com/g/ovidiul/XCloner-Wordpress/build-status/master)
 
 Backup your Wordpress site, restore to any web location, send your backups to Dropbox, Amazon S3, Azure, FTP, SFTP and many others with XCloner backup plugin.
