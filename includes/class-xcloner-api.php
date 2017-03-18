@@ -171,7 +171,7 @@ class Xcloner_Api{
 		}else{
 			$schedule['start_at'] = date('Y-m-d H:i:s', $schedule['start_at'] - (get_option( 'gmt_offset' ) * HOUR_IN_SECONDS) );	
 		}
-		
+			
 		$schedule['name'] = $this->form_params['backup_params']['schedule_name'];
 		$schedule['recurrence'] = $this->form_params['backup_params']['schedule_frequency'];
 		$schedule['remote_storage'] = $this->form_params['backup_params']['schedule_storage'];
@@ -638,7 +638,7 @@ class Xcloner_Api{
 				
 			$return['data'][] = array($res->id, $res->name, $res->recurrence,/*$res->start_at,*/ $next_run, $remote_storage, $backup_text, $status, $action);
 		}
-		
+
 		return $this->send_response($return, 0);
 	}
 	
