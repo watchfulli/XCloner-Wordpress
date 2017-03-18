@@ -97,7 +97,7 @@ if($requirements->check_backup_ready_status())
 									<div class="item">
 										<div class="title"><?php echo __("Backup Date", 'xcloner-backup-and-restore')?>:</div>
 										<?php 
-										echo date($date_format." ".$time_format, $latest_backup['timestamp'])
+										echo date($date_format." ".$time_format, $latest_backup['timestamp']+(get_option( 'gmt_offset' ) * HOUR_IN_SECONDS))
 										?>
 									</div> 
 								<?php else:?>

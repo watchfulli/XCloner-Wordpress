@@ -630,7 +630,7 @@ class Xcloner_Api{
 				{
 					$metadata = $this->xcloner_file_system->get_storage_filesystem()->getMetadata($res->last_backup);
 					$backup_size  = size_format($this->xcloner_file_system->get_backup_size($res->last_backup));
-					$backup_time  = date(get_option('date_format')." ".get_option('time_format'), $metadata['timestamp']);
+					$backup_time  = date(get_option('date_format')." ".get_option('time_format'), $metadata['timestamp']+(get_option( 'gmt_offset' ) * HOUR_IN_SECONDS));
 				}
 			
 				$backup_text = "<span title='".$backup_time."' class='shorten_string'>".$res->last_backup." (".$backup_size.")</span>";
