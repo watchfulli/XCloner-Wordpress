@@ -99,6 +99,7 @@ Yes, if XCloner Logger option is enabled, it will store a log file inside the xc
 * added Remote Storage Manage Backups dropdown selection
 * fixed windows opendir error
 * added total archived files to notifications email
+* timezone scheduler fix
 
 
 = 4.0.1 =
