@@ -317,6 +317,10 @@ class Xcloner_Scheduler{
 			
 		}catch(Exception $e){
 			
+			//send email to site admin if email notification is not set in the scheduler
+			if(!isset($schedule['backup_params']->email_notification))
+				$schedule['backup_params']->email_notification = get_option('admin_email');
+				
 			if(isset($schedule['backup_params']->email_notification) and $to=$schedule['backup_params']->email_notification)
 			{
 				$from = "XCloner Schedule - ".$schedule['name'];

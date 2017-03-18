@@ -114,7 +114,7 @@ $available_storages = $xcloner_remote_storage->get_available_storages();
 				
 				<?php if(sizeof($available_storages)):?>
 				<div class="row">
-					<div class="input-field col s12 l6">
+					<div class="input-field col s12 l12">
 						<select name="schedule_storage" id="schedule_storage" class="validate" >
 							<option value="" selected><?php echo __('none', 'xcloner-backup-and-restore') ?></option>
 							<?php foreach($available_storages as $storage=>$text):?>
@@ -132,7 +132,6 @@ $available_storages = $xcloner_remote_storage->get_available_storages();
 						<label for="email_notification"><?php echo __('Email Notification Address', 'xcloner-backup-and-restore') ?></label>
 					</div>
 				</div>
-				
 			</div>
 			
 			<div id="advanced_scheduler_settings" class="tab-content">
@@ -161,7 +160,7 @@ $available_storages = $xcloner_remote_storage->get_available_storages();
 		
 		<div class="row">
 			
-			<div class="input-field col s12">
+			<div class="input-field col s12 ">
 				<button class="right btn waves-effect waves-light" type="submit" name="action"><?php echo __('Save', 'xcloner-backup-and-restore') ?>
 					<i class="material-icons right">send</i>
 				</button>

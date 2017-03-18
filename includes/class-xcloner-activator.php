@@ -46,11 +46,11 @@ class Xcloner_Activator {
 		
 		$xcloner_db_version = Xcloner_Activator::xcloner_db_version;
 		
-		if($installed_ver != $xcloner_db_version)
+		$xcloner_scheduler_table = $wpdb->prefix . "xcloner_scheduler";
+		
+		if($installed_ver != $xcloner_db_version)		
 		{
-			$table_name = $wpdb->prefix . "xcloner_scheduler";
-		 
-			$xcloner_schedule_sql="CREATE TABLE IF NOT EXISTS `".$table_name."` (
+			$xcloner_schedule_sql="CREATE TABLE `".$xcloner_scheduler_table."` (
 				  `id` int(11) NOT NULL AUTO_INCREMENT,
 				  `name` varchar(255) NOT NULL,
 				  `recurrence` varchar(10) NOT NULL,
@@ -60,15 +60,16 @@ class Xcloner_Activator {
 				  `hash` varchar(10) DEFAULT NULL,
 				  `status` int(1) NOT NULL,
 				  `last_backup` varchar(100) DEFAULT NULL,
-				  PRIMARY KEY (`id`)
+				  PRIMARY KEY  (`id`)
 				) ".$charset_collate.";
 				";
+			
 			require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 			dbDelta( $xcloner_schedule_sql );
 			
 			update_option( "xcloner_db_version", $xcloner_db_version );
 		}
-	
+		
 		if(!get_option('xcloner_backup_compression_level'))
 			update_option('xcloner_backup_compression_level', 0);
 		

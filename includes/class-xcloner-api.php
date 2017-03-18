@@ -167,7 +167,7 @@ class Xcloner_Api{
 		
 		if(!$schedule['start_at'])						
 		{
-			$schedule['start_at'] = time();
+			$schedule['start_at'] = date('Y-m-d H:i:s', time());
 		}else{
 			$schedule['start_at'] = date('Y-m-d H:i:s', $schedule['start_at'] - (get_option( 'gmt_offset' ) * HOUR_IN_SECONDS) );	
 		}

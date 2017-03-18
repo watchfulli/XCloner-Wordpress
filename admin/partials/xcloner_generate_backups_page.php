@@ -229,25 +229,25 @@ $tab = 1;
 			</div>
 			-->
 			<div class="row">
-				 <div class="input-field inline col s12 m10 l6">
+				 <div class="input-field inline col s12 m12 l7">
 					  <input type="text" id="schedule_name" class="" name="schedule_name" required>
 					  <label for="schedule_name"><?php echo __('Schedule Name', 'xcloner-backup-and-restore') ?></label>
 				</div>
 			</div>
 			
 			<div class="row">
-				 <div class="input-field inline col s12 m6 l4">
+				 <div class="input-field inline col s12 m8 l4">
 					  <input type="datetime-local" id="datepicker" class="datepicker" name="schedule_start_date" >
 					  <label for="datepicker"><?php echo __('Schedule Backup To Start On:','xcloner-backup-and-restore')?></label>
 				</div>
-				 <div class="input-field inline col s12 m4 l2">
+				 <div class="input-field inline col s12 m4 l3">
 					  <input id="timepicker_ampm_dark" class="timepicker" type="time" name="schedule_start_time">
 					  <label for="timepicker_ampm_dark"><?php echo __('At:','xcloner-backup-and-restore')?></label>
 				</div>
 			</div>
 			
 			<div class="row">
-				<div class="input-field col s12 m10 l6">
+				<div class="input-field col s12 l7">
 					<select name="schedule_frequency" id="schedule_frequency" class="validate" required>
 						<option value="" disabled selected><?php echo __('please select', 'xcloner-backup-and-restore') ?></option>
 						<option value="single"><?php echo __("Don't Repeat",'xcloner-backup-and-restore')?></option>
@@ -262,7 +262,7 @@ $tab = 1;
 
 			<?php if(sizeof($available_storages)):?>
 			<div class="row">
-				<div class="input-field col s12 m10 l6">
+				<div class="input-field col s12 m12 l7">
 					<select name="schedule_storage" id="schedule_storage" class="validate">
 						<option value="" selected><?php echo __('none', 'xcloner-backup-and-restore') ?></option>
 						<?php foreach($available_storages as $storage=>$text):?>
@@ -274,7 +274,7 @@ $tab = 1;
 			</div>
 			<?php endif?>
 			<div class="row">
-				<div class="col s12 m10 l6">
+				<div class="col s12 l7">
 					<button class="right btn waves-effect waves-light submit_schedule" type="submit" name="action"><?php echo __("Submit" ,'xcloner-backup-and-restore')?>
 						<i class="material-icons right">send</i>
 					</button>
