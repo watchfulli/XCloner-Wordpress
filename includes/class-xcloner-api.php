@@ -152,7 +152,7 @@ class Xcloner_Api{
 			
 			$this->form_params['excluded_files'] = ($return);
 			
-			$schedule['start_at'] = $this->form_params['backup_params']['start_at'] ;
+			$schedule['start_at'] = $this->form_params['backup_params']['start_at'];
 			
 			if(!isset($_POST['status']))
 				$schedule['status'] = 0;
@@ -166,9 +166,11 @@ class Xcloner_Api{
 		}
 		
 		if(!$schedule['start_at'])						
+		{
 			$schedule['start_at'] = time();
-		
-		$schedule['start_at'] = date('Y-m-d H:i:s', $schedule['start_at']);	
+		}else{
+			$schedule['start_at'] = date('Y-m-d H:i:s', $schedule['start_at'] - (get_option( 'gmt_offset' ) * HOUR_IN_SECONDS) );	
+		}
 		
 		$schedule['name'] = $this->form_params['backup_params']['schedule_name'];
 		$schedule['recurrence'] = $this->form_params['backup_params']['schedule_frequency'];
@@ -569,6 +571,8 @@ class Xcloner_Api{
 		$scheduler = $this->xcloner_scheduler;
 		$data  = $scheduler->get_schedule_by_id($schedule_id);
 		
+		$data['start_at'] = date("Y-m-d H:i", strtotime($data['start_at']) + (get_option( 'gmt_offset' ) * HOUR_IN_SECONDS));
+		
 		return $this->send_response($data);
 	}
 	
@@ -596,7 +600,7 @@ class Xcloner_Api{
 				
 			$next_run_time = wp_next_scheduled('xcloner_scheduler_'.$res->id, array($res->id));
 				
-			$next_run = date("d M, Y H:i", $next_run_time);	
+			$next_run = date(get_option('date_format')." ".get_option('time_format'), $next_run_time);	
 			
 			$remote_storage = $res->remote_storage;
 			
@@ -605,7 +609,7 @@ class Xcloner_Api{
 			
 			if(trim($next_run))
 			{
-				$date_text = $next_run;
+				$date_text = date(get_option('date_format')." ".get_option('time_format'), $next_run_time + (get_option( 'gmt_offset' ) * HOUR_IN_SECONDS));
 				
 				if($next_run_time >= time())
 					$next_run = "in ".human_time_diff($next_run_time, time());

@@ -157,6 +157,11 @@ class Xcloner_Remote_Storage{
 	
 	public function save($action = "ftp")
 	{
+		if(!$action)
+		{
+			return false;
+		}
+		
 		$storage = $this->xcloner_sanitization->sanitize_input_as_string($action);
 		$this->logger->debug(sprintf("Saving the remote storage %s options", strtoupper($action)));	
 		

@@ -48,7 +48,7 @@ $available_storages = $xcloner_remote_storage->get_available_storages();
 
 <div class="row">
 	<div class="col s12 m6 offset-m6 teal lighten-1" id="server_time">
-		<h2><?php echo __('Current Server Time', 'xcloner-backup-and-restore')?>: <span class="right"><?php echo date("Y/m/d H:i")?></span></h2>
+		<h2><?php echo __('Current Server Time', 'xcloner-backup-and-restore')?>: <span class="right"><?php echo current_time('mysql');?></span></h2>
 	</div>
 </div>
 
