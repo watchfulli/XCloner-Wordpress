@@ -184,8 +184,9 @@ $gdrive_construct = $remote_storage->gdrive_construct();
 							<label for="sftp_private_key"><?php echo __("SFTP Private Key",'xcloner-backup-and-restore')?></label>
 						</div>
 						<div class=" col s12 m6">
-							<input placeholder="<?php echo __("SFTP Private Key",'xcloner-backup-and-restore')?>" id="sftp_private_key" type="text" name="xcloner_sftp_private_key" class="validate" value="<?php echo get_option("xcloner_sftp_private_key")?>">
-						</div>	
+							<textarea rows="5" placeholder="<?php echo __("Local Server Path or Contents of the SFTP Private Key File",'xcloner-backup-and-restore')?>" id="sftp_private_key" type="text" name="xcloner_sftp_private_key" class="validate" value=""><?php echo get_option("xcloner_sftp_private_key")?>
+							</textarea>
+						</div>
 			        </div>
 			        
 			        <div class="row">

@@ -48,7 +48,7 @@ class Xcloner_Remote_Storage{
 						"sftp_username" 	=> "string",
 						"sftp_password" 	=> "raw",
 						"sftp_path" 		=> "path",
-						"sftp_private_key" 	=> "path",
+						"sftp_private_key" 	=> "raw",
 						"sftp_timeout" 		=> "int",
 						"sftp_cleanup_days"	=> "float",
 						),

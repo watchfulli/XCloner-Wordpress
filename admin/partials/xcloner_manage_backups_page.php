@@ -118,7 +118,7 @@ foreach($backup_list as $file_info):?>
 			</ul>
 			<?php endif;?>
 		</td>
-		<td><?php echo date("d M, Y H:i", $file_info['timestamp'])?></td>
+		<td><?php if(isset($file_info['timestamp'])) echo date("d M, Y H:i", $file_info['timestamp'])?></td>
 		<td><?php echo size_format($file_info['size'])?></td>
 		<td>
 			<?php if(!$storage_selection):?>

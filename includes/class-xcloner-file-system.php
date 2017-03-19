@@ -330,15 +330,15 @@ class Xcloner_File_System{
 		
 		foreach($backup_files as $key=>$file_info)
 		{
-			if($storage_selection == "gdrive")
+			if(!isset($backup_files[$key]['timestamp']))
 			{
-				//$file_info['basename'] = $file_info['filename'].".".$file_info['extension'];
+				//$backup_files[$key]['timestamp'] = $this->get_storage_filesystem($storage_selection)->getTimestamp($file_info['path']);
 			}
 			
 			if(isset($parents[$file_info['basename']]))
 				$backup_files[$key]['parent'] = $parents[$file_info['basename']];
 		}
-
+		
 		return $backup_files;
 	}
 	
