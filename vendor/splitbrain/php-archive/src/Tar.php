@@ -155,7 +155,7 @@ class Tar extends Archive
 
         $outdir = rtrim($outdir, '/');
         if(!is_dir($outdir))
-				@mkdir($outdir, 0777, true);
+				@mkdir($outdir, 0755, true);
 			else
 				@chmod($outdir, 0777);
         
@@ -201,9 +201,9 @@ class Tar extends Archive
             $output    = $outdir.'/'.$fileinfo->getPath();
             $directory = ($fileinfo->getIsdir()) ? $output : dirname($output);
             if(!is_dir($directory))
-				@mkdir($directory, 0777, true);
+				@mkdir($directory, 0755, true);
 			else
-				@chmod($directory, 0777);
+				@chmod($directory, 0755);
 
             // extract data
             if (!$fileinfo->getIsdir()) {
