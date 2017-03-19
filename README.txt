@@ -6,7 +6,7 @@ Requires at least: 3.0.1
 Tested up to: 4.7
 Stable tag: 4.0.2
 
-Backup your site, restore to any web location, send your backups to Dropbox, Amazon S3, Azure, FTP, SFTP, WebDAV, Google Drive with XCloner backup plugin.
+Backup your site, restore to any web location, send your backups to Dropbox, Amazon S3, Azure, FTP, SFTP, WebDAV, Google Drive with XCloner plugin.
 
 == Description ==
 
