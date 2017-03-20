@@ -87,13 +87,13 @@ if($db_installed_ver != $xcloner_db_version)
  * admin-specific hooks, and public-facing site hooks.
  */
 
-function stop_heartbeat() {
+function xcloner_stop_heartbeat() {
 	wp_deregister_script('heartbeat');
 }
 
 if(isset($_GET['page']) and stristr($_GET['page'] ,  "xcloner_"))
 {
-	add_action( 'init', 'stop_heartbeat', 1 );
+	add_action( 'init', 'xcloner_stop_heartbeat', 1 );
 }	
 
 /**
