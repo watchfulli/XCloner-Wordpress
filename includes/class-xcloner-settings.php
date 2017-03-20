@@ -459,6 +459,18 @@ class Xcloner_Settings
 	         )
 	    );
 	    
+		register_setting('xcloner_system_settings_group', 'xcloner_diff_backup_recreate_percent', array($this->xcloner_sanitization, "sanitize_input_as_int"));
+	    add_settings_field(
+	        'xcloner_database_records_per_request',
+	       __('Differetial Backups Max Changed Files','xcloner-backup-and-restore'),
+	        array($this, 'do_form_number_field'),
+	        'xcloner_system_settings_page',
+	        'xcloner_system_settings_group',
+	        array('xcloner_diff_backup_recreate_percent',
+	         __('Use this option to set when a full backup should be recreated if the scheduled backup type is set to \'Full Backup+Differential Backups\' <br />and the changed files number is bigger than the set value.','xcloner-backup-and-restore'), 
+	         )
+	    );
+	    
 		register_setting('xcloner_system_settings_group', 'xcloner_exclude_files_larger_than_mb', array($this->xcloner_sanitization, "sanitize_input_as_int"));
 	    add_settings_field(
 	        'xcloner_exclude_files_larger_than_mb',
@@ -621,6 +633,7 @@ class Xcloner_Settings
 					<li>Exclude wp-content/updraft and wp/content/uploads/wp_all_backup folder :<span class="regex_pattern">\/(wp-content\/updraft|\/wp-content\/uploads\/wp_all_backup)(.*)$</span></li>
 					<li>Exclude all cache folders from wp-content/ and it's subdirectories: <span class="regex_pattern"> <?php echo htmlentities('\/wp-content(.*)\/cache($|\/)(.*)')?></span></li>
 					<li>Exclude wp-content/cache/ folder: <span class="regex_pattern"> <?php echo htmlentities('\/wp-content\/cache(.*)')?></span></li>
+					<li>Exclude all error_log files: <span class="regex_pattern"> <?php echo htmlentities('(.*)error_log$')?></span></li>
 				</ul>
 			</div>
 	    </div>
@@ -648,7 +661,7 @@ class Xcloner_Settings
 	          <input class="validate" <?php echo ($disabled)?"disabled":""?> name="<?php echo $fieldname?>" id="<?php echo $fieldname?>" type="number" class="validate" value="<?php echo isset($value) ? esc_attr($value) : ''; ?>">
 	        </div>
 	        <div class="col s2 m2 ">
-				<a class="btn-floating tooltipped btn-small" data-position="center" data-delay="50" data-tooltip="<?php echo $label?>" data-tooltip-id=""><i class="material-icons">help_outline</i></a>
+				<a class="btn-floating tooltipped btn-small" data-html="true"  data-position="center" data-delay="50" data-tooltip="<?php echo $label?>" data-tooltip-id=""><i class="material-icons">help_outline</i></a>
 	        </div>
 	    </div>
 		
@@ -671,7 +684,7 @@ class Xcloner_Settings
 			    </p>
 			</div>
 			<div class="col s2 m2 ">
-				<a class="btn-floating tooltipped btn-small" data-position="center" data-delay="50" data-tooltip="<?php echo $label?>" data-tooltip-id=""><i class="material-icons">help_outline</i></a>
+				<a class="btn-floating tooltipped btn-small" data-html="true"  data-position="center" data-delay="50" data-tooltip="<?php echo $label?>" data-tooltip-id=""><i class="material-icons">help_outline</i></a>
 	        </div>    
 		</div>	
 	<?php
@@ -686,7 +699,7 @@ class Xcloner_Settings
 		$value = get_option($fieldname);
 	?>
 	<div class="row">
-		<div class="input-field col s10 m10 l8">	
+		<div class="input-field col s10 m5 l3">	
 			<div class="switch">
 				<label>
 				  Off

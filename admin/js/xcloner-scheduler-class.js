@@ -75,6 +75,7 @@ jQuery(document).ready(function(){
 			this.edit_modal.find("#backup_name").val(response.backup_params.backup_name)
 			this.edit_modal.find("#email_notification").val(response.backup_params.email_notification)
 			this.edit_modal.find('#schedule_frequency>option[value="' + response.recurrence + '"]').prop('selected', true);
+			this.edit_modal.find('#backup_type>option[value="' + response.backup_type + '"]').prop('selected', true);
 			this.edit_modal.find('#schedule_storage>option[value="' + response.remote_storage + '"]').prop('selected', true);
 			//var date = new Date(response.start_at);
 			this.edit_modal.find("#schedule_start_date").val(response.start_at)

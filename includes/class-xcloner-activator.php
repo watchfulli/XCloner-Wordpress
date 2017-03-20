@@ -22,7 +22,7 @@
  */
 class Xcloner_Activator {
 
-	const xcloner_db_version = '1.1.5';
+	const xcloner_db_version = '1.1.6';
 	const xcloner_minimum_version = '5.4.0';
 	/**
 	 * Short Description. (use period)
@@ -58,6 +58,7 @@ class Xcloner_Activator {
 				  `start_at` datetime,
 				  `remote_storage` varchar(10) DEFAULT NULL,
 				  `hash` varchar(10) DEFAULT NULL,
+				  `backup_type` varchar(10) DEFAULT NULL,
 				  `status` int(1) NOT NULL,
 				  `last_backup` varchar(100) DEFAULT NULL,
 				  PRIMARY KEY  (`id`)
@@ -106,8 +107,11 @@ class Xcloner_Activator {
 		if(!get_option('xcloner_directories_to_scan_per_request'))
 			update_option('xcloner_directories_to_scan_per_request', 25);
 			
+		if(!get_option('xcloner_diff_backup_recreate_percent'))
+			update_option('xcloner_diff_backup_recreate_percent', 1500);
+			
 		if(!get_option('xcloner_regex_exclude'))
-			update_option('xcloner_regex_exclude', "(wp-content\/updraft|wp-content\/uploads\/wp_all_backup)(.*)$".PHP_EOL."(.*)\.(svn|git)(.*)$".PHP_EOL."wp-content\/cache(.*)$");
+			update_option('xcloner_regex_exclude', "(wp-content\/updraft|wp-content\/uploads\/wp_all_backup)(.*)$".PHP_EOL."(.*)\.(svn|git)(.*)$".PHP_EOL."wp-content\/cache(.*)$".PHP_EOL."(.*)error_log$");
 
 	}
 	

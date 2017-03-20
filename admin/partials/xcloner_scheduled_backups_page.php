@@ -88,9 +88,17 @@ $available_storages = $xcloner_remote_storage->get_available_storages();
 			<div id="scheduler_settings" class="tab-content active">
 			
 				<div class="row">
-					<div class="input-field col s12 l12">
+					<div class="input-field col s12 l6">
 						<input placeholder="" name="schedule_name" id="schedule_name" type="text" required value="">
 						<label for="schedule_name"><?php echo __('Schedule Name', 'xcloner-backup-and-restore') ?></label>
+					</div>
+					<div class="input-field inline col s12 l6">
+						<select id="backup_type" class="" name="backup_type" id="backup_type">
+							<option value=""><?php echo __("Full Backup","xcloner-backup-and-restore");?></option>
+							<option value="diff"><?php echo __("Differential Backups","xcloner-backup-and-restore");?></option>
+							<option value="full_diff"><?php echo __("Full Backup + Differential Backups","xcloner-backup-and-restore");?></option>
+						</select>
+						<label for="backup_type"><?php echo __('Scheduled Backup Type','xcloner-backup-and-restore')?></label>
 					</div>
 				</div>
 				

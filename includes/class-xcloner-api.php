@@ -127,6 +127,8 @@ class Xcloner_Api{
 			$this->form_params['database'] = (stripslashes($this->xcloner_sanitization->sanitize_input_as_raw($_POST['table_params'])));
 			$this->form_params['excluded_files'] = (stripslashes($this->xcloner_sanitization->sanitize_input_as_raw($_POST['excluded_files'])));
 			
+			$this->form_params['backup_params']['backup_type'] = $this->xcloner_sanitization->sanitize_input_as_string($_POST['backup_type']);
+			
 			$tables = explode(PHP_EOL, $this->form_params['database']);
 			$return = array();
 			
@@ -175,6 +177,7 @@ class Xcloner_Api{
 		$schedule['name'] = $this->form_params['backup_params']['schedule_name'];
 		$schedule['recurrence'] = $this->form_params['backup_params']['schedule_frequency'];
 		$schedule['remote_storage'] = $this->form_params['backup_params']['schedule_storage'];
+		$schedule['backup_type'] = $this->form_params['backup_params']['backup_type'];
 		
 		$schedule['params'] = json_encode($this->form_params);
 		
