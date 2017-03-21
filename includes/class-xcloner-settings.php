@@ -459,15 +459,15 @@ class Xcloner_Settings
 	         )
 	    );
 	    
-		register_setting('xcloner_system_settings_group', 'xcloner_diff_backup_recreate_percent', array($this->xcloner_sanitization, "sanitize_input_as_int"));
+		register_setting('xcloner_system_settings_group', 'xcloner_diff_backup_recreate_period', array($this->xcloner_sanitization, "sanitize_input_as_int"));
 	    add_settings_field(
-	        'xcloner_database_records_per_request',
-	       __('Differetial Backups Max Changed Files','xcloner-backup-and-restore'),
+	        'xcloner_diff_backup_recreate_period',
+	       __('Differetial Backups Max Days','xcloner-backup-and-restore'),
 	        array($this, 'do_form_number_field'),
 	        'xcloner_system_settings_page',
 	        'xcloner_system_settings_group',
-	        array('xcloner_diff_backup_recreate_percent',
-	         __('Use this option to set when a full backup should be recreated if the scheduled backup type is set to \'Full Backup+Differential Backups\' <br />and the changed files number is bigger than the set value.','xcloner-backup-and-restore'), 
+	        array('xcloner_diff_backup_recreate_period',
+	         __('Use this option to set when a full backup should be recreated if the scheduled backup type is set to \'Full Backup+Differential Backups\' ','xcloner-backup-and-restore'), 
 	         )
 	    );
 	    

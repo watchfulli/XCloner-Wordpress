@@ -88,18 +88,18 @@ $available_storages = $xcloner_remote_storage->get_available_storages();
 			<div id="scheduler_settings" class="tab-content active">
 			
 				<div class="row">
-					<div class="input-field col s12 l6">
+					<div class="input-field col s12">
 						<input placeholder="" name="schedule_name" id="schedule_name" type="text" required value="">
 						<label for="schedule_name"><?php echo __('Schedule Name', 'xcloner-backup-and-restore') ?></label>
 					</div>
-					<div class="input-field inline col s12 l6">
+					<!--<div class="input-field inline col s12 l6">
 						<select id="backup_type" class="" name="backup_type" id="backup_type">
 							<option value=""><?php echo __("Full Backup","xcloner-backup-and-restore");?></option>
 							<option value="diff"><?php echo __("Differential Backups","xcloner-backup-and-restore");?></option>
 							<option value="full_diff"><?php echo __("Full Backup + Differential Backups","xcloner-backup-and-restore");?></option>
 						</select>
 						<label for="backup_type"><?php echo __('Scheduled Backup Type','xcloner-backup-and-restore')?></label>
-					</div>
+					</div>-->
 				</div>
 				
 				<div class="row">
@@ -138,6 +138,13 @@ $available_storages = $xcloner_remote_storage->get_available_storages();
 					<div class="input-field col s12 l12">
 						<input placeholder="" name="email_notification" id="email_notification" type="text" value="">
 						<label for="email_notification"><?php echo __('Email Notification Address', 'xcloner-backup-and-restore') ?></label>
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class="input-field col s12 l12">
+						<input placeholder="" name="diff_start_date" id="diff_start_date" type="text" class="datepicker_max_today" value="">
+						<label for="diff_start_date"><?php echo __('Backup Only Files Modified/Created After', 'xcloner-backup-and-restore') ?></label>
 					</div>
 				</div>
 			</div>

@@ -45,7 +45,6 @@ class Xcloner_Api{
 		$this->xcloner_database 	=  $xcloner_container->get_xcloner_database();
 		$this->xcloner_scheduler 	=  $xcloner_container->get_xcloner_scheduler();
 		
-		
 		if(isset($_POST['API_ID'])){
 			$this->logger->info("Processing ajax request ID ".substr($this->xcloner_sanitization->sanitize_input_as_string($_POST['API_ID']), 0 , 15));
 		}
@@ -120,6 +119,11 @@ class Xcloner_Api{
 			
 			$this->form_params['backup_params']['backup_name'] = $this->xcloner_sanitization->sanitize_input_as_string($_POST['backup_name']);
 			$this->form_params['backup_params']['email_notification'] = $this->xcloner_sanitization->sanitize_input_as_string($_POST['email_notification']);
+			if($_POST['diff_start_date']){
+				$this->form_params['backup_params']['diff_start_date'] = strtotime($this->xcloner_sanitization->sanitize_input_as_string($_POST['diff_start_date']));
+			}else{
+				$this->form_params['backup_params']['diff_start_date'] = "";
+				}
 			$this->form_params['backup_params']['schedule_name'] = $this->xcloner_sanitization->sanitize_input_as_string($_POST['schedule_name']);
 			$this->form_params['backup_params']['start_at'] = strtotime($_POST['schedule_start_date']);
 			$this->form_params['backup_params']['schedule_frequency'] = $this->xcloner_sanitization->sanitize_input_as_string($_POST['schedule_frequency']);
@@ -403,7 +407,13 @@ class Xcloner_Api{
 			foreach($params->extra as $key=>$value)
 				$this->form_params['extra'][$key] = $this->xcloner_sanitization->sanitize_input_as_raw($value);
 		}
-			
+		
+		if(isset($this->form_params['backup_params']['diff_start_date']) and $this->form_params['backup_params']['diff_start_date'])
+		{
+			$this->form_params['backup_params']['diff_start_date'] = strtotime($this->form_params['backup_params']['diff_start_date']);
+			$this->xcloner_file_system->set_diff_timestamp_start($this->form_params['backup_params']['diff_start_date']);
+		}
+		
 		return $this->xcloner_settings->get_hash();
 	}
 	
@@ -575,6 +585,10 @@ class Xcloner_Api{
 		$data  = $scheduler->get_schedule_by_id($schedule_id);
 		
 		$data['start_at'] = date("Y-m-d H:i", strtotime($data['start_at']) + (get_option( 'gmt_offset' ) * HOUR_IN_SECONDS));
+		if(isset($data['backup_params']->diff_start_date) && $data['backup_params']->diff_start_date != "")
+		{
+			$data['backup_params']->diff_start_date = date("Y-m-d", ($data['backup_params']->diff_start_date) );
+		}
 		
 		return $this->send_response($data);
 	}

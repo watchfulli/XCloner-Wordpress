@@ -107,8 +107,8 @@ class Xcloner_Activator {
 		if(!get_option('xcloner_directories_to_scan_per_request'))
 			update_option('xcloner_directories_to_scan_per_request', 25);
 			
-		if(!get_option('xcloner_diff_backup_recreate_percent'))
-			update_option('xcloner_diff_backup_recreate_percent', 1500);
+		if(!get_option('xcloner_diff_backup_recreate_period'))
+			update_option('xcloner_diff_backup_recreate_period', 10);
 			
 		if(!get_option('xcloner_regex_exclude'))
 			update_option('xcloner_regex_exclude', "(wp-content\/updraft|wp-content\/uploads\/wp_all_backup)(.*)$".PHP_EOL."(.*)\.(svn|git)(.*)$".PHP_EOL."wp-content\/cache(.*)$".PHP_EOL."(.*)error_log$");

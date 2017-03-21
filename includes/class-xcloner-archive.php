@@ -40,8 +40,10 @@ class Xcloner_Archive extends Tar
 		
 		$this->xcloner_split_backup_limit = $this->xcloner_split_backup_limit * 1024*1024; //transform to bytes
 			
-		if(isset($archive_name))
+		if(isset($archive_name) && $archive_name)
+		{
 			$this->set_archive_name($archive_name);
+		}
 	}
 	
 	/*
@@ -63,7 +65,20 @@ class Xcloner_Archive extends Tar
 	 */ 
 	public function set_archive_name($name = "", $part = 0)
 	{
+		
 		$this->archive_name = $this->filesystem->process_backup_name($name);
+		
+		if($diff_timestamp_start = $this->filesystem->get_diff_timestamp_start())
+		{
+			//$this->archive_name = $this->archive_name."-diff-".date("Y-m-d_H-i",$diff_timestamp_start);
+			$new_name = $this->archive_name;
+			
+			if(!stristr($new_name, "-diff"))
+				$new_name = $this->archive_name . "-diff".date("Y-m-d_H-i",$diff_timestamp_start);
+			
+			$this->archive_name = $new_name;
+			
+		}
 		
 		if(isset($part) and $part)
 		{
@@ -73,7 +88,7 @@ class Xcloner_Archive extends Tar
 			
 			$this->archive_name = $new_name;	
 		}
-
+		
 		return $this;
 	}
 	

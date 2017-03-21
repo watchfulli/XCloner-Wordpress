@@ -36,7 +36,7 @@ $tab = 1;
 		     
 		     <div class="row">
 		        <div class="input-field inline col s12 m10 l6">
-					<i class="material-icons prefix">input</i>
+					<i class="material-icons prefix">email</i>
 					<input name="email_notification" id="email_notification" type="text" value="<?php echo get_option('admin_email');?>" >
 					<label for="email_notification"><?php echo __('Send Email Notification To','xcloner-backup-and-restore')?></label>
 				</div>
@@ -44,6 +44,17 @@ $tab = 1;
 					<a class="btn-floating tooltipped btn-small" data-position="right" data-delay="50" data-tooltip="<?php echo __('If left blank, no notification will be sent','xcloner-backup-and-restore')?>" data-tooltip-id=""><i class="material-icons">help_outline</i></a>
 				</div>
 		     </div>
+		     
+		     <div class="row">
+				<div class="input-field inline col s10 m10 l6">
+					<i class="material-icons prefix">access_time</i>
+					<input type="datetime-local" id="diff_start_date" class="datepicker_max_today" name="diff_start_date" >
+					<label for="diff_start_date"><?php echo __('Backup Only Files Modified/Created After','xcloner-backup-and-restore')?></label>
+				</div>
+				<div class="hide-on-small-only m2">	
+					<a class="btn-floating tooltipped btn-small" data-html="true" data-position="center" data-delay="50" data-tooltip="<?php echo __("This option allows you to create a differential backup that will include only <br> changed files since the set date, leave blank to include all files", "xcloner-backup-and-restore")?>"><i class="material-icons">help_outline</i></a>
+				</div>
+			</div>
 		     
 		     <div class="row">
 				<div class="input-field col s12 m10 l6">
@@ -229,20 +240,9 @@ $tab = 1;
 			</div>
 			-->
 			<div class="row">
-				 <div class="input-field inline col s12 m8 l4">
+				 <div class="input-field inline col s12 l7">
 					  <input type="text" id="schedule_name" class="" name="schedule_name" required>
 					  <label for="schedule_name"><?php echo __('Schedule Name', 'xcloner-backup-and-restore') ?></label>
-				</div>
-				<div class="input-field col s12 m4 l3">
-					<select name="schedule_frequency" id="schedule_frequency" class="validate" required>
-						<option value="" disabled selected><?php echo __('please select', 'xcloner-backup-and-restore') ?></option>
-						<option value="single"><?php echo __("Don't Repeat",'xcloner-backup-and-restore')?></option>
-						<option value="hourly"><?php echo __("Hourly",'xcloner-backup-and-restore')?></option>
-						<option value="daily"><?php echo __("Daily",'xcloner-backup-and-restore')?></option>
-						<option value="weekly"><?php echo __("Weekly",'xcloner-backup-and-restore')?></option>
-						<option value="monthly"><?php echo __("Monthly",'xcloner-backup-and-restore')?></option>
-					</select>
-					<label><?php echo __('Schedule Frequency', 'xcloner-backup-and-restore') ?></label>
 				</div>
 			</div>
 			
@@ -257,6 +257,7 @@ $tab = 1;
 				</div>
 			</div>
 			
+			<!--
 			<div class="row">
 				<div class="input-field inline col s10 m11 l7">
 					<select id="backup_type" class="" name="backup_type">
@@ -270,8 +271,22 @@ $tab = 1;
 					<a class="btn-floating tooltipped btn-small" data-html="true" data-position="center" data-delay="50" data-tooltip="<ul style='max-width:760px; text-align:left;'>
 						<li><?php echo __("Full Backup = it will generate a full backup of all included files each time schedule runs","xcloner-backup-and-restore");?></li>
 						<li><?php echo __("Differentials Backups = backups will include only changed files since the schedule started to run","xcloner-backup-and-restore");?></li>
-						<li><?php echo __("Full Backup +  Differential Backups = the first time schedule runs, it will create a full backup and all next scheduled backups will include only files created/modified since that last full backup; a full backup is recreated when the number of changed files is bigger than the 'Differetial Backups Max Changed Files' XCloner option.","xcloner-backup-and-restore");?></li>
+						<li><?php echo __("Full Backup +  Differential Backups = the first time schedule runs, it will create a full backup and all next scheduled backups will include only files created/modified since that last full backup; a full backup is recreated when the number of changed files is bigger than the 'Differetial Backups Max Days' XCloner option.","xcloner-backup-and-restore");?></li>
 					</ul>"><i class="material-icons">help_outline</i></a>
+				</div>
+			</div>	
+			-->
+			<div class="row">
+				<div class="input-field col s12 l7">
+					<select name="schedule_frequency" id="schedule_frequency" class="validate" required>
+						<option value="" disabled selected><?php echo __('please select', 'xcloner-backup-and-restore') ?></option>
+						<option value="single"><?php echo __("Don't Repeat",'xcloner-backup-and-restore')?></option>
+						<option value="hourly"><?php echo __("Hourly",'xcloner-backup-and-restore')?></option>
+						<option value="daily"><?php echo __("Daily",'xcloner-backup-and-restore')?></option>
+						<option value="weekly"><?php echo __("Weekly",'xcloner-backup-and-restore')?></option>
+						<option value="monthly"><?php echo __("Monthly",'xcloner-backup-and-restore')?></option>
+					</select>
+					<label><?php echo __('Schedule Frequency', 'xcloner-backup-and-restore') ?></label>
 				</div>
 			</div>	
 			
@@ -421,6 +436,16 @@ jQuery(function () {
 		selectMonths: true, // Creates a dropdown to control month
 		selectYears: 15, // Creates a dropdown of 15 years to control year
 		min: +0.1,
+		onSet: function() {
+			//this.close();
+		}
+	});
+	
+	var date_picker_allowed = jQuery('.datepicker_max_today').pickadate({
+		format: 'd mmmm yyyy',
+		selectMonths: true, // Creates a dropdown to control month
+		selectYears: 15, // Creates a dropdown of 15 years to control year
+		max: +0.1,
 		onSet: function() {
 			//this.close();
 		}

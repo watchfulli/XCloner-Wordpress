@@ -410,6 +410,9 @@ class Xcloner {
 		{
 			$this->xcloner_logger 			= new XCloner_Logger($this, "xcloner_api");
 			$this->xcloner_filesystem 		= new Xcloner_File_System($this);
+			
+			//$this->xcloner_filesystem->set_diff_timestamp_start (strtotime("-15 days"));
+			
 			$this->archive_system 			= new Xcloner_Archive($this);
 			$this->xcloner_database 		= new Xcloner_Database($this);
 			$this->xcloner_scheduler 		= new Xcloner_Scheduler($this);

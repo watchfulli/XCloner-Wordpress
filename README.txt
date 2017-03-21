@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: backup plugin, restore plugin, database backup, duplicate, full site backup, website cloner, wordpress backup, database restore, webdav, azure, ftp, sftp, amazon s3, dropbox, google drive
 Requires at least: 3.0.1
 Tested up to: 4.7
-Stable tag: 4.0.2
+Stable tag: 4.0.3
 
 Backup your site, restore to any web location, send your backups to Dropbox, Amazon S3, Azure, FTP, SFTP, WebDAV, Google Drive with XCloner plugin.
 
@@ -87,6 +87,9 @@ Yes, if XCloner Logger option is enabled, it will store a log file inside the xc
 11. Generate Backup Screen
 
 == Changelog ==
+
+= 4.0.3 =
+* added differential backups with the option to only backup files modified after a certain date
 
 = 4.0.2 =
 * added WebDAV remote storage support

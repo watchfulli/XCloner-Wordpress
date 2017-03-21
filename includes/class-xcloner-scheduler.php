@@ -216,6 +216,11 @@ class Xcloner_Scheduler{
 		$this->archive_system 			= $this->get_xcloner_container()->get_archive_system();
 		$this->logger 					= $this->get_xcloner_container()->get_xcloner_logger()->withName("xcloner_scheduler");
 		$this->xcloner_remote_storage 	= $this->get_xcloner_container()->get_xcloner_remote_storage();
+		
+		if($schedule['backup_params']->diff_start_date)
+		{
+			$this->xcloner_file_system->set_diff_timestamp_start($schedule['backup_params']->diff_start_date);
+		}
 				
 		if($schedule['recurrence'] == "single")
 		{

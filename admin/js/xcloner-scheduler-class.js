@@ -74,6 +74,7 @@ jQuery(document).ready(function(){
 			this.edit_modal.find("#schedule_name").val(response.name)
 			this.edit_modal.find("#backup_name").val(response.backup_params.backup_name)
 			this.edit_modal.find("#email_notification").val(response.backup_params.email_notification)
+			this.edit_modal.find("#diff_start_date").val(response.backup_params.diff_start_date)
 			this.edit_modal.find('#schedule_frequency>option[value="' + response.recurrence + '"]').prop('selected', true);
 			this.edit_modal.find('#backup_type>option[value="' + response.backup_type + '"]').prop('selected', true);
 			this.edit_modal.find('#schedule_storage>option[value="' + response.remote_storage + '"]').prop('selected', true);
@@ -225,6 +226,16 @@ jQuery(document).ready(function(){
 		selectMonths: true, // Creates a dropdown to control month
 		selectYears: 15, // Creates a dropdown of 15 years to control year
 		min: +0.1,
+		onSet: function() {
+			//this.close();
+		}
+	});
+	
+	var date_picker_allowed = jQuery('.datepicker_max_today').pickadate({
+		format: 'yyyy-mm-dd',
+		selectMonths: true, // Creates a dropdown to control month
+		selectYears: 15, // Creates a dropdown of 15 years to control year
+		max: +0.1,
 		onSet: function() {
 			//this.close();
 		}

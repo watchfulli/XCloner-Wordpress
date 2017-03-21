@@ -15,6 +15,7 @@ class Xcloner_File_System{
 	public  $storage_filesystem;
 	private $xcloner_settings_append;
 	private $xcloner_container;
+	private $diff_timestamp_start		= "";
 	
 	private $logger;
 	private $start_adapter;
@@ -75,6 +76,20 @@ class Xcloner_File_System{
 
 	}
 	
+	public function set_diff_timestamp_start($timestamp = "")
+	{
+		if($timestamp)
+		{
+			$this->logger->info(sprintf("Setting Differential Timestamp To %s", date("Y-m-d", $timestamp)), array("FILESYSTEM", "DIFF"));
+			$this->diff_timestamp_start = $timestamp;
+		}
+	}
+	
+	public function get_diff_timestamp_start()
+	{
+		return $this->diff_timestamp_start;
+	}
+
 	private function get_xcloner_container()
 	{
 		return $this->xcloner_container;
@@ -503,8 +518,10 @@ class Xcloner_File_System{
 				elseif(!$matching_pattern = $this->is_excluded($file) ){
 					$this->logger->info(sprintf(__("Adding %s to the filesystem list"), $file['path']), array("FILESYSTEM SCAN","INCLUDE"));
 					$file['visibility'] = $this->start_filesystem->getVisibility($file['path']);
-					$this->store_file($file);
-					$this->files_counter++;
+					if($this->store_file($file))
+					{
+						$this->files_counter++;
+					}
 					if(isset($file['size']))
 						$this->files_size += $file['size'];
 					
@@ -682,6 +699,26 @@ class Xcloner_File_System{
 	    return array_pop($args);
 	}
 	
+	private function check_file_diff_time($file)
+	{
+		if($this->get_diff_timestamp_start() != "")
+		{
+			$fileMeta = $this->getMetadataFull("start_adapter", $file['path']);
+			$timestamp = $fileMeta->getMTime();
+			if($timestamp < $fileMeta->getCTime())
+			{
+				$timestamp = $fileMeta->getCTime();
+			}
+			
+			if($timestamp <= $this->get_diff_timestamp_start())
+			{
+				return  " file DIFF timestamp ".$timestamp." < ". $this->diff_timestamp_start;
+			}
+		}
+		
+		return false;
+	}
+	
 	public function is_excluded($file)
 	{
 		$this->logger->debug(sprintf(("Checking if %s is excluded"), $file['path']));
@@ -710,6 +747,15 @@ class Xcloner_File_System{
 		
 		if( $regex = $this->is_excluded_regex($file))
 			return $regex;
+		
+		if($file['type'] == "file")
+		{
+			$check_file_diff_timestamp = $this->check_file_diff_time($file);
+			if($check_file_diff_timestamp)
+			{
+				return $check_file_diff_timestamp;
+			}
+		}
 		
 		return false;
 	}
@@ -796,6 +842,23 @@ class Xcloner_File_System{
 		
 		$this->last_logged_file = $file['path'];
 		
+		if($file['type'] == "dir"){
+			try{
+				$this->tmp_filesystem_append->write($this->get_temp_dir_handler(), $file['path']."\n");
+			}catch(Exception $e){
+				$this->logger->error($e->getMessage());	
+			}
+		}
+		
+		if($this->get_diff_timestamp_start())
+		{
+			if($file['type'] != "file" && $response = $this->check_file_diff_time($file))
+			{
+				$this->logger->info(sprintf("Directory %s archiving skipped on differential backup %s", $file['path'], $response), array("FILESYSTEM SCAN","DIR DIFF"));
+				return false;
+			}
+		}
+		
 		try{
 			if(!$this->tmp_filesystem_append->has($this->get_included_files_handler()))
 			{
@@ -811,13 +874,7 @@ class Xcloner_File_System{
 			$this->logger->error($e->getMessage());	
 		}
 		
-		if($file['type'] == "dir"){
-			try{
-				$this->tmp_filesystem_append->write($this->get_temp_dir_handler(), $file['path']."\n");
-			}catch(Exception $e){
-				$this->logger->error($e->getMessage());	
-			}
-		}
+		return true;
 	}
 	
 	public function get_fileystem_handler()
