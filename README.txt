@@ -49,12 +49,12 @@ You can do it easily from the Wordpress backend.
 
 == Frequently Asked Questions ==
 
-= Where does XCloner keep it's database backups? =
+= Where does XCloner keep it's Database Backups? =
 
 XCloner stores them in separate mysql dump files, inside a folder called xcloner-XXXXX inside the backup archive root path, where XXXXX is a hash number that is identical with the last 5 characters of the backup name,
 so if the backup name is backup_localhost-2017-02-16_15-36-sql-1c6c6.tgz , the mysql backup file will be stored in xcloner-1c6c6/ folder.
 
-= How do I restore my backup? =
+= How do I Restore my Backup? =
 
 XCloner provide an easy to use restore script available in the Site Backup -> Restore Backups menu, the process is being described there as well.
 
@@ -64,13 +64,31 @@ If the XCloner Restore option fails, you can manually restore your backup as fol
 2. locate the xcloner-XXXXX folder inside your backup root folder, and look for the mysql backup in database-sql and import it through phpmyadmin
 3. update your wp-config.php file to reflect the new mysql details
 
-= How do I know which files were include in the backup? =
+= How do I know which Files were include in the Backup? =
 
 The XCloner Manager Backups Panel provides an easy utility to view each backup content files list. It also stores a copy of the archived backup files inside the xcloner-XXXXX/backup_files.csv file in an easy to read CSV format.
 
-= Do you have a log for the created backup? =
+= Do you have a Log for the created Backup? =
 
 Yes, if XCloner Logger option is enabled, it will store a log file inside the xcloner-XXXXX folder inside the backup archive, file is named xcloner-xxxxx.log
+
+= What are Differentials Backups? =
+
+Differential Backups contain files modified after a certian period of time. So each time backup runs, modified files after that period of time are added to a new Backup archive.
+Compared to Incremental Backups, which contain only modified files from the previous run, they use more space but are more reliable for files restore. 
+They will use considerably less space than a full backup however.
+
+= Why Differential Backups and will you support Incremental Backups? =
+
+The main difference comes from how reliable a backup set it. For instance, if something happens to one backup archive from the Incremental Backup set, then it is possible you will lose 
+the files changes in that period of time, however if the same case happens to a Differential Backup, then the files can easily be recovered from any of the other Differential Backups. The 
+storage difference between Incremental Backups and Differential Backups is not significant and considering the reliability of the Differential Set so we have decided, for now, to not implement 
+further Incremental Backups.
+
+= What would a good Backup Procedure be with Differential Backups? =
+
+As a general rule, I would recommend setting a weekly full site backup schedule and then a daily schedule for a differential backup. You can also include a daily backup of the database in the same Differential Backup. 
+Of course, schedules can be adjusted accordingly to how often you update your site, the size of it and the storage space available.
 
 == Screenshots ==
 
