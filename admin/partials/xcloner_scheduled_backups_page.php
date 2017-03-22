@@ -111,11 +111,16 @@ $available_storages = $xcloner_remote_storage->get_available_storages();
 					<div class="input-field col s12 l6">
 						<select name="schedule_frequency" id="schedule_frequency" class="validate" required>
 							<option value="" disabled selected><?php echo __('Schedule Recurrence', 'xcloner-backup-and-restore') ?></option>
-							<option value="single"><?php echo __("Don't Repeat",'xcloner-backup-and-restore')?></option>
-							<option value="hourly"><?php echo __("Hourly",'xcloner-backup-and-restore')?></option>
-							<option value="daily"><?php echo __("Daily",'xcloner-backup-and-restore')?></option>
-							<option value="weekly"><?php echo __("Weekly",'xcloner-backup-and-restore')?></option>
-							<option value="monthly"><?php echo __("Monthly",'xcloner-backup-and-restore')?></option>
+							<?php
+							$schedules = $xcloner_scheduler->get_available_intervals();
+							
+							foreach($schedules as $key=>$schedule)
+							{
+							?>
+								<option value="<?php echo $key?>"><?php echo $schedule['display']?></option>
+							<?php
+							}
+							?>
 						</select>
 					</div>
 				</div>

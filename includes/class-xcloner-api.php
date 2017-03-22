@@ -169,6 +169,11 @@ class Xcloner_Api{
 			$schedule['status'] = 1;
 			$schedule['start_at'] = strtotime($this->form_params['backup_params']['schedule_start_date'] .
 								" ".$this->form_params['backup_params']['schedule_start_time']);
+			
+			if($schedule['start_at'] <= time())
+			{
+				$schedule['start_at'] = "";
+			}
 		}
 		
 		if(!$schedule['start_at'])						
@@ -177,14 +182,13 @@ class Xcloner_Api{
 		}else{
 			$schedule['start_at'] = date('Y-m-d H:i:s', $schedule['start_at'] - (get_option( 'gmt_offset' ) * HOUR_IN_SECONDS) );	
 		}
-			
+		
 		$schedule['name'] = $this->form_params['backup_params']['schedule_name'];
 		$schedule['recurrence'] = $this->form_params['backup_params']['schedule_frequency'];
 		$schedule['remote_storage'] = $this->form_params['backup_params']['schedule_storage'];
 		$schedule['backup_type'] = $this->form_params['backup_params']['backup_type'];
-		
 		$schedule['params'] = json_encode($this->form_params);
-		
+
 		if(!isset($_POST['id']))
 		{
 			$wpdb->insert( 
@@ -207,7 +211,9 @@ class Xcloner_Api{
 			);
 		}
 		if(isset($_POST['id']))
+		{
 			$scheduler->update_cron_hook($_POST['id']);
+		}
 			
 		if( $wpdb->last_error ) {
             $response['error'] = 1;
@@ -651,6 +657,13 @@ class Xcloner_Api{
 				}
 			
 				$backup_text = "<span title='".$backup_time."' class='shorten_string'>".$res->last_backup." (".$backup_size.")</span>";
+			}
+			
+			$schedules = wp_get_schedules();
+
+			if(isset($schedules[$res->recurrence]))
+			{
+				$res->recurrence = $schedules[$res->recurrence]['display'];
 			}
 				
 			$return['data'][] = array($res->id, $res->name, $res->recurrence,/*$res->start_at,*/ $next_run, $remote_storage, $backup_text, $status, $action);

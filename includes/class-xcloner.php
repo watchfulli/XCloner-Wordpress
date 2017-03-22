@@ -471,15 +471,22 @@ class Xcloner {
 	
 	function add_new_intervals($schedules) 
 	{
-		// add weekly and monthly intervals
+		//weekly scheduler interval
 		$schedules['weekly'] = array(
 			'interval' => 604800,
-			'display' => __('Once Weekly')
+			'display' => __('Once Weekly', 'xcloner-backup-and-restore')
 		);
-	
+		
+		//monthly scheduler interval
 		$schedules['monthly'] = array(
 			'interval' => 2635200,
-			'display' => __('Once a month')
+			'display' => __('Once Monthly', 'xcloner-backup-and-restore')
+		);
+		
+		//monthly scheduler interval
+		$schedules['twicedaily'] = array(
+			'interval' => 43200,
+			'display' => __('Twice Daily', 'xcloner-backup-and-restore')
 		);
 	
 		return $schedules;

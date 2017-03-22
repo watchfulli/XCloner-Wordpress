@@ -2,6 +2,7 @@
 $xcloner_settings = $this->get_xcloner_container()->get_xcloner_settings();
 $xcloner_remote_storage = $this->get_xcloner_container()->get_xcloner_remote_storage();
 $available_storages = $xcloner_remote_storage->get_available_storages();
+$xcloner_scheduler = $this->get_xcloner_container()->get_xcloner_scheduler();
 $tab = 1;
 ?>
 
@@ -233,12 +234,6 @@ $tab = 1;
 				</div>
 			</div>
 			
-			<!--<div class="row server-time">
-				<div class="col s12 m10 l6 teal lighten-1">
-					<h2><?php echo __('Current Server Time', 'xcloner-backup-and-restore')?>: <span class="right"><?php echo date("Y/m/d H:i")?></span></h2>
-				</div>
-			</div>
-			-->
 			<div class="row">
 				 <div class="input-field inline col s12 l7">
 					  <input type="text" id="schedule_name" class="" name="schedule_name" required>
@@ -280,11 +275,16 @@ $tab = 1;
 				<div class="input-field col s12 l7">
 					<select name="schedule_frequency" id="schedule_frequency" class="validate" required>
 						<option value="" disabled selected><?php echo __('please select', 'xcloner-backup-and-restore') ?></option>
-						<option value="single"><?php echo __("Don't Repeat",'xcloner-backup-and-restore')?></option>
-						<option value="hourly"><?php echo __("Hourly",'xcloner-backup-and-restore')?></option>
-						<option value="daily"><?php echo __("Daily",'xcloner-backup-and-restore')?></option>
-						<option value="weekly"><?php echo __("Weekly",'xcloner-backup-and-restore')?></option>
-						<option value="monthly"><?php echo __("Monthly",'xcloner-backup-and-restore')?></option>
+						<?php
+						$schedules = $xcloner_scheduler->get_available_intervals();
+						
+						foreach($schedules as $key=>$schedule)
+						{
+						?>
+							<option value="<?php echo $key?>"><?php echo $schedule['display']?></option>
+						<?php
+						}
+						?>	
 					</select>
 					<label><?php echo __('Schedule Frequency', 'xcloner-backup-and-restore') ?></label>
 				</div>

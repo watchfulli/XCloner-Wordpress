@@ -459,7 +459,7 @@ class Xcloner_Settings
 	         )
 	    );
 	    
-		register_setting('xcloner_system_settings_group', 'xcloner_diff_backup_recreate_period', array($this->xcloner_sanitization, "sanitize_input_as_int"));
+		/*register_setting('xcloner_system_settings_group', 'xcloner_diff_backup_recreate_period', array($this->xcloner_sanitization, "sanitize_input_as_int"));
 	    add_settings_field(
 	        'xcloner_diff_backup_recreate_period',
 	       __('Differetial Backups Max Days','xcloner-backup-and-restore'),
@@ -469,7 +469,7 @@ class Xcloner_Settings
 	        array('xcloner_diff_backup_recreate_period',
 	         __('Use this option to set when a full backup should be recreated if the scheduled backup type is set to \'Full Backup+Differential Backups\' ','xcloner-backup-and-restore'), 
 	         )
-	    );
+	    );*/
 	    
 		register_setting('xcloner_system_settings_group', 'xcloner_exclude_files_larger_than_mb', array($this->xcloner_sanitization, "sanitize_input_as_int"));
 	    add_settings_field(

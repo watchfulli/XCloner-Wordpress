@@ -123,9 +123,11 @@ class Xcloner_Scheduler{
 			if ( ! wp_next_scheduled( $hook, array($schedule->id) ) and $schedule->status) {
 				
 				if($schedule->recurrence == "single")
+				{
 					wp_schedule_single_event( strtotime($schedule->start_at), $hook, array($schedule->id));
-				else	
+				}else{	
 					wp_schedule_event( strtotime($schedule->start_at), $schedule->recurrence, $hook, array($schedule->id) );
+				}
 					
 			}elseif(!$schedule->status)
 			{
@@ -147,8 +149,9 @@ class Xcloner_Scheduler{
 		if ($schedule->status) {
 			
 			if($schedule->recurrence == "single")
+			{
 				wp_schedule_single_event( strtotime($schedule->start_at), $hook, array($schedule->id));
-			else{	
+			}else{	
 				wp_schedule_event( strtotime($schedule->start_at), $schedule->recurrence, $hook, array($schedule->id) );
 			}
 				
@@ -336,6 +339,18 @@ class Xcloner_Scheduler{
 			
 		}
 		
+	}
+	
+	public function get_available_intervals()
+	{
+		$schedules = wp_get_schedules();
+		foreach ($schedules as $key => $row) {
+		    $intervals[$key]  = $row['interval'];
+		}
+		
+		array_multisort($intervals, SORT_ASC, $schedules);
+		
+		return $schedules;
 	}
 	
 	
