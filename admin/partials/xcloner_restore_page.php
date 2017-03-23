@@ -115,8 +115,16 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 						
 						<div class=" col s12 l7">
 							<div class="input-field row">
-								<input type="text" name="remote_restore_path" id="remote_restore_path" class="validate" placeholder="Restore Target Path">
-								<label><?php echo __("Restore Target Path",'xcloner-backup-and-restore')?></label>
+								<div class="col s10">
+									<input type="text" name="remote_restore_path" id="remote_restore_path" class="validate" placeholder="Restore Target Path">
+									<label><?php echo __("Restore Target Path",'xcloner-backup-and-restore')?></label>
+								</div>
+								<div class="col s2">
+								<a class="btn-floating tooltipped btn-small right" data-html="true" data-position="left" data-delay="50" 
+								data-tooltip="<?php echo __("This is the directory where you would like to restore the backup archive files.<br /> 
+								Please use this with caution when restoring to a live site.",'xcloner-backup-and-restore')?>"><i class="material-icons">help_outline</i></a>	
+								</div>
+
 							</div>
 							
 							<div class="input-field row">
@@ -158,7 +166,7 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 						
 						<div id="remote-restore-options">
 						<div class="col s12">
-							<a class="btn-floating tooltipped btn-small right" data-position="left" data-delay="50" data-tooltip="<?php echo __('Please provide below the mysql connection details for the target host database.','xcloner-backup-and-restore')?>" data-tooltip-id="92c95730-94e9-7b59-bd52-14adc30d5e3e"><i class="material-icons">help_outline</i></a>	
+							<a class="btn-floating tooltipped btn-small right" data-position="left" data-delay="50" data-html="true" data-tooltip="<?php echo __('Please provide below the mysql connection details for the target host database.<br />For live sites we recommend using a new separate database.','xcloner-backup-and-restore')?>" data-tooltip-id="92c95730-94e9-7b59-bd52-14adc30d5e3e"><i class="material-icons">help_outline</i></a>	
 							<h5><?php echo __('Target Mysql Details','xcloner-backup-and-restore')?></h5>
 						</div>						
 						<div class=" col s12">

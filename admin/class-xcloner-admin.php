@@ -143,10 +143,10 @@ class Xcloner_Admin {
 		$xcloner_sanitization = $this->get_xcloner_container()->get_xcloner_sanitization();
 		$remote_storage = $this->get_xcloner_container()->get_xcloner_remote_storage();
 		
-		$_POST['action'] = $xcloner_sanitization->sanitize_input_as_string($_POST['action']);
 		
 		if(isset($_POST['action']))
 		{
+			$_POST['action'] = $xcloner_sanitization->sanitize_input_as_string($_POST['action']);
 			$remote_storage->save($_POST['action']);
 		}
 		
