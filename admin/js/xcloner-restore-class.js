@@ -570,7 +570,7 @@ class Xcloner_Restore{
 		if(!status)
 		{
 			document.dispatchEvent(new CustomEvent("restore_script_invalid"));
-			document.dispatchEvent(new CustomEvent("xcloner_restore_display_status_text", {detail: {status:'error', message: "Error running the restore script: "+response.status+" "+response.statusText }}));
+			document.dispatchEvent(new CustomEvent("xcloner_restore_display_status_text", {detail: {status:'error', message: "Could not access the restore script: "+response.status+" "+response.statusText }}));
 			//document.dispatchEvent(new CustomEvent("xcloner_restore_update_progress", {detail: {percent: 100 }}));
 			
 		}else{
