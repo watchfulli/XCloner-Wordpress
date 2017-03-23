@@ -438,6 +438,7 @@ class Xcloner {
 			add_action( 'wp_ajax_restore_upload_backup'	, 		array($xcloner_api,'restore_upload_backup')  );
 			add_action( 'wp_ajax_download_restore_script', 		array($xcloner_api,'download_restore_script')  );
 			add_action( 'wp_ajax_copy_backup_remote_to_local', 	array($xcloner_api,'copy_backup_remote_to_local')  );
+			add_action( 'wp_ajax_restore_backup', 				array($xcloner_api,'restore_backup')  );
 			add_action( 'admin_notices', 						array($this, 'xcloner_error_admin_notices' ));
             
         }

@@ -50,11 +50,14 @@ class Xcloner_Database extends wpdb{
 		if(!$this->recordsPerSession)
 			$this->recordsPerSession = 100;
 		
-		$wp_host 	= $this->xcloner_settings->get_db_hostname();
-		$wp_user 	= $this->xcloner_settings->get_db_username();
-		$wp_pass 	= $this->xcloner_settings->get_db_password();
-		$wp_db 		= $this->xcloner_settings->get_db_database();
-
+		if(!$wp_user && !$wp_pass && !$wp_host && !$wp_db )
+		{
+			$wp_host 	= $this->xcloner_settings->get_db_hostname();
+			$wp_user 	= $this->xcloner_settings->get_db_username();
+			$wp_pass 	= $this->xcloner_settings->get_db_password();
+			$wp_db 		= $this->xcloner_settings->get_db_database();
+		}
+		
 		parent::__construct($wp_user, $wp_pass, $wp_db, $wp_host);
 		
 		//$this->use_mysqli = true;

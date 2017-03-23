@@ -11,6 +11,7 @@ class Xcloner_Restore{
 		this.upload_file_event = new Event('upload_file_event');
 		this.resume = new Object();
 		this.hash = hash;
+		this.local_restore = 0;
 		
 		document.addEventListener("backup_upload_finish", function (e) {
 			
@@ -47,6 +48,7 @@ class Xcloner_Restore{
 		document.addEventListener("xcloner_populate_remote_backup_files_list", function (e) {
 			
 			var files = e.detail.files
+			var original_value = jQuery('.xcloner-restore #remote_backup_file').val();
 			
 			jQuery('.xcloner-restore #remote_backup_file').find('option').not(':first').remove();
 			
@@ -55,8 +57,10 @@ class Xcloner_Restore{
 			{
 				var selected = "not-selected";
 				
-				if(files[key].selected)
+				if(files[key].selected || original_value == files[key].path)
+				{
 					selected = "selected";
+				}
 					
 				jQuery('.xcloner-restore #remote_backup_file').append("<option value='"+files[key].path+"' "+selected+">"+files[key].path+"("+e.detail.$this.getSize(files[key].size)+" MB)"+"</option>").addClass("file");
 			}
@@ -66,12 +70,13 @@ class Xcloner_Restore{
 		document.addEventListener("xcloner_populate_remote_mysqldump_files_list", function (e) {
 			
 			var files = e.detail.files
+			var original_value = jQuery('.xcloner-restore #remote_database_file').val();
 			
 			jQuery('.xcloner-restore #remote_database_file').find('option').not(':first').remove();
 			
 			for( var key in files)
 			{
-				if(files[key].selected)
+				if(files[key].selected  || original_value == files[key].path)
 					var selected = "selected";
 				else
 					var selected = "not-selected";
@@ -134,6 +139,7 @@ class Xcloner_Restore{
 		
 		document.addEventListener("xcloner_populate_remote_restore_path", function (e) {
 			
+			//dir: response.statusText.dir, restore_script_url: response.statusText.restore_script_url
 			if(e.detail.dir !== undefined)
 			{
 				if(!jQuery(".xcloner-restore #remote_restore_path").val())
@@ -143,10 +149,19 @@ class Xcloner_Restore{
 			if(e.detail.restore_script_url !== undefined)
 			{
 				if(!jQuery(".xcloner-restore #remote_restore_url").val())
+				{
 					jQuery(".xcloner-restore #remote_restore_url").val(e.detail.restore_script_url);
+				}
 				
 				if(!jQuery(".xcloner-restore #remote_restore_site_url").val())
+				{
 					jQuery(".xcloner-restore #remote_restore_site_url").val(e.detail.restore_script_url);	
+				}
+				
+				jQuery(".xcloner-restore #remote_mysql_host").val(e.detail.remote_mysql_host);
+				jQuery(".xcloner-restore #remote_mysql_db").val(e.detail.remote_mysql_db);
+				jQuery(".xcloner-restore #remote_mysql_user").val(e.detail.remote_mysql_user);
+				jQuery(".xcloner-restore #remote_mysql_pass").val(e.detail.remote_mysql_pass);
 			}
 				
 		}, false);
@@ -160,7 +175,10 @@ class Xcloner_Restore{
 				{
 					files_text[i] = "<li>"+(e.detail.files[i])+"</li>";
 				}
-				jQuery('.xcloner-restore .restore-remote-backup-step .files-list').prepend(files_text.reverse().join("\n"));
+				if(!jQuery('.xcloner-restore .restore-remote-backup-step .files-list').is(":hidden"))
+				{
+					jQuery('.xcloner-restore .restore-remote-backup-step .files-list').prepend(files_text.reverse().join("\n"));
+				}
 			}else{
 				jQuery('.xcloner-restore .restore-remote-backup-step .files-list').html("");
 			}
@@ -184,6 +202,7 @@ class Xcloner_Restore{
 		document.addEventListener("xcloner_restore_finish", function (e) {
 			
 			jQuery(".xcloner-restore #xcloner_restore_finish").show();
+			jQuery(".xcloner-restore #open_target_site a").removeAttr("disabled");
 				
 		}, false);
 		
@@ -261,7 +280,7 @@ class Xcloner_Restore{
 	{
 		if(status)
 		{
-			document.dispatchEvent(new CustomEvent("xcloner_populate_remote_restore_path", {detail: {dir: response.statusText.dir, restore_script_url: response.statusText.restore_script_url, $this: this }}))
+			document.dispatchEvent(new CustomEvent("xcloner_populate_remote_restore_path", {detail: response.statusText}))
 		}
 	}
 	
@@ -532,38 +551,73 @@ class Xcloner_Restore{
 		}
 	}
 	
+	verify_restore_url_callback(response, status, params = new Object())
+	{
+		if(!status)
+		{
+			document.dispatchEvent(new CustomEvent("restore_script_invalid"));
+			document.dispatchEvent(new CustomEvent("xcloner_restore_display_status_text", {detail: {status:'error', message: "Error running the restore script: "+response.status+" "+response.statusText }}));
+			//document.dispatchEvent(new CustomEvent("xcloner_restore_update_progress", {detail: {percent: 100 }}));
+			
+		}else{
+			
+			document.dispatchEvent(new CustomEvent("restore_script_valid"));
+			document.dispatchEvent(new CustomEvent("xcloner_restore_display_status_text", {detail: {message: "Validation ok." }}));
+			
+			if(this.local_restore)
+			{
+				this.next_step(1);
+			}else{
+				this.next_step();
+			}
+		}
+	
+	}
+	
 	verify_restore_url(response, status, params = new Object())
 	{
+		//jQuery("#remote-restore-options").show();
+		//jQuery("#update_remote_site_url").attr("checked", "checked").removeAttr("disabled");
+		jQuery("#delete_restore_script").attr("checked", "checked").removeAttr("disabled");
+		
+		if(this.restore_script_url == "http://" || this.restore_script_url == "https://" || this.restore_script_url == "" || this.restore_script_url === undefined)
+		{
+			this.restore_script_url = ajaxurl+"?action=restore_backup";
+			this.local_restore = 1;
+			//jQuery("#remote-restore-options").hide();
+			//jQuery("#update_remote_site_url").attr("disabled", "disabled").removeAttr("checked");
+			jQuery("#delete_restore_script").attr("disabled", "disabled").removeAttr("checked");
+		}
+		
 		this.ajaxurl = this.restore_script_url;
+		
 		
 		jQuery(".xcloner-restore #xcloner_restore_finish").hide();
 		
-		if(!response)
-		{	
-			this.cancel = false;
-			this.set_current_step = 0
-			this.do_ajax("verify_restore_url");
-		}else{	
+		this.cancel = false;
+		this.set_current_step = 0
+		
+		this.do_ajax("verify_restore_url_callback");
 			
-			if(!status)
-			{
-				document.dispatchEvent(new CustomEvent("restore_script_invalid"));
-				document.dispatchEvent(new CustomEvent("xcloner_restore_display_status_text", {detail: {status:'error', message: response.status+" "+response.statusText }}));
-				//document.dispatchEvent(new CustomEvent("xcloner_restore_update_progress", {detail: {percent: 100 }}));
-				
-			}else{
-				
-				document.dispatchEvent(new CustomEvent("restore_script_valid"));
-				document.dispatchEvent(new CustomEvent("xcloner_restore_display_status_text", {detail: {message: "Validation ok." }}));
-				
-				this.next_step();
-			}
-		}	
 	}
 	
-	next_step()
+	open_target_site(elem)
+	{
+		var url = jQuery(".xcloner-restore #remote_restore_url").val();
+		
+		if(!url )
+		{
+			jQuery(".xcloner-restore #wp_home_url").val();
+		}
+		
+		jQuery(elem).attr("href", url);
+	}
+	
+	next_step(inc = 0)
 	{
 		this.set_current_step = jQuery(".xcloner-restore li.active").attr("data-step");
+		
+		this.set_current_step = parseInt(this.set_current_step) + parseInt(inc);
 		
 		document.dispatchEvent(new CustomEvent("xcloner_restore_next_step", {detail: {$this: this}}));
 		
@@ -582,7 +636,12 @@ class Xcloner_Restore{
 	/** global: ajaxurl */
 	do_ajax(callback, action="", params= new Object())
 	{
-		params.action 	= action
+		if(action == "restore_upload_backup")
+		{
+			params.action = "restore_upload_backup";
+		}
+		
+		params.xcloner_action 	= action
 		params.hash 	= this.hash
 		params.API_ID 	= ID()
 		
@@ -616,6 +675,10 @@ class Xcloner_Restore{
 					$this[callback](xhr, false);
 				}
 			}).done(function(json) {
+				if(!json)
+				{
+					document.dispatchEvent(new CustomEvent("xcloner_restore_display_status_text", {detail: {status: 'error', message: "Lost connection with the API, please try and authentificate again"}}));
+				}
 				
 				if(json.status != 200){
 						if(json.error)
@@ -756,6 +819,10 @@ jQuery(document).ready(function(){
 		xcloner_restore.restore_finish();
 	})
 	
+	jQuery(".xcloner-restore #open_target_site a").click(function(){
+		xcloner_restore.open_target_site(this);
+	})
+	
 	jQuery(".xcloner-restore #refresh_remote_backup_file").on("click", function(e){
 		document.dispatchEvent(new CustomEvent("xcloner_restore_update_progress", {detail: {percent: 0 }}));
 		xcloner_restore.resume = new Object();
@@ -770,7 +837,7 @@ jQuery(document).ready(function(){
 		e.stopPropagation();
 	})
 	
-	jQuery(".xcloner-restore #toggle_file_restore_display").on("click", function(){
+	jQuery(".xcloner-restore #toggle_file_restore_display").on("click", function(e){
 		jQuery(".xcloner-restore .restore-remote-backup-step .files-list").toggle();
 	})
 	

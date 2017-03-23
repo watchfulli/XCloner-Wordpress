@@ -39,7 +39,7 @@ class Xcloner_File_Transfer extends Xcloner_File_System{
 		
 		$send_array['file'] 	= $file;
 		$send_array['start'] 	= $start;
-		$send_array['action'] 	= "write_file";
+		$send_array['xcloner_action'] 	= "write_file";
 		$send_array['hash'] 	= $hash;
 		#$send_array['blob'] 	= $binary_data;
 		$send_array['blob'] 	= $this->curl_file_create($tmp_file_path,'application/x-binary',$tmp_filename);

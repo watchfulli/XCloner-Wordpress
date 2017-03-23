@@ -27,7 +27,7 @@ class Xcloner_Api{
 	{
 		global $wpdb;
 		
-		error_reporting(0);
+		//error_reporting(0);
 		if( ob_get_length() )
 			ob_end_clean();
 		ob_start();
@@ -51,7 +51,7 @@ class Xcloner_Api{
 		
 	}
 	
-	private function get_xcloner_container()
+	public function get_xcloner_container()
 	{
 		return $this->xcloner_container;
 	}
@@ -904,7 +904,7 @@ class Xcloner_Api{
 			$tar->addFile(dirname(__DIR__).DS.$file['path'], $file['path']);
 		}
 		
-		$content = file_get_contents(dirname(__DIR__)."/restore/xcloner_restore.php.txt");
+		$content = file_get_contents(dirname(__DIR__)."/restore/xcloner_restore.php");
 		$content = str_replace("define('AUTH_KEY', '');", "define('AUTH_KEY', '".md5(AUTH_KEY)."');", $content);
 		
 		$tar->addData("xcloner_restore.php", $content);
@@ -1032,6 +1032,16 @@ class Xcloner_Api{
 		
 		$this->send_response( $return, 0);
 	}
+	
+	public function restore_backup()
+	{
+		$this->check_access();
+		
+		define("XCLONER_PLUGIN_ACCESS", 1);
+		include_once(dirname(__DIR__) .DS."restore".DS."xcloner_restore.php");
+		return;
+	}
+	
 	/*
 	 * 
 	 * Send the json response back

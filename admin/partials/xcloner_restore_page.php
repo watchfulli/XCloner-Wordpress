@@ -25,7 +25,9 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 				<div class="collapsible-body row">
 						
 						<ul class="text-steps">
-							<li><?php echo __("Please download the restore script from",'xcloner-backup-and-restore')?> <a href='#' onclick="window.location=ajaxurl+'?action=download_restore_script&phar=true'"><strong><?php echo __("here",'xcloner-backup-and-restore')?></strong></a>
+							<li><?php echo __("If you want to do a local target system restore, leave Url field below empty and click 'Check Connection'",'xcloner-backup-and-restore')?> 
+							</li>	
+							<li><?php echo __("If you want to do a remote target system restore, please download the restore script from",'xcloner-backup-and-restore')?> <a href='#' onclick="window.location=ajaxurl+'?action=download_restore_script&phar=true'"><strong><?php echo __("here",'xcloner-backup-and-restore')?></strong></a>
 							</li>	
 							<li>
 							<?php echo __("Extract the files on your new host",'xcloner-backup-and-restore')?>
@@ -45,12 +47,12 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 						</ul>	
 						
 						<div class="input-field col l9 s12">
-							<input value="<?php echo (is_ssl())?"https://":"http://"?>" id="restore_script_url" type="text" class="validate" placeholder="Url to XCloner Restore Script, example http://myddns.com/xcloner/xcloner_restore.php" >
+							<input value="<?php echo (is_ssl())?"https://":""?>" id="restore_script_url" type="text" class="validate" placeholder="Url to XCloner Restore Script, example http://myddns.com/xcloner/xcloner_restore.php" >
 							<label for="restore_script_url"></label>
 							<div id="url_validation_status" class="status"></div>
 				        </div>
 				        <div class="col l3 s12 right-align">
-							<button class="btn waves-effect waves-light" type="submit" id="validate_url" name="action"><?php echo __("Check",'xcloner-backup-and-restore')?>
+							<button class="btn waves-effect waves-light" type="submit" id="validate_url" name="action"><?php echo __("Check Connection",'xcloner-backup-and-restore')?>
 							    <i class="material-icons right">send</i>
 							</button>
 				        </div>
@@ -58,13 +60,13 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 			</li>
 			
 			<li data-step="2" class="backup-upload-step steps">
-				<div class="collapsible-header active"><i class="material-icons">file_upload</i><?php echo __("Upload Local Backup Archive To Remote Host",'xcloner-backup-and-restore')?>
+				<div class="collapsible-header active"><i class="material-icons">file_upload</i><?php echo __("Upload Local Backup Archive To Target Host",'xcloner-backup-and-restore')?>
 				</div>
 				<div class="collapsible-body row">
 					<p><?php echo __("You can skip this step if you want to transfer the archive in some other way, make sure you upload it in the same directory as the restore script from the previous step.",'xcloner-backup-and-restore')?></p>
 					<div class="input-field col s12 l7">
 						<select id="backup_file" name="backup_file" class="browser-default">
-					      <option value="" disabled selected><?php echo __("Please select a local backup archive to upload to remote host",'xcloner-backup-and-restore')?></option>
+					      <option value="" disabled selected><?php echo __("Please select a local backup archive to upload to target host",'xcloner-backup-and-restore')?></option>
 					      <?php if(is_array($backup_list)):?>
 							<?php foreach($backup_list as $file):?>
 								<option value="<?php echo $file['basename']?>">
@@ -97,8 +99,8 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 			</li>	
 			
 			<li data-step="3" class="restore-remote-backup-step steps active">
-				<div class="collapsible-header"><i class="material-icons">folder_open</i><?php echo __("Restore Files Backup Available On Remote Host",'xcloner-backup-and-restore')?>
-						<i class="material-icons right" title="Refresh Remote Backup Files List" id="refresh_remote_backup_file">cached</i>
+				<div class="collapsible-header"><i class="material-icons">folder_open</i><?php echo __("Restore Files Backup Available On Target Host",'xcloner-backup-and-restore')?>
+						<i class="material-icons right" title="Refresh Target Backup Files List" id="refresh_remote_backup_file">cached</i>
 
 						<div class="switch right">
 							<label>
@@ -114,12 +116,12 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 						<div class=" col s12 l7">
 							<div class="input-field row">
 								<input type="text" name="remote_restore_path" id="remote_restore_path" class="validate" placeholder="Restore Target Path">
-								<label><?php echo __("Remote Restore Target Path",'xcloner-backup-and-restore')?></label>
+								<label><?php echo __("Restore Target Path",'xcloner-backup-and-restore')?></label>
 							</div>
 							
 							<div class="input-field row">
 								<select id="remote_backup_file" name="remote_backup_file" class="browser-default">
-									<option value="" disabled selected><?php echo __("Please select the remote backup file to restore",'xcloner-backup-and-restore')?></option>
+									<option value="" disabled selected><?php echo __("Please select the target backup file to restore",'xcloner-backup-and-restore')?></option>
 							    </select>
 							    <label></label>
 							</div>
@@ -149,41 +151,42 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 			</li>
 			
 			<li data-step="4" class="restore-remote-database-step steps active">
-				<div class="collapsible-header"><i class="material-icons">list</i><?php echo __("Restore Remote Database - Search and Replace",'xcloner-backup-and-restore')?>
+				<div class="collapsible-header"><i class="material-icons">list</i><?php echo __("Restore Target Database - Search and Replace",'xcloner-backup-and-restore')?>
 					<i class="material-icons right" title="Refresh Database Backup Files List" id="refresh_database_file">cached</i>
 				</div>
 				<div class="collapsible-body row">
 						
+						<div id="remote-restore-options">
 						<div class="col s12">
-							<a class="btn-floating tooltipped btn-small right" data-position="left" data-delay="50" data-tooltip="<?php echo __('Please provide below the mysql connection details for the remote host database.','xcloner-backup-and-restore')?>" data-tooltip-id="92c95730-94e9-7b59-bd52-14adc30d5e3e"><i class="material-icons">help_outline</i></a>	
-							<h5><?php echo __('Remote Mysql Details','xcloner-backup-and-restore')?></h5>
+							<a class="btn-floating tooltipped btn-small right" data-position="left" data-delay="50" data-tooltip="<?php echo __('Please provide below the mysql connection details for the target host database.','xcloner-backup-and-restore')?>" data-tooltip-id="92c95730-94e9-7b59-bd52-14adc30d5e3e"><i class="material-icons">help_outline</i></a>	
+							<h5><?php echo __('Target Mysql Details','xcloner-backup-and-restore')?></h5>
 						</div>						
 						<div class=" col s12">
 							<div class="input-field col s12 m6">
-								<input type="text" name="remote_mysql_host" id="remote_mysql_host" class="validate" placeholder="Remote Mysql Hostname" value="localhost">
+								<input type="text" name="remote_mysql_host" id="remote_mysql_host" class="validate" placeholder="Target Mysql Hostname">
 								<label><?php echo __("Remote Mysql Hostname",'xcloner-backup-and-restore')?></label>
 							</div>
 							
 							<div class="input-field  col s12 m6">
-								<input type="text" name="remote_mysql_db" id="remote_mysql_db" class="validate" placeholder="Remote Mysql Database">
+								<input type="text" name="remote_mysql_db" id="remote_mysql_db" class="validate" placeholder="Target Mysql Database">
 								<label><?php echo __("Remote Mysql Database",'xcloner-backup-and-restore')?></label>
 							</div>
 							
 							<div class="input-field  col s12 m6">
-								<input type="text" name="remote_mysql_user" id="remote_mysql_user" class="validate" placeholder="Remote Mysql Username">
+								<input type="text" name="remote_mysql_user" id="remote_mysql_user" class="validate" placeholder="Target Mysql Username">
 								<label><?php echo __("Remote Mysql Username",'xcloner-backup-and-restore')?></label>
 							</div>
 							
 							
 							<div class="input-field  col s12 m6">
-								<input type="text" name="remote_mysql_pass" id="remote_mysql_pass" class="validate" placeholder="Remote Mysql Password">
+								<input type="text" name="remote_mysql_pass" id="remote_mysql_pass" class="validate" placeholder="Target Mysql Password">
 								<label><?php echo __("Remote Mysql Password",'xcloner-backup-and-restore')?></label>
 							</div>
 							
 						</div>	
 						<div class="col s12">
 						<a class="btn-floating tooltipped btn-small right" data-position="left" data-delay="50" data-html="true" data-tooltip="<?php echo __('I will attempt to replace all mysql backup records matching the provided Source Url with the provided Target Url. <br />Leave blank the Target Url if you would like to skip this option. <br />As a bonus, I will also replace all matching serialized data and fix it\'s parsing.','xcloner-backup-and-restore')?>" data-tooltip-id="92c95730-94e9-7b59-bd52-14adc30d5e3e"><i class="material-icons">help_outline</i></a>	
-							<h5><?php echo __('Remote Mysql Search and Replace','xcloner-backup-and-restore')?></h5>
+							<h5><?php echo __('Target Mysql Search and Replace','xcloner-backup-and-restore')?></h5>
 						</div>
 						<div class="col s12">  
 							<div class="input-field col s12 m6 ">
@@ -210,10 +213,12 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 						<?php endif;?>
 						</div>
 						
+						</div>
+						
 						<div class=" col s12 l7">
 							<div class="input-field row">
 								<select id="remote_database_file" name="remote_database_file" class="browser-default">
-									<option value="" disabled selected><?php echo __("Please select the remote database backup file to restore",'xcloner-backup-and-restore')?></option>
+									<option value="" disabled selected><?php echo __("Please select the target database backup file to restore",'xcloner-backup-and-restore')?></option>
 							    </select>
 							    
 							    <label></label>
@@ -225,7 +230,7 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 
 							 <div class="status"></div>
 							 <div class="query-box">
-								 <h6><?php echo __('Use the field below to fix your mysql query and Retry again the Restore', 'xcloner-backup-and-restore')?></h6>
+								 <h6><?php echo __('Use the field below to fix your mysql query and Retry again the Restore, or replace with # to Skip next', 'xcloner-backup-and-restore')?></h6>
 								<textarea class="query-list" cols="5"></textarea>
 							 </div>
 				        </div>
@@ -315,10 +320,19 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 				        </div>
 				        
 				        <div class="col s12 center-align">
-
-							<button class="btn waves-effect waves-light teal" type="submit" id="restore_finish" name="action"><?php echo __("Finish",'xcloner-backup-and-restore')?>
-								<i class="material-icons right">navigate_next</i>
-							</button>
+							<div class="row">
+								<div class="col s6 right-align">
+								<button class="btn waves-effect waves-light teal" type="submit" id="restore_finish" name="action"><?php echo __("Finish",'xcloner-backup-and-restore')?>
+									<i class="material-icons right">navigate_next</i>
+								</button>
+								</div>
+									
+								<div id="open_target_site" class="col s6 left-align">
+									<a disabled="disabled" href="#" class="btn waves-effect waves-light teal" type="button" target="_blank"><?php echo __("Open Target Site",'xcloner-backup-and-restore')?>
+										<i class="material-icons right">navigate_next</i>
+									</a>
+								</div>
+							</div>
 				        </div>
 				</div>
 			</li>
