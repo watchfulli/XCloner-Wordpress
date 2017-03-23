@@ -193,7 +193,7 @@ class Xcloner_Restore{
 				{
 					jQuery('.xcloner-restore .restore-remote-backup-step .files-list').prepend(files_text.reverse().join("\n"));
 				}
-			}else{
+			}else if(!jQuery.isArray(e.detail.files)){
 				jQuery('.xcloner-restore .restore-remote-backup-step .files-list').html("");
 			}
 				
@@ -334,7 +334,7 @@ class Xcloner_Restore{
 			params.part = response.statusText.part
 			params.processed = response.statusText.processed
 			
-			document.dispatchEvent(new CustomEvent("xcloner_restore_display_status_text", {detail: {message: 'Processing <strong>'+response.statusText.backup_file+'</strong>- wrote '+this.getSize(processed, 1024)+" KB to disk"}}));
+			document.dispatchEvent(new CustomEvent("xcloner_restore_display_status_text", {detail: {message: 'Processing <strong>'+response.statusText.backup_file+'</strong>- processed '+this.getSize(processed, 1024)+" KB from archive"}}));
 			
 			this.do_ajax('remote_restore_backup_file_callback', 'restore_backup_to_path', params)
 			return

@@ -105,7 +105,7 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 						<div class="switch right">
 							<label>
 							<?php echo __('Verbose Output', 'xcloner-backup-and-restore')?>
-							<input type="checkbox" id="toggle_file_restore_display" name="toggle_file_restore_display"  value="1">
+							<input type="checkbox" id="toggle_file_restore_display" name="toggle_file_restore_display"  class="" checked value="1">
 							<span class="lever"></span>
 							
 							</label>
@@ -113,34 +113,42 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 				</div>
 				<div class="collapsible-body row">
 						
-						<div class=" col s12 l7">
+						<div class=" col s12 l8">
 							<div class="input-field row">
-								<div class="col s10">
+								<div class="col s12">
+									<a class="btn-floating tooltipped btn-small right" data-html="true" data-position="left" data-delay="50" 
+										data-tooltip="<?php echo __("This is the directory where you would like to restore the backup archive files.<br /> 
+										Please use this with caution when restoring to a live site.",'xcloner-backup-and-restore')?>"><i class="material-icons">help_outline</i>
+									</a>	
+									<h5><?php echo __("Restore Target Path:",'xcloner-backup-and-restore')?></h5>
 									<input type="text" name="remote_restore_path" id="remote_restore_path" class="validate" placeholder="Restore Target Path">
-									<label><?php echo __("Restore Target Path",'xcloner-backup-and-restore')?></label>
+									<label></label>
 								</div>
-								<div class="col s2">
-								<a class="btn-floating tooltipped btn-small right" data-html="true" data-position="left" data-delay="50" 
-								data-tooltip="<?php echo __("This is the directory where you would like to restore the backup archive files.<br /> 
-								Please use this with caution when restoring to a live site.",'xcloner-backup-and-restore')?>"><i class="material-icons">help_outline</i></a>	
-								</div>
+				
 							</div>
 							
 							<div class="input-field row">
-								<input class="with-gap" name="filter_files" type="radio" id="filter_files_all" checked value="/(.*)/" />
-								<label for="filter_files_all"><?php echo __("All Files","xcloner-backup-and-restore")?></label>
-								<input class="with-gap" name="filter_files" type="radio" id="filter_files_plugins"  value="/^wp-content\/plugins(.*)/" />
-								<label for="filter_files_plugins"><?php echo __("Only Plugins","xcloner-backup-and-restore")?></label>
-								<input class="with-gap" name="filter_files" type="radio" id="filter_files_uploads"  value="/^wp-content\/uploads(.*)/" />
-								<label for="filter_files_uploads"><?php echo __("Only Uploads","xcloner-backup-and-restore")?></label>
-								<input class="with-gap" name="filter_files" type="radio" id="filter_files_database"  value="/^xcloner-(.*)/"/>
-								<label for="filter_files_database"><?php echo __("Only Database Backup","xcloner-backup-and-restore")?></label>
-							</div>
-							<div class="input-field row">
-								<select id="remote_backup_file" name="remote_backup_file" class="browser-default">
-									<option value="" disabled selected><?php echo __("Please select the target backup file to restore",'xcloner-backup-and-restore')?></option>
-							    </select>
-							    <label></label>
+								<div class="col s12">
+									<h5><?php echo __("Restore Backup Archive:",'xcloner-backup-and-restore')?></h5>
+									<select id="remote_backup_file" name="remote_backup_file" class="browser-default">
+										<option value="" disabled selected><?php echo __("Please select the target backup file to restore",'xcloner-backup-and-restore')?></option>
+								    </select>
+								    <label></label>
+							    </div>
+							
+								<div class="col s12">
+									<input class="with-gap" name="filter_files" type="radio" id="filter_files_all" checked value="" />
+									<label for="filter_files_all"><?php echo __("All Files","xcloner-backup-and-restore")?></label>
+									
+									<input class="with-gap" name="filter_files" type="radio" id="filter_files_plugins"  value="/^wp-content\/plugins(.*)/" />
+									<label for="filter_files_plugins"><?php echo __("Only Plugins","xcloner-backup-and-restore")?></label>
+									
+									<input class="with-gap" name="filter_files" type="radio" id="filter_files_uploads"  value="/^wp-content\/uploads(.*)/" />
+									<label for="filter_files_uploads"><?php echo __("Only Uploads","xcloner-backup-and-restore")?></label>
+									
+									<input class="with-gap" name="filter_files" type="radio" id="filter_files_database"  value="/^xcloner-(.*)\/(.*)\.sql/"/>
+									<label for="filter_files_database"><?php echo __("Only Database Backup","xcloner-backup-and-restore")?></label>
+								</div>
 							</div>
 							
 							<div class="progress">
@@ -148,10 +156,10 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 							</div>
 								
 							 <div class="status"></div>
-							 <ul class="files-list" style="display:none"></ul>
-				        </div>
+								<ul class="files-list"></ul>
+							 </div>
 				       
-				        <div class="col s12 l5 right-align">
+				        <div class="col s12 l4 right-align">
 							<div class="toggler">
 								<button class="btn waves-effect waves-light restore_remote_backup normal " type="submit" id="" name="action"><?php echo __("Restore",'xcloner-backup-and-restore')?>
 								    <i class="material-icons right">send</i>
