@@ -149,6 +149,7 @@ class Tar extends Archive
      */
     public function extract($outdir, $strip = '', $exclude = '', $include = '', $files_limit = 0)
     {
+
         if ($this->closed || !$this->file) {
             throw new ArchiveIOException('Can not read from a closed archive');
         }

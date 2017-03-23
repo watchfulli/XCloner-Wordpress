@@ -354,6 +354,7 @@ class Xcloner_Restore{
 		var params 			= new Object()
 		params.backup_file 	= backup_file
 		params.remote_path 	= remote_path
+		params.filter_files = jQuery(".xcloner-restore input[name=filter_files]:checked").val()
 		
 		if(this.resume.callback == "remote_restore_backup_file_callback")
 		{

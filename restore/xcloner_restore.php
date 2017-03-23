@@ -692,11 +692,13 @@ class Xcloner_Restore
 	
 	public function restore_backup_to_path_action()
 	{
-		$source_backup_file = filter_input(INPUT_POST, 'backup_file', FILTER_SANITIZE_STRING);
-		$remote_path = filter_input(INPUT_POST, 'remote_path', FILTER_SANITIZE_STRING);
-		$start = filter_input(INPUT_POST, 'start', FILTER_SANITIZE_NUMBER_INT);
-		$return['part'] = (int)filter_input(INPUT_POST, 'part', FILTER_SANITIZE_NUMBER_INT);
-		$return['processed'] = (int)filter_input(INPUT_POST, 'processed', FILTER_SANITIZE_NUMBER_INT);
+		$source_backup_file 	= filter_input(INPUT_POST, 'backup_file', FILTER_SANITIZE_STRING);
+		$remote_path 			= filter_input(INPUT_POST, 'remote_path', FILTER_SANITIZE_STRING);
+		$include_filter_files 	= filter_input(INPUT_POST, 'filter_files', FILTER_SANITIZE_STRING);
+		$exclude_filter_files 	= "";
+		$start 					= filter_input(INPUT_POST, 'start', FILTER_SANITIZE_NUMBER_INT);
+		$return['part'] 		= (int)filter_input(INPUT_POST, 'part', FILTER_SANITIZE_NUMBER_INT);
+		$return['processed'] 	= (int)filter_input(INPUT_POST, 'processed', FILTER_SANITIZE_NUMBER_INT);
 				
 		$this->target_adapter = new Local($remote_path ,LOCK_EX, 'SKIP_LINKS');
 		$this->target_filesystem = new Filesystem($this->target_adapter, new Config([
@@ -708,8 +710,6 @@ class Xcloner_Restore
 		$return['finished'] = 1;
 		$return['extracted_files'] = array();
 		$return['total_size'] = $this->get_backup_size($backup_file);
-		
-		
 		
 		$backup_archive = new Tar();
 		if($this->is_multipart($backup_file))
@@ -723,13 +723,8 @@ class Xcloner_Restore
 		
 		$this->logger->info(sprintf('Opening backup archive %s at position %s', $backup_file, $start));
 		$backup_archive->open($this->backup_storage_dir .DS. $backup_file, $start);
-		
-		/*$res = $backup_archive->contents();
-		foreach($res as $file)
-			$return['files'][] = $file->getPath();
-		*/
 
-		$data = $backup_archive->extract($remote_path, '','','', $this->process_files_limit);
+		$data = $backup_archive->extract($remote_path, '',$exclude_filter_files,$include_filter_files, $this->process_files_limit);
 		
 		if(isset($data['extracted_files']))
 		{

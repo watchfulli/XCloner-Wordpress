@@ -334,14 +334,18 @@ class FileInfo
      */
     public function match($include = '', $exclude = '')
     {
+		//echo $include; 
+		
+		//echo $this->getPath()."--".preg_match($include, $this->getPath())."\n";
         $extract = true;
         if ($include && !preg_match($include, $this->getPath())) {
             $extract = false;
+           
         }
         if ($exclude && preg_match($exclude, $this->getPath())) {
             $extract = false;
         }
-
+        
         return $extract;
     }
 }

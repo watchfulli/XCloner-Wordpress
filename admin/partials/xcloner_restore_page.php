@@ -99,7 +99,7 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 			</li>	
 			
 			<li data-step="3" class="restore-remote-backup-step steps active">
-				<div class="collapsible-header"><i class="material-icons">folder_open</i><?php echo __("Restore Files Backup Available On Target Host",'xcloner-backup-and-restore')?>
+				<div class="collapsible-header"><i class="material-icons">folder_open</i><?php echo __("Restore Files Backup Available On Target Location",'xcloner-backup-and-restore')?>
 						<i class="material-icons right" title="Refresh Target Backup Files List" id="refresh_remote_backup_file">cached</i>
 
 						<div class="switch right">
@@ -124,9 +124,18 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 								data-tooltip="<?php echo __("This is the directory where you would like to restore the backup archive files.<br /> 
 								Please use this with caution when restoring to a live site.",'xcloner-backup-and-restore')?>"><i class="material-icons">help_outline</i></a>	
 								</div>
-
 							</div>
 							
+							<div class="input-field row">
+								<input class="with-gap" name="filter_files" type="radio" id="filter_files_all" checked value="/(.*)/" />
+								<label for="filter_files_all"><?php echo __("All Files","xcloner-backup-and-restore")?></label>
+								<input class="with-gap" name="filter_files" type="radio" id="filter_files_plugins"  value="/^wp-content\/plugins(.*)/" />
+								<label for="filter_files_plugins"><?php echo __("Only Plugins","xcloner-backup-and-restore")?></label>
+								<input class="with-gap" name="filter_files" type="radio" id="filter_files_uploads"  value="/^wp-content\/uploads(.*)/" />
+								<label for="filter_files_uploads"><?php echo __("Only Uploads","xcloner-backup-and-restore")?></label>
+								<input class="with-gap" name="filter_files" type="radio" id="filter_files_database"  value="/^xcloner-(.*)/"/>
+								<label for="filter_files_database"><?php echo __("Only Database Backup","xcloner-backup-and-restore")?></label>
+							</div>
 							<div class="input-field row">
 								<select id="remote_backup_file" name="remote_backup_file" class="browser-default">
 									<option value="" disabled selected><?php echo __("Please select the target backup file to restore",'xcloner-backup-and-restore')?></option>
@@ -172,23 +181,23 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 						<div class=" col s12">
 							<div class="input-field col s12 m6">
 								<input type="text" name="remote_mysql_host" id="remote_mysql_host" class="validate" placeholder="Target Mysql Hostname">
-								<label><?php echo __("Remote Mysql Hostname",'xcloner-backup-and-restore')?></label>
+								<label><?php echo __("Target Mysql Hostname",'xcloner-backup-and-restore')?></label>
 							</div>
 							
 							<div class="input-field  col s12 m6">
 								<input type="text" name="remote_mysql_db" id="remote_mysql_db" class="validate" placeholder="Target Mysql Database">
-								<label><?php echo __("Remote Mysql Database",'xcloner-backup-and-restore')?></label>
+								<label><?php echo __("Target Mysql Database",'xcloner-backup-and-restore')?></label>
 							</div>
 							
 							<div class="input-field  col s12 m6">
 								<input type="text" name="remote_mysql_user" id="remote_mysql_user" class="validate" placeholder="Target Mysql Username">
-								<label><?php echo __("Remote Mysql Username",'xcloner-backup-and-restore')?></label>
+								<label><?php echo __("Target Mysql Username",'xcloner-backup-and-restore')?></label>
 							</div>
 							
 							
 							<div class="input-field  col s12 m6">
 								<input type="text" name="remote_mysql_pass" id="remote_mysql_pass" class="validate" placeholder="Target Mysql Password">
-								<label><?php echo __("Remote Mysql Password",'xcloner-backup-and-restore')?></label>
+								<label><?php echo __("Target Mysql Password",'xcloner-backup-and-restore')?></label>
 							</div>
 							
 						</div>	
@@ -269,7 +278,7 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 						
 						<div class="row">
 							<div class="col s4">
-								<label><?php echo __("Update wp-config.php mysql details and update the restored site Url",'xcloner-backup-and-restore')?></label>
+								<label><?php echo __("Update wp-config.php mysql details and update the Target Site Url",'xcloner-backup-and-restore')?></label>
 							</div>
 							
 							<div class="col s8">
