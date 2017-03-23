@@ -158,10 +158,24 @@ class Xcloner_Restore{
 					jQuery(".xcloner-restore #remote_restore_site_url").val(e.detail.restore_script_url);	
 				}
 				
-				jQuery(".xcloner-restore #remote_mysql_host").val(e.detail.remote_mysql_host);
-				jQuery(".xcloner-restore #remote_mysql_db").val(e.detail.remote_mysql_db);
-				jQuery(".xcloner-restore #remote_mysql_user").val(e.detail.remote_mysql_user);
-				jQuery(".xcloner-restore #remote_mysql_pass").val(e.detail.remote_mysql_pass);
+				if(!jQuery(".xcloner-restore #remote_mysql_host").val())
+				{
+					jQuery(".xcloner-restore #remote_mysql_host").val(e.detail.remote_mysql_host);
+				}
+				if(!jQuery(".xcloner-restore #remote_mysql_db").val())
+				{
+					jQuery(".xcloner-restore #remote_mysql_db").val(e.detail.remote_mysql_db);
+				}
+				if(!jQuery(".xcloner-restore #remote_mysql_user").val())
+				{
+					jQuery(".xcloner-restore #remote_mysql_user").val(e.detail.remote_mysql_user);
+				}
+				
+				if(!jQuery(".xcloner-restore #remote_mysql_pass").val())
+				{
+					jQuery(".xcloner-restore #remote_mysql_pass").val(e.detail.remote_mysql_pass);
+				}	
+				
 			}
 				
 		}, false);
@@ -576,10 +590,6 @@ class Xcloner_Restore{
 	
 	verify_restore_url(response, status, params = new Object())
 	{
-		//jQuery("#remote-restore-options").show();
-		//jQuery("#update_remote_site_url").attr("checked", "checked").removeAttr("disabled");
-		jQuery("#delete_restore_script").attr("checked", "checked").removeAttr("disabled");
-		
 		if(this.restore_script_url == "http://" || this.restore_script_url == "https://" || this.restore_script_url == "" || this.restore_script_url === undefined)
 		{
 			this.restore_script_url = ajaxurl+"?action=restore_backup";
@@ -587,6 +597,11 @@ class Xcloner_Restore{
 			//jQuery("#remote-restore-options").hide();
 			//jQuery("#update_remote_site_url").attr("disabled", "disabled").removeAttr("checked");
 			jQuery("#delete_restore_script").attr("disabled", "disabled").removeAttr("checked");
+		}else{
+			this.local_restore = 0;
+			//jQuery("#remote-restore-options").show();
+			//jQuery("#update_remote_site_url").attr("checked", "checked").removeAttr("disabled");
+			jQuery("#delete_restore_script").attr("checked", "checked").removeAttr("disabled");
 		}
 		
 		this.ajaxurl = this.restore_script_url;

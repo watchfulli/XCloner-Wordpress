@@ -105,7 +105,7 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 						<div class="switch right">
 							<label>
 							<?php echo __('Verbose Output', 'xcloner-backup-and-restore')?>
-							<input type="checkbox" id="toggle_file_restore_display" name="toggle_file_restore_display" checked value="1">
+							<input type="checkbox" id="toggle_file_restore_display" name="toggle_file_restore_display"  value="1">
 							<span class="lever"></span>
 							
 							</label>
