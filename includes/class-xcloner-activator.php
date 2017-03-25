@@ -70,40 +70,40 @@ class Xcloner_Activator {
 			update_option( "xcloner_db_version", $xcloner_db_version );
 		}
 		
-		if(!get_option('xcloner_backup_compression_level'))
+		if(get_option('xcloner_backup_compression_level') === false)
 			update_option('xcloner_backup_compression_level', 0);
 		
-		if(!get_option('xcloner_enable_log'))
+		if(get_option('xcloner_enable_log') === false)
 			update_option('xcloner_enable_log', 1);
 			
-		if(!get_option('xcloner_enable_mysql_backup'))
+		if(get_option('xcloner_enable_mysql_backup') === false)
 			update_option('xcloner_enable_mysql_backup', 1);
 		
-		if(!get_option('xcloner_system_settings_page'))
+		if(get_option('xcloner_system_settings_page') === false)
 			update_option('xcloner_system_settings_page', 100);
 			
-		if(!get_option('xcloner_files_to_process_per_request'))
+		if(get_option('xcloner_files_to_process_per_request') === false)
 			update_option('xcloner_files_to_process_per_request', 250);
 
-		if(!get_option('xcloner_database_records_per_request'))
+		if(get_option('xcloner_database_records_per_request') === false)
 			update_option('xcloner_database_records_per_request', 10000);
 
-		if(!get_option('xcloner_exclude_files_larger_than_mb'))
+		if(get_option('xcloner_exclude_files_larger_than_mb') === false)
 			update_option('xcloner_exclude_files_larger_than_mb', 0);
 		
-		if(!get_option('xcloner_split_backup_limit'))
+		if(get_option('xcloner_split_backup_limit') === false)
 			update_option('xcloner_split_backup_limit', 2048);
 			
-		if(!get_option('xcloner_size_limit_per_request'))
+		if(get_option('xcloner_size_limit_per_request') === false)
 			update_option('xcloner_size_limit_per_request', 50);
 			
-		if(!get_option('xcloner_cleanup_retention_limit_days'))
+		if(get_option('xcloner_cleanup_retention_limit_days') === false)
 			update_option('xcloner_cleanup_retention_limit_days', 60);
 			
-		if(!get_option('xcloner_cleanup_retention_limit_archives'))
+		if(get_option('xcloner_cleanup_retention_limit_archives') === false)
 			update_option('xcloner_cleanup_retention_limit_archives', 100);
 			
-		if(!get_option('xcloner_directories_to_scan_per_request'))
+		if(get_option('xcloner_directories_to_scan_per_request') === false)
 			update_option('xcloner_directories_to_scan_per_request', 25);
 			
 		/*if(!get_option('xcloner_diff_backup_recreate_period'))

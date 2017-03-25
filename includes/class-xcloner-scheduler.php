@@ -34,6 +34,11 @@ class Xcloner_Scheduler{
 		return $this->xcloner_container;
 	}
 	
+	private function set_xcloner_container(Xcloner $container)
+	{
+		$this->xcloner_container = $container;
+	}
+	
 	public function get_scheduler_list($return_only_enabled = 0 )
 	{
 		$list = $this->db->get_results("SELECT * FROM ".$this->scheduler_table);
@@ -214,11 +219,17 @@ class Xcloner_Scheduler{
 	{
 		set_time_limit(0);
 		
+		$xcloner = new XCloner();
+		$xcloner->init();
+		$this->set_xcloner_container($xcloner);
+		
 		$this->xcloner_file_system 		= $this->get_xcloner_container()->get_xcloner_filesystem();
 		$this->xcloner_database 		= $this->get_xcloner_container()->get_xcloner_database();
 		$this->archive_system 			= $this->get_xcloner_container()->get_archive_system();
 		$this->logger 					= $this->get_xcloner_container()->get_xcloner_logger()->withName("xcloner_scheduler");
 		$this->xcloner_remote_storage 	= $this->get_xcloner_container()->get_xcloner_remote_storage();
+		
+		$this->logger->info(sprintf("New schedule hash is %s", $this->xcloner_settings->get_hash()));
 		
 		if($schedule['backup_params']->diff_start_date)
 		{
