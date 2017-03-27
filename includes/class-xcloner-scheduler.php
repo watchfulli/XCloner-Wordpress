@@ -12,6 +12,7 @@ class Xcloner_Scheduler{
 	private $logger;
 	private $xcloner_file_system;
 	
+	private $allowed_schedules = array("hourly", "twicedaily", "daily", "weekly", "monthly");
 	/*public function __call($method, $args) {
 		echo "$method is not defined";
 	}*/
@@ -355,13 +356,18 @@ class Xcloner_Scheduler{
 	public function get_available_intervals()
 	{
 		$schedules = wp_get_schedules();
+		$new_schedules = array();
+		
 		foreach ($schedules as $key => $row) {
-		    $intervals[$key]  = $row['interval'];
+			if(in_array($key, $this->allowed_schedules))
+			{
+				$new_schedules[$key] = $row;
+				$intervals[$key]  = $row['interval'];
+			}
 		}
 		
-		array_multisort($intervals, SORT_ASC, $schedules);
-		
-		return $schedules;
+		array_multisort($intervals, SORT_ASC, $new_schedules);
+		return $new_schedules;
 	}
 	
 	
