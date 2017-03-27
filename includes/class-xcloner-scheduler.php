@@ -315,7 +315,9 @@ class Xcloner_Scheduler{
 			try{
 				$from = "XCloner Schedule - ".$schedule['name'];
 				$additional['lines_total'] = $return['extra']['lines_total'];
-				$this->archive_system->send_notification($to, $from, "", $return['extra']['backup_parent'], $schedule, "", $additional);
+				$subject = sprintf(__("%s - new scheduled backup generated %s") , $schedule['name'], $return['extra']['backup_parent']);
+				
+				$this->archive_system->send_notification($to, $from, $subject, $return['extra']['backup_parent'], $schedule, "", $additional);
 			}catch(Exception $e)
 			{
 				$this->logger->error($e->getMessage());
@@ -345,8 +347,8 @@ class Xcloner_Scheduler{
 				
 			if(isset($schedule['backup_params']->email_notification) && $to=$schedule['backup_params']->email_notification)
 			{
-				$from = "XCloner Schedule - ".$schedule['name'];
-				$this->archive_system->send_notification($to, $from, "Scheduled backup error","", "", $e->getMessage());
+				$from = "XCloner Scheduler";
+				$this->archive_system->send_notification($to, $from, $schedule['name']." - scheduled backup error","", "", $e->getMessage());
 			}
 			
 		}

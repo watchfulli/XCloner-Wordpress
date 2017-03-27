@@ -155,7 +155,9 @@ class Xcloner_Archive extends Tar
 	public function send_notification($to, $from, $subject, $backup_name, $params, $error_message="", $additional = array())
 	{
 		if(!$from)
+		{
 			$from = "XCloner Backup";
+		}
 			
 		if(($error_message))
 		{
@@ -165,7 +167,9 @@ class Xcloner_Archive extends Tar
 		$params = (array)$params;
 		
 		if(!$subject)
+		{
 			$subject = sprintf(__("New backup generated %s") ,$backup_name);
+		}
 			
 		$body = sprintf(__("Generated Backup Size: %s"), size_format($this->filesystem->get_backup_size($backup_name)));
 		$body .= "<br /><br />";
