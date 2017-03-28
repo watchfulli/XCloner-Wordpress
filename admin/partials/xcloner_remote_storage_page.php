@@ -172,10 +172,10 @@ $gdrive_construct = $remote_storage->gdrive_construct();
 			        
 			        <div class="row">
 						<div class="col s12 m3 label">
-							<label for="sftp_password"><?php echo __("SFTP Password",'xcloner-backup-and-restore')?></label>
+							<label for="sftp_password"><?php echo __("SFTP or Private Key Password",'xcloner-backup-and-restore')?></label>
 						</div>
 						<div class=" col s12 m6">
-							<input placeholder="<?php echo __("SFTP Password",'xcloner-backup-and-restore')?>" id="ftp_spassword" type="password" name="xcloner_sftp_password" class="validate" value="<?php echo get_option("xcloner_sftp_password")?>" autocomplete="off" >
+							<input placeholder="<?php echo __("SFTP or Private Key Password",'xcloner-backup-and-restore')?>" id="ftp_spassword" type="password" name="xcloner_sftp_password" class="validate" value="<?php echo get_option("xcloner_sftp_password")?>" autocomplete="off" >
 				        </div>
 			        </div>
 			        
