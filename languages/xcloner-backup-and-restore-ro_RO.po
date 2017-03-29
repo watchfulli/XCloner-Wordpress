@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2017-03-29 08:59+0300\n"
-"PO-Revision-Date: 2017-03-29 09:20+0300\n"
+"POT-Creation-Date: 2017-03-29 09:24+0300\n"
+"PO-Revision-Date: 2017-03-29 09:24+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ro_RO\n"
@@ -192,12 +192,12 @@ msgid "List Backup Content"
 msgstr "Afiseaza Continutul Backup"
 
 #: admin/partials/xcloner_generate_backups_page.php:215
-#: admin/partials/xcloner_restore_page.php:341
+#: admin/partials/xcloner_restore_page.php:344
 msgid "Thank you for using XCloner."
 msgstr "Multumim pentru ca utilizati XCloner."
 
 #: admin/partials/xcloner_generate_backups_page.php:216
-#: admin/partials/xcloner_restore_page.php:342
+#: admin/partials/xcloner_restore_page.php:345
 #, php-format
 msgid "We would love to hear about your experience in the %s."
 msgstr "Ne-ar placea sa auzim despre experienta dumnevoastra in %s."
@@ -973,20 +973,20 @@ msgid "Upload"
 msgstr "Incarca"
 
 #: admin/partials/xcloner_restore_page.php:90
-#: admin/partials/xcloner_restore_page.php:167
-#: admin/partials/xcloner_restore_page.php:268
+#: admin/partials/xcloner_restore_page.php:170
+#: admin/partials/xcloner_restore_page.php:271
 msgid "Cancel"
 msgstr "Anulare"
 
 #: admin/partials/xcloner_restore_page.php:94
-#: admin/partials/xcloner_restore_page.php:171
-#: admin/partials/xcloner_restore_page.php:273
+#: admin/partials/xcloner_restore_page.php:174
+#: admin/partials/xcloner_restore_page.php:276
 msgid "Skip Next"
 msgstr "Pasul Urmator"
 
 #: admin/partials/xcloner_restore_page.php:94
-#: admin/partials/xcloner_restore_page.php:171
-#: admin/partials/xcloner_restore_page.php:273
+#: admin/partials/xcloner_restore_page.php:174
+#: admin/partials/xcloner_restore_page.php:276
 msgid "Next"
 msgstr "Urmator"
 
@@ -1034,45 +1034,49 @@ msgid "Only Uploads"
 msgstr "Doar Uploads"
 
 #: admin/partials/xcloner_restore_page.php:150
+msgid "Only Themes"
+msgstr "Doar Themes"
+
+#: admin/partials/xcloner_restore_page.php:153
 msgid "Only Database Backup"
 msgstr "Doar Baza de Date"
 
-#: admin/partials/xcloner_restore_page.php:164
-#: admin/partials/xcloner_restore_page.php:265
+#: admin/partials/xcloner_restore_page.php:167
+#: admin/partials/xcloner_restore_page.php:268
 msgid "Restore"
 msgstr "Restaurare"
 
-#: admin/partials/xcloner_restore_page.php:179
+#: admin/partials/xcloner_restore_page.php:182
 msgid "Restore Target Database - Search and Replace"
 msgstr "Restaurare Baza de Date - Cauta si Inlocuieste"
 
-#: admin/partials/xcloner_restore_page.php:186
+#: admin/partials/xcloner_restore_page.php:189
 msgid ""
 "Please provide below the mysql connection details for the target host "
 "database.<br />For live sites we recommend using a new separate database."
 msgstr ""
 
-#: admin/partials/xcloner_restore_page.php:187
+#: admin/partials/xcloner_restore_page.php:190
 msgid "Target Mysql Details"
 msgstr ""
 
-#: admin/partials/xcloner_restore_page.php:192
+#: admin/partials/xcloner_restore_page.php:195
 msgid "Target Mysql Hostname"
 msgstr ""
 
-#: admin/partials/xcloner_restore_page.php:197
+#: admin/partials/xcloner_restore_page.php:200
 msgid "Target Mysql Database"
 msgstr ""
 
-#: admin/partials/xcloner_restore_page.php:202
+#: admin/partials/xcloner_restore_page.php:205
 msgid "Target Mysql Username"
 msgstr ""
 
-#: admin/partials/xcloner_restore_page.php:208
+#: admin/partials/xcloner_restore_page.php:211
 msgid "Target Mysql Password"
 msgstr ""
 
-#: admin/partials/xcloner_restore_page.php:213
+#: admin/partials/xcloner_restore_page.php:216
 msgid ""
 "I will attempt to replace all mysql backup records matching the provided "
 "Source Url with the provided Target Url. <br />Leave blank the Target Url if "
@@ -1080,31 +1084,31 @@ msgid ""
 "all matching serialized data and fix it's parsing."
 msgstr ""
 
-#: admin/partials/xcloner_restore_page.php:214
+#: admin/partials/xcloner_restore_page.php:217
 msgid "Target Mysql Search and Replace"
 msgstr ""
 
-#: admin/partials/xcloner_restore_page.php:219
+#: admin/partials/xcloner_restore_page.php:222
 msgid "Source Home Url"
 msgstr "Url Locatie Sursa"
 
-#: admin/partials/xcloner_restore_page.php:224
+#: admin/partials/xcloner_restore_page.php:227
 msgid "With Target Home Url"
 msgstr "Cu Url Destinatie"
 
-#: admin/partials/xcloner_restore_page.php:230
+#: admin/partials/xcloner_restore_page.php:233
 msgid "Source Site Url"
 msgstr "Url Sursa"
 
-#: admin/partials/xcloner_restore_page.php:235
+#: admin/partials/xcloner_restore_page.php:238
 msgid "With Target Site Url"
 msgstr "Cu Url Destinatie"
 
-#: admin/partials/xcloner_restore_page.php:246
+#: admin/partials/xcloner_restore_page.php:249
 msgid "Please select the target database backup file to restore"
 msgstr "Selectati fisierul de backup al bazei de date pentru restaurare"
 
-#: admin/partials/xcloner_restore_page.php:258
+#: admin/partials/xcloner_restore_page.php:261
 msgid ""
 "Use the field below to fix your mysql query and Retry again the Restore, or "
 "replace with # to Skip next"
@@ -1112,29 +1116,29 @@ msgstr ""
 "Folositi campul de mai jos pentru repararea erorilor mysql si apasati Retry "
 "again pentru Restaurare, sau inlocuiti textul cu # pentru continuare"
 
-#: admin/partials/xcloner_restore_page.php:283
+#: admin/partials/xcloner_restore_page.php:286
 msgid "Finishing up..."
 msgstr "Terminare..."
 
-#: admin/partials/xcloner_restore_page.php:289
+#: admin/partials/xcloner_restore_page.php:292
 msgid "Update wp-config.php mysql details and update the Target Site Url"
 msgstr ""
 "Actualizeaza detaliile mysql in wp-config.php si actualizeaza adresa Url a "
 "noului site"
 
-#: admin/partials/xcloner_restore_page.php:306
+#: admin/partials/xcloner_restore_page.php:309
 msgid "Delete Restored Backup Temporary Folder"
 msgstr "Stergeti Directorul Temporar Restaurat"
 
-#: admin/partials/xcloner_restore_page.php:322
+#: admin/partials/xcloner_restore_page.php:325
 msgid "Delete Restore Script"
 msgstr "Stergeti script-ul de restaurare"
 
-#: admin/partials/xcloner_restore_page.php:350
+#: admin/partials/xcloner_restore_page.php:353
 msgid "Finish"
 msgstr "Terminare"
 
-#: admin/partials/xcloner_restore_page.php:356
+#: admin/partials/xcloner_restore_page.php:359
 msgid "Open Target Site"
 msgstr "Deschida Site-ul Destinatie"
 

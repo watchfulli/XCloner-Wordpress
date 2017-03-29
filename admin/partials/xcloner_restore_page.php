@@ -146,6 +146,9 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 									<input class="with-gap" name="filter_files" type="radio" id="filter_files_uploads"  value="/^wp-content\/uploads(.*)/" />
 									<label for="filter_files_uploads"><?php echo __("Only Uploads","xcloner-backup-and-restore")?></label>
 									
+									<input class="with-gap" name="filter_files" type="radio" id="filter_files_themes"  value="/^wp-content\/themes(.*)/" />
+									<label for="filter_files_themes"><?php echo __("Only Themes","xcloner-backup-and-restore")?></label>
+									
 									<input class="with-gap" name="filter_files" type="radio" id="filter_files_database"  value="/^xcloner-(.*)\/(.*)\.sql/"/>
 									<label for="filter_files_database"><?php echo __("Only Database Backup","xcloner-backup-and-restore")?></label>
 								</div>
