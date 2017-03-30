@@ -445,6 +445,27 @@ class Xcloner_File_System{
 		return;
 	}
 	
+	public function cleanup_tmp_directories()
+	{
+		$adapter = new Local($this->xcloner_settings->get_xcloner_tmp_path(false),LOCK_EX|FILE_APPEND, 'SKIP_LINKS');
+		$tmp_filesystem = new Filesystem($adapter, new Config([
+					'disable_asserts' => true,
+				]));
+				
+		$contents = $tmp_filesystem->listContents();
+		
+		foreach($contents as $file)
+		{
+			if(preg_match("/.xcloner-(.*)/",$file['path']))
+			{
+				$tmp_filesystem->deleteDir($file['path']);
+				$this->logger->info(sprintf("Delete temporary directory %s", $file['path']));
+			}
+		}
+		
+		return true;
+	}
+	
 	private function do_system_init()
 	{
 		$this->files_counter = 0;
