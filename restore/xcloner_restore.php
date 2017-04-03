@@ -134,7 +134,9 @@ class Xcloner_Restore
 		$logger_path = $this->get_logger_filename();
 		
 		if(!is_writeable($logger_path) and !touch($logger_path))
+		{
 			$logger_path = "php://stderr";
+		}
 		
 		$this->logger->pushHandler(new StreamHandler($logger_path, Logger::DEBUG));
 		
@@ -169,7 +171,7 @@ class Xcloner_Restore
 	
 	public function get_logger_filename()
 	{
-		$filename = __DIR__ .DS. "xcloner_restore.log";
+		$filename = $this->backup_storage_dir .DS. "xcloner_restore.log";
 		
 		return $filename;
 	}
