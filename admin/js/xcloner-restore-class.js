@@ -12,6 +12,7 @@ class Xcloner_Restore{
 		this.resume = new Object();
 		this.hash = hash;
 		this.local_restore = 0;
+		this.file_counter = 0;
 		
 		document.addEventListener("backup_upload_finish", function (e) {
 			
@@ -639,6 +640,68 @@ class Xcloner_Restore{
 		
 	}
 	
+	list_backup_content_callback(response, status, params = new Object())
+	{	
+		if(response.error)
+		{
+			jQuery("#backup_cotent_modal .files-list").addClass("error").prepend(response.statusText)
+			jQuery("#backup_cotent_modal .progress > div").addClass("determinate").removeClass(".indeterminate").css('width', "100%")
+			return;
+		}
+		
+		response = response.statusText;
+		
+		var files_text = [];
+		
+		for(var i in response.files)
+		{
+		  
+		  if(response.total_size !== undefined)
+		  {
+			var percent = parseInt(response.start*100)/parseInt(response.total_size)
+			//jQuery("#backup_cotent_modal .progress .determinate").css('width', percent + "%")
+		  }
+		
+		this.file_counter++
+		
+		files_text[i] = "<li>"+(this.file_counter +". <span title='"+response.files[i].mtime+"'>"+response.files[i].path+"</span> ("+response.files[i].size+" bytes)")+"</li>";
+		}
+				
+		jQuery("#backup_cotent_modal .modal-content .files-list").prepend(files_text.reverse().join("\n"));
+		
+		if(!response.finished && jQuery('#backup_cotent_modal').is(':visible'))
+		{
+			//$this.list_backup_content_callback(backup_file, response.start, response.part)
+			params.start = response.start
+			params.part = response.part
+			
+			this.do_ajax("list_backup_content_callback", "list_backup_files", params);
+		}
+		else
+		{
+			jQuery("#backup_cotent_modal .progress > div").addClass('determinate').removeClass(".indeterminate").css('width', "100%")
+		}
+			
+	}
+		
+				
+	list_backup_content(backup_file)
+	{
+		this.file_counter = 0
+		jQuery("#backup_cotent_modal .modal-content .files-list").text("").removeClass("error");
+		jQuery("#backup_cotent_modal .modal-content .backup-name").text(backup_file);
+		jQuery("#backup_cotent_modal").modal('open');
+		jQuery("#backup_cotent_modal .progress > div").removeClass('determinate').addClass("indeterminate");
+		
+		//this.list_backup_content_callback(backup_file)
+		var params = new Object()
+		params.file = backup_file
+		params.start = 0
+		params.part = 0
+
+		this.do_ajax("list_backup_content_callback", "list_backup_files", params);
+	}
+	
 	init_resume()
 	{
 		this.resume = new Object()
@@ -880,6 +943,16 @@ jQuery(document).ready(function(){
 		}
 		
 	})
+	
+	jQuery(".xcloner-restore .list-backup-content").on("click", function(e){
+			var id = jQuery(".xcloner-restore #remote_backup_file").val()
+			
+			if(id)
+			{
+				xcloner_restore.list_backup_content(id);
+			}
+			e.preventDefault();
+	});
 	
 	jQuery(".xcloner-restore .restore-remote-backup-step .restore_remote_backup").click(function(){
 		if(jQuery(this).hasClass('cancel'))

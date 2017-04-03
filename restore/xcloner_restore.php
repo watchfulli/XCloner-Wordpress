@@ -96,9 +96,10 @@ class Xcloner_Restore
 	
 	const 	xcloner_minimum_version = "5.4.0";
 	
-	private $backup_archive_extensions = array("zip", "tar", "tgz", "tar.gz", "gz", "csv");
-	private $process_files_limit = 150;
-	private $process_mysql_records_limit = 250;
+	private $backup_archive_extensions 		= array("zip", "tar", "tgz", "tar.gz", "gz", "csv");
+	private $process_files_limit 			= 150;
+	private $process_files_limit_list 		= 350;
+	private $process_mysql_records_limit 	= 250;
 	private $adapter;
 	private $filesystem;
 	private $logger;
@@ -411,6 +412,71 @@ class Xcloner_Restore
 		$this->logger->info(sprintf("New query length is %s", strlen($query)), array("QUERY_REPLACE"));
 		
 		return $query;
+	}
+	
+	public function list_backup_files_action()
+	{
+		$backup_parts = array();
+		
+		$source_backup_file = filter_input(INPUT_POST, 'file', FILTER_SANITIZE_STRING);
+		$start 				= (int)filter_input(INPUT_POST, 'start', FILTER_SANITIZE_STRING);
+		$return['part'] 	= (int)filter_input(INPUT_POST, 'part', FILTER_SANITIZE_STRING);
+		
+		$backup_file = $source_backup_file;
+		
+		if($this->is_multipart($backup_file))
+		{
+			$backup_parts = $this->get_multipart_files($backup_file);
+			$backup_file = $backup_parts[$return['part']];
+		}
+		
+		try{
+			$tar = new Tar();
+			$tar->open($this->backup_storage_dir.DS.$backup_file, $start);
+		
+			$data = $tar->contents($this->process_files_limit_list);
+		}catch(Exception $e)
+		{
+			$return['error'] = true;
+			$return['message'] = $e->getMessage();
+			$this->send_response(200, $return);
+		}
+		
+		$return['files'] 		= array();
+		$return['finished'] 	= 1;
+		$return['total_size'] 	= filesize($this->backup_storage_dir.DS.$backup_file);
+		$i = 0;
+		
+		if(isset($data['extracted_files']) and is_array($data['extracted_files']))
+		{
+			foreach($data['extracted_files'] as $file)
+			{
+				$return['files'][$i]['path'] = $file->getPath();
+				$return['files'][$i]['size'] = $file->getSize();
+				$return['files'][$i]['mtime'] = date("d M,Y H:i", $file->getMtime());
+				
+				$i++;
+			}
+		}
+		
+		if(isset($data['start']))
+		{
+			$return['start'] = $data['start'];
+			$return['finished'] = 0;	
+		}else{
+			if($this->is_multipart($source_backup_file))
+			{
+				$return['start'] = 0;
+				
+				++$return['part'];
+			
+				if($return['part'] < sizeof($backup_parts))	
+					$return['finished'] = 0;
+				
+			}
+		}	
+		
+		$this->send_response(200, $return);
 	}
 	
 	public function restore_finish_action()
@@ -902,7 +968,11 @@ class Xcloner_Restore
 		$return['status'] = $status;
 		$return['statusText'] = $response;
 		
-		if($status != 200 and $status != 418)
+		if(isset($response['error']) && $response['error'])
+		{
+			$return['statusText'] = $response['message'];
+			$return['error'] = true;
+		}elseif($status != 200 and $status != 418)
 		{
 			$return['error'] = true;
 			$return['message'] = $response;

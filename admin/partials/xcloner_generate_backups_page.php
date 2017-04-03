@@ -329,7 +329,6 @@ $tab = 1;
 </div>
 
 <!-- List Backup Content Modal-->
-
 <div id="backup_cotent_modal" class="modal">
 	<div class="modal-content">
 		<h4><?php echo sprintf(__("Listing Backup Content ",'xcloner-backup-and-restore'), "")?></h4>

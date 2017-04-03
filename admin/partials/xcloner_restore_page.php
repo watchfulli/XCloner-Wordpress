@@ -129,6 +129,10 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 							
 							<div class="input-field row">
 								<div class="col s12">
+									<a href="#backup_localhost-2017-04-03_10-58-sql-diff2017-03-22_00-00-5b6c4.tgz" 
+									class="list-backup-content btn-floating tooltipped btn-small right" data-tooltip="<?php echo __('Click To List The Selected Backup Content', 'xcloner-backup-and-restore') ?>">
+										<i class="material-icons">folder_open</i>
+									</a>
 									<h5><?php echo __("Restore Backup Archive:",'xcloner-backup-and-restore')?></h5>
 									<select id="remote_backup_file" name="remote_backup_file" class="browser-default">
 										<option value="" disabled selected><?php echo __("Please select the target backup file to restore",'xcloner-backup-and-restore')?></option>
@@ -371,3 +375,15 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 
 
 
+<!-- List Backup Content Modal-->
+<div id="backup_cotent_modal" class="modal">
+	<div class="modal-content">
+		<h4><?php echo sprintf(__("Listing Backup Content ",'xcloner-backup-and-restore'), "")?></h4>
+		<h5 class="backup-name"></h5>
+		
+		<div class="progress">
+			<div class="indeterminate"></div>
+		</div>
+		<ul class="files-list"></ul>
+	</div>	
+</div>
