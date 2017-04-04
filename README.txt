@@ -108,6 +108,12 @@ Of course, schedules can be adjusted accordingly to how often you update your si
 
 = 4.0.3 =
 * added differential backups with the option to only backup files modified after a certain date
+* added localhost restore option with direct access to the restore restore
+* added schedule name fixes
+* added restore filter All Files, Only Plugins Files, Only Theme Files, Only Uploads Files, Only Database Backup
+* added remote backup list archive option on restore page
+* tmp directory cleanup on deactivate
+* sftp text fixes
 
 = 4.0.2 =
 * added WebDAV remote storage support

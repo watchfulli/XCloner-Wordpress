@@ -144,7 +144,9 @@ class Xcloner_Restore{
 			if(e.detail.dir !== undefined)
 			{
 				if(!jQuery(".xcloner-restore #remote_restore_path").val())
+				{
 					jQuery(".xcloner-restore #remote_restore_path").val(e.detail.dir);
+				}
 			}
 			
 			if(e.detail.restore_script_url !== undefined)
