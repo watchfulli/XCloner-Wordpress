@@ -34,7 +34,10 @@ if ( ! defined( 'WPINC' ) ) {
 if(!is_admin() and !defined('DOING_CRON'))
 	return;
 
-define("DS", DIRECTORY_SEPARATOR);
+if(!defined("DS"))
+{
+	define("DS", DIRECTORY_SEPARATOR);
+}
 
 /**
  * The code that runs during plugin activation.
