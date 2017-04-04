@@ -10,7 +10,7 @@ Backup your site, restore to any web location, send your backups to Dropbox, Ama
 
 == Description ==
 
-XCloner is a Backup and Restore plugin that is perfectly integrated with Wordpress. It is able to create complete and differentials backups of your site, manually or automatically through the built in scheduler.
+XCloner is a Backup and Restore plugin that is perfectly integrated with Wordpress. It is able to create complete and differentials backups of your site, manually or automatically through the built-in scheduler.
 
 [youtube http://www.youtube.com/watch?v=V9iWpPyG1EE]
 
