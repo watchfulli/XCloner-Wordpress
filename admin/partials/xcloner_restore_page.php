@@ -142,7 +142,7 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 							
 								<div class="col s12">
 									<input class="with-gap" name="filter_files" type="radio" id="filter_files_all" checked value="" />
-									<label for="filter_files_all"><?php echo __("All Files","xcloner-backup-and-restore")?></label>
+									<label for="filter_files_all"><?php echo __("Restore All Files","xcloner-backup-and-restore")?></label>
 									
 									<input class="with-gap" name="filter_files" type="radio" id="filter_files_plugins"  value="/^wp-content\/plugins(.*)/" />
 									<label for="filter_files_plugins"><?php echo __("Only Plugins","xcloner-backup-and-restore")?></label>
