@@ -1,7 +1,7 @@
 === XCloner - Backup and Restore===
 Contributors: xcloner
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=AAPE8PLAE554S
-Tags: backup plugin, restore plugin, database backup, duplicate, full site backup, website cloner, wordpress backup, database restore, webdav, azure, ftp, sftp, amazon s3, dropbox, google drive
+Tags: backup plugin, restore plugin, database backup, duplicate, full site backup, website cloner, wordpress backup, database restore, webdav, azure, ftp, sftp, amazon s3, dropbox, google drive, differential backup
 Requires at least: 3.0.1
 Tested up to: 4.7
 Stable tag: 4.0.3
@@ -10,7 +10,7 @@ Backup your site, restore to any web location, send your backups to Dropbox, Ama
 
 == Description ==
 
-XCloner is a Backup and Restore plugin that is perfectly integrated with Wordpress.
+XCloner is a Backup and Restore plugin that is perfectly integrated with Wordpress. It is able to create complete and differentials backups of your site, manually or automatically through the built in scheduler.
 
 [youtube http://www.youtube.com/watch?v=V9iWpPyG1EE]
 
