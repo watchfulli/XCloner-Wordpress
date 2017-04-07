@@ -990,7 +990,7 @@ class Xcloner_Restore
 	 
 	function do_serialized_fix($query)
 	{
-		//return preg_replace('!s:(\d+):([\\\\]?"[\\\\]?"|[\\\\]?"((.*?)[^\\\\])[\\\\]?");!e', "'s:'.strlen(unescape_mysql('$3')).':\"'.unescape_quotes('$3').'\";'", $query);
+		$query = str_replace(array("\\n","\\r","\\'"), array("","","\""), ($query));
 		
 		return preg_replace_callback('!s:(\d+):([\\\\]?"[\\\\]?"|[\\\\]?"((.*?)[^\\\\])[\\\\]?");!', function ($m) {
 				  $data = "";
