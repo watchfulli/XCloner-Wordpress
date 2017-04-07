@@ -716,6 +716,12 @@ class Tar extends Archive
             "a100filename/a8perm/a8uid/a8gid/a12size/a12mtime/a8checksum/a1typeflag/a100link/a6magic/a2version/a32uname/a32gname/a8devmajor/a8devminor/a155prefix",
             $block
         );
+        
+        if(DecOct($header['typeflag']) == DecOct(''))
+        {
+			$header['typeflag'] = (string)0;
+		}
+		
         if (!$header) {
             throw new ArchiveCorruptedException('Failed to parse header');
         }
@@ -740,7 +746,7 @@ class Tar extends Archive
         if (trim($header['prefix'])) {
             $return['filename'] = trim($header['prefix']).'/'.$return['filename'];
         }
-
+		
         // Handle Long-Link and PAX entries from GNU Tar
         if ($return['typeflag'] == 'L') {
             // following data block(s) is the filename
