@@ -113,7 +113,7 @@ class Xcloner_Restore
 
 		if(defined('XCLONER_PLUGIN_ACCESS') && XCLONER_PLUGIN_ACCESS)
 		{
-			$dir = get_option("xcloner_store_path");
+			$dir = $parent_api->get_xcloner_container()->get_xcloner_settings()->get_xcloner_store_path();
 		}
 		
 		if(!isset($dir) || !$dir){
