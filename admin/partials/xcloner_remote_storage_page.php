@@ -21,15 +21,13 @@ $gdrive_construct = $remote_storage->gdrive_construct();
 			<li id="ftp">
 				<div class="collapsible-header">
 					<i class="material-icons">computer</i><?php echo __("FTP Storage",'xcloner-backup-and-restore')?>
-					<div class="right">
-						<div class="switch">
-							<label>
-							Off
-							<input type="checkbox" name="xcloner_ftp_enable" class="status" value="1" <?php if(get_option("xcloner_ftp_enable")) echo "checked"?> \>
-							<span class="lever"></span>
-							On
-							</label>
-						</div>
+					<div class="switch right">
+						<label>
+						Off
+						<input type="checkbox" name="xcloner_ftp_enable" class="status" value="1" <?php if(get_option("xcloner_ftp_enable")) echo "checked"?> \>
+						<span class="lever"></span>
+						On
+						</label>
 					</div>
 				</div>
 				<div class="collapsible-body">
@@ -136,15 +134,13 @@ $gdrive_construct = $remote_storage->gdrive_construct();
 			<li id="sftp">
 				<div class="collapsible-header">
 					<i class="material-icons">computer</i><?php echo __("SFTP Storage",'xcloner-backup-and-restore')?>
-					<div class="right">
-						<div class="switch">
-							<label>
-							Off
-							<input type="checkbox" name="xcloner_sftp_enable" class="status" value="1" <?php if(get_option("xcloner_sftp_enable")) echo "checked"?> \>
-							<span class="lever"></span>
-							On
-							</label>
-						</div>
+					<div class="switch right">
+						<label>
+						Off
+						<input type="checkbox" name="xcloner_sftp_enable" class="status" value="1" <?php if(get_option("xcloner_sftp_enable")) echo "checked"?> \>
+						<span class="lever"></span>
+						On
+						</label>
 					</div>
 				</div>
 				<div class="collapsible-body">
@@ -235,15 +231,13 @@ $gdrive_construct = $remote_storage->gdrive_construct();
 			<li id="aws">
 				<div class="collapsible-header">
 					<i class="material-icons">computer</i><?php echo __("AWS Storage",'xcloner-backup-and-restore')?>
-					<div class="right">
-						<div class="switch">
-							<label>
-							Off
-							<input type="checkbox" name="xcloner_aws_enable" class="status" value="1" <?php if(get_option("xcloner_aws_enable")) echo "checked"?> \>
-							<span class="lever"></span>
-							On
-							</label>
-						</div>
+					<div class="switch right">
+						<label>
+						Off
+						<input type="checkbox" name="xcloner_aws_enable" class="status" value="1" <?php if(get_option("xcloner_aws_enable")) echo "checked"?> \>
+						<span class="lever"></span>
+						On
+						</label>
 					</div>
 				</div>
 				<div class="collapsible-body">
@@ -335,15 +329,13 @@ $gdrive_construct = $remote_storage->gdrive_construct();
 			<li id="dropbox">
 				<div class="collapsible-header">
 					<i class="material-icons">computer</i><?php echo __("Dropbox Storage",'xcloner-backup-and-restore')?>
-					<div class="right">
-						<div class="switch">
-							<label>
-							Off
-							<input type="checkbox" name="xcloner_dropbox_enable" class="status" value="1" <?php if(get_option("xcloner_dropbox_enable")) echo "checked"?> \>
-							<span class="lever"></span>
-							On
-							</label>
-						</div>
+					<div class="switch right">
+						<label>
+						Off
+						<input type="checkbox" name="xcloner_dropbox_enable" class="status" value="1" <?php if(get_option("xcloner_dropbox_enable")) echo "checked"?> \>
+						<span class="lever"></span>
+						On
+						</label>
 					</div>
 				</div>
 				<div class="collapsible-body">
@@ -416,15 +408,13 @@ $gdrive_construct = $remote_storage->gdrive_construct();
 			<li id="azure">
 				<div class="collapsible-header">
 					<i class="material-icons">computer</i><?php echo __("Azure Blog Storage",'xcloner-backup-and-restore')?>
-					<div class="right">
-						<div class="switch">
-							<label>
-							Off
-							<input type="checkbox" name="xcloner_azure_enable" class="status" value="1" <?php if(get_option("xcloner_azure_enable")) echo "checked"?> \>
-							<span class="lever"></span>
-							On
-							</label>
-						</div>
+					<div class="switch right">
+						<label>
+						Off
+						<input type="checkbox" name="xcloner_azure_enable" class="status" value="1" <?php if(get_option("xcloner_azure_enable")) echo "checked"?> \>
+						<span class="lever"></span>
+						On
+						</label>
 					</div>
 				</div>
 				<div class="collapsible-body">
@@ -497,15 +487,13 @@ $gdrive_construct = $remote_storage->gdrive_construct();
 			<li id="backblaze">
 				<div class="collapsible-header">
 					<i class="material-icons">computer</i><?php echo __("BackBlaze Storage",'xcloner-backup-and-restore')?>
-					<div class="right">
-						<div class="switch">
-							<label>
-							Off
-							<input type="checkbox" name="xcloner_backblaze_enable" class="status" value="1" <?php if(get_option("xcloner_backblaze_enable")) echo "checked"?> \>
-							<span class="lever"></span>
-							On
-							</label>
-						</div>
+					<div class="switch right">
+						<label>
+						Off
+						<input type="checkbox" name="xcloner_backblaze_enable" class="status" value="1" <?php if(get_option("xcloner_backblaze_enable")) echo "checked"?> \>
+						<span class="lever"></span>
+						On
+						</label>
 					</div>
 				</div>
 				<div class="collapsible-body">
@@ -578,15 +566,13 @@ $gdrive_construct = $remote_storage->gdrive_construct();
 			<li id="webdav">
 				<div class="collapsible-header">
 					<i class="material-icons">computer</i><?php echo __("WebDAV Storage",'xcloner-backup-and-restore')?>
-					<div class="right">
-						<div class="switch">
-							<label>
-							Off
-							<input type="checkbox" name="xcloner_webdav_enable" class="status" value="1" <?php if(get_option("xcloner_webdav_enable")) echo "checked"?> \>
-							<span class="lever"></span>
-							On
-							</label>
-						</div>
+					<div class="switch right">
+						<label>
+						Off
+						<input type="checkbox" name="xcloner_webdav_enable" class="status" value="1" <?php if(get_option("xcloner_webdav_enable")) echo "checked"?> \>
+						<span class="lever"></span>
+						On
+						</label>
 					</div>
 				</div>
 				<div class="collapsible-body">
@@ -668,15 +654,13 @@ $gdrive_construct = $remote_storage->gdrive_construct();
 				<div class="collapsible-header">
 					<i class="material-icons">computer</i><?php echo __("Google Drive Storage",'xcloner-backup-and-restore')?>
 					<?php if($gdrive_construct):?>
-					<div class="right">
-						<div class="switch">
-							<label>
-							Off
-							<input type="checkbox" name="xcloner_gdrive_enable" class="status" value="1" <?php if(get_option("xcloner_gdrive_enable")) echo "checked"?> \>
-							<span class="lever"></span>
-							On
-							</label>
-						</div>
+					<div class="switch right">
+						<label>
+						Off
+						<input type="checkbox" name="xcloner_gdrive_enable" class="status" value="1" <?php if(get_option("xcloner_gdrive_enable")) echo "checked"?> \>
+						<span class="lever"></span>
+						On
+						</label>
 					</div>
 					<?php endif?>
 				</div>
