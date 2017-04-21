@@ -37,13 +37,13 @@ class Xcloner_Logger extends Logger{
 		
 		if(!is_dir($xcloner_settings->get_xcloner_store_path()) or !is_writable($xcloner_settings->get_xcloner_store_path()))
 		{
-			$logger_path = "php://stderr";
+			$logger_path = 'php://stderr';
 			$logger_path_tmp = "";
 		}
 		
 		if(!$xcloner_settings->get_xcloner_option('xcloner_enable_log'))
 		{
-			$logger_path = "php://stderr";
+			$logger_path = 'php://stderr';
 			$logger_path_tmp = "";
 		}
 		
@@ -60,7 +60,13 @@ class Xcloner_Logger extends Logger{
 	
 		if($logger_path)
 		{
-			$stream = new RotatingFileHandler($logger_path, $this->max_logger_files, $debug_level);
+			if(!$xcloner_settings->get_xcloner_option('xcloner_enable_log'))
+			{
+				$stream = new StreamHandler($logger_path, $debug_level);
+			}else{
+				$stream = new RotatingFileHandler($logger_path, $this->max_logger_files, $debug_level);
+			}
+				
 			$this->pushHandler($stream);
 			
 			$this->main_logger_url =  $stream->getUrl();
