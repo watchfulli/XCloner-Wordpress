@@ -85,13 +85,13 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 					<div class="col s12 l5 right-align">
 						<div class="toggler">
 							<button class="btn waves-effect waves-light upload-backup normal" type="submit" id="" name="action"><?php echo __("Upload",'xcloner-backup-and-restore')?>
-							    <i class="material-icons right">send</i>
+							    <i class="material-icons left">navigate_before</i>
 							</button>
 							<button class="btn waves-effect waves-light red upload-backup cancel" type="submit" id="" name="action"><?php echo __("Cancel",'xcloner-backup-and-restore')?>
 							    <i class="material-icons right">close</i>
 							</button>
 						</div>
-						<button class="btn waves-effect waves-light grey" type="submit" title="<?php echo __("Skip Next",'xcloner-backup-and-restore')?>" id="skip_upload_backup" name="action"><?php echo __("Next",'xcloner-backup-and-restore')?>
+						<button class="btn waves-effect waves-light grey" type="submit" title="<?php echo __("Skip Next",'xcloner-backup-and-restore')?>" id="skip_upload_backup" name="action"><?php echo __("Skip Next",'xcloner-backup-and-restore')?>
 						    <i class="material-icons right">navigate_next</i>
 						</button>
 					</div>
@@ -169,13 +169,13 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 				        <div class="col s12 l4 right-align">
 							<div class="toggler">
 								<button class="btn waves-effect waves-light restore_remote_backup normal " type="submit" id="" name="action"><?php echo __("Restore",'xcloner-backup-and-restore')?>
-								    <i class="material-icons right">send</i>
+								    <i class="material-icons left">navigate_before</i>
 								</button>
 								<button class="btn waves-effect waves-light red restore_remote_backup cancel" type="submit" id="" name="action"><?php echo __("Cancel",'xcloner-backup-and-restore')?>
 								    <i class="material-icons right">close</i>
 								</button>
 							</div>
-							<button class="btn waves-effect waves-light grey" type="submit" title="<?php echo __("Skip Next",'xcloner-backup-and-restore')?>" id="skip_remote_backup_step" name="action"><?php echo __("Next",'xcloner-backup-and-restore')?>
+							<button class="btn waves-effect waves-light grey" type="submit" title="<?php echo __("Skip Next",'xcloner-backup-and-restore')?>" id="skip_remote_backup_step" name="action"><?php echo __("Skip Next",'xcloner-backup-and-restore')?>
 								<i class="material-icons right">navigate_next</i>
 							</button>
 				        </div>
@@ -270,14 +270,14 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 				        <div class="col s12 l5 right-align">
 							<div class="toggler">
 								<button class="btn waves-effect waves-light restore_remote_mysqldump normal " type="submit" id="" name="action"><?php echo __("Restore",'xcloner-backup-and-restore')?>
-								    <i class="material-icons right">send</i>
+								    <i class="material-icons left">navigate_before</i>
 								</button>
 								<button class="btn waves-effect waves-light red restore_remote_mysqldump cancel" type="submit" id="" name="action"><?php echo __("Cancel",'xcloner-backup-and-restore')?>
 								    <i class="material-icons right">close</i>
 								</button>
 							</div>
 							
-							<button class="btn waves-effect waves-light grey" type="submit" title="<?php echo __("Skip Next",'xcloner-backup-and-restore')?>" id="skip_restore_remote_database_step" name="action"><?php echo __("Next",'xcloner-backup-and-restore')?>
+							<button class="btn waves-effect waves-light grey" type="submit" title="<?php echo __("Skip Next",'xcloner-backup-and-restore')?>" id="skip_restore_remote_database_step" name="action"><?php echo __("Skip Next",'xcloner-backup-and-restore')?>
 								<i class="material-icons right">navigate_next</i>
 							</button>
 							
