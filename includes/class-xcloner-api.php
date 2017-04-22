@@ -189,6 +189,10 @@ class Xcloner_Api{
 		
 		$schedule['name'] = $this->form_params['backup_params']['schedule_name'];
 		$schedule['recurrence'] = $this->form_params['backup_params']['schedule_frequency'];
+		if(!isset($this->form_params['backup_params']['schedule_storage']))
+		{
+			$this->form_params['backup_params']['schedule_storage'] = "";
+		}
 		$schedule['remote_storage'] = $this->form_params['backup_params']['schedule_storage'];
 		//$schedule['backup_type'] = $this->form_params['backup_params']['backup_type'];
 		$schedule['params'] = json_encode($this->form_params);
