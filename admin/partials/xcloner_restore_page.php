@@ -25,12 +25,12 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 				<div class="collapsible-body row">
 						
 						<ul class="text-steps">
-							<li><?php echo __("If you want to do a local target system restore, leave Url field below empty and click 'Check Connection'",'xcloner-backup-and-restore')?> 
+							<li><?php echo __("If you want to do a Local target system restore, leave Url field below empty and click 'Check Connection', you can skip the next steps.",'xcloner-backup-and-restore')?> 
 							</li>	
-							<li><?php echo __("If you want to do a remote target system restore, please download the restore script from",'xcloner-backup-and-restore')?> <a href='#' onclick="window.location=ajaxurl+'?action=download_restore_script&phar=true'"><strong><?php echo __("here",'xcloner-backup-and-restore')?></strong></a>
+							<li><?php echo __("If you want to do a Remote target system restore, please download the restore script from",'xcloner-backup-and-restore')?> <a href='#' onclick="window.location=ajaxurl+'?action=download_restore_script&phar=true'"><strong><?php echo __("here",'xcloner-backup-and-restore')?></strong></a>
 							</li>	
 							<li>
-							<?php echo __("Extract the files on your new host",'xcloner-backup-and-restore')?>
+							<?php echo __("Extract the restore script archive files on your new host",'xcloner-backup-and-restore')?>
 							</li>
 							<li>
 							<?php echo __("Provide url below to the <u>xcloner_restore.php</u> restore script, like http://my_restore_site.com/xcloner_restore.php",'xcloner-backup-and-restore')?>
@@ -39,7 +39,7 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 							<?php echo __("If your server is not web accessible, like a localhost computer, you can use a DynDNS service or install a blank copy of Wordpress with XCloner in the same environment and start the restore from there.",'xcloner-backup-and-restore')?>
 							</li>
 							<?php if(is_ssl()):?>
-							<li>
+							<li class="warning">
 								<?php echo __("We have detected your connection to the site as being secure, so your restore script address must start with https://.")?>
 							</li>
 							<?php endif ?>

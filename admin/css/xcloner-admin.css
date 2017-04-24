@@ -293,6 +293,10 @@ a.expand-multipart.remove{
 	list-style-type: decimal;
 }
 
+.xcloner-restore ul.text-steps li.warning{
+	color: red;
+}
+
 .xcloner-restore ul.text-steps ul li{
 	list-style-type: disc;
 }
