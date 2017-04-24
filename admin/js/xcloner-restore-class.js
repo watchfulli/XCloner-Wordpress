@@ -573,8 +573,9 @@ class Xcloner_Restore{
 	{
 		if(!status)
 		{
+			var href_url = "<a href='"+this.restore_script_url+"' target='_blank'>restore script address</a>";
 			document.dispatchEvent(new CustomEvent("restore_script_invalid"));
-			document.dispatchEvent(new CustomEvent("xcloner_restore_display_status_text", {detail: {status:'error', message: "Could not access the restore script: "+response.status+" "+response.statusText +". Please check the javascript console for more details." }}));
+			document.dispatchEvent(new CustomEvent("xcloner_restore_display_status_text", {detail: {status:'error', message: "Could not access the restore script: "+response.status+" "+response.statusText +". Please check the javascript console for more details. Are you able to see a valid JSON response of the "+href_url+" in your browser?" }}));
 			//document.dispatchEvent(new CustomEvent("xcloner_restore_update_progress", {detail: {percent: 100 }}));
 			
 		}else{
@@ -750,6 +751,8 @@ class Xcloner_Restore{
 			url: this.ajaxurl,
 			dataType: 'json',
 			type: 'POST',
+			crossDomain: true,
+			timeout: 1000,
 			data: params,
 			error: function(xhr, status, error) {
 					document.dispatchEvent(new CustomEvent("xcloner_restore_display_status_text", {detail: {status: 'error', message: xhr.status+" "+xhr.statusText}}));
