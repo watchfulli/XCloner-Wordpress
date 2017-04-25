@@ -113,7 +113,7 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 				</div>
 				<div class="collapsible-body row">
 						
-						<div class=" col s12 l8">
+						<div class=" col s12 l7">
 							<div class="input-field row">
 								<div class="col s12">
 									<a class="btn-floating tooltipped btn-small right" data-html="true" data-position="left" data-delay="50" 
@@ -153,7 +153,7 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 									<label for="filter_files_plugins" class="tooltipped" data-tooltip="<?php echo __('Restore the files only of the wp-content/plugins/ folder', 'xcloner-backup-and-restore')?>">
 										<?php echo __("Only Plugins","xcloner-backup-and-restore")?>
 									</label>
-									
+
 									<input class="with-gap" name="filter_files" type="radio" id="filter_files_uploads"  value="/^wp-content\/uploads(.*)/" />
 									<label for="filter_files_uploads" class="tooltipped" data-tooltip="<?php echo __('Restore the files only of the wp-content/uploads/ folder only', 'xcloner-backup-and-restore')?>">
 										<?php echo __("Only Uploads","xcloner-backup-and-restore")?>
@@ -179,7 +179,7 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 								<ul class="files-list"></ul>
 							 </div>
 				       
-				        <div class="col s12 l4 right-align">
+				        <div class="col s12 l5 right-align">
 							<div class="toggler">
 								<button class="btn waves-effect waves-light restore_remote_backup normal " type="submit" id="" name="action"><?php echo __("Restore",'xcloner-backup-and-restore')?>
 								    <i class="material-icons left">navigate_before</i>

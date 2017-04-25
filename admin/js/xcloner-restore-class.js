@@ -612,11 +612,11 @@ class Xcloner_Restore{
 		if(this.local_restore == 1)
 		{
 			jQuery(".restore-remote-backup-step #filter_files_all").removeAttr("checked").attr("disabled","disabled")
-			jQuery(".restore-remote-backup-step #filter_files_database").attr("checked", "checked");
+			jQuery(".restore-remote-backup-step #filter_files_wp_content").attr("checked", "checked");
 			
 		}else{
 			jQuery(".restore-remote-backup-step #filter_files_all").removeAttr("disabled").attr("checked", "checked");
-			jQuery(".restore-remote-backup-step #filter_files_database").removeAttr("checked");
+			jQuery(".restore-remote-backup-step #filter_files_wp_content").removeAttr("checked");
 		}
 		
 		this.ajaxurl = this.restore_script_url;
