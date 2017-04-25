@@ -25,9 +25,9 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 				<div class="collapsible-body row">
 						
 						<ul class="text-steps">
-							<li><?php echo __("If you want to do a Local target system restore, leave Url field below empty and click 'Check Connection', you can skip the next steps.",'xcloner-backup-and-restore')?> 
+							<li><?php echo __("If you want to do a <strong>Local Target System Restore</strong>, leave Url field below empty and click 'Check Connection', you can skip the next steps.",'xcloner-backup-and-restore')?> 
 							</li>	
-							<li><?php echo __("If you want to do a Remote target system restore, please download the restore script from",'xcloner-backup-and-restore')?> <a href='#' onclick="window.location=ajaxurl+'?action=download_restore_script&phar=true'"><strong><?php echo __("here",'xcloner-backup-and-restore')?></strong></a>
+							<li><?php echo __("If you want to do a <strong>Remote Target System Restore</strong>, please download the restore script from",'xcloner-backup-and-restore')?> <a href='#' onclick="window.location=ajaxurl+'?action=download_restore_script&phar=true'"><strong><?php echo __("here",'xcloner-backup-and-restore')?></strong></a>
 							</li>	
 							<li>
 							<?php echo __("Extract the restore script archive files on your new host",'xcloner-backup-and-restore')?>
@@ -141,20 +141,33 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 							    </div>
 							
 								<div class="col s12">
-									<input class="with-gap" name="filter_files" type="radio" id="filter_files_all" checked value="" />
-									<label for="filter_files_all"><?php echo __("Restore All Files","xcloner-backup-and-restore")?></label>
+									<input class="with-gap" name="filter_files" type="radio" id="filter_files_all" checked value="" disabled />
+									<label for="filter_files_all" class="tooltipped" data-position="right" data-tooltip="<?php echo __("Restore all backup files. Available only when doing a Remote Target System Restore", 'xcloner-backup-and-restore')?>"><?php echo __("Restore All Files","xcloner-backup-and-restore")?></label>
+									
+									<input class="with-gap" name="filter_files" type="radio" id="filter_files_wp_content"  value="/^wp-content\/(.*)/" />
+									<label for="filter_files_wp_content" class="tooltipped" data-tooltip="<?php echo __('Restore the files only of the wp-content/ folder', 'xcloner-backup-and-restore')?>">
+										<?php echo __("Only wp-content","xcloner-backup-and-restore")?>
+									</label>
 									
 									<input class="with-gap" name="filter_files" type="radio" id="filter_files_plugins"  value="/^wp-content\/plugins(.*)/" />
-									<label for="filter_files_plugins"><?php echo __("Only Plugins","xcloner-backup-and-restore")?></label>
+									<label for="filter_files_plugins" class="tooltipped" data-tooltip="<?php echo __('Restore the files only of the wp-content/plugins/ folder', 'xcloner-backup-and-restore')?>">
+										<?php echo __("Only Plugins","xcloner-backup-and-restore")?>
+									</label>
 									
 									<input class="with-gap" name="filter_files" type="radio" id="filter_files_uploads"  value="/^wp-content\/uploads(.*)/" />
-									<label for="filter_files_uploads"><?php echo __("Only Uploads","xcloner-backup-and-restore")?></label>
+									<label for="filter_files_uploads" class="tooltipped" data-tooltip="<?php echo __('Restore the files only of the wp-content/uploads/ folder only', 'xcloner-backup-and-restore')?>">
+										<?php echo __("Only Uploads","xcloner-backup-and-restore")?>
+									</label>
 									
 									<input class="with-gap" name="filter_files" type="radio" id="filter_files_themes"  value="/^wp-content\/themes(.*)/" />
-									<label for="filter_files_themes"><?php echo __("Only Themes","xcloner-backup-and-restore")?></label>
+									<label for="filter_files_themes" class="tooltipped" data-tooltip="<?php echo __('Restore the files only of the wp-content/themes/ folder', 'xcloner-backup-and-restore')?>">
+										<?php echo __("Only Themes","xcloner-backup-and-restore")?>
+									</label>
 									
 									<input class="with-gap" name="filter_files" type="radio" id="filter_files_database"  value="/^xcloner-(.*)\/(.*)\.sql/"/>
-									<label for="filter_files_database"><?php echo __("Only Database Backup","xcloner-backup-and-restore")?></label>
+									<label for="filter_files_database" class="tooltipped" data-tooltip="<?php echo __('Restore the database-sql.sql mysql backup from the xcloner-xxxxx/ folder', 'xcloner-backup-and-restore')?>">
+										<?php echo __("Only Database Backup","xcloner-backup-and-restore")?>
+									</label>
 								</div>
 							</div>
 							

@@ -609,6 +609,16 @@ class Xcloner_Restore{
 			jQuery("#delete_restore_script").attr("checked", "checked").removeAttr("disabled");
 		}
 		
+		if(this.local_restore == 1)
+		{
+			jQuery(".restore-remote-backup-step #filter_files_all").removeAttr("checked").attr("disabled","disabled")
+			jQuery(".restore-remote-backup-step #filter_files_database").attr("checked", "checked");
+			
+		}else{
+			jQuery(".restore-remote-backup-step #filter_files_all").removeAttr("disabled").attr("checked", "checked");
+			jQuery(".restore-remote-backup-step #filter_files_database").removeAttr("checked");
+		}
+		
 		this.ajaxurl = this.restore_script_url;
 		
 		
@@ -752,7 +762,6 @@ class Xcloner_Restore{
 			dataType: 'json',
 			type: 'POST',
 			crossDomain: true,
-			timeout: 1000,
 			data: params,
 			error: function(xhr, status, error) {
 					document.dispatchEvent(new CustomEvent("xcloner_restore_display_status_text", {detail: {status: 'error', message: xhr.status+" "+xhr.statusText}}));
