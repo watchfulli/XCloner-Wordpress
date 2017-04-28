@@ -328,6 +328,18 @@ class Xcloner_Settings
 				)
 		);	
 		
+		register_setting('xcloner_general_settings_group', 'xcloner_enable_pre_update_backup', array($this->xcloner_sanitization, "sanitize_input_as_int"));
+	    add_settings_field(
+	        'xcloner_enable_pre_update_backup',
+	        __('Generate Backups before Automatic WP Upgrades','xcloner-backup-and-restore'),
+	        array($this, 'do_form_switch_field'),
+	        'xcloner_settings_page',
+	        'xcloner_general_settings_group',
+	        array('xcloner_enable_pre_update_backup',
+				sprintf(__('Attempt to generate a core, plugins, themes or languages files backup before the automatic update of Wordpress core, plugins, themes or languages files.','xcloner-backup-and-restore'), $this->get_logger_filename())
+				)
+		);	
+		
 		register_setting('xcloner_general_settings_group', 'xcloner_regex_exclude', array($this->xcloner_sanitization, "sanitize_input_as_raw"));
 	    add_settings_field(
 	        'xcloner_regex_exclude',

@@ -133,8 +133,9 @@ try{
 	
 }
 
-if($_GET['page'] == "xcloner_pre_auto_update")
+/*
+if(isset($_GET['page']) && $_GET['page'] == "xcloner_pre_auto_update")
 {
-	//wp_maybe_auto_update();
-}
+	wp_maybe_auto_update();
+}*/
 

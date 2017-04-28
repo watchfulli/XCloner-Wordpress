@@ -364,10 +364,24 @@ class Xcloner {
 		add_filter('plugin_action_links', array($this, 'add_plugin_action_links'), 10, 2);
 		
 	}
-
+	
+	/*
+	 * type = core|plugin|theme|translation
+	 */
 	public function pre_auto_update($type, $item, $context)
 	{
-		//$type=core|plugin|theme|translation
+		if(!$type)
+		{
+			return false;
+		}	
+		
+		$this->get_xcloner_logger()->info(sprintf("Doing automatic backup before %s upgrade, pre_auto_update hook.", $type));
+		
+		$content_dir = str_replace(ABSPATH, "", WP_CONTENT_DIR); 
+		$plugins_dir 	= str_replace(ABSPATH, "", WP_PLUGIN_DIR);
+		$langs_dir 		= $content_dir . DS . "languages";
+		$themes_dir 		= $content_dir . DS . "themes";
+						
 		switch ( $type ) {
 			case 'core':
 				$exclude_files = array(
@@ -375,19 +389,52 @@ class Xcloner {
 								);
 				break;
 			case 'plugin':
+			
+				$dir_array = explode(DS, $plugins_dir);
+				
+				foreach($dir_array as $dir)
+				{
+					$data .= "\/".$dir;
+					$regex .= $data."$|";
+				}
+				
+				$regex .= "\/".implode("\/", $dir_array);
+				
 				$exclude_files = array(
-									"^(?!(\/wp-content\/plugins\/|\/wp-content$|\/wp-content\/plugins$))(.*)$",
+									"^(?!(".$regex."))(.*)$",
 								);
 				break;
 			case 'theme':
+
+				$dir_array = explode(DS, $themes_dir);
+				
+				foreach($dir_array as $dir)
+				{
+					$data .= "\/".$dir;
+					$regex .= $data."$|";
+				}
+				
+				$regex .= "\/".implode("\/", $dir_array);
+				
 				$exclude_files = array(
-									"^(?!(\/wp-content\/themes\/|\/wp-content$|\/wp-content\/themes$))(.*)$",
-								);
+									"^(?!(".$regex."))(.*)$",
+								);				
 				break;
 			case 'translation':
+
+				$dir_array = explode(DS, $langs_dir);
+				
+				foreach($dir_array as $dir)
+				{
+					$data .= "\/".$dir;
+					$regex .= $data."$|";
+				}
+				
+				$regex .= "\/".implode("\/", $dir_array);
+				
 				$exclude_files = array(
-									"^(?!(\/wp-content\/languages\/|\/wp-content$|\/wp-content\/languages$))(.*)$",
-								);
+									"^(?!(".$regex."))(.*)$",
+								);				
 				break;
 		}
 		
@@ -492,7 +539,11 @@ class Xcloner {
             
         }
         
-        add_action("pre_auto_update", array($this, "pre_auto_update"), 1, 3);
+        //Do a pre-update backup of targeted files
+        if($this->get_xcloner_settings()->get_xcloner_option('xcloner_enable_pre_update_backup'))
+        {
+			add_action("pre_auto_update", array($this, "pre_auto_update"), 1, 3);
+		}
 	}
 	
 	function add_plugin_action_links($links, $file) {
