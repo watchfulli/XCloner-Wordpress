@@ -97,6 +97,7 @@ function xcloner_stop_heartbeat() {
 if(isset($_GET['page']) and stristr($_GET['page'] ,  "xcloner_"))
 {
 	add_action( 'init', 'xcloner_stop_heartbeat', 1 );
+	
 }	
 
 /**
@@ -130,5 +131,10 @@ try{
 	
 	echo $e->getMessage();
 	
+}
+
+if($_GET['page'] == "xcloner_pre_auto_update")
+{
+	//wp_maybe_auto_update();
 }
 

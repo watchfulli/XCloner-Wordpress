@@ -7,6 +7,7 @@ use League\Flysystem\Adapter\Local;
 class Xcloner_File_System{
 	
 	private $excluded_files 			= "";
+	private $additional_regex_patterns	= array();
 	private $excluded_files_by_default	= array("administrator/backups", "wp-content/backups");
 	private $included_files_handler 	= "backup_files.csv";
 	private $temp_dir_handler 			= ".dir";
@@ -422,9 +423,26 @@ class Xcloner_File_System{
 	public function get_backup_attachments()
 	{
 		$return = array();
-		$return[] = $this->xcloner_settings->get_xcloner_tmp_path().DS.$this->get_included_files_handler();
+		
+		$files_list_file = $this->xcloner_settings->get_xcloner_tmp_path().DS.$this->get_included_files_handler();
+		if(file_exists($files_list_file))
+			{
+				$return[] = $files_list_file;
+			}
+			
 		if($this->xcloner_settings->get_xcloner_option('xcloner_enable_log'))
-			$return[] = $this->xcloner_settings->get_xcloner_tmp_path().DS.$this->xcloner_settings->get_logger_filename(1);
+		{
+			$log_file = $this->xcloner_settings->get_xcloner_tmp_path().DS.$this->xcloner_settings->get_logger_filename(1);
+			if(!file_exists($log_file))
+			{
+				$log_file = $this->xcloner_settings->get_xcloner_store_path().DS.$this->xcloner_settings->get_logger_filename();
+			}
+			
+			if(file_exists($log_file))
+			{
+				$return[] = $log_file;
+			}
+		}
 		
 		return $return;
 	}
@@ -498,11 +516,26 @@ class Xcloner_File_System{
 		return $this->last_logged_file;
 	}
 	
+	public static function is_regex($regex) {
+		return preg_match("/^\^(.*)\$$/i",$regex);
+	}
+	
 	public function set_excluded_files($excluded_files = array())
 	{
 		if(!is_array($excluded_files))
+		{
 			$excluded_files = array();
+		}
+		
+		foreach($excluded_files as $excl)
+		{
 			
+			if($this->is_regex($excl))
+			{
+				$this->additional_regex_patterns[] = $excl;
+			}
+		}
+		
 		$this->excluded_files = array_merge($excluded_files, $this->excluded_files_by_default);
 		
 		return $this->excluded_files;
@@ -751,8 +784,10 @@ class Xcloner_File_System{
 		}
 		
 		if(!sizeof($this->excluded_files))
+		{
 			$this->set_excluded_files();
-				
+		}
+						
 		if(is_array($this->excluded_files))
 		foreach($this->excluded_files as $excluded_file_pattern)
 		{
@@ -818,6 +853,11 @@ class Xcloner_File_System{
 		//$this->logger->debug(sprintf(("Checking if %s is excluded"), $file['path']));
 		
 		$regex_patterns = explode(PHP_EOL, $this->xcloner_settings->get_xcloner_option('xcloner_regex_exclude'));
+		
+		if(is_array($this->additional_regex_patterns))
+		{
+			$regex_patterns = array_merge($regex_patterns, $this->additional_regex_patterns);
+		}
 		
 		//print_r($regex_patterns);exit;
 		

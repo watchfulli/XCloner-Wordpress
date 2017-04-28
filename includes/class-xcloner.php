@@ -345,7 +345,7 @@ class Xcloner {
 		*/
 
 		$this->xcloner_settings = new XCloner_Settings($this);
-		
+				
 		if(defined('DOING_CRON') || isset($_POST['hash'])){
 			
 			if(defined('DOING_CRON') || $_POST['hash'] == "generate_hash"){
@@ -362,6 +362,53 @@ class Xcloner {
 		
 		//adding links to the Manage Plugins Wordpress page for XCloner
 		add_filter('plugin_action_links', array($this, 'add_plugin_action_links'), 10, 2);
+		
+	}
+
+	public function pre_auto_update($type, $item, $context)
+	{
+		//$type=core|plugin|theme|translation
+		switch ( $type ) {
+			case 'core':
+				$exclude_files = array(
+									"^(?!(wp-admin|wp-includes|(?!.*\/.*.php)))(.*)$",
+								);
+				break;
+			case 'plugin':
+				$exclude_files = array(
+									"^(?!(\/wp-content\/plugins\/|\/wp-content$|\/wp-content\/plugins$))(.*)$",
+								);
+				break;
+			case 'theme':
+				$exclude_files = array(
+									"^(?!(\/wp-content\/themes\/|\/wp-content$|\/wp-content\/themes$))(.*)$",
+								);
+				break;
+			case 'translation':
+				$exclude_files = array(
+									"^(?!(\/wp-content\/languages\/|\/wp-content$|\/wp-content\/languages$))(.*)$",
+								);
+				break;
+		}
+		
+		$schedule = array();
+		
+		$schedule['id'] = 0;
+		$schedule['name'] = "pre_auto_update";
+		$schedule['recurrence'] = "single";
+		$schedule['excluded_files'] = json_encode($exclude_files);
+		$schedule['table_params'] = json_encode(array("#" => array($this->get_xcloner_settings()->get_db_database())));
+		
+		$schedule['backup_params'] = new stdClass();
+		$schedule['backup_params']->email_notification = get_option('admin_email');
+		$schedule['backup_params']->backup_name = "backup_pre_auto_update_".$type."_[domain]-[time]-sql";
+		
+		try{
+			$this->xcloner_scheduler->xcloner_scheduler_callback(0, $schedule);
+		}catch(Exception $e){
+			$this->get_xcloner_logger()->error($e->getMessage());
+		}
+	
 	}
 
 	/**
@@ -406,6 +453,8 @@ class Xcloner {
 		
 	private function define_ajax_hooks()
 	{
+		//adding the pre-update hook
+		
 		if(is_admin() || defined('DOING_CRON'))
 		{
 			$this->xcloner_logger 			= new XCloner_Logger($this, "xcloner_api");
@@ -442,7 +491,8 @@ class Xcloner {
 			add_action( 'admin_notices', 						array($this, 'xcloner_error_admin_notices' ));
             
         }
-		
+        
+        add_action("pre_auto_update", array($this, "pre_auto_update"), 1, 3);
 	}
 	
 	function add_plugin_action_links($links, $file) {

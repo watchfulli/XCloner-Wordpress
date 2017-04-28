@@ -224,6 +224,10 @@ class Xcloner_Scheduler{
 		$xcloner->init();
 		$this->set_xcloner_container($xcloner);
 		
+		#$hash = $this->xcloner_settings->get_hash();
+		#$this->get_xcloner_container()->get_xcloner_settings()->set_hash($hash);
+		
+		//$this->xcloner_settings 		= $this->get_xcloner_container()->get_xcloner_settings();		
 		$this->xcloner_file_system 		= $this->get_xcloner_container()->get_xcloner_filesystem();
 		$this->xcloner_database 		= $this->get_xcloner_container()->get_xcloner_database();
 		$this->archive_system 			= $this->get_xcloner_container()->get_archive_system();
@@ -232,7 +236,7 @@ class Xcloner_Scheduler{
 		
 		$this->logger->info(sprintf("New schedule hash is %s", $this->xcloner_settings->get_hash()));
 		
-		if($schedule['backup_params']->diff_start_date)
+		if(isset($schedule['backup_params']->diff_start_date) && $schedule['backup_params']->diff_start_date)
 		{
 			$this->xcloner_file_system->set_diff_timestamp_start($schedule['backup_params']->diff_start_date);
 		}
@@ -247,6 +251,8 @@ class Xcloner_Scheduler{
 			$this->logger->info(sprintf("Could not load schedule with id'%s'", $id), array("CRON"));
 			return;
 		}
+		
+		//echo $this->get_xcloner_container()->get_xcloner_settings()->get_hash(); exit;
 		
 		$this->update_hash($schedule['id'], $this->xcloner_settings->get_hash());
 		
@@ -296,10 +302,10 @@ class Xcloner_Scheduler{
 		$return['extra']['backup_parent'] = $this->archive_system->get_archive_name_with_extension();
 		if($this->xcloner_file_system->is_part($this->archive_system->get_archive_name_with_extension()))
 				$return['extra']['backup_parent'] = $this->archive_system->get_archive_name_multipart();
-		
+				
 		$this->update_last_backup($schedule['id'], $return['extra']['backup_parent']);
 		
-		if($schedule['remote_storage'] and array_key_exists($schedule['remote_storage'], $this->xcloner_remote_storage->get_available_storages()))
+		if(isset($schedule['remote_storage']) && $schedule['remote_storage'] && array_key_exists($schedule['remote_storage'], $this->xcloner_remote_storage->get_available_storages()))
 		{
 			$backup_file = $return['extra']['backup_parent'];
 			
@@ -308,7 +314,6 @@ class Xcloner_Scheduler{
 			if(method_exists($this->xcloner_remote_storage, "upload_backup_to_storage"))
 				call_user_func_array(array($this->xcloner_remote_storage, "upload_backup_to_storage"), array($backup_file, $schedule['remote_storage']));
 		}
-		
 		
 		if(isset($schedule['backup_params']->email_notification) and $to=$schedule['backup_params']->email_notification)
 		{	
@@ -329,9 +334,12 @@ class Xcloner_Scheduler{
 		$this->xcloner_file_system->backup_storage_cleanup();
 	}
 	
-	public function xcloner_scheduler_callback($id)
+	public function xcloner_scheduler_callback($id, $schedule = "")
 	{
-		$schedule = $this->get_schedule_by_id($id);
+		if($id)
+		{
+			$schedule = $this->get_schedule_by_id($id);
+		}
 		
 		try{
 
