@@ -37,6 +37,7 @@ PHP 5.4+ with mod CURL installed
    * Althrough we have optimized XCloner to run properly on most hosts, we give Developers options to customize it's running speed and avoid backup timeouts, all from the XCloner Config-> System Options
    * Ability to split backups into multiple smaller parts if a certain size limit is reached
    * Generate Differential Backups so your backup will include only files modified after a certain date, giving you the option to decrease the total backup space disk usage
+   * Generate automatic backups before a Wordpress automatic update
 
 == Installation ==
 

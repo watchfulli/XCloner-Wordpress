@@ -178,7 +178,7 @@ class Xcloner_Remote_Storage{
 				if(!method_exists($this->xcloner_sanitization, $sanitize_method))
 					$sanitize_method = "sanitize_input_as_string";
 					
-				$sanitized_value = $this->xcloner_sanitization->$sanitize_method($_POST[$check_field]);
+				$sanitized_value = $this->xcloner_sanitization->$sanitize_method(stripslashes($_POST[$check_field]));
 				update_option($check_field, $sanitized_value);
 			}
 			
