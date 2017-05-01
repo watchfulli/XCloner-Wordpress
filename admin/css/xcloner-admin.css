@@ -205,6 +205,10 @@ a.expand-multipart.remove{
 	padding-top: 25px;
 }
 
+.remote-storage .collapsible-header{
+	padding: 2px 5px;
+}
+
 
 #manage_backups td.checkbox{
 	vertical-align: top;
