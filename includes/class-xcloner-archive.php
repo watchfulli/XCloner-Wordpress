@@ -188,8 +188,8 @@ class Xcloner_Archive extends Tar
 		$body .= sprintf(__("Backup Parts: %s"), $backups_counter);
 		$body .= "<br />";
 		
-		$sponsor_html = "<a href='https://www.captainform.com/captainform-xcloner/?x-source=xcloner' target='_blank'>
-		<img style=\"padding:10px 5px;\" class=\"responsive-img\" src='". plugins_url('admin/images/banners/CF Banner 728x90 blue.jpg', dirname(__FILE__) )."'>
+		$sponsor_html = "<br /><a href='https://www.captainform.com/captainform-xcloner/?x-source=xcloner' target='_blank'>
+		<img style=\"padding:10px 5px;\" class=\"responsive-img\" src='http://www.xcloner.com/images/banners/CF%20Banner%20728x90%20blue.jpg'>
 		</a>";
 		$body .= $sponsor_html."<br />";
 		
