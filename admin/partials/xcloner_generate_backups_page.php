@@ -216,6 +216,12 @@ $tab = 1;
 										<h6><?php echo sprintf(__("We would love to hear about your experience in the %s.", 'xcloner-backup-and-restore'),'<a href="https://wordpress.org/support/plugin/xcloner-backup-and-restore/reviews/" target="_blank">Wordpress XCloner Reviews Section</a>') ?></h6>
 										<a class="twitter-follow-button" href="https://twitter.com/thinkovi" data-show-count="false">Follow @thinkovi</a>
 										<script src="//platform.twitter.com/widgets.js" async="" charset="utf-8"></script>
+										
+										<!-- XCLONER SPONSORS AREA-->
+										<a href="https://www.captainform.com/captainform-xcloner/?x-source=xcloner" target="_blank">
+											<img style=" padding:10px 5px;" class="responsive-img" src='<?php echo plugins_url('images/banners/CF Banner 728x90 red.jpg', dirname(__FILE__) )?>'>
+										</a>
+										<!-- END XCLONER SPONSORS AREA-->
 									</div>
 							  </div>
 					    </li>
