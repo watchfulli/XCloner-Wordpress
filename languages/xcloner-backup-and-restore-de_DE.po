@@ -1,0 +1,885 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2017-02-07 14:29+0200\n"
+"PO-Revision-Date: 2017-05-17 12:43+0200\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.0.1\n"
+"X-Poedit-Basepath: ..\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-KeywordsList: __\n"
+"Last-Translator: \n"
+"Language: de_DE\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPath-1: .\n"
+"X-Poedit-SearchPath-2: vendor\n"
+"X-Poedit-SearchPathExcluded-0: admin/js\n"
+"X-Poedit-SearchPathExcluded-1: vendor\n"
+
+#: admin/class-xcloner-admin.php:185
+msgid "Settings Saved"
+msgstr "Einstellungen gespeichert"
+
+#: admin/class-xcloner-admin.php:204
+msgid "General Options"
+msgstr "Allgemein"
+
+#: admin/class-xcloner-admin.php:205
+msgid "Mysql Options"
+msgstr "MySQL"
+
+#: admin/class-xcloner-admin.php:206
+msgid "System Options"
+msgstr "System"
+
+#: admin/class-xcloner-admin.php:207
+msgid "Cleanup Options"
+msgstr "Cleanup"
+
+#: admin/class-xcloner-admin.php:208
+msgid "Cron Options"
+msgstr "Cron Optionen"
+
+#: admin/partials/xcloner_console_page.php:16
+msgid "XCloner Debugger Dashboard"
+msgstr "XCloner Debugger Dashboard"
+
+#: admin/partials/xcloner_generate_backups_page.php:13
+msgid "Backup Options"
+msgstr "Grundeinstellungen"
+
+#: admin/partials/xcloner_generate_backups_page.php:15
+msgid "Database Options"
+msgstr "Datenbank Optionen"
+
+#: admin/partials/xcloner_generate_backups_page.php:17
+msgid "Files Options"
+msgstr "Datei Optionen"
+
+#: admin/partials/xcloner_generate_backups_page.php:18
+#: includes/class-xcloner.php:348
+msgid "Generate Backup"
+msgstr "Backup erstellen"
+
+#: admin/partials/xcloner_generate_backups_page.php:19
+msgid "Schedule Backup"
+msgstr "Automatisierung"
+
+#: admin/partials/xcloner_generate_backups_page.php:30
+#: admin/partials/xcloner_manage_backups_page.php:22
+#: admin/partials/xcloner_scheduled_backups_page.php:133
+msgid "Backup Name"
+msgstr "Backup Name"
+
+#: admin/partials/xcloner_generate_backups_page.php:33
+msgid "The default backup name, supported tags [time], [hostname], [domain]"
+msgstr ""
+"Der Backup-Name unterstützt folgende Tags: [time], [hostname], [domain]"
+
+#: admin/partials/xcloner_generate_backups_page.php:41
+msgid "Send Email Notification To"
+msgstr "eMail Benachrichtigung an"
+
+#: admin/partials/xcloner_generate_backups_page.php:44
+msgid "If left blank, no notification will be sent"
+msgstr ""
+"Wird keine eMailadresse angegeben, werden keine Benachrichtigungen verschickt"
+
+#: admin/partials/xcloner_generate_backups_page.php:52
+msgid "Backup Comments"
+msgstr "Kommentar"
+
+#: admin/partials/xcloner_generate_backups_page.php:55
+msgid ""
+"Some default backup comments that will be stored inside the backup archive"
+msgstr "Der Backup Kommentar wird innerhalb das Backup Archiv mit angezeigt"
+
+#: admin/partials/xcloner_generate_backups_page.php:68
+msgid "Select database data to include in the backup"
+msgstr "Wähle die Datenbanken Tabellen, die im Backup enthalten sein sollen"
+
+#: admin/partials/xcloner_generate_backups_page.php:69
+msgid ""
+"Disable the 'Backup only WP tables' setting if you don't want to show all "
+"other databases and tables not related to this Wordpress install"
+msgstr ""
+"Deaktiviere die Option „Nur Wordpress Tabellen sichern“, wenn du nicht alle "
+"verfügbaren Datenbanken und Tabellen sichern möchtest"
+
+#: admin/partials/xcloner_generate_backups_page.php:89
+msgid ""
+"Select from below the files/folders you want to exclude from your Backup "
+"Archive"
+msgstr ""
+"Markiere die Dateien und Ordner, die beim Backup AUSGESCHLOSSEN werden sollen"
+
+#: admin/partials/xcloner_generate_backups_page.php:90
+msgid ""
+"You can navigate below through all your site structure(Backup Start "
+"Location) to exclude any file/folder you need by clicking the checkbox near "
+"it"
+msgstr ""
+
+#: admin/partials/xcloner_generate_backups_page.php:118
+msgid "Scanning The File System..."
+msgstr "Prüfe das Dateisystem…"
+
+#: admin/partials/xcloner_generate_backups_page.php:120
+#, php-format
+msgid "Found %s files (%s)"
+msgstr "%s Dateien gefunden (%s)"
+
+#: admin/partials/xcloner_generate_backups_page.php:135
+msgid "Generating the Mysql Backup..."
+msgstr "Erstelle das MySQL Backup…"
+
+#: admin/partials/xcloner_generate_backups_page.php:137
+#, php-format
+msgid "Found %s tables in %s databases (%s)"
+msgstr "%s Tabellen in %s Datenbanken gefunden (%s)"
+
+#: admin/partials/xcloner_generate_backups_page.php:161
+msgid "Adding Files to Archive..."
+msgstr "Füge die Dateien dem Archiv hinzu …"
+
+#: admin/partials/xcloner_generate_backups_page.php:163
+#, php-format
+msgid "Adding %s files (%s)"
+msgstr "Füge %s Dateien hinzu (%s)"
+
+#: admin/partials/xcloner_generate_backups_page.php:176
+msgid "Backup Parts"
+msgstr "Backup Teile"
+
+#: admin/partials/xcloner_generate_backups_page.php:186
+msgid "Backup Done"
+msgstr "Backup abgeschlossen"
+
+#: admin/partials/xcloner_generate_backups_page.php:190
+msgid "Send Backup To Remote Storage"
+msgstr "Übertrage das Backup Archiv auf den Remote Speicher"
+
+#: admin/partials/xcloner_generate_backups_page.php:211
+msgid "Schedule Saved"
+msgstr "Zeitplan gespeichert"
+
+#: admin/partials/xcloner_generate_backups_page.php:212
+msgid "(Dismiss this notice."
+msgstr "(Schließe die Nachricht."
+
+#: admin/partials/xcloner_generate_backups_page.php:218
+#: admin/partials/xcloner_scheduled_backups_page.php:42
+msgid "Current Server Time"
+msgstr "Aktuelle Server Zeit"
+
+#: admin/partials/xcloner_generate_backups_page.php:225
+#: admin/partials/xcloner_scheduled_backups_page.php:14
+#: admin/partials/xcloner_scheduled_backups_page.php:26
+#: admin/partials/xcloner_scheduled_backups_page.php:84
+msgid "Schedule Name"
+msgstr "Name des Zeitplans"
+
+#: admin/partials/xcloner_generate_backups_page.php:232
+msgid "Schedule Backup To Start On:"
+msgstr "Starte das Backup am:"
+
+#: admin/partials/xcloner_generate_backups_page.php:236
+msgid "At:"
+msgstr "um:"
+
+#: admin/partials/xcloner_generate_backups_page.php:243
+msgid "please select"
+msgstr "Bitte wählen"
+
+#: admin/partials/xcloner_generate_backups_page.php:250
+msgid "Please Select Frequency to run"
+msgstr "Bitte wähle die Wiederholungshäufigkeit"
+
+#: admin/partials/xcloner_generate_backups_page.php:258
+#: admin/partials/xcloner_scheduled_backups_page.php:110
+msgid "none"
+msgstr "keine"
+
+#: admin/partials/xcloner_generate_backups_page.php:263
+msgid "Send To Remote Storage"
+msgstr "Übertrage an Remote Speicher"
+
+#: admin/partials/xcloner_generate_backups_page.php:269
+msgid "Submit"
+msgstr "Abschicken"
+
+#: admin/partials/xcloner_generate_backups_page.php:283
+msgid "Message"
+msgstr "Nachricht"
+
+#: admin/partials/xcloner_generate_backups_page.php:284
+msgid "Response Code"
+msgstr ""
+
+#: admin/partials/xcloner_generate_backups_page.php:288
+msgid "Close"
+msgstr "Schließen"
+
+#: admin/partials/xcloner_generate_backups_page.php:297
+#: admin/partials/xcloner_manage_backups_page.php:89
+msgid "Remote Storage Transfer"
+msgstr "Remote Speicher Übertragung"
+
+#: admin/partials/xcloner_generate_backups_page.php:306
+#: admin/partials/xcloner_manage_backups_page.php:98
+msgid "please select..."
+msgstr "bitte auswählen…"
+
+#: admin/partials/xcloner_generate_backups_page.php:318
+#: admin/partials/xcloner_manage_backups_page.php:110
+msgid "Uploading backup to the selected remote storage..."
+msgstr "Übertragung des Backup Archivs an den ausgewählten Remote Speicher…"
+
+#: admin/partials/xcloner_init_page.php:30
+msgid "Backup system not ready, please check and fix the issues marked in red"
+msgstr ""
+"Backup System nicht bereit, bitte prüfen und behebe den rot markierten Fehler"
+
+#: admin/partials/xcloner_init_page.php:40
+msgid "Backup Dashboard"
+msgstr ""
+
+#: admin/partials/xcloner_init_page.php:74
+msgid "System Check"
+msgstr "System Prüfung"
+
+#: admin/partials/xcloner_init_page.php:77
+#: includes/class-xcloner-settings.php:262
+msgid "Backup Start Location"
+msgstr "Backup Startverzeichnis"
+
+#: admin/partials/xcloner_init_page.php:80
+#: includes/class-xcloner-settings.php:276
+msgid "Backup Storage Location"
+msgstr "Backup Speicherort"
+
+#: admin/partials/xcloner_init_page.php:83
+msgid "Temporary Location"
+msgstr "Temporärer Speicherort"
+
+#: admin/partials/xcloner_init_page.php:87
+msgid "PHP Version Check"
+msgstr "PHP Versionsprüfung"
+
+#: admin/partials/xcloner_init_page.php:91
+msgid "PHP Safe Mode"
+msgstr ""
+
+#: admin/partials/xcloner_init_page.php:95
+msgid "BACKUP READY"
+msgstr "Backup bereit?"
+
+#: admin/partials/xcloner_init_page.php:95
+msgid "Backup not ready, please check above requirements"
+msgstr "Backup nicht bereit, bitte prüfe die Anforderungen"
+
+#: admin/partials/xcloner_init_page.php:101
+msgid "PHP max_execution_time"
+msgstr ""
+
+#: admin/partials/xcloner_init_page.php:104
+msgid "PHP memory_limit"
+msgstr ""
+
+#: admin/partials/xcloner_init_page.php:107
+msgid "PHP open_basedir"
+msgstr ""
+
+#: admin/partials/xcloner_init_page.php:115
+msgid "Reading Time 1MB Block"
+msgstr ""
+
+#: admin/partials/xcloner_init_page.php:115
+#: admin/partials/xcloner_init_page.php:118
+msgid "unknown"
+msgstr ""
+
+#: admin/partials/xcloner_init_page.php:118
+msgid "Writing Time 1MB Block"
+msgstr ""
+
+#: admin/partials/xcloner_init_page.php:121
+msgid "Free Disk Space"
+msgstr "Freieier Speicherplaz"
+
+#: admin/partials/xcloner_init_page.php:126
+msgid "Toggle Additional System Info"
+msgstr "Verberge die zusätzlichen System Informationen"
+
+#: admin/partials/xcloner_manage_backups_page.php:23
+msgid "Created Time"
+msgstr "Erstellt am:"
+
+#: admin/partials/xcloner_manage_backups_page.php:24
+msgid "Size"
+msgstr "Größe"
+
+#: admin/partials/xcloner_manage_backups_page.php:25
+#: admin/partials/xcloner_scheduled_backups_page.php:20
+#: admin/partials/xcloner_scheduled_backups_page.php:32
+msgid "Action"
+msgstr "Aktionen"
+
+#: admin/partials/xcloner_manage_backups_page.php:81
+msgid "Delete"
+msgstr "Löschen"
+
+#: admin/partials/xcloner_remote_storage_page.php:13
+msgid "Ftp Storage"
+msgstr "FTP Speicher"
+
+#: admin/partials/xcloner_remote_storage_page.php:28
+#: admin/partials/xcloner_remote_storage_page.php:31
+msgid "Ftp Hostname"
+msgstr "FTP Hostname"
+
+#: admin/partials/xcloner_remote_storage_page.php:34
+msgid "Ftp Port"
+msgstr "FTP Port"
+
+#: admin/partials/xcloner_remote_storage_page.php:40
+#: admin/partials/xcloner_remote_storage_page.php:43
+msgid "Ftp Username"
+msgstr "FTP Benutzername"
+
+#: admin/partials/xcloner_remote_storage_page.php:50
+#: admin/partials/xcloner_remote_storage_page.php:53
+msgid "Ftp Password"
+msgstr "FTP Passwort"
+
+#: admin/partials/xcloner_remote_storage_page.php:59
+#: admin/partials/xcloner_remote_storage_page.php:62
+msgid "Ftp Storage Folder"
+msgstr "FTP Speicherordner"
+
+#: admin/partials/xcloner_remote_storage_page.php:68
+msgid "Ftp Transfer Mode"
+msgstr "FTP Übertragungsmodus"
+
+#: admin/partials/xcloner_remote_storage_page.php:72
+msgid "Passive"
+msgstr "Passiv"
+
+#: admin/partials/xcloner_remote_storage_page.php:75
+msgid "Active"
+msgstr "Aktiv"
+
+#: admin/partials/xcloner_remote_storage_page.php:81
+msgid "Ftp Secure Connection"
+msgstr "FTP Sichere Verbindung"
+
+#: admin/partials/xcloner_remote_storage_page.php:85
+msgid "Disable"
+msgstr "Deaktiviert"
+
+#: admin/partials/xcloner_remote_storage_page.php:88
+msgid "Enable"
+msgstr "Aktiviert"
+
+#: admin/partials/xcloner_remote_storage_page.php:94
+#: admin/partials/xcloner_remote_storage_page.php:97
+msgid "Ftp Timeout"
+msgstr "FTP Timeout"
+
+#: admin/partials/xcloner_remote_storage_page.php:103
+msgid "Ftp Cleanup (days)"
+msgstr "FTP Cleanup (Tage)"
+
+#: admin/partials/xcloner_remote_storage_page.php:106
+#: admin/partials/xcloner_remote_storage_page.php:204
+msgid "how many days to keep the backups for"
+msgstr "Wie viele Tage soll ein Backup aufgehoben werden"
+
+#: admin/partials/xcloner_remote_storage_page.php:112
+#: admin/partials/xcloner_remote_storage_page.php:210
+msgid "Save Settings"
+msgstr "Einstellungen speichern"
+
+#: admin/partials/xcloner_remote_storage_page.php:117
+#: admin/partials/xcloner_remote_storage_page.php:215
+msgid "Verify"
+msgstr "Verbindung prüfen"
+
+#: admin/partials/xcloner_remote_storage_page.php:128
+msgid "SFTP Storage"
+msgstr "SFTP Speicher"
+
+#: admin/partials/xcloner_remote_storage_page.php:143
+#: admin/partials/xcloner_remote_storage_page.php:146
+msgid "SFTP Hostname"
+msgstr "SFTP Hostname"
+
+#: admin/partials/xcloner_remote_storage_page.php:149
+msgid "SFTP Port"
+msgstr "SFTP Port"
+
+#: admin/partials/xcloner_remote_storage_page.php:155
+#: admin/partials/xcloner_remote_storage_page.php:158
+msgid "SFTP Username"
+msgstr "SFTP Benutzername"
+
+#: admin/partials/xcloner_remote_storage_page.php:165
+#: admin/partials/xcloner_remote_storage_page.php:168
+msgid "SFTP Password"
+msgstr "SFTP Passwort"
+
+#: admin/partials/xcloner_remote_storage_page.php:174
+#: admin/partials/xcloner_remote_storage_page.php:177
+msgid "SFTP Private Key"
+msgstr "SFTP Privater Schlüssel"
+
+#: admin/partials/xcloner_remote_storage_page.php:183
+#: admin/partials/xcloner_remote_storage_page.php:186
+msgid "SFTP Storage Folder"
+msgstr "SFTP Speicherordner"
+
+#: admin/partials/xcloner_remote_storage_page.php:192
+#: admin/partials/xcloner_remote_storage_page.php:195
+msgid "SFTP Timeout"
+msgstr "SFTP Timeout"
+
+#: admin/partials/xcloner_remote_storage_page.php:201
+msgid "SFTP Cleanup (days)"
+msgstr "SFTP Cleanup (Tage)"
+
+#: admin/partials/xcloner_scheduled_backups_page.php:13
+#: admin/partials/xcloner_scheduled_backups_page.php:25
+msgid "ID"
+msgstr "Id"
+
+#: admin/partials/xcloner_scheduled_backups_page.php:15
+#: admin/partials/xcloner_scheduled_backups_page.php:27
+msgid "Recurrence"
+msgstr "Wiederholung"
+
+#: admin/partials/xcloner_scheduled_backups_page.php:16
+#: admin/partials/xcloner_scheduled_backups_page.php:28
+msgid "Next Execution"
+msgstr "Nächste Ausführung"
+
+#: admin/partials/xcloner_scheduled_backups_page.php:17
+#: admin/partials/xcloner_scheduled_backups_page.php:29
+#: includes/class-xcloner-loader.php:66
+msgid "Remote Storage"
+msgstr "Remote Speicher"
+
+#: admin/partials/xcloner_scheduled_backups_page.php:18
+#: admin/partials/xcloner_scheduled_backups_page.php:30
+msgid "Last Backup"
+msgstr "Letztes Backup"
+
+#: admin/partials/xcloner_scheduled_backups_page.php:19
+#: admin/partials/xcloner_scheduled_backups_page.php:31
+msgid "Status"
+msgstr ""
+
+#: admin/partials/xcloner_scheduled_backups_page.php:56
+msgid "Edit Schedule"
+msgstr "Zeitplan bearbeiten"
+
+#: admin/partials/xcloner_scheduled_backups_page.php:62
+msgid "Off"
+msgstr "Aus"
+
+#: admin/partials/xcloner_scheduled_backups_page.php:65
+msgid "On"
+msgstr "An"
+
+#: admin/partials/xcloner_scheduled_backups_page.php:74
+msgid "Scheduler Settings"
+msgstr "Zeitplaneinstellungen"
+
+#: admin/partials/xcloner_scheduled_backups_page.php:75
+msgid "Advanced"
+msgstr "Erweitert"
+
+#: admin/partials/xcloner_scheduled_backups_page.php:91
+msgid "Schedule Start At"
+msgstr "Ausführung beginnen am"
+
+#: admin/partials/xcloner_scheduled_backups_page.php:96
+msgid "Schedule Recurrence"
+msgstr "Ausführungshäufigkeit"
+
+#: admin/partials/xcloner_scheduled_backups_page.php:115
+msgid "Send To Remote Storage "
+msgstr "An Remote Speicher übertragen"
+
+#: admin/partials/xcloner_scheduled_backups_page.php:123
+msgid "Email Notification Address"
+msgstr "eMailadress für Benachrichtigungen"
+
+#: admin/partials/xcloner_scheduled_backups_page.php:140
+msgid "Included Database Data"
+msgstr "Beinhaltetet Datenbanken und Tabellen"
+
+#: admin/partials/xcloner_scheduled_backups_page.php:147
+msgid "Excluded Files"
+msgstr "Ausgeschlossene Dateien"
+
+#: admin/partials/xcloner_scheduled_backups_page.php:156
+msgid "Save"
+msgstr "Speichern"
+
+#: includes/class-xcloner-api.php:569
+msgid "executed"
+msgstr "ausgeführt"
+
+#: includes/class-xcloner-archive.php:148
+#, php-format
+msgid "New backup generated %s"
+msgstr "Neues Backup erstellt %s"
+
+#: includes/class-xcloner-archive.php:150
+#, php-format
+msgid "Generated Backup Size: %s"
+msgstr "Größe des erstellten Backups: %s"
+
+#: includes/class-xcloner-archive.php:158
+#, php-format
+msgid "Backup Parts: %s"
+msgstr "Backup aufgeteilt in %s Teile"
+
+#: includes/class-xcloner-archive.php:171
+msgid "Backup Comments: "
+msgstr "Backup Kommentare: "
+
+#: includes/class-xcloner-archive.php:176
+msgid "Latest 50 Log Lines: "
+msgstr "Letzte 50 Zeilen der Log-Datei"
+
+#: includes/class-xcloner-archive.php:218
+#, php-format
+msgid "Initializing the backup archive %s"
+msgstr "Erstellen des Backup Archiv %s"
+
+#: includes/class-xcloner-archive.php:227
+#, php-format
+msgid "Opening for append the backup archive %s"
+msgstr "Öffnen des Backup Archivs %s"
+
+#: includes/class-xcloner-database.php:94
+msgid "Starting database backup process"
+msgstr "Beginne Datenbankbackup Prozess"
+
+#: includes/class-xcloner-database.php:181
+msgid "Setting mysql headers"
+msgstr "Setze MySQL Headers"
+
+#: includes/class-xcloner-database.php:196
+#, php-format
+msgid "Getting number of tables in %s"
+msgstr "Ermittle Anzahl der Tabellen in %s"
+
+#: includes/class-xcloner-database.php:276
+#, php-format
+msgid "Excluding table %s.%s from backup"
+msgstr "Schließe Tabelle %s.%s aus dem Backup aus"
+
+#: includes/class-xcloner-database.php:290
+msgid "Preparing the database recursion file"
+msgstr "Bereite die Datenbank-Rekursionsdatei vor"
+
+#: includes/class-xcloner-database.php:373
+#, php-format
+msgid "Starting new backup dump to file %s"
+msgstr "Starte neuen Backup Dump für die Datei %s"
+
+#: includes/class-xcloner-database.php:506
+#, php-format
+msgid "Dumping %s records starting position %s from %s.%s table"
+msgstr "Kopiere %s Datensätze ab der Position %s aus der Tabelle %s.%s "
+
+#: includes/class-xcloner-database.php:514
+#, php-format
+msgid "Dumping the structure for %s.%s table"
+msgstr "Kopiere die Struktur der Tabelle %s.%s"
+
+#: includes/class-xcloner-database.php:606
+#, php-format
+msgid "Writing %s database dump headers"
+msgstr "Schreibe %s Datenbank Dump Header"
+
+#: includes/class-xcloner-file-system.php:253
+#, php-format
+msgid "Starting the filesystem scanner on root folder %s"
+msgstr "Starte die Dateisystemprüfung im Ordner %s"
+
+#: includes/class-xcloner-file-system.php:404
+#, php-format
+msgid "Adding %s to the filesystem list"
+msgstr "Füge %s der Dateiliste hinzu"
+
+#: includes/class-xcloner-file-system.php:412
+#, php-format
+msgid "Excluding %s from the filesystem list, matching pattern %s"
+msgstr "Schließe die Datei %s von der Dateiliste aus, Grund: %s"
+
+#: includes/class-xcloner-loader.php:59
+msgid "Site Backup"
+msgstr "Seitenbackup"
+
+#: includes/class-xcloner-loader.php:64
+msgid "XCloner Dashboard"
+msgstr ""
+
+#: includes/class-xcloner-loader.php:64
+msgid "Dashboard"
+msgstr ""
+
+#: includes/class-xcloner-loader.php:65
+msgid "XCloner Backup Settings"
+msgstr "XCloner Backup Einstellungen"
+
+#: includes/class-xcloner-loader.php:65 includes/class-xcloner.php:347
+msgid "Settings"
+msgstr "Einstellungen"
+
+#: includes/class-xcloner-loader.php:66
+msgid "Remote Storage Settings"
+msgstr "Remote Speicher Einstellungen"
+
+#: includes/class-xcloner-loader.php:67
+msgid "Manage Backups"
+msgstr "Verwalte Backups"
+
+#: includes/class-xcloner-loader.php:68
+msgid "Scheduled Backups"
+msgstr "Plane Backups"
+
+#: includes/class-xcloner-loader.php:69
+msgid "Generate Backups"
+msgstr "Erstelle Backups"
+
+#: includes/class-xcloner-loader.php:70
+msgid "Open Debugger"
+msgstr "Öffne den Debugger"
+
+#: includes/class-xcloner-remote-storage.php:82
+#, php-format
+msgid "%s storage settings saved."
+msgstr "%s Speichereinstellungen gespeichert."
+
+#: includes/class-xcloner-remote-storage.php:89
+#, php-format
+msgid "%s connection is valid."
+msgstr "%s Verbindung erfolgreich."
+
+#: includes/class-xcloner-remote-storage.php:113
+msgid "Could not write data"
+msgstr "Konnte Daten nicht schreiben"
+
+#: includes/class-xcloner-remote-storage.php:118
+msgid "Could not read data"
+msgstr "Konnte Daten nicht lesen"
+
+#: includes/class-xcloner-remote-storage.php:123
+msgid "Could not delete data"
+msgstr "Konnte Daten nicht löschen"
+
+#: includes/class-xcloner-settings.php:205
+#: includes/class-xcloner-settings.php:212
+#: includes/class-xcloner-settings.php:228
+#: includes/class-xcloner-settings.php:237
+msgid " "
+msgstr ""
+
+#: includes/class-xcloner-settings.php:220
+msgid "These are advanced options recommended for developers!"
+msgstr "Das sind erweiterte Einstellungen (Nur für Entwickler empfohlen)!"
+
+#: includes/class-xcloner-settings.php:248
+msgid "Backup Compression Level"
+msgstr "Archiv Kompression Level"
+
+#: includes/class-xcloner-settings.php:253
+msgid ""
+"Options between [0-9]. Value 0 means no compression, while 9 is maximum "
+"compression affecting cpu load"
+msgstr ""
+"Zwischen [0-9]. 0 bedeutet keine Kompression und 9 ist das Maximum und "
+"erzeugt die größte CPU Last."
+
+#: includes/class-xcloner-settings.php:267
+msgid "Base path location from where XCloner can start the Backup."
+msgstr "Verzeichnis an dem XCloner mit dem Backup beginnen soll."
+
+#: includes/class-xcloner-settings.php:281
+msgid "Location where XCloner will store the Backup archives."
+msgstr "Verzeichnis in dem XCloner seine Backup Archive speichert."
+
+#: includes/class-xcloner-settings.php:290
+msgid "Enable XCloner Backup Log"
+msgstr "Aktiviere XCloner Backup Log"
+
+#: includes/class-xcloner-settings.php:303
+msgid "Enable Mysql Backup"
+msgstr "Aktiviere MySQL Backup"
+
+#: includes/class-xcloner-settings.php:308
+msgid ""
+"Enable Mysql Backup Option. If you don't want to backup the database, you "
+"can disable this."
+msgstr ""
+"Wenn die MySQL Datenbank nicht gesichert werden soll, kann diese Option "
+"deaktiviert werden. "
+
+#: includes/class-xcloner-settings.php:315
+msgid "Backup only WP tables"
+msgstr "Nur Wordpress Tabellen sichern"
+
+#: includes/class-xcloner-settings.php:320
+#, php-format
+msgid ""
+"Enable this if you only want to Backup only tables starting with '%s' prefix"
+msgstr ""
+"Aktiviere diese Option, wenn nur Tabellen die mit dem Prefix  ‚%s‘ beginnen "
+"gesichert werden sollen. "
+
+#: includes/class-xcloner-settings.php:327
+msgid "Mysql Hostname"
+msgstr "MySQL Hostname"
+
+#: includes/class-xcloner-settings.php:332
+msgid "Wordpress mysql hostname"
+msgstr "Wordpress MySQL hostname"
+
+#: includes/class-xcloner-settings.php:341
+msgid "Mysql Username"
+msgstr "MySQL Benutzername"
+
+#: includes/class-xcloner-settings.php:346
+msgid "Wordpress mysql username"
+msgstr "Wordpress MySQL Benutzername"
+
+#: includes/class-xcloner-settings.php:355
+msgid "Mysql Database"
+msgstr "MySQL Datenbank"
+
+#: includes/class-xcloner-settings.php:360
+msgid "Wordpress mysql database"
+msgstr "Wordpress MySQL Datenbank"
+
+#: includes/class-xcloner-settings.php:370
+msgid "Data Size Limit Per Request"
+msgstr "maximale Datengröße pro Anfrage"
+
+#: includes/class-xcloner-settings.php:375
+msgid ""
+"Use this option to set how much file data can XCloner backup in one AJAX "
+"request. Range 0-100 MB"
+msgstr ""
+
+#: includes/class-xcloner-settings.php:384
+msgid "Files To Process Per Request"
+msgstr "Dateien zum Verarbeiten pro Anfrage"
+
+#: includes/class-xcloner-settings.php:389
+msgid ""
+"Use this option to set how many files XCloner should process at one time "
+"before doing another AJAX call"
+msgstr ""
+
+#: includes/class-xcloner-settings.php:398
+msgid "Directories To Scan Per Request"
+msgstr "Verzeichnisse zum prüfen pro Anfrage"
+
+#: includes/class-xcloner-settings.php:403
+msgid ""
+"Use this option to set how many directories XCloner should scan at one time "
+"before doing another AJAX call"
+msgstr ""
+
+#: includes/class-xcloner-settings.php:412
+msgid "Database Records Per Request"
+msgstr "Datenbankdatensätze pro Anfrage"
+
+#: includes/class-xcloner-settings.php:417
+msgid ""
+"Use this option to set how many database table records should be fetched per "
+"AJAX request, or set to 0 to fetch all.  Range 0-100000 records"
+msgstr ""
+
+#: includes/class-xcloner-settings.php:426
+msgid "Exclude files larger than (MB)"
+msgstr "Schließe Dateien größer als x MB aus"
+
+#: includes/class-xcloner-settings.php:431
+msgid ""
+"Use this option to automatically exclude files larger than a certain size in "
+"MB, or set to -1 to include all. Range 0-1000 MB"
+msgstr ""
+
+#: includes/class-xcloner-settings.php:438
+msgid "Split Backup Archive Limit (MB)"
+msgstr "Teile das Backup nach X MB"
+
+#: includes/class-xcloner-settings.php:443
+msgid ""
+"Use this option to automatically split the backup archive into smaller "
+"parts. Range  0-10000 MB"
+msgstr ""
+
+#: includes/class-xcloner-settings.php:451
+msgid "Cleanup by Date(days)"
+msgstr "Cleanup nach Datum (Tage)"
+
+#: includes/class-xcloner-settings.php:456
+msgid ""
+"Specify the maximum number of days a backup archive can be kept on the "
+"server. 0 disables this option"
+msgstr ""
+
+#: includes/class-xcloner-settings.php:463
+msgid "Cleanup by Quantity"
+msgstr "Cleanup nach Anzahl"
+
+#: includes/class-xcloner-settings.php:468
+msgid ""
+"Specify the maximum number of backup archives to keep on the server. 0 "
+"disables this option"
+msgstr ""
+"Definiert die maximale Anzahl an Backup Archiven, die auf dem Server "
+"behalten werden. 0 deativiert die Option"
+
+#: includes/class-xcloner-settings.php:475
+msgid "Cleanup by Capacity(MB)"
+msgstr "Löschen nach Speicherlimit in MB"
+
+#: includes/class-xcloner-settings.php:480
+msgid ""
+"Remove oldest backups if all created backups exceed the configured limit in "
+"Megabytes. 0 disables this option"
+msgstr ""
+"Löscht die ältesten Backup Dateien, wenn alle Backup Jobs zusammen das "
+"konfigurierte Speicherlimit in MB überschreiten. 0 deaktiviert diese Option."
+
+#: includes/class-xcloner-settings.php:488
+#: includes/class-xcloner-settings.php:493
+msgid "Cron frequency"
+msgstr "Wiederholungsfrequenz"
+
+#: includes/class-xcloner.php:100
+#, php-format
+msgid ""
+"Unable to create the Backup Storage Location Folder %s . Please fix this "
+"before starting the backup process."
+msgstr ""
+"Der Backup Speicher Ordner %s konnte nicht erstellt werden. Bitte behebe das "
+"Problem, bevor du den Backup Prozess startest. "
+
+#: includes/class-xcloner.php:381
+msgid "Once Weekly"
+msgstr "Einmal die Woche"
+
+#: includes/class-xcloner.php:386
+msgid "Once a month"
+msgstr "Einmal im Monat"
