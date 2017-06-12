@@ -131,7 +131,11 @@ class Xcloner_Archive extends Tar
 	public function send_notification_error($to, $from, $subject, $backup_name, $params, $error_message)
 	{
 		
-		$body  = $error_message; 
+		$body = "";
+		$body .= sprintf(__("Backup Site Url: %s"), get_site_url());
+		$body .= "<br /><>";
+		
+		$body  .= sprintf(__("Error Message: %s"), $error_message); 
 		
 		$this->logger->info(sprintf("Sending backup error notification to %s", $to));
 		
@@ -188,11 +192,6 @@ class Xcloner_Archive extends Tar
 		$body .= sprintf(__("Backup Parts: %s"), $backups_counter);
 		$body .= "<br />";
 		
-		$sponsor_html = "<br /><a href='https://www.captainform.com/captainform-xcloner/?x-source=xcloner' target='_blank'>
-		<img style=\"padding:10px 5px;\" class=\"responsive-img\" src='http://www.xcloner.com/images/banners/CF%20Banner%20728x90%20blue.jpg'>
-		</a>";
-		$body .= $sponsor_html."<br />";
-		
 		if(sizeof($backup_parts))
 		{
 			$body .= implode("<br />",$backup_parts);
@@ -200,6 +199,15 @@ class Xcloner_Archive extends Tar
 		}
 		
 		$body.= "<br />";
+		
+		$body .= sprintf(__("Backup Site Url: %s"), get_site_url());
+		$body .= "<br />";
+		
+		$sponsor_html = "<br /><a href='https://www.captainform.com/captainform-xcloner/?x-source=xcloner' target='_blank'>
+		<img style=\"padding:10px 5px;\" class=\"responsive-img\" src='http://www.xcloner.com/images/banners/CF%20Banner%20728x90%20blue.jpg'>
+		</a>";
+		$body .= $sponsor_html."<br />";
+		
 		
 		if(isset($params['backup_params']->backup_comments))
 		{
