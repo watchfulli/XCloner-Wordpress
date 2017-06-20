@@ -173,19 +173,6 @@ if($requirements->check_backup_ready_status())
 			
 			</ul>
 		
-		<!-- XCLONER SPONSORS AREA-->
-		<ul class="collapsible banner" data-collapsible="accordion">
-			<li class="">
-			  <div class="collapsible-header active"><i class="material-icons">favorite</i>Our Sponsors</div>
-			  <div class="collapsible-body center-align"><span>
-				<a href="https://www.captainform.com/captainform-xcloner/?x-source=xcloner" target="_blank">
-					<img style=" padding:10px 5px;" class="responsive-img" src='<?php echo plugins_url('images/banners/CF Banner 728x90 red.jpg', dirname(__FILE__) )?>'>
-				</a>
-			  </span></div>
-			</li>
-		</ul>
-		<!-- END XCLONER SPONSORS AREA-->
-		
 		</div>
 	
 	

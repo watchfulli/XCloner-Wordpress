@@ -219,9 +219,6 @@ $tab = 1;
 										
 										<br />
 										<!-- XCLONER SPONSORS AREA-->
-										<a href="https://www.captainform.com/captainform-xcloner/?x-source=xcloner" target="_blank">
-											<img style=" padding:10px 5px;" class="responsive-img" src='<?php echo plugins_url('images/banners/CF Banner 728x90 red.jpg', dirname(__FILE__) )?>'>
-										</a>
 										<!-- END XCLONER SPONSORS AREA-->
 									</div>
 							  </div>

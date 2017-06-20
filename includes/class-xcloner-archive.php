@@ -203,12 +203,6 @@ class Xcloner_Archive extends Tar
 		$body .= sprintf(__("Backup Site Url: %s"), get_site_url());
 		$body .= "<br />";
 		
-		$sponsor_html = "<br /><a href='https://www.captainform.com/captainform-xcloner/?x-source=xcloner' target='_blank'>
-		<img style=\"padding:10px 5px;\" class=\"responsive-img\" src='http://www.xcloner.com/images/banners/CF%20Banner%20728x90%20blue.jpg'>
-		</a>";
-		$body .= $sponsor_html."<br />";
-		
-		
 		if(isset($params['backup_params']->backup_comments))
 		{
 			$body .= __("Backup Comments: ").$params['backup_params']->backup_comments;
