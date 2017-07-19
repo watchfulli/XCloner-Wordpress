@@ -833,7 +833,7 @@ jQuery(document).ready(function(){
 	
 	xcloner_restore.set_current_step(0);
 	
-	jQuery('select').material_select();
+	jQuery('.col select').material_select();
 	
 	jQuery(".xcloner-restore .upload-backup.cancel").on("click", function(){
 		//jQuery(".xcloner-restore #upload_backup").show();

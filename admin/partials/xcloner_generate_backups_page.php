@@ -385,7 +385,7 @@ $tab = 1;
 <script>
 jQuery(function () { 
 	
-	jQuery('select').material_select();
+	jQuery('.col select').material_select();
 	jQuery("select[required]").css({display: "block", height: 0, padding: 0, width: 0, position: 'absolute'});
 	jQuery(".backup-done .cloud-upload").on("click", function(e){
 		var xcloner_manage_backups = new Xcloner_Manage_Backups();

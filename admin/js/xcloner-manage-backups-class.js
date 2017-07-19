@@ -116,7 +116,7 @@ class Xcloner_Manage_Backups{
 			jQuery('#remote_storage_modal').find(".backup_name").text(backup_file)
 			jQuery('#remote_storage_modal').find("input.backup_name").val(backup_file)
 			Materialize.updateTextFields();	
-			jQuery('select').material_select();
+			jQuery('.col select').material_select();
 			jQuery("#remote_storage_modal").modal('open')
 			jQuery("#remote_storage_modal .status").hide();
 			

@@ -103,7 +103,7 @@ jQuery(document).ready(function(){
 			
 			this.edit_modal.find("#excluded_files").val(exclude_files_list)
 			
-			jQuery('select').material_select();
+			jQuery('.col select').material_select();
 			
 			Materialize.updateTextFields();
 			
