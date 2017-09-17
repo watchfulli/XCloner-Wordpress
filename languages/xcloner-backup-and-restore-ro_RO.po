@@ -718,7 +718,7 @@ msgid "Dropbox Cleanup (days)"
 msgstr "Curatare Dropbox(zile)"
 
 #: admin/partials/xcloner_remote_storage_page.php:418
-msgid "Azure Blog Storage"
+msgid "Azure Blob Storage"
 msgstr ""
 
 #: admin/partials/xcloner_remote_storage_page.php:438

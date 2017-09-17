@@ -407,7 +407,7 @@ $gdrive_construct = $remote_storage->gdrive_construct();
 			<!-- AZURE STORAGE-->
 			<li id="azure">
 				<div class="collapsible-header">
-					<i class="material-icons">computer</i><?php echo __("Azure Blog Storage",'xcloner-backup-and-restore')?>
+					<i class="material-icons">computer</i><?php echo __("Azure Blob Storage",'xcloner-backup-and-restore')?>
 					<div class="switch right">
 						<label>
 						Off
