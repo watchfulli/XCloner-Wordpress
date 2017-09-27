@@ -486,7 +486,7 @@ $gdrive_construct = $remote_storage->gdrive_construct();
 			<!-- BACKBLAZE STORAGE-->
 			<li id="backblaze">
 				<div class="collapsible-header">
-					<i class="material-icons">computer</i><?php echo __("BackBlaze Storage",'xcloner-backup-and-restore')?>
+					<i class="material-icons">computer</i><?php echo __("Backblaze Storage",'xcloner-backup-and-restore')?>
 					<div class="switch right">
 						<label>
 						Off
@@ -511,35 +511,35 @@ $gdrive_construct = $remote_storage->gdrive_construct();
 			        
 			        <div class="row">
 						<div class="col s12 m3 label">
-							<label for="backblaze_account_id"><?php echo __("BackBlaze Account Id",'xcloner-backup-and-restore')?></label>
+							<label for="backblaze_account_id"><?php echo __("Backblaze Account Id",'xcloner-backup-and-restore')?></label>
 						</div>	
 						<div class=" col s12 m6">
-							<input placeholder="<?php echo __("BackBlaze Account Id",'xcloner-backup-and-restore')?>" id="backblaze_account_id" type="text" name="xcloner_backblaze_account_id" class="validate" value="<?php echo get_option("xcloner_backblaze_account_id")?>" autocomplete="off" >
+							<input placeholder="<?php echo __("Backblaze Account Id",'xcloner-backup-and-restore')?>" id="backblaze_account_id" type="text" name="xcloner_backblaze_account_id" class="validate" value="<?php echo get_option("xcloner_backblaze_account_id")?>" autocomplete="off" >
 				        </div>
 			        </div>
 			        
 			        
 			        <div class="row">
 						<div class="col s12 m3 label">
-							<label for="backblaze_application_key"><?php echo __("BackBlaze Application Key",'xcloner-backup-and-restore')?></label>
+							<label for="backblaze_application_key"><?php echo __("Backblaze Application Key",'xcloner-backup-and-restore')?></label>
 						</div>
 						<div class=" col s12 m6">
-							<input placeholder="<?php echo __("BackBlaze Application Key",'xcloner-backup-and-restore')?>" id="backblaze_application_key" type="text" name="xcloner_backblaze_application_key" class="validate" value="<?php echo get_option("xcloner_backblaze_application_key")?>" autocomplete="off" >
+							<input placeholder="<?php echo __("Backblaze Application Key",'xcloner-backup-and-restore')?>" id="backblaze_application_key" type="text" name="xcloner_backblaze_application_key" class="validate" value="<?php echo get_option("xcloner_backblaze_application_key")?>" autocomplete="off" >
 				        </div>
 			        </div>
 			        
 			        <div class="row">
 						<div class="col s12 m3 label">
-							<label for="backblaze_bucket_name"><?php echo __("BackBlaze Bucket Name",'xcloner-backup-and-restore')?></label>
+							<label for="backblaze_bucket_name"><?php echo __("Backblaze Bucket Name",'xcloner-backup-and-restore')?></label>
 						</div>
 						<div class=" col s12 m6">
-							<input placeholder="<?php echo __("BackBlaze Bucket Name",'xcloner-backup-and-restore')?>" id="backblaze_bucket_name" type="text" name="xcloner_backblaze_bucket_name" class="validate" value="<?php echo get_option("xcloner_backblaze_bucket_name")?>" autocomplete="off" >
+							<input placeholder="<?php echo __("Backblaze Bucket Name",'xcloner-backup-and-restore')?>" id="backblaze_bucket_name" type="text" name="xcloner_backblaze_bucket_name" class="validate" value="<?php echo get_option("xcloner_backblaze_bucket_name")?>" autocomplete="off" >
 				        </div>
 			        </div>
 			        
 			        <div class="row">
 						<div class="col s12 m3 label">
-							<label for="backblaze_cleanup_days"><?php echo __("BackBlaze Cleanup (days)",'xcloner-backup-and-restore')?></label>
+							<label for="backblaze_cleanup_days"><?php echo __("Backblaze Cleanup (days)",'xcloner-backup-and-restore')?></label>
 						</div>
 						<div class=" col s12 m6">
 							<input placeholder="<?php echo __("how many days to keep the backups for",'xcloner-backup-and-restore')?>" id="backblaze_cleanup_days" type="text" name="xcloner_backblaze_cleanup_days" class="validate" value="<?php echo get_option("xcloner_backblaze_cleanup_days")?>">

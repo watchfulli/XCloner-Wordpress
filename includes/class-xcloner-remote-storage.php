@@ -78,7 +78,7 @@ class Xcloner_Remote_Storage{
 						"azure_cleanup_days"	=> "float",
 						),
 					"backblaze" => array(
-						"text"						=> "BackBlaze",
+						"text"						=> "Backblaze",
 						"backblaze_enable"			=> "int",
 						"backblaze_account_id"		=> "string",
 						"backblaze_application_key"	=> "string",

@@ -746,8 +746,8 @@ msgid "Azure Cleanup (days)"
 msgstr "Curatare Azure(zile)"
 
 #: admin/partials/xcloner_remote_storage_page.php:499
-msgid "BackBlaze Storage"
-msgstr "Stocare BackBlaze"
+msgid "Backblaze Storage"
+msgstr "Stocare Backblaze"
 
 #: admin/partials/xcloner_remote_storage_page.php:519
 #, php-format
@@ -756,21 +756,21 @@ msgstr "Vizitati %s pentru a obtine Account Id si Applciation Key."
 
 #: admin/partials/xcloner_remote_storage_page.php:526
 #: admin/partials/xcloner_remote_storage_page.php:529
-msgid "BackBlaze Account Id"
+msgid "Backblaze Account Id"
 msgstr ""
 
 #: admin/partials/xcloner_remote_storage_page.php:536
 #: admin/partials/xcloner_remote_storage_page.php:539
-msgid "BackBlaze Application Key"
+msgid "Backblaze Application Key"
 msgstr ""
 
 #: admin/partials/xcloner_remote_storage_page.php:545
 #: admin/partials/xcloner_remote_storage_page.php:548
-msgid "BackBlaze Bucket Name"
+msgid "Backblaze Bucket Name"
 msgstr ""
 
 #: admin/partials/xcloner_remote_storage_page.php:554
-msgid "BackBlaze Cleanup (days)"
+msgid "Backblaze Cleanup (days)"
 msgstr ""
 
 #: admin/partials/xcloner_remote_storage_page.php:580
