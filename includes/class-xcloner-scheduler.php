@@ -323,12 +323,20 @@ class Xcloner_Scheduler{
 				$subject = sprintf(__("%s - new backup generated %s") , $schedule['name'], $return['extra']['backup_parent']);
 				
 				$this->archive_system->send_notification($to, $from, $subject, $return['extra']['backup_parent'], $schedule, "", $additional);
+				
+				//CHECK IF WE SHOULD DELETE BACKUP AFTER REMOTE TRANSFER IS DONE
+				if($this->xcloner_settings->get_xcloner_option('xcloner_cleanup_delete_after_remote_transfer'))
+				{
+					$this->logger->info(sprintf("Deleting %s from local storage matching rule xcloner_cleanup_delete_after_remote_transfer",$return['extra']['backup_parent']));
+					$this->xcloner_file_system->delete_backup_by_name($return['extra']['backup_parent']);
+					
+				}
 			}catch(Exception $e)
 			{
 				$this->logger->error($e->getMessage());
 			}
 		}
-
+		
 		$this->xcloner_file_system->remove_tmp_filesystem();
 		
 		$this->xcloner_file_system->backup_storage_cleanup();

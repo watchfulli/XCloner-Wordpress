@@ -562,6 +562,18 @@ class Xcloner_Settings
 				__('Remove oldest backups if all created backups exceed the configured limit in Megabytes. 0 disables this option','xcloner-backup-and-restore')
 			)
 	    );
+	    
+	    register_setting('xcloner_cleanup_settings_group', 'xcloner_cleanup_delete_after_remote_transfer', array($this->xcloner_sanitization, "sanitize_input_as_int"));
+	    add_settings_field(
+	        'xcloner_cleanup_delete_after_remote_transfer',
+	        __('Delete Backup After Sending it to Remote Storage','xcloner-backup-and-restore'),
+	        array($this, 'do_form_switch_field'),
+	        'xcloner_cleanup_settings_page',
+	        'xcloner_cleanup_settings_group',
+	        array('xcloner_cleanup_delete_after_remote_transfer',
+				__('Remove backups created automatically from local storage after sending the backup to remote storage','xcloner-backup-and-restore')
+			)
+	    );
 		
 		//REGISTERING THE 'CRON SECTION' FIELDS
 		register_setting('xcloner_cron_settings_group', 'xcloner_cron_frequency');
