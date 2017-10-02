@@ -571,7 +571,7 @@ class Xcloner_Settings
 	        'xcloner_cleanup_settings_page',
 	        'xcloner_cleanup_settings_group',
 	        array('xcloner_cleanup_delete_after_remote_transfer',
-				__('Remove backup created automatically from local storage after sending the backup to remote storage','xcloner-backup-and-restore')
+				__('Remove backup created automatically from local storage after sending the backup to Remote Storage','xcloner-backup-and-restore')
 			)
 	    );
 		
