@@ -6,8 +6,10 @@ use League\Flysystem\Adapter\Ftp as Adapter;
 
 use League\Flysystem\Sftp\SftpAdapter;
 
-use League\Flysystem\Dropbox\DropboxAdapter;
-use Dropbox\Client;
+#use League\Flysystem\Dropbox\DropboxAdapter;
+#use Dropbox\Client;
+use Srmklive\Dropbox\Client\DropboxClient;
+use Srmklive\Dropbox\Adapter\DropboxAdapter;
 
 use MicrosoftAzure\Storage\Common\ServicesBuilder;
 use League\Flysystem\Azure\AzureAdapter;
@@ -78,7 +80,7 @@ class Xcloner_Remote_Storage{
 						"azure_cleanup_days"	=> "float",
 						),
 					"backblaze" => array(
-						"text"						=> "BackBlaze",
+						"text"						=> "Backblaze",
 						"backblaze_enable"			=> "int",
 						"backblaze_account_id"		=> "string",
 						"backblaze_application_key"	=> "string",
@@ -226,7 +228,7 @@ class Xcloner_Remote_Storage{
 		$this->logger->debug(sprintf("I can write data to remote storage %s", strtoupper($storage_type)));	
 		
 		//testing read access
-		if(!$filesystem->read($test_file))
+		if(!$filesystem->has($test_file))
 			throw new Exception(__("Could not read data",'xcloner-backup-and-restore'));
 		$this->logger->debug(sprintf("I can read data to remote storage %s", strtoupper($storage_type)));		
 		
@@ -405,7 +407,12 @@ class Xcloner_Remote_Storage{
 	{
 		$this->logger->info(sprintf("Creating the DROPBOX remote storage connection"), array(""));
 		
-		$client = new Client(get_option("xcloner_dropbox_access_token"), get_option("xcloner_dropbox_app_secret"));
+		if (version_compare(phpversion(), '5.5.0', '<')) 
+		{
+				throw new Exception("DROPBOX requires PHP 5.5 to be installed!");
+		}
+		
+		$client = new DropboxClient(get_option("xcloner_dropbox_access_token"));
 		$adapter = new DropboxAdapter($client, get_option("xcloner_dropbox_prefix"));
 		
 		$filesystem = new Filesystem($adapter, new Config([

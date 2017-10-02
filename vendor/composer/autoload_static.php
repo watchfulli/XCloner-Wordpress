@@ -19,7 +19,9 @@ class ComposerStaticInit571f9d19802717f7be61d57b40d60b28
         'a1cce3d26cc15c00fcd0b3354bd72c88' => __DIR__ . '/..' . '/sabre/event/lib/Promise/functions.php',
         '8a9dc1de0ca7e01f3e08231539562f61' => __DIR__ . '/..' . '/aws/aws-sdk-php/src/functions.php',
         'ebdb698ed4152ae445614b69b5e4bb6a' => __DIR__ . '/..' . '/sabre/http/lib/functions.php',
+        '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
         'decc78cc4436b1292c6c0d151b19445c' => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib/bootstrap.php',
+        '72579e7bd17821bb1321b87411366eae' => __DIR__ . '/..' . '/illuminate/support/helpers.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -33,6 +35,7 @@ class ComposerStaticInit571f9d19802717f7be61d57b40d60b28
         ),
         'S' => 
         array (
+            'Srmklive\\Dropbox\\' => 17,
             'Sabre\\Xml\\' => 10,
             'Sabre\\VObject\\' => 14,
             'Sabre\\Uri\\' => 10,
@@ -67,6 +70,11 @@ class ComposerStaticInit571f9d19802717f7be61d57b40d60b28
         array (
             'JmesPath\\' => 9,
         ),
+        'I' => 
+        array (
+            'Illuminate\\Support\\' => 19,
+            'Illuminate\\Contracts\\' => 21,
+        ),
         'G' => 
         array (
             'GuzzleHttp\\Psr7\\' => 16,
@@ -91,6 +99,10 @@ class ComposerStaticInit571f9d19802717f7be61d57b40d60b28
         'phpseclib\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib',
+        ),
+        'Srmklive\\Dropbox\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/srmklive/flysystem-dropbox-v2/src',
         ),
         'Sabre\\Xml\\' => 
         array (
@@ -176,6 +188,14 @@ class ComposerStaticInit571f9d19802717f7be61d57b40d60b28
         array (
             0 => __DIR__ . '/..' . '/mtdowling/jmespath.php/src',
         ),
+        'Illuminate\\Support\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/illuminate/support',
+        ),
+        'Illuminate\\Contracts\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/illuminate/contracts',
+        ),
         'GuzzleHttp\\Psr7\\' => 
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/psr7/src',
@@ -204,6 +224,10 @@ class ComposerStaticInit571f9d19802717f7be61d57b40d60b28
             'Dropbox' => 
             array (
                 0 => __DIR__ . '/..' . '/dropbox/dropbox-sdk/lib',
+            ),
+            'Doctrine\\Common\\Inflector\\' => 
+            array (
+                0 => __DIR__ . '/..' . '/doctrine/inflector/lib',
             ),
         ),
     );
