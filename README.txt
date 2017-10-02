@@ -108,6 +108,10 @@ Of course, schedules can be adjusted accordingly to how often you update your si
 
 == Changelog ==
 
+= 4.0.5 =
+* Dropbox API update to V2
+* Code fixes and text changes
+
 = 4.0.4 =
 * remote storage view fix
 * added automatic backups option before WP automatic update
