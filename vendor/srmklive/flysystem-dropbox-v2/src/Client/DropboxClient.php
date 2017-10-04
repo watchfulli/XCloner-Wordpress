@@ -436,7 +436,7 @@ class DropboxClient
      *
      * @return array
      */
-    public function uploadChunk(string $path, $contents, $mode = 'add', $chunkSize = null)
+    public function uploadChunk($path, $contents, $mode = 'add', $chunkSize = null)
     {
         $chunkSize = ($chunkSize) ? $chunkSize: static::MAX_CHUNK_SIZE;
         $stream = $contents;
