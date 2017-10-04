@@ -20,7 +20,7 @@ class DropboxClient
     const THUMBNAIL_SIZE_L = 'w640h480';
     const THUMBNAIL_SIZE_XL = 'w1024h768';
 
-    const MAX_CHUNK_SIZE = 150 * 1024 * 1024;
+    const MAX_CHUNK_SIZE = 157286400; //150MB
 
     /** @var \GuzzleHttp\Client */
     protected $client;
@@ -438,7 +438,7 @@ class DropboxClient
      */
     public function uploadChunk(string $path, $contents, $mode = 'add', $chunkSize = null)
     {
-        $chunkSize = $chunkSize ?? static::MAX_CHUNK_SIZE;
+        $chunkSize = ($chunkSize) ? $chunkSize: static::MAX_CHUNK_SIZE;
         $stream = $contents;
 
         // This method relies on resources, so we need to convert strings to resource
