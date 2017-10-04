@@ -7,6 +7,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 use Srmklive\Dropbox\Client\DropboxClient as Client;
+use Srmklive\Dropbox\DropboxUploadCounter as UploadSessionCursor;
 
 class ClientTest extends TestCase
 {
@@ -223,7 +224,7 @@ class ClientTest extends TestCase
 
         $mockHttpClient = $this->mock_http_request(
             json_encode($expectedResponse),
-            'https://api.dropboxapi.com/2/files/move',
+            'https://api.dropboxapi.com/2/files/move_v2',
             [
                 'json' => [
                     'from_path' => '/from/path/file.txt',
@@ -265,6 +266,206 @@ class ClientTest extends TestCase
         );
     }
 
+    /** @test */
+    public function it_can_start_upload_session()
+    {
+        $mockGuzzle = $this->mock_http_request(
+            json_encode(['session_id' => 'mockedUploadSessionId']),
+            'https://content.dropboxapi.com/2/files/upload_session/start',
+            [
+                'headers' => [
+                    'Dropbox-API-Arg' => json_encode(
+                        [
+                            'close' => false,
+                        ]
+                    ),
+                    'Content-Type' => 'application/octet-stream',
+                ],
+                'body' => 'this text have 23 bytes',
+            ]
+        );
+
+        $client = new Client('test_token', $mockGuzzle);
+
+        $uploadSessionCursor = $client->startUploadSession('this text have 23 bytes');
+
+        $this->assertInstanceOf(UploadSessionCursor::class, $uploadSessionCursor);
+        $this->assertEquals('mockedUploadSessionId', $uploadSessionCursor->session_id);
+        $this->assertEquals(23, $uploadSessionCursor->offset);
+    }
+
+    /** @test */
+    public function it_can_append_to_upload_session()
+    {
+        $mockGuzzle = $this->mock_http_request(
+            null,
+            'https://content.dropboxapi.com/2/files/upload_session/append_v2',
+            [
+                'headers' => [
+                    'Dropbox-API-Arg' => json_encode(
+                        [
+                            'cursor' => [
+                                'session_id'    => 'mockedUploadSessionId',
+                                'offset'        => 10,
+                            ],
+                            'close' => false,
+                        ]
+                    ),
+                    'Content-Type' => 'application/octet-stream',
+                ],
+                'body' => 'this text has 32 bytes',
+            ]
+        );
+
+        $client = new Client('test_token', $mockGuzzle);
+
+        $oldUploadSessionCursor = new UploadSessionCursor('mockedUploadSessionId', 10);
+
+        $uploadSessionCursor = $client->appendContentToUploadSession('this text has 32 bytes', $oldUploadSessionCursor);
+
+        $this->assertInstanceOf(UploadSessionCursor::class, $uploadSessionCursor);
+        $this->assertEquals('mockedUploadSessionId', $uploadSessionCursor->session_id);
+        $this->assertEquals(32, $uploadSessionCursor->offset);
+    }
+
+    /** @test */
+    public function it_can_upload_a_file_string_chunk()
+    {
+        $content = 'chunk0chunk1chunk2rest';
+        $mockClient = $this->mock_chunk_upload_client($content, 6);
+
+        $this->assertEquals(
+            ['name' => 'answers.txt'],
+            $mockClient->uploadChunk('Homework/math/answers.txt', $content, 'add', 6)
+        );
+    }
+
+    /** @test */
+    public function it_can_upload_a_file_resource_chunk()
+    {
+        $content = 'chunk0chunk1chunk2rest';
+        $resource = fopen('php://memory', 'r+');
+        fwrite($resource, $content);
+        rewind($resource);
+
+        $mockClient = $this->mock_chunk_upload_client($content, 6);
+
+        $this->assertEquals(
+            ['name' => 'answers.txt'],
+            $mockClient->uploadChunk('Homework/math/answers.txt', $resource, 'add', 6)
+        );
+    }
+
+    /** @test */
+    public function it_can_upload_a_tiny_file_chunk()
+    {
+        $content = 'smallerThenChunkSize';
+        $resource = fopen('php://memory', 'r+');
+        fwrite($resource, $content);
+        rewind($resource);
+
+        $mockClient = $this->mock_chunk_upload_client($content, 21);
+
+        $this->assertEquals(
+            ['name' => 'answers.txt'],
+            $mockClient->uploadChunk('Homework/math/answers.txt', $resource, 'add', 21)
+        );
+    }
+
+    /** @test */
+    public function it_can_finish_an_upload_session()
+    {
+        $mockGuzzle = $this->mock_http_request(
+            json_encode([
+                'name' => 'answers.txt',
+            ]),
+            'https://content.dropboxapi.com/2/files/upload_session/finish',
+            [
+                'headers' => [
+                    'Dropbox-API-Arg' => json_encode([
+                        'cursor' => [
+                            'session_id'    => 'mockedUploadSessionId',
+                            'offset'        => 10,
+                        ],
+                        'commit' => [
+                            'path'          => 'Homework/math/answers.txt',
+                            'mode'          => 'add',
+                            'autorename'    => false,
+                            'mute'          => false,
+                        ],
+                    ]),
+                    'Content-Type' => 'application/octet-stream',
+                ],
+                'body' => 'this text has 32 bytes',
+            ]
+        );
+
+        $client = new Client('test_token', $mockGuzzle);
+
+        $oldUploadSessionCursor = new UploadSessionCursor('mockedUploadSessionId', 10);
+
+        $response = $client->finishUploadSession(
+            'this text has 32 bytes',
+            $oldUploadSessionCursor,
+            'Homework/math/answers.txt'
+        );
+
+        $this->assertEquals([
+            '.tag' => 'file',
+            'name' => 'answers.txt',
+        ], $response);
+    }
+
+    /** @test */
+    public function it_can_get_account_info()
+    {
+        $expectedResponse = [
+            'account_id'    => 'dbid:AAH4f99T0taONIb-OurWxbNQ6ywGRopQngc',
+            'name'          => [
+                'given_name'        => 'Franz',
+                'surname'           => 'Ferdinand',
+                'familiar_name'     => 'Franz',
+                'display_name'      => 'Franz Ferdinand (Personal)',
+                'abbreviated_name'  => 'FF',
+            ],
+            'email'             => 'franz@gmail.com',
+            'email_verified'    => false,
+            'disabled'          => false,
+            'locale'            => 'en',
+            'referral_link'     => 'https://db.tt/ZITNuhtI',
+            'is_paired'         => false,
+            'account_type'      => [
+                '.tag' => 'basic',
+            ],
+            'profile_photo_url' => 'https://dl-web.dropbox.com/account_photo/get/dbid%3AAAH4f99T0taONIb-OurWxbNQ6ywGRopQngc?vers=1453416673259&size=128x128',
+            'country'           => 'US',
+        ];
+
+        $mockGuzzle = $this->mock_http_request(
+            json_encode($expectedResponse),
+            'https://api.dropboxapi.com/2/users/get_current_account',
+            []
+        );
+
+        $client = new Client('test_token', $mockGuzzle);
+
+        $this->assertEquals($expectedResponse, $client->getAccountInfo());
+    }
+
+    /** @test */
+    public function it_can_revoke_token()
+    {
+        $mockGuzzle = $this->mock_http_request(
+            null,
+            'https://api.dropboxapi.com/2/auth/token/revoke',
+            []
+        );
+
+        $client = new Client('test_token', $mockGuzzle);
+
+        $client->revokeToken();
+    }
+
     private function mock_http_request($expectedResponse, $expectedEndpoint, $expectedParams)
     {
         $mockResponse = $this->getMockBuilder(ResponseInterface::class)
@@ -282,5 +483,46 @@ class ClientTest extends TestCase
             ->willReturn($mockResponse);
 
         return $mockHttpClient;
+    }
+
+    private function mock_chunk_upload_client($content, $chunkSize)
+    {
+        $chunks = str_split($content, $chunkSize);
+
+        $mockClient = $this->getMockBuilder(Client::class)
+            ->setConstructorArgs(['test_token'])
+            ->setMethodsExcept(['uploadChunk', 'upload'])
+            ->getMock();
+
+        $mockClient->expects($this->once())
+            ->method('startUploadSession')
+            ->with(array_shift($chunks))
+            ->willReturn(new UploadSessionCursor('mockedSessionId', $chunkSize));
+
+        $mockClient->expects($this->once())
+            ->method('finishUploadSession')
+            ->with(array_pop($chunks), $this->anything(), 'Homework/math/answers.txt', 'add')
+            ->willReturn(['name' => 'answers.txt']);
+
+        $remainingChunks = count($chunks);
+        $offset = $chunkSize;
+
+        if ($remainingChunks) {
+            $withs = [];
+            $returns = [];
+
+            foreach ($chunks as $chunk) {
+                $offset += $chunkSize;
+                $withs[] = [$chunk, $this->anything()];
+                $returns[] = new UploadSessionCursor('mockedSessionId', $offset);
+            }
+
+            $mockClient->expects($this->exactly($remainingChunks))
+                ->method('appendContentToUploadSession')
+                ->withConsecutive(...$withs)
+                ->willReturn(...$returns);
+        }
+
+        return $mockClient;
     }
 }
