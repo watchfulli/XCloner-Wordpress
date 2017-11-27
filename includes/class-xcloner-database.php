@@ -509,6 +509,11 @@ class Xcloner_Database extends wpdb{
 
 	                foreach ($arr as $key => $value) {
 						$value = $this->_real_escape($value);
+						
+						if(method_exists($this, 'remove_placeholder_escape')){
+							$value = $this->remove_placeholder_escape($value);
+						}
+						
 						$buffer .= "'".$value."', ";
 					}
 					$buffer = rtrim($buffer, ', ') . ");\n";
