@@ -311,6 +311,15 @@ $gdrive_construct = $remote_storage->gdrive_construct();
 			        
 			        <div class="row">
 						<div class="col s12 m3 label">
+							<label for="aws_prefix"><?php echo __("S3 Prefix",'xcloner-backup-and-restore')?></label>
+						</div>	
+						<div class=" col s12 m6">
+							<input placeholder="<?php echo __("S3 Prefix, use / ending to define a folder",'xcloner-backup-and-restore')?>" id="aws_prefix" type="text" name="xcloner_aws_prefix" class="validate" value="<?php echo get_option("xcloner_aws_prefix")?>" autocomplete="off" >
+				        </div>
+			        </div>
+			        
+			        <div class="row">
+						<div class="col s12 m3 label">
 							<label for="aws_cleanup_days"><?php echo __("S3 Cleanup (days)",'xcloner-backup-and-restore')?></label>
 						</div>
 						<div class=" col s12 m6">

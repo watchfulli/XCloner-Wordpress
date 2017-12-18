@@ -62,6 +62,7 @@ class Xcloner_Remote_Storage{
 						"aws_endpoint"			=> "string",
 						"aws_region"			=> "string",
 						"aws_bucket_name"		=> "string",
+						"aws_prefix"			=> "string",
 						"aws_cleanup_days"		=> "float",		
 						),		
 					"dropbox" => array(
@@ -450,13 +451,16 @@ class Xcloner_Remote_Storage{
 		if(get_option('xcloner_aws_endpoint') != ""){
 			
 			$credentials['endpoint'] = get_option('xcloner_aws_endpoint');
+			#$credentials['use_path_style_endpoint'] = true;
+			#$credentials['bucket_endpoint'] = false;
+			
 			
 		}
 		
 		
 		$client = new S3Client($credentials);
 		
-		$adapter = new AwsS3Adapter($client, get_option("xcloner_aws_bucket_name"));
+		$adapter = new AwsS3Adapter($client, get_option("xcloner_aws_bucket_name"), get_option("xcloner_aws_prefix"));
 		$filesystem = new Filesystem($adapter, new Config([
 				'disable_asserts' => true,
 			]));
