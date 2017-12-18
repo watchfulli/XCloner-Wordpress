@@ -108,6 +108,11 @@ Of course, schedules can be adjusted accordingly to how often you update your si
 
 == Changelog ==
 
+= 4.0.6 =
+* S3 prefix addon for defining folders
+* S3 custom endpoint addon to support minio.io
+* code fixes
+
 = 4.0.5 =
 * Dropbox API update to V2
 * Code fixes and text changes
