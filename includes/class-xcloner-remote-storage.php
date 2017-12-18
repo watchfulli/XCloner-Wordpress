@@ -185,7 +185,7 @@ class Xcloner_Remote_Storage{
 				update_option($check_field, $sanitized_value);
 			}
 			
-			$this->xcloner->trigger_message(__("%s storage settings saved.", 'xcloner-backup-and-restore'), "success", ucfirst($action));
+			$this->xcloner->trigger_message(__("%s storage settings saved.", 'xcloner-backup-and-restore'), "success", $this->storage_fields[$action]['text']);
 		}
 		
 	}
@@ -194,10 +194,10 @@ class Xcloner_Remote_Storage{
 	{
 		try{
 			$this->verify_filesystem($action);
-			$this->xcloner->trigger_message(__("%s connection is valid.", 'xcloner-backup-and-restore'), "success", ucfirst($action));
+			$this->xcloner->trigger_message(__("%s connection is valid.", 'xcloner-backup-and-restore'), "success", $this->storage_fields[$action]['text']);
 			$this->logger->debug(sprintf("Connection to remote storage %s is valid", strtoupper($action)));	
 		}catch(Exception $e){
-			$this->xcloner->trigger_message("%s connection error: ".$e->getMessage(), "error", ucfirst($action));
+			$this->xcloner->trigger_message("%s connection error: ".$e->getMessage(), "error", $this->storage_fields[$action]['text']);
 		}
 	}
 	
