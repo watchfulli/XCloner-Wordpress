@@ -230,7 +230,7 @@ $gdrive_construct = $remote_storage->gdrive_construct();
 			<!-- AWS STORAGE-->
 			<li id="aws">
 				<div class="collapsible-header">
-					<i class="material-icons">computer</i><?php echo __("AWS Storage",'xcloner-backup-and-restore')?>
+					<i class="material-icons">computer</i><?php echo __("S3 Storage",'xcloner-backup-and-restore')?>
 					<div class="switch right">
 						<label>
 						Off
@@ -248,36 +248,45 @@ $gdrive_construct = $remote_storage->gdrive_construct();
 						</div>	
 						<div class=" col s12 m6">
 							<p>
-								<?php echo sprintf(__('Visit %s and get your "Key" and "Secret".'), "<a href='https://aws.amazon.com/s3/' target='_blank'>https://aws.amazon.com/s3/</a>")?>
+								<?php echo sprintf(__('Visit %s and get your "Key" and "Secret <br />Visit %s to install your own S3 like service.'), "<a href='https://aws.amazon.com/s3/' target='_blank'>https://aws.amazon.com/s3/</a>", "<a href='https://minio.io/' target='_blank'>https://minio.io/</a>")?>
 							</p>
 				        </div>
 			        </div>
 			        
 			        <div class="row">
 						<div class="col s12 m3 label">
-							<label for="aws_key"><?php echo __("AWS Key",'xcloner-backup-and-restore')?></label>
+							<label for="aws_key"><?php echo __("S3 Key",'xcloner-backup-and-restore')?></label>
 						</div>	
 						<div class=" col s12 m6">
-							<input placeholder="<?php echo __("AWS Key",'xcloner-backup-and-restore')?>" id="aws_key" type="text" name="xcloner_aws_key" class="validate" value="<?php echo get_option("xcloner_aws_key")?>" autocomplete="off" >
+							<input placeholder="<?php echo __("S3 Key",'xcloner-backup-and-restore')?>" id="aws_key" type="text" name="xcloner_aws_key" class="validate" value="<?php echo get_option("xcloner_aws_key")?>" autocomplete="off" >
 				        </div>
 			        </div>
 			        
 			        <div class="row">
 						<div class="col s12 m3 label">
-							<label for="aws_secret"><?php echo __("AWS Secret",'xcloner-backup-and-restore')?></label>
+							<label for="aws_secret"><?php echo __("S3 Secret",'xcloner-backup-and-restore')?></label>
 						</div>	
 						<div class=" col s12 m6">
-							<input placeholder="<?php echo __("AWS Secret",'xcloner-backup-and-restore')?>" id="aws_secret" type="text" name="xcloner_aws_secret" class="validate" value="<?php echo get_option("xcloner_aws_secret")?>" autocomplete="off" >
+							<input placeholder="<?php echo __("S3 Secret",'xcloner-backup-and-restore')?>" id="aws_secret" type="text" name="xcloner_aws_secret" class="validate" value="<?php echo get_option("xcloner_aws_secret")?>" autocomplete="off" >
 				        </div>
 			        </div>
 			        
 			        <div class="row">
 						<div class="col s12 m3 label">
-							<label for="aws_region"><?php echo __("AWS Region",'xcloner-backup-and-restore')?></label>
+							<label for="aws_endpoint"><?php echo __("S3 EndPoint",'xcloner-backup-and-restore')?></label>
+						</div>	
+						<div class=" col s12 m6">
+							<input placeholder="<?php echo __("S3 EndPoint, leave blank if you want to use the default Amazon AWS Service",'xcloner-backup-and-restore')?>" id="aws_endpoint" type="text" name="xcloner_aws_endpoint" class="validate" value="<?php echo get_option("xcloner_aws_endpoint")?>" autocomplete="off" >
+				        </div>
+			        </div>
+			        
+			        <div class="row">
+						<div class="col s12 m3 label">
+							<label for="aws_region"><?php echo __("S3 Region",'xcloner-backup-and-restore')?></label>
 						</div>	
 						<div class=" col s12 m6">
 							<select placeholder="<?php echo __("example: us-east-1",'xcloner-backup-and-restore')?>" id="aws_region" type="text" name="xcloner_aws_region" class="validate" value="<?php echo get_option("xcloner_aws_region")?>" autocomplete="off" >
-							<option readonly value=""><?php echo __("Please Select AWS Region")?></option>
+							<option readonly value=""><?php echo __("Please Select S3 Region")?></option>
 							<?php 							
 							$aws_regions = $remote_storage->get_aws_regions();
 							
@@ -293,16 +302,16 @@ $gdrive_construct = $remote_storage->gdrive_construct();
 			        
 			        <div class="row">
 						<div class="col s12 m3 label">
-							<label for="aws_bucket_name"><?php echo __("AWS Bucket Name",'xcloner-backup-and-restore')?></label>
+							<label for="aws_bucket_name"><?php echo __("S3 Bucket Name",'xcloner-backup-and-restore')?></label>
 						</div>	
 						<div class=" col s12 m6">
-							<input placeholder="<?php echo __("AWS Bucket Name",'xcloner-backup-and-restore')?>" id="aws_bucket_name" type="text" name="xcloner_aws_bucket_name" class="validate" value="<?php echo get_option("xcloner_aws_bucket_name")?>" autocomplete="off" >
+							<input placeholder="<?php echo __("S3 Bucket Name",'xcloner-backup-and-restore')?>" id="aws_bucket_name" type="text" name="xcloner_aws_bucket_name" class="validate" value="<?php echo get_option("xcloner_aws_bucket_name")?>" autocomplete="off" >
 				        </div>
 			        </div>
 			        
 			        <div class="row">
 						<div class="col s12 m3 label">
-							<label for="aws_cleanup_days"><?php echo __("AWS Cleanup (days)",'xcloner-backup-and-restore')?></label>
+							<label for="aws_cleanup_days"><?php echo __("S3 Cleanup (days)",'xcloner-backup-and-restore')?></label>
 						</div>
 						<div class=" col s12 m6">
 							<input placeholder="<?php echo __("how many days to keep the backups for",'xcloner-backup-and-restore')?>" id="aws_cleanup_days" type="text" name="xcloner_aws_cleanup_days" class="validate" value="<?php echo get_option("xcloner_aws_cleanup_days")?>">
