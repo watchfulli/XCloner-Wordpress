@@ -273,20 +273,11 @@ $gdrive_construct = $remote_storage->gdrive_construct();
 			        
 			        <div class="row">
 						<div class="col s12 m3 label">
-							<label for="aws_endpoint"><?php echo __("S3 EndPoint",'xcloner-backup-and-restore')?></label>
-						</div>	
-						<div class=" col s12 m6">
-							<input placeholder="<?php echo __("S3 EndPoint, leave blank if you want to use the default Amazon AWS Service",'xcloner-backup-and-restore')?>" id="aws_endpoint" type="text" name="xcloner_aws_endpoint" class="validate" value="<?php echo get_option("xcloner_aws_endpoint")?>" autocomplete="off" >
-				        </div>
-			        </div>
-			        
-			        <div class="row">
-						<div class="col s12 m3 label">
 							<label for="aws_region"><?php echo __("S3 Region",'xcloner-backup-and-restore')?></label>
 						</div>	
 						<div class=" col s12 m6">
 							<select placeholder="<?php echo __("example: us-east-1",'xcloner-backup-and-restore')?>" id="aws_region" type="text" name="xcloner_aws_region" class="validate" value="<?php echo get_option("xcloner_aws_region")?>" autocomplete="off" >
-							<option readonly value=""><?php echo __("Please Select S3 Region")?></option>
+							<option readonly value=""><?php echo __("Please Select AWS S3 Region or Leave Unselected for Custom Endpoint")?></option>
 							<?php 							
 							$aws_regions = $remote_storage->get_aws_regions();
 							
@@ -297,6 +288,15 @@ $gdrive_construct = $remote_storage->gdrive_construct();
 								}
 							?>
 							</select>
+				        </div>
+			        </div>
+			        
+			        <div class="row">
+						<div class="col s12 m3 label">
+							<label for="aws_endpoint"><?php echo __("S3 EndPoint",'xcloner-backup-and-restore')?></label>
+						</div>	
+						<div class=" col s12 m6">
+							<input placeholder="<?php echo __("S3 EndPoint, leave blank if you want to use the default Amazon AWS Service",'xcloner-backup-and-restore')?>" id="aws_endpoint" type="text" name="xcloner_aws_endpoint" class="validate" value="<?php echo get_option("xcloner_aws_endpoint")?>" autocomplete="off" >
 				        </div>
 			        </div>
 			        
@@ -801,9 +801,24 @@ $gdrive_construct = $remote_storage->gdrive_construct();
 </form>
 
 <script>
+	
+function checkEndpoint(){
+	if(jQuery("#aws_region").val() != ""){
+			jQuery('#aws_endpoint').parent().parent().hide();
+		}else{
+			jQuery('#aws_endpoint').parent().parent().show();
+		}
+}
+
 jQuery(document).ready(function(){
 	
 	var remote_storage = new Xcloner_Remote_Storage();
+
+	checkEndpoint()
+	jQuery("#aws_region").on("change", function(){
+		checkEndpoint();
+			
+	})
 	
 	jQuery(".remote-storage .status").on("change", function(){
 			remote_storage.toggle_status(this);
@@ -830,6 +845,8 @@ jQuery(document).ready(function(){
 	jQuery('.collapsible').collapsible();
 	
 	Materialize.updateTextFields();
+	
+	
 });
         
 </script>
