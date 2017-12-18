@@ -448,7 +448,7 @@ class Xcloner_Remote_Storage{
 		    'version' => 'latest',
 		);
 		
-		if(get_option('xcloner_aws_endpoint') != ""){
+		if(get_option('xcloner_aws_endpoint') != "" && !get_option("xcloner_aws_region")){
 			
 			$credentials['endpoint'] = get_option('xcloner_aws_endpoint');
 			#$credentials['use_path_style_endpoint'] = true;
