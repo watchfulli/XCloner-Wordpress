@@ -55,10 +55,11 @@ class Xcloner_Remote_Storage{
 						"sftp_cleanup_days"	=> "float",
 						),
 					"aws" => array(
-						"text"					=> "AWS",
+						"text"					=> "S3",
 						"aws_enable"			=> "int",
 						"aws_key"				=> "string",
 						"aws_secret"			=> "string",
+						"aws_endpoint"			=> "string",
 						"aws_region"			=> "string",
 						"aws_bucket_name"		=> "string",
 						"aws_cleanup_days"		=> "float",		
@@ -184,7 +185,7 @@ class Xcloner_Remote_Storage{
 				update_option($check_field, $sanitized_value);
 			}
 			
-			$this->xcloner->trigger_message(__("%s storage settings saved.", 'xcloner-backup-and-restore'), "success", ucfirst($action));
+			$this->xcloner->trigger_message(__("%s storage settings saved.", 'xcloner-backup-and-restore'), "success", $this->storage_fields[$action]['text']);
 		}
 		
 	}
@@ -193,10 +194,10 @@ class Xcloner_Remote_Storage{
 	{
 		try{
 			$this->verify_filesystem($action);
-			$this->xcloner->trigger_message(__("%s connection is valid.", 'xcloner-backup-and-restore'), "success", ucfirst($action));
+			$this->xcloner->trigger_message(__("%s connection is valid.", 'xcloner-backup-and-restore'), "success", $this->storage_fields[$action]['text']);
 			$this->logger->debug(sprintf("Connection to remote storage %s is valid", strtoupper($action)));	
 		}catch(Exception $e){
-			$this->xcloner->trigger_message("%s connection error: ".$e->getMessage(), "error", ucfirst($action));
+			$this->xcloner->trigger_message("%s connection error: ".$e->getMessage(), "error", $this->storage_fields[$action]['text']);
 		}
 	}
 	
@@ -424,11 +425,11 @@ class Xcloner_Remote_Storage{
 	
 	public function get_aws_filesystem()
 	{
-		$this->logger->info(sprintf("Creating the AWS remote storage connection"), array(""));
+		$this->logger->info(sprintf("Creating the S3 remote storage connection"), array(""));
 		
 		if (version_compare(phpversion(), '5.5.0', '<')) 
 		{
-				throw new Exception("AWS S3 class requires PHP 5.5 to be installed!");
+				throw new Exception("S3 class requires PHP 5.5 to be installed!");
 		}
 		
 		if (!class_exists('XmlWriter')) 
@@ -437,14 +438,23 @@ class Xcloner_Remote_Storage{
 		}
 		
 		
-		$client = new S3Client([
-		    'credentials' => [
+		$credentials = array(
+		    'credentials' => array(
 		        'key'    => get_option("xcloner_aws_key"),
 		        'secret' => get_option("xcloner_aws_secret")
-		    ],
+		    ),
 		    'region' => get_option("xcloner_aws_region"),
 		    'version' => 'latest',
-		]);
+		);
+		
+		if(get_option('xcloner_aws_endpoint') != ""){
+			
+			$credentials['endpoint'] = get_option('xcloner_aws_endpoint');
+			
+		}
+		
+		
+		$client = new S3Client($credentials);
 		
 		$adapter = new AwsS3Adapter($client, get_option("xcloner_aws_bucket_name"));
 		$filesystem = new Filesystem($adapter, new Config([
