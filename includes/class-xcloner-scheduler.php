@@ -341,6 +341,9 @@ class Xcloner_Scheduler{
 		$this->xcloner_file_system->remove_tmp_filesystem();
 		
 		$this->xcloner_file_system->backup_storage_cleanup();
+		
+		//DO TMP FILESYSTEM CLEANUP
+		$this->xcloner_file_system->cleanup_tmp_directories();
 	}
 	
 	public function xcloner_scheduler_callback($id, $schedule = "")
