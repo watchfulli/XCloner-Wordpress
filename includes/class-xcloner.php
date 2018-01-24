@@ -353,6 +353,11 @@ class Xcloner {
 			}else{
 				$this->xcloner_settings->set_hash($_POST['hash']);
 			}
+		}else{
+			add_action( 'shutdown', function(){
+				$this->xcloner_file_system = new Xcloner_File_System($this);
+				$this->xcloner_file_system->remove_tmp_filesystem();
+			});
 		}
 		
 		$this->xcloner_sanitization 	= new Xcloner_Sanitization();
@@ -362,6 +367,8 @@ class Xcloner {
 		
 		//adding links to the Manage Plugins Wordpress page for XCloner
 		add_filter('plugin_action_links', array($this, 'add_plugin_action_links'), 10, 2);
+		
+		
 		
 	}
 	

@@ -23,6 +23,8 @@ $logger_content = $logger->getLastDebugLines();
 $date_format = get_option( 'date_format' );
 $time_format = get_option( 'time_format' );
 
+$xcloner_file_system->cleanup_tmp_directories();
+
 if($requirements->check_backup_ready_status())
 {
 	$latest_backup =  $xcloner_file_system->get_latest_backup();

@@ -474,10 +474,14 @@ class Xcloner_File_System{
 		
 		foreach($contents as $file)
 		{
+			
 			if(preg_match("/.xcloner-(.*)/",$file['path']))
 			{
-				$tmp_filesystem->deleteDir($file['path']);
-				$this->logger->info(sprintf("Delete temporary directory %s", $file['path']));
+				if($file['timestamp'] < strtotime("-1days"))
+				{
+					$tmp_filesystem->deleteDir($file['path']);
+					$this->logger->info(sprintf("Delete temporary directory %s", $file['path']));
+				}
 			}
 		}
 		
