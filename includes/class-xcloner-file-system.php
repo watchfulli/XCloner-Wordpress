@@ -450,7 +450,7 @@ class Xcloner_File_System{
 	public function remove_tmp_filesystem()
 	{
 		//delete the temporary folder
-		$this->logger->info(sprintf("Deleting the temporary storage folder %s", $this->xcloner_settings->get_xcloner_tmp_path()));
+		$this->logger->debug(sprintf("Deleting the temporary storage folder %s", $this->xcloner_settings->get_xcloner_tmp_path()));
 		
 		$contents = $this->get_tmp_filesystem()->listContents();
 	
@@ -480,7 +480,7 @@ class Xcloner_File_System{
 				if($file['timestamp'] < strtotime("-1days"))
 				{
 					$tmp_filesystem->deleteDir($file['path']);
-					$this->logger->info(sprintf("Delete temporary directory %s", $file['path']));
+					$this->logger->debug(sprintf("Delete temporary directory %s", $file['path']));
 				}
 			}
 		}
