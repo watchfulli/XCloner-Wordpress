@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: backup plugin, restore plugin, database backup, duplicate, full site backup, website cloner, wordpress backup, database restore, webdav, azure, ftp, sftp, amazon s3, dropbox, google drive, differential backup
 Requires at least: 3.0.1
 Tested up to: 4.9
-Stable tag: 4.0.6
+Stable tag: 4.0.7
 
 Backup your site, restore to any web location, send your backups to Dropbox, Amazon S3, Azure, FTP, SFTP, WebDAV, Google Drive with XCloner plugin.
 
@@ -107,6 +107,10 @@ Of course, schedules can be adjusted accordingly to how often you update your si
 11. Generate Backup Screen
 
 == Changelog ==
+
+= 4.0.7 =
+* added log fixes for Wordpress cron
+* remove storage fixes
 
 = 4.0.6 =
 * S3 prefix addon for defining folders
