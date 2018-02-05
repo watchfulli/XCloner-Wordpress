@@ -65,16 +65,22 @@ class Xcloner_Settings
 	
 	public function get_xcloner_tmp_path($suffix = true)
 	{
-		$path = sys_get_temp_dir();
-		if(!is_dir($path))
-		{
-			@mkdir($path);
-			@chmod($path, 0777);
-		}
-		
-		if(!is_dir($path) or !is_writeable($path) or get_option('xcloner_force_tmp_path_site_root'))
+		if(get_option('xcloner_force_tmp_path_site_root'))
 		{
 			$path = $this->get_xcloner_store_path();
+		}else{
+		
+			$path = sys_get_temp_dir();
+			if(!is_dir($path))
+			{
+				@mkdir($path);
+				@chmod($path, 0777);
+			}
+		
+			if(!is_dir($path) or !is_writeable($path))
+			{
+				$path = $this->get_xcloner_store_path();
+			}
 		}
 		
 		if($suffix)
