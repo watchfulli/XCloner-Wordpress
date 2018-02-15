@@ -108,6 +108,7 @@ class Xcloner_Remote_Storage{
 						"gdrive_client_secret"		=> "string",
 						"gdrive_target_folder"		=> "string",
 						"gdrive_cleanup_days"		=> "float",		
+						"gdrive_empty_trash"		=> "int",		
 						),	
 					);
 	
@@ -584,6 +585,7 @@ class Xcloner_Remote_Storage{
 	 */
 	public function get_gdrive_filesystem()
 	{
+		
 		if (version_compare(phpversion(), '5.5.0', '<')) 
 		{
 				throw new Exception("Google Drive API requires PHP 5.5 to be installed!");
@@ -603,6 +605,11 @@ class Xcloner_Remote_Storage{
 		$client->refreshToken(get_option("xcloner_gdrive_refresh_token"));
 	
 		$service = new \Google_Service_Drive($client);
+		
+		if( get_option("xcloner_gdrive_empty_trash",0) ){
+			$this->logger->info(sprintf("Doing a Google Drive emptyTrash call"), array(""));
+			$service->files->emptyTrash();
+		}
 		
 		$parent = 'root';
 		$dir = basename( get_option("xcloner_gdrive_target_folder"));
