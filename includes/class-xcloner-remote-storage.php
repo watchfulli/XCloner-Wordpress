@@ -606,10 +606,10 @@ class Xcloner_Remote_Storage{
 	
 		$service = new \Google_Service_Drive($client);
 		
-		if( get_option("xcloner_gdrive_empty_trash",0) ){
+		/*if( get_option("xcloner_gdrive_empty_trash",0) ){
 			$this->logger->info(sprintf("Doing a Google Drive emptyTrash call"), array(""));
 			$service->files->emptyTrash();
-		}
+		}*/
 		
 		$parent = 'root';
 		$dir = basename( get_option("xcloner_gdrive_target_folder"));
@@ -643,7 +643,11 @@ class Xcloner_Remote_Storage{
 		
 		$this->logger->info(sprintf("Using target folder with ID %s on the remote storage", $folderID));
 		
-		$adapter = new \Hypweb\Flysystem\GoogleDrive\GoogleDriveAdapter($service, $folderID);
+		if(class_exists('XCloner_Google_Drive_Adapter')){
+			$adapter = new XCloner_Google_Drive_Adapter($service, $folderID);
+		}else{
+			$adapter = new \Hypweb\Flysystem\GoogleDrive\GoogleDriveAdapter($service, $folderID);
+		}
 		
 		$filesystem = new \League\Flysystem\Filesystem($adapter, new Config([
 				'disable_asserts' => true,
