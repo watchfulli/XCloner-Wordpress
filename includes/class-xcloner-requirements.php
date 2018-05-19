@@ -61,9 +61,10 @@ class Xcloner_Requirements
 	
 	public function check_safe_mode($return_bool=0)
 	{
+		/*no longer needed for PHP 7*/
 		$safe_mode = "Off";
 		
-		if($return_bool)
+		/*if($return_bool)
 		{
 			if( ini_get('safe_mode') )
 				return false;
@@ -73,6 +74,7 @@ class Xcloner_Requirements
 		
 		if( ini_get('safe_mode') )
 			$safe_mode = "On";
+		* */
 			
 		return $safe_mode;
 	}

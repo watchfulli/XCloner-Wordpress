@@ -494,7 +494,7 @@ class Xcloner_Database extends wpdb{
 		
 		}else{
 			$result = mysql_query($query, $this->dbh);
-			$mysql_fetch_function = "mysql_fetch_array";
+			$mysql_fetch_function = "mysqli_fetch_array";
 		}
 		//$result = $this->get_results($query, ARRAY_N);
 		//print_r($result); exit;

@@ -216,7 +216,7 @@ class Xcloner_Scheduler{
 		return $update;		
 	} 
 	
-	private function __xcloner_scheduler_callback($id, $schedule)
+	private function _xcloner_scheduler_callback($id, $schedule)
 	{
 		set_time_limit(0);
 		
@@ -355,7 +355,7 @@ class Xcloner_Scheduler{
 		
 		try{
 
-			$this->__xcloner_scheduler_callback($id, $schedule);
+			$this->_xcloner_scheduler_callback($id, $schedule);
 			
 		}catch(Exception $e){
 			
