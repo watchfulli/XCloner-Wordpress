@@ -33,7 +33,7 @@ function filter($iterable, callable $pred)
 {
     foreach ($iterable as $value) {
         if ($pred($value)) {
-            yield ($value);
+            yield $value;
         }
     }
 }
@@ -49,7 +49,7 @@ function filter($iterable, callable $pred)
 function map($iterable, callable $f)
 {
     foreach ($iterable as $value) {
-        yield ($f($value));
+        yield $f($value);
     }
 }
 
@@ -67,7 +67,7 @@ function flatmap($iterable, callable $f)
 {
     foreach (map($iterable, $f) as $outer) {
         foreach ($outer as $inner) {
-            yield ($inner);
+            yield $inner;
         }
     }
 }
@@ -86,13 +86,13 @@ function partition($iterable, $size)
     foreach ($iterable as $value) {
         $buffer[] = $value;
         if (count($buffer) === $size) {
-            yield ($buffer);
+            yield $buffer;
             $buffer = [];
         }
     }
 
     if ($buffer) {
-        yield ($buffer);
+        yield $buffer;
     }
 }
 
@@ -181,7 +181,7 @@ function dir_iterator($path, $context = null)
         throw new \InvalidArgumentException('File not found: ' . $path);
     }
     while (($file = readdir($dh)) !== false) {
-        yield ($file);
+        yield $file;
     }
     closedir($dh);
 }
@@ -212,7 +212,7 @@ function recursive_dir_iterator($path, $context = null)
                 continue;
             }
             $fullPath = "{$path}/{$file}";
-            yield ($fullPath);
+            yield $fullPath;
             if (is_dir($fullPath)) {
                 $queue[] = $iterator;
                 $iterator = map(
