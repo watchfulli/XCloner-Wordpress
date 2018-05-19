@@ -1,0 +1,28 @@
+language: php
+
+php:
+  - 5.5
+  - 5.6
+  - 7.0
+  - hhvm
+
+sudo: false
+
+env:
+  - COMPOSER_OPTS=""
+  - COMPOSER_OPTS="--prefer-lowest"
+
+matrix:
+  allow_failures:
+    - php: hhvm
+  fast_finish: true
+
+install:
+  - export AWS_ACCESS_KEY_ID=foo
+  - export AWS_SECRET_ACCESS_KEY=bar
+  - 'if [ $(phpenv version-name) != "hhvm" ]; then echo "xdebug.overload_var_dump = 0" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini; fi'
+  - travis_retry composer update $COMPOSER_OPTS --no-interaction --prefer-source
+
+script:
+  - make test
+  - if [ -z "$COMPOSER_OPTS" ]; then make package; fi
