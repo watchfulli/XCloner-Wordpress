@@ -19,6 +19,11 @@ class SftpAdapter extends AbstractFtpAdapter
     use StreamedCopyTrait;
 
     /**
+     * @var SFTP
+     */
+    protected $connection;
+
+    /**
      * @var int
      */
     protected $port = 22;
@@ -247,13 +252,13 @@ class SftpAdapter extends AbstractFtpAdapter
     }
 
     /**
-     * Get the private get with the password or private key contents.
+     * Get the private key with the password or private key contents.
      *
      * @return RSA
      */
     public function getPrivateKey()
     {
-        if (@is_file($this->privatekey)) {
+        if ("---" !== substr($this->privatekey, 0, 3) && is_file($this->privatekey)) {
             $this->privatekey = file_get_contents($this->privatekey);
         }
 
@@ -326,7 +331,7 @@ class SftpAdapter extends AbstractFtpAdapter
     protected function normalizeListingObject($path, array $object)
     {
         $permissions = $this->normalizePermissions($object['permissions']);
-        $type = isset($object['type']) && ($object['type'] === 1) ? 'file' : 'dir' ;
+        $type = isset($object['type']) && ($object['type'] === 2) ?  'dir' : 'file';
 
         $timestamp = $object['mtime'];
 
