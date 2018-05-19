@@ -25,7 +25,6 @@ return array(
     'Mhetreramesh\\Flysystem\\' => array($vendorDir . '/mhetreramesh/flysystem-backblaze/src'),
     'League\\Flysystem\\WebDAV\\' => array($vendorDir . '/league/flysystem-webdav/src'),
     'League\\Flysystem\\Sftp\\' => array($vendorDir . '/league/flysystem-sftp/src'),
-    'League\\Flysystem\\Dropbox\\' => array($vendorDir . '/league/flysystem-dropbox/src'),
     'League\\Flysystem\\Azure\\' => array($vendorDir . '/league/flysystem-azure/src'),
     'League\\Flysystem\\AwsS3v3\\' => array($vendorDir . '/league/flysystem-aws-s3-v3/src'),
     'League\\Flysystem\\' => array($vendorDir . '/league/flysystem/src'),

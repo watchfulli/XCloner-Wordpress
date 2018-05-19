@@ -61,7 +61,6 @@ class ComposerStaticInit571f9d19802717f7be61d57b40d60b28
         array (
             'League\\Flysystem\\WebDAV\\' => 24,
             'League\\Flysystem\\Sftp\\' => 22,
-            'League\\Flysystem\\Dropbox\\' => 25,
             'League\\Flysystem\\Azure\\' => 23,
             'League\\Flysystem\\AwsS3v3\\' => 25,
             'League\\Flysystem\\' => 17,
@@ -168,10 +167,6 @@ class ComposerStaticInit571f9d19802717f7be61d57b40d60b28
         array (
             0 => __DIR__ . '/..' . '/league/flysystem-sftp/src',
         ),
-        'League\\Flysystem\\Dropbox\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/league/flysystem-dropbox/src',
-        ),
         'League\\Flysystem\\Azure\\' => 
         array (
             0 => __DIR__ . '/..' . '/league/flysystem-azure/src',
@@ -221,10 +216,6 @@ class ComposerStaticInit571f9d19802717f7be61d57b40d60b28
     public static $prefixesPsr0 = array (
         'D' => 
         array (
-            'Dropbox' => 
-            array (
-                0 => __DIR__ . '/..' . '/dropbox/dropbox-sdk/lib',
-            ),
             'Doctrine\\Common\\Inflector\\' => 
             array (
                 0 => __DIR__ . '/..' . '/doctrine/inflector/lib',
