@@ -106,6 +106,10 @@ Of course, schedules can be adjusted accordingly to how often you update your si
 10. Generate Backup Process
 11. Generate Backup Screen
 
+== DONORS ==
+
+Immigration Attorney Montana <a href="https://www.immigrationlawofmt.com" target='_blank'>https://www.immigrationlawofmt.com</a>
+
 == Changelog ==
 
 = 4.0.7 =
