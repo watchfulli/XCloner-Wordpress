@@ -9,8 +9,8 @@ class ComposerStaticInit571f9d19802717f7be61d57b40d60b28
     public static $files = array (
         'c964ee0ededf28c96ebd9db5099ef910' => __DIR__ . '/..' . '/guzzlehttp/promises/src/functions_include.php',
         'a0edc8309cc5e1d60e3047b5df6b7052' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/functions_include.php',
-        '383eaff206634a77a1be54e64e6459c7' => __DIR__ . '/..' . '/sabre/uri/lib/functions.php',
         '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
+        '383eaff206634a77a1be54e64e6459c7' => __DIR__ . '/..' . '/sabre/uri/lib/functions.php',
         'b067bc7112e384b61c701452d53a14a8' => __DIR__ . '/..' . '/mtdowling/jmespath.php/src/JmesPath.php',
         '3569eecfeed3bcf0bad3c998a494ecb8' => __DIR__ . '/..' . '/sabre/xml/lib/Deserializer/functions.php',
         '93aa591bc4ca510c520999e34229ee79' => __DIR__ . '/..' . '/sabre/xml/lib/Serializer/functions.php',
@@ -19,8 +19,6 @@ class ComposerStaticInit571f9d19802717f7be61d57b40d60b28
         'a1cce3d26cc15c00fcd0b3354bd72c88' => __DIR__ . '/..' . '/sabre/event/lib/Promise/functions.php',
         '8a9dc1de0ca7e01f3e08231539562f61' => __DIR__ . '/..' . '/aws/aws-sdk-php/src/functions.php',
         'ebdb698ed4152ae445614b69b5e4bb6a' => __DIR__ . '/..' . '/sabre/http/lib/functions.php',
-        '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
-        '72579e7bd17821bb1321b87411366eae' => __DIR__ . '/..' . '/illuminate/support/helpers.php',
         'decc78cc4436b1292c6c0d151b19445c' => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib/bootstrap.php',
     );
 
@@ -69,11 +67,6 @@ class ComposerStaticInit571f9d19802717f7be61d57b40d60b28
         array (
             'JmesPath\\' => 9,
         ),
-        'I' => 
-        array (
-            'Illuminate\\Support\\' => 19,
-            'Illuminate\\Contracts\\' => 21,
-        ),
         'G' => 
         array (
             'GuzzleHttp\\Psr7\\' => 16,
@@ -83,6 +76,10 @@ class ComposerStaticInit571f9d19802717f7be61d57b40d60b28
         'C' => 
         array (
             'ChrisWhite\\B2\\' => 14,
+        ),
+        'B' => 
+        array (
+            'BackblazeB2\\' => 12,
         ),
         'A' => 
         array (
@@ -183,14 +180,6 @@ class ComposerStaticInit571f9d19802717f7be61d57b40d60b28
         array (
             0 => __DIR__ . '/..' . '/mtdowling/jmespath.php/src',
         ),
-        'Illuminate\\Support\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/illuminate/support',
-        ),
-        'Illuminate\\Contracts\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/illuminate/contracts',
-        ),
         'GuzzleHttp\\Psr7\\' => 
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/psr7/src',
@@ -207,6 +196,10 @@ class ComposerStaticInit571f9d19802717f7be61d57b40d60b28
         array (
             0 => __DIR__ . '/..' . '/cwhite92/b2-sdk-php/src',
         ),
+        'BackblazeB2\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/gliterd/backblaze-b2/src',
+        ),
         'Aws\\' => 
         array (
             0 => __DIR__ . '/..' . '/aws/aws-sdk-php/src',
@@ -214,11 +207,11 @@ class ComposerStaticInit571f9d19802717f7be61d57b40d60b28
     );
 
     public static $prefixesPsr0 = array (
-        'D' => 
+        'o' => 
         array (
-            'Doctrine\\Common\\Inflector\\' => 
+            'org\\bovigo\\vfs\\' => 
             array (
-                0 => __DIR__ . '/..' . '/doctrine/inflector/lib',
+                0 => __DIR__ . '/..' . '/mikey179/vfsStream/src/main/php',
             ),
         ),
     );

@@ -13,14 +13,13 @@ use Aws\S3\S3Client;
 use Aws\HandlerList;
 use Aws\Sdk;
 use Aws\Result;
-use Aws\WrappedHttpHandler;
-use GuzzleHttp\Promise\RejectedPromise;
 use Psr\Http\Message\RequestInterface;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers Aws\ClientResolver
  */
-class ClientResolverTest extends \PHPUnit_Framework_TestCase
+class ClientResolverTest extends TestCase
 {
     use UsesServiceTrait;
 
@@ -165,6 +164,44 @@ class ClientResolverTest extends \PHPUnit_Framework_TestCase
             ]
         ]);
         $r->resolve(['foo' => 'c'], new HandlerList());
+    }
+
+    public function testValidatesCallableClosure()
+    {
+        $r = new ClientResolver([
+            'foo' => [
+                'type' => 'value',
+                'valid' => ['string'],
+                'default' => function () {
+                    return 'callable_test';
+                }
+            ]
+        ]);
+        $res = $r->resolve([], new HandlerList());
+        $this->assertEquals('callable_test', $res['foo']);
+    }
+
+    public function checkCallable()
+    {
+        return "testcall";
+    }
+
+    public function testValidatesNotInvokeStringCallable()
+    {
+        $callableFunction = '\Aws\test\ClientResolverTest::checkCallable';
+        $r = new ClientResolver([
+            'foo' => [
+                'type'    => 'value',
+                'valid'   => ['string'],
+                'default' => $callableFunction
+            ]
+        ]);
+        $res = $r->resolve([], new HandlerList());
+        $this->assertInternalType('callable', $callableFunction);
+        $this->assertEquals(
+            '\Aws\test\ClientResolverTest::checkCallable',
+            $res['foo']
+        );
     }
 
     /**
@@ -317,6 +354,7 @@ EOT;
 
     public function testCanUseCredentialsCache()
     {
+        putenv('AWS_CONTAINER_CREDENTIALS_RELATIVE_URI');
         $credentialsEnvironment = [
             'home' => 'HOME',
             'key' => CredentialProvider::ENV_KEY,
@@ -452,6 +490,22 @@ EOT;
 
     /**
      * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage A "version" configuration value is required
+     */
+    public function testHasSpecificMessageForNullRequiredVersion()
+    {
+        $r = new ClientResolver(ClientResolver::getDefaultArguments());
+        $list = new HandlerList();
+        $r->resolve([
+            'service'     => 'foo',
+            'region'      => 'x',
+            'credentials' => ['key' => 'a', 'secret' => 'b'],
+            'version'     => null,
+        ], $list);
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage A "region" configuration value is required for the "foo" service
      */
     public function testHasSpecificMessageForMissingRegion()
@@ -459,6 +513,22 @@ EOT;
         $args = ClientResolver::getDefaultArguments()['region'];
         $r = new ClientResolver(['region' => $args]);
         $r->resolve(['service' => 'foo'], new HandlerList());
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage A "region" configuration value is required for the "foo" service
+     */
+    public function testHasSpecificMessageForNullRequiredRegion()
+    {
+        $r = new ClientResolver(ClientResolver::getDefaultArguments());
+        $list = new HandlerList();
+        $r->resolve([
+            'service'     => 'foo',
+            'region'      => null,
+            'credentials' => ['key' => 'a', 'secret' => 'b'],
+            'version'     => 'latest',
+        ], $list);
     }
 
     public function testAddsTraceMiddleware()
@@ -473,7 +543,7 @@ EOT;
             'debug'       => ['logfn' => function ($value) use (&$str) { $str .= $value; }]
         ], $list);
         $value = $this->readAttribute($list, 'interposeFn');
-        $this->assertTrue(is_callable($value));
+        $this->assertInternalType('callable', $value);
     }
 
     public function testAppliesUserAgent()
@@ -509,7 +579,12 @@ EOT;
 
         $request->expects($this->once())
             ->method('withHeader')
-            ->with('User-Agent', 'aws-sdk-php/' . Sdk::VERSION . ' MockBuilder');
+            ->with(
+                'User-Agent',
+                new \PHPUnit_Framework_Constraint_PCREMatch(
+                    '/aws-sdk-php\/' . Sdk::VERSION . '.* MockBuilder/'
+                )
+            );
 
         $args = [];
         $list = new HandlerList(function () {});
@@ -600,10 +675,10 @@ EOT;
             array_flip(['endpoint_provider', 'service', 'region', 'scheme', $argName])
         );
         $resolver = new ClientResolver($resolverArgs);
-        
+
         $resolved = $resolver->resolve($args, new HandlerList);
         $this->assertSame($expected, $resolved[$argName]);
-        
+
         $resolved = $resolver->resolve([$argName => $override] + $args, new HandlerList);
         $this->assertSame($override, $resolved[$argName]);
     }
@@ -708,9 +783,9 @@ EOT;
         ];
         $list = new HandlerList;
 
-        $this->assertSame(0, count($list));
+        $this->assertCount(0, $list);
         ClientResolver::_apply_idempotency_auto_fill($value, $args, $list);
-        $this->assertSame($shouldAddIdempotencyMiddleware ? 1 : 0, count($list));
+        $this->assertCount($shouldAddIdempotencyMiddleware ? 1 : 0, $list);
     }
 
     public function idempotencyAutoFillProvider()

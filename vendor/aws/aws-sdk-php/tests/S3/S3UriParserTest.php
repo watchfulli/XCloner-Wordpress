@@ -2,11 +2,12 @@
 namespace Aws\Test\S3;
 
 use Aws\S3\S3UriParser;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers Aws\S3\S3UriParser
  */
-class S3UriParserTest extends \PHPUnit_Framework_TestCase
+class S3UriParserTest extends TestCase
 {
     public function uriProvider()
     {
@@ -48,9 +49,18 @@ class S3UriParserTest extends \PHPUnit_Framework_TestCase
             ['http://foo.baz.s3-us-west-2.amazonaws.com/bar/baz', ['region' => 'us-west-2', 'bucket' => 'foo.baz', 'key' => 'bar/baz', 'path_style' => false]],
             ['http://foo.baz.s3-us-west-2.amazonaws.com/bar/baz/', ['region' => 'us-west-2', 'bucket' => 'foo.baz', 'key' => 'bar/baz/', 'path_style' => false]],
 
-            ['http://jarjar.binks.com/foo/bar', ['bucket' => 'foo', 'key' => 'bar', 'path_style' => true, 'region' => null], true],
-            ['http://jarjar.binks.com/foo/bar/baz', ['bucket' => 'foo', 'key' => 'bar/baz', 'path_style' => true, 'region' => null], true],
-            ['http://amazonaws.com/foo', ['bucket' => 'foo', 'key' => null, 'path_style' => true, 'region' => null], true],
+            ['http://jarjar.binks.com/foo/bar', ['bucket' => 'foo', 'key' => 'bar', 'path_style' => true, 'region' => null]],
+            ['http://jarjar.binks.com/foo/bar/baz', ['bucket' => 'foo', 'key' => 'bar/baz', 'path_style' => true, 'region' => null]],
+            ['http://amazonaws.com/foo', ['bucket' => 'foo', 'key' => null, 'path_style' => true, 'region' => null]],
+
+            ['s3://bar/baz/foo/', ['region' => null, 'bucket' => 'bar', 'key' => 'baz/foo/', 'path_style' => false]],
+            ['s3://bar/baz/foo', ['region' => null, 'bucket' => 'bar', 'key' => 'baz/foo', 'path_style' => false]],
+            ['s3://bar/baz/', ['region' => null, 'bucket' => 'bar', 'key' => 'baz/', 'path_style' => false]],
+            ['s3://bar/baz', ['region' => null, 'bucket' => 'bar', 'key' => 'baz', 'path_style' => false]],
+            ['s3://bar/', ['region' => null, 'bucket' => 'bar', 'key' => null, 'path_style' => false]],
+            ['s3://bar', ['region' => null, 'bucket' => 'bar', 'key' => null, 'path_style' => false]],
+            ['s3://', [], true],
+
             ['/foo/bar', [], true],
         ];
     }

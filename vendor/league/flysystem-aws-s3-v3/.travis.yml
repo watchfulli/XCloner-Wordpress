@@ -1,0 +1,18 @@
+language: php
+sudo: false
+
+php:
+  - 5.5
+  - 5.6
+  - 7.0
+  - 7.1
+
+install:
+  - travis_retry composer install --no-interaction --prefer-source
+
+script:
+  - bin/phpspec run
+
+after_script:
+  - wget https://scrutinizer-ci.com/ocular.phar
+  - php ocular.phar code-coverage:upload --format=php-clover coverage.xml

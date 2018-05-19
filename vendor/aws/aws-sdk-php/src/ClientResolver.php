@@ -6,13 +6,10 @@ use Aws\Api\ApiProvider;
 use Aws\Api\Service;
 use Aws\Credentials\Credentials;
 use Aws\Credentials\CredentialsInterface;
-use Aws\Endpoint\Partition;
 use Aws\Endpoint\PartitionEndpointProvider;
-use Aws\Endpoint\PartitionProviderInterface;
 use Aws\Signature\SignatureProvider;
 use Aws\Endpoint\EndpointProvider;
 use Aws\Credentials\CredentialProvider;
-use GuzzleHttp\Promise;
 use InvalidArgumentException as IAE;
 use Psr\Http\Message\RequestInterface;
 
@@ -210,7 +207,9 @@ class ClientResolver
      * - default: (mixed) The default value of the argument if not provided. If
      *   a function is provided, then it will be invoked to provide a default
      *   value. The function is provided the array of options and is expected
-     *   to return the default value of the option.
+     *   to return the default value of the option. The default value can be a
+     *   closure and can not be a callable string that is not  part of the
+     *   defaultArgs array.
      * - doc: (string) The argument documentation string.
      * - fn: (callable) Function used to apply the argument. The function
      *   accepts the provided value, array of arguments by reference, and an
@@ -235,6 +234,7 @@ class ClientResolver
 
     /**
      * Resolves client configuration options and attached event listeners.
+     * Check for missing keys in passed arguments
      *
      * @param array       $args Provided constructor arguments.
      * @param HandlerList $list Handler list to augment.
@@ -251,9 +251,16 @@ class ClientResolver
             if (!isset($args[$key])) {
                 if (isset($a['default'])) {
                     // Merge defaults in when not present.
-                    $args[$key] = is_callable($a['default'])
-                        ? $a['default']($args)
-                        : $a['default'];
+                    if (is_callable($a['default'])
+                        && (
+                            is_array($a['default'])
+                            || $a['default'] instanceof \Closure
+                        )
+                    ) {
+                        $args[$key] = $a['default']($args);
+                    } else {
+                        $args[$key] = $a['default'];
+                    }
                 } elseif (empty($a['required'])) {
                     continue;
                 } else {
@@ -353,7 +360,7 @@ class ClientResolver
         foreach ($this->argDefinitions as $k => $a) {
             if (empty($a['required'])
                 || isset($a['default'])
-                || array_key_exists($k, $args)
+                || isset($args[$k])
             ) {
                 continue;
             }
@@ -379,7 +386,9 @@ class ClientResolver
     {
         if (is_callable($value)) {
             return;
-        } elseif ($value instanceof CredentialsInterface) {
+        }
+
+        if ($value instanceof CredentialsInterface) {
             $args['credentials'] = CredentialProvider::fromCredentials($value);
         } elseif (is_array($value)
             && isset($value['key'])
@@ -557,6 +566,9 @@ class ClientResolver
 
         $value = array_map('strval', $value);
 
+        if (defined('HHVM_VERSION')) {
+            array_unshift($value, 'HHVM/' . HHVM_VERSION);
+        }
         array_unshift($value, 'aws-sdk-php/' . Sdk::VERSION);
         $args['ua_append'] = $value;
 

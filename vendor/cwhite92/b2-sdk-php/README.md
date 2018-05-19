@@ -58,6 +58,20 @@ $fileContent = $client->download([
     // Can also save directly to a location on disk. This will cause download() to not return file content.
     // 'SaveAs' => '/path/to/save/location'
 ]);
+
+// Delete a file from a bucket. Returns true or false.
+$fileDelete = $client->deleteFile([
+    'FileId' => $file->getId()
+    
+    // Can also identify the file via bucket and path:
+    // 'BucketName' => 'my-special-bucket',
+    // 'FileName' => 'path/to/file'
+]);
+
+// Retrieve an array of file objects from a bucket.
+$fileList = $client->listFiles([
+    'BucketId' => '4d2dbbe08e1e983c5e6f0d12'
+]);
 ```
 
 ## Installation

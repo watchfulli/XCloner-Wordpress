@@ -8,11 +8,12 @@ use Aws\Multipart\UploadState;
 use Aws\Result;
 use Aws\Test\UsesServiceTrait;
 use GuzzleHttp\Psr7;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers Aws\Multipart\AbstractUploader
  */
-class AbstractUploaderTest extends \PHPUnit_Framework_TestCase
+class AbstractUploaderTest extends TestCase
 {
     use UsesServiceTrait;
 
@@ -139,11 +140,12 @@ class AbstractUploaderTest extends \PHPUnit_Framework_TestCase
         };
 
         $uploader = $this->getTestUploader(Psr7\stream_for('abcde'), [
-            'bucket'          => 'foo',
-            'key'             => 'bar',
-            'before_initiate' => $fn,
-            'before_upload'   => $fn,
-            'before_complete' => $fn,
+            'bucket'              => 'foo',
+            'key'                 => 'bar',
+            'prepare_data_source' => $fn,
+            'before_initiate'     => $fn,
+            'before_upload'       => $fn,
+            'before_complete'     => $fn,
         ], [
             new Result(), // Initiate
             new Result(), // Upload
@@ -155,7 +157,7 @@ class AbstractUploaderTest extends \PHPUnit_Framework_TestCase
         $promise = $uploader->promise();
         $this->assertSame($promise, $uploader->promise());
         $this->assertInstanceOf('Aws\Result', $promise->wait());
-        $this->assertEquals(5, $called);
+        $this->assertEquals(6, $called);
     }
 
     /**

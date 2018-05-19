@@ -6,10 +6,12 @@ use Aws\Credentials\Credentials;
 use Aws\LruArrayCache;
 use Aws\Sts\StsClient;
 use GuzzleHttp\Promise;
+use PHPUnit\Framework\TestCase;
+
 /**
  * @covers \Aws\Credentials\CredentialProvider
  */
-class CredentialProviderTest extends \PHPUnit_Framework_TestCase
+class CredentialProviderTest extends TestCase
 {
     private $home, $homedrive, $homepath, $key, $secret, $profile;
 
@@ -18,6 +20,7 @@ class CredentialProviderTest extends \PHPUnit_Framework_TestCase
         putenv(CredentialProvider::ENV_KEY . '=');
         putenv(CredentialProvider::ENV_SECRET . '=');
         putenv(CredentialProvider::ENV_PROFILE . '=');
+        putenv('AWS_CONTAINER_CREDENTIALS_RELATIVE_URI');
 
         $dir = sys_get_temp_dir() . '/.aws';
 
@@ -116,7 +119,7 @@ class CredentialProviderTest extends \PHPUnit_Framework_TestCase
         }
 
         $this->assertEquals(1, $timesCalled);
-        $this->assertEquals(1, count($cache));
+        $this->assertCount(1, $cache);
         $this->assertEquals($creds->getAccessKeyId(), $found->getAccessKeyId());
         $this->assertEquals($creds->getSecretKey(), $found->getSecretKey());
         $this->assertEquals($creds->getSecurityToken(), $found->getSecurityToken());
@@ -128,9 +131,23 @@ class CredentialProviderTest extends \PHPUnit_Framework_TestCase
         $this->clearEnv();
         putenv(CredentialProvider::ENV_KEY . '=abc');
         putenv(CredentialProvider::ENV_SECRET . '=123');
+        putenv(CredentialProvider::ENV_SESSION . '=456');
         $creds = call_user_func(CredentialProvider::env())->wait();
         $this->assertEquals('abc', $creds->getAccessKeyId());
+        $this->assertEquals('123', $creds->getSecretKey());
+        $this->assertEquals('456', $creds->getSecurityToken());
+    }
+
+    public function testCreatesFromEnvironmentVariablesNullToken()
+    {
+        $this->clearEnv();
+        putenv(CredentialProvider::ENV_KEY . '=abc');
+        putenv(CredentialProvider::ENV_SECRET . '=123');
+        putenv(CredentialProvider::ENV_SESSION . '');
+        $creds = call_user_func(CredentialProvider::env())->wait();
         $this->assertEquals('abc', $creds->getAccessKeyId());
+        $this->assertEquals('123', $creds->getSecretKey());
+        $this->assertNull($creds->getSecurityToken());
     }
 
     /**
@@ -284,7 +301,7 @@ EOT;
         $creds = new Credentials('foo', 'bar');
         $f = function () use (&$called, $creds) {
             $called++;
-            return \GuzzleHttp\Promise\promise_for($creds);
+            return Promise\promise_for($creds);
         };
         $p = CredentialProvider::memoize($f);
         $this->assertSame($creds, $p()->wait());

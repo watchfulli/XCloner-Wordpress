@@ -274,59 +274,62 @@ class ServerRequestTest extends \PHPUnit_Framework_TestCase
     public function dataGetUriFromGlobals()
     {
         $server = [
-            'PHP_SELF' => '/blog/article.php',
-            'GATEWAY_INTERFACE' => 'CGI/1.1',
-            'SERVER_ADDR' => 'Server IP: 217.112.82.20',
-            'SERVER_NAME' => 'www.blakesimpson.co.uk',
-            'SERVER_SOFTWARE' => 'Apache/2.2.15 (Win32) JRun/4.0 PHP/5.2.13',
-            'SERVER_PROTOCOL' => 'HTTP/1.0',
+            'REQUEST_URI' => '/blog/article.php?id=10&user=foo',
+            'SERVER_PORT' => '443',
+            'SERVER_ADDR' => '217.112.82.20',
+            'SERVER_NAME' => 'www.example.org',
+            'SERVER_PROTOCOL' => 'HTTP/1.1',
             'REQUEST_METHOD' => 'POST',
-            'REQUEST_TIME' => 'Request start time: 1280149029',
             'QUERY_STRING' => 'id=10&user=foo',
             'DOCUMENT_ROOT' => '/path/to/your/server/root/',
-            'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-            'HTTP_ACCEPT_CHARSET' => 'ISO-8859-1,utf-8;q=0.7,*;q=0.7',
-            'HTTP_ACCEPT_ENCODING' => 'gzip,deflate',
-            'HTTP_ACCEPT_LANGUAGE' => 'en-gb,en;q=0.5',
-            'HTTP_CONNECTION' => 'keep-alive',
-            'HTTP_HOST' => 'www.blakesimpson.co.uk',
-            'HTTP_REFERER' => 'http://previous.url.com',
-            'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows; U; Windows NT 6.0; en-GB; rv:1.9.2.6) Gecko/20100625 Firefox/3.6.6 ( .NET CLR 3.5.30729)',
-            'HTTPS' => '1',
+            'HTTP_HOST' => 'www.example.org',
+            'HTTPS' => 'on',
             'REMOTE_ADDR' => '193.60.168.69',
-            'REMOTE_HOST' => 'Client server\'s host name',
             'REMOTE_PORT' => '5390',
-            'SCRIPT_FILENAME' => '/path/to/this/script.php',
-            'SERVER_ADMIN' => 'webmaster@blakesimpson.co.uk',
-            'SERVER_PORT' => '80',
-            'SERVER_SIGNATURE' => 'Version signature: 5.123',
             'SCRIPT_NAME' => '/blog/article.php',
-            'REQUEST_URI' => '/blog/article.php?id=10&user=foo',
+            'SCRIPT_FILENAME' => '/path/to/your/server/root/blog/article.php',
+            'PHP_SELF' => '/blog/article.php',
         ];
 
         return [
-            'Normal request' => [
-                'http://www.blakesimpson.co.uk/blog/article.php?id=10&user=foo',
+            'HTTPS request' => [
+                'https://www.example.org/blog/article.php?id=10&user=foo',
                 $server,
             ],
-            'Secure request' => [
-                'https://www.blakesimpson.co.uk/blog/article.php?id=10&user=foo',
-                array_merge($server, ['HTTPS' => 'on', 'SERVER_PORT' => '443']),
+            'HTTPS request with different on value' => [
+                'https://www.example.org/blog/article.php?id=10&user=foo',
+                array_merge($server, ['HTTPS' => '1']),
             ],
-            'HTTP_HOST missing' => [
-                'http://www.blakesimpson.co.uk/blog/article.php?id=10&user=foo',
+            'HTTP request' => [
+                'http://www.example.org/blog/article.php?id=10&user=foo',
+                array_merge($server, ['HTTPS' => 'off', 'SERVER_PORT' => '80']),
+            ],
+            'HTTP_HOST missing -> fallback to SERVER_NAME' => [
+                'https://www.example.org/blog/article.php?id=10&user=foo',
                 array_merge($server, ['HTTP_HOST' => null]),
             ],
+            'HTTP_HOST and SERVER_NAME missing -> fallback to SERVER_ADDR' => [
+                'https://217.112.82.20/blog/article.php?id=10&user=foo',
+                array_merge($server, ['HTTP_HOST' => null, 'SERVER_NAME' => null]),
+            ],
             'No query String' => [
-                'http://www.blakesimpson.co.uk/blog/article.php',
+                'https://www.example.org/blog/article.php',
                 array_merge($server, ['REQUEST_URI' => '/blog/article.php', 'QUERY_STRING' => '']),
             ],
-            'Different port' => [
-                'http://www.blakesimpson.co.uk:8324/blog/article.php?id=10&user=foo',
+            'Host header with port' => [
+                'https://www.example.org:8324/blog/article.php?id=10&user=foo',
+                array_merge($server, ['HTTP_HOST' => 'www.example.org:8324']),
+            ],
+            'Different port with SERVER_PORT' => [
+                'https://www.example.org:8324/blog/article.php?id=10&user=foo',
                 array_merge($server, ['SERVER_PORT' => '8324']),
             ],
+            'REQUEST_URI missing query string' => [
+                'https://www.example.org/blog/article.php?id=10&user=foo',
+                array_merge($server, ['REQUEST_URI' => '/blog/article.php']),
+            ],
             'Empty server variable' => [
-                '',
+                'http://localhost',
                 [],
             ],
         ];
@@ -345,34 +348,21 @@ class ServerRequestTest extends \PHPUnit_Framework_TestCase
     public function testFromGlobals()
     {
         $_SERVER = [
-            'PHP_SELF' => '/blog/article.php',
-            'GATEWAY_INTERFACE' => 'CGI/1.1',
-            'SERVER_ADDR' => 'Server IP: 217.112.82.20',
-            'SERVER_NAME' => 'www.blakesimpson.co.uk',
-            'SERVER_SOFTWARE' => 'Apache/2.2.15 (Win32) JRun/4.0 PHP/5.2.13',
-            'SERVER_PROTOCOL' => 'HTTP/1.0',
+            'REQUEST_URI' => '/blog/article.php?id=10&user=foo',
+            'SERVER_PORT' => '443',
+            'SERVER_ADDR' => '217.112.82.20',
+            'SERVER_NAME' => 'www.example.org',
+            'SERVER_PROTOCOL' => 'HTTP/1.1',
             'REQUEST_METHOD' => 'POST',
-            'REQUEST_TIME' => 'Request start time: 1280149029',
             'QUERY_STRING' => 'id=10&user=foo',
             'DOCUMENT_ROOT' => '/path/to/your/server/root/',
-            'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-            'HTTP_ACCEPT_CHARSET' => 'ISO-8859-1,utf-8;q=0.7,*;q=0.7',
-            'HTTP_ACCEPT_ENCODING' => 'gzip,deflate',
-            'HTTP_ACCEPT_LANGUAGE' => 'en-gb,en;q=0.5',
-            'HTTP_CONNECTION' => 'keep-alive',
-            'HTTP_HOST' => 'www.blakesimpson.co.uk',
-            'HTTP_REFERER' => 'http://previous.url.com',
-            'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows; U; Windows NT 6.0; en-GB; rv:1.9.2.6) Gecko/20100625 Firefox/3.6.6 ( .NET CLR 3.5.30729)',
-            'HTTPS' => '1',
+            'HTTP_HOST' => 'www.example.org',
+            'HTTPS' => 'on',
             'REMOTE_ADDR' => '193.60.168.69',
-            'REMOTE_HOST' => 'Client server\'s host name',
             'REMOTE_PORT' => '5390',
-            'SCRIPT_FILENAME' => '/path/to/this/script.php',
-            'SERVER_ADMIN' => 'webmaster@blakesimpson.co.uk',
-            'SERVER_PORT' => '80',
-            'SERVER_SIGNATURE' => 'Version signature: 5.123',
             'SCRIPT_NAME' => '/blog/article.php',
-            'REQUEST_URI' => '/blog/article.php?id=10&user=foo',
+            'SCRIPT_FILENAME' => '/path/to/your/server/root/blog/article.php',
+            'PHP_SELF' => '/blog/article.php',
         ];
 
         $_COOKIE = [
@@ -401,16 +391,16 @@ class ServerRequestTest extends \PHPUnit_Framework_TestCase
 
         $server = ServerRequest::fromGlobals();
 
-        $this->assertEquals('POST', $server->getMethod());
-        $this->assertEquals(['Host' => ['www.blakesimpson.co.uk']], $server->getHeaders());
-        $this->assertEquals('', (string) $server->getBody());
-        $this->assertEquals('1.0', $server->getProtocolVersion());
+        $this->assertSame('POST', $server->getMethod());
+        $this->assertEquals(['Host' => ['www.example.org']], $server->getHeaders());
+        $this->assertSame('', (string) $server->getBody());
+        $this->assertSame('1.1', $server->getProtocolVersion());
         $this->assertEquals($_COOKIE, $server->getCookieParams());
         $this->assertEquals($_POST, $server->getParsedBody());
         $this->assertEquals($_GET, $server->getQueryParams());
 
         $this->assertEquals(
-            new Uri('http://www.blakesimpson.co.uk/blog/article.php?id=10&user=foo'),
+            new Uri('https://www.example.org/blog/article.php?id=10&user=foo'),
             $server->getUri()
         );
 
@@ -501,20 +491,20 @@ class ServerRequestTest extends \PHPUnit_Framework_TestCase
         $this->assertNotSame($request2, $request1);
         $this->assertNotSame($request3, $request2);
         $this->assertNotSame($request4, $request3);
-        $this->assertNotSame($request5, $request4);
+        $this->assertSame($request5, $request3);
 
-        $this->assertEmpty($request1->getAttributes());
-        $this->assertEmpty($request1->getAttribute('name'));
-        $this->assertEquals(
+        $this->assertSame([], $request1->getAttributes());
+        $this->assertNull($request1->getAttribute('name'));
+        $this->assertSame(
             'something',
             $request1->getAttribute('name', 'something'),
             'Should return the default value'
         );
 
-        $this->assertEquals('value', $request2->getAttribute('name'));
-        $this->assertEquals(['name' => 'value'], $request2->getAttributes());
+        $this->assertSame('value', $request2->getAttribute('name'));
+        $this->assertSame(['name' => 'value'], $request2->getAttributes());
         $this->assertEquals(['name' => 'value', 'other' => 'otherValue'], $request3->getAttributes());
-        $this->assertEquals(['name' => 'value'], $request4->getAttributes());
+        $this->assertSame(['name' => 'value'], $request4->getAttributes());
     }
 
     public function testNullAttribute()

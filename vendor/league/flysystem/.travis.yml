@@ -1,0 +1,46 @@
+sudo: required
+services:
+  - docker
+
+language: php
+
+php:
+  - 5.5
+  - 5.6
+  - 7.0
+  - 7.1
+  - 7.2
+
+matrix:
+  allow_failures:
+  - php: 5.5
+
+sudo: false
+
+env:
+  - COMPOSER_OPTS=""
+  - COMPOSER_OPTS="--prefer-lowest"
+
+before_install:
+  - mkdir tests/files
+
+install:
+  - if [[ "${TRAVIS_PHP_VERSION}" == "5.5" ]]; then composer require phpunit/phpunit:^4.8.36 phpspec/phpspec:^2 --prefer-dist --update-with-dependencies; fi
+  - if [[ "${TRAVIS_PHP_VERSION}" == "7.2" ]]; then composer require phpunit/phpunit:^6.0 --prefer-dist --update-with-dependencies; fi
+  - if [[ "${TRAVIS_PHP_VERSION}" == "7.2" ]]; then composer require --dev phpstan/phpstan:^0.9.2 --prefer-dist --update-with-dependencies; fi
+  - travis_retry composer update --prefer-dist $COMPOSER_OPTS
+
+before_script:
+  - docker run -d --name ftpd_server -p 21:21 -p 30000-30009:30000-30009 -e "PUBLICHOST=localhost" stilliard/pure-ftpd:hardened
+  - php wait_for_ftp_service.php
+  - docker exec -it ftpd_server sh -c "(echo test; echo test) | pure-pw useradd bob -f /etc/pure-ftpd/passwd/pureftpd.passwd -m -u ftpuser -d /home/ftpusers/bob"
+
+script:
+  - bin/phpunit tests/ftp/FtpIntegrationTests.php tests/ftp/FtpManualRecursionIntegrationTests.php tests/ftp/FtpdIntegrationTests.php tests/ftp/FtpdManualRecursionIntegrationTests.php
+  - bin/phpunit --exclude-group integration --coverage-text --coverage-clover coverage.xml
+  - bin/phpspec run
+  - if [[ "${TRAVIS_PHP_VERSION}" == "7.2" ]]; then bin/phpstan analyse -l 3 src; fi
+
+after_script:
+  - wget https://scrutinizer-ci.com/ocular.phar
+  - php ocular.phar code-coverage:upload --format=php-clover coverage.xml

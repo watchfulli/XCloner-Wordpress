@@ -11,14 +11,12 @@ PHP and how the new version differs from the Version 2 of the SDK.
     has not changed from Version 2 to Version 3, which should result in a fairly
     smooth migration.
 
-
 Introduction
 ------------
 
 Version 3 of the SDK represents a significant effort to improve the capabilities
 of the SDK, incorporate over two years of customer feedback, upgrade our
 dependencies, improve performance, and adopt the latest PHP standards.
-
 
 What's New?
 -----------
@@ -44,7 +42,6 @@ What's New?
 - Easy debugging via the ``'debug'`` configuration option.
 - Strictly follows the `SemVer <http://semver.org/>`_ standard going forward.
 
-
 What's Different?
 -----------------
 
@@ -68,7 +65,7 @@ The dependencies of the SDK have changed in this version.
   of the interfaces in PSR-7, as well as a number of helpful classes and
   functions to go along with it. Both the SDK and Guzzle 6 rely on this package
   heavily.
-- Guzzle's `Promises/A+ <https://promisesaplus.com/>`_ implementation
+- Guzzle's `Promises/A+ <https://promisesaplus.com>`_ implementation
   (``guzzlehttp/promises``) is used throughout the SDK and Guzzle to provide
   interfaces for managing asynchronous requests and coroutines. While Guzzle's
   multi-cURL HTTP handler ultimately implements the non-blocking I/O model that
@@ -78,7 +75,6 @@ The dependencies of the SDK have changed in this version.
   (``mtdowling/jmespath.php``) is used in the SDK to provide the data querying
   ability of the ``Aws\Result::search()`` and ``Aws\ResultPaginator::search()``
   methods. See :doc:`jmespath` for more details.
-
 
 Region and version options are now required
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -113,7 +109,6 @@ changes until you are ready to explicitly update your configuration.
     parameter. The region used by default by these clients is specified with the
     ``region`` option supplied to the client constructor.
 
-
 Client instantiation uses the constructor
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -141,7 +136,6 @@ with the ``new`` keyword.
     Instantiating a client using the ``factory()`` method still works, it is
     just considered deprecated.
 
-
 Client configuration has changed
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -155,7 +149,6 @@ supported options.
     options at the root level, but you can pass them in as part of the
     ``'credentials'`` option. One reason this change was made was to discourage
     developers from hard-coding their AWS credentials into their projects.
-
 
 The SDK Object
 ^^^^^^^^^^^^^^
@@ -172,7 +165,6 @@ It also does not support the same configuration file format from Version 2 of
 the SDK. That configuration format was specific to Guzzle 3 and is now obsolete.
 Configuration can be done more simply with basic arrays, and is documented
 in :ref:`sdk-class`.
-
 
 Some API results have changed
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -286,7 +278,6 @@ output of the result (provided below in parenthesis):
   - RevokeSnapshotAccess (Snapshot)
   - RotateEncryptionKey (Cluster)
 
-
 Enum classes have been removed
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -300,7 +291,6 @@ agnostic nature of Version 3.
 
 Instead of using values from ``Enum`` objects, you should just use the literal
 values directly (e.g., ``CannedAcl::PUBLIC_READ`` → ``'public-read'``).
-
 
 Fine-grained Exception classes have been removed
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -319,7 +309,6 @@ method of the exception to check for specific error codes. This is functionally
 equivalent to catching different exception classes, but provides that function
 without adding bloat to the SDK.
 
-
 Static Facade classes have been removed
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -329,7 +318,6 @@ various service clients. This feature goes against PHP best practices, and we
 stopped documenting it over a year ago. In Version 3, this feature is gone
 completely. You should retrieve your client objects from the ``Aws\Sdk`` object
 and use them as object instances, not static classes.
-
 
 Paginators supersede Iterators
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -383,7 +371,6 @@ expressions to extract data more easily from the result set.
     transition to Version 3, but encourage you to upgrade your code to use
     Paginators.
 
-
 Many higher-level abstractions have changed
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -409,22 +396,19 @@ even been removed.
 
 * Removed:
     * DynamoDB ``Item``, ``Attribute``, and ``ItemIterator`` classes - These
-      were previously deprecated in `Version 2.7.0 <https://github.com/aws/aws-sdk-php/blob/v3/CHANGELOG.md#270---2014-10-08>`_.
+      were previously deprecated in `Version 2.7.0 <https://github.com/aws/aws-sdk-php/blob/3.0.0/CHANGELOG.md#270---2014-10-08>`_.
     * SNS Message Validator - This is now `a separate, light-weight project
       <https://github.com/aws/aws-php-sns-message-validator>`_ that does not
       require the SDK as a dependency. This project is, however, included in the
       Phar and Zip distributions of the SDK. A getting started guide can be
-      found `on the AWS PHP Development blog <https://blogs.aws.amazon.com/php/post/Tx15276Q7B4NUO0/Receiving-Amazon-SNS-Messages-in-PHP>`_.
+      found `on the AWS PHP Development blog <https://aws.amazon.com/blogs/developer/receiving-amazon-sns-messages-in-php/>`_.
     * S3 ``AcpBuilder`` and related objects were removed.
-
-
 
 Comparing Code Samples from Both SDKs
 -------------------------------------
 
 The following examples illustrate some of the ways in which using Version 3 of
 the SDK may differ from Version 2.
-
 
 Example: Amazon S3 ListObjects operation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -494,7 +478,6 @@ Key differences:
     } catch (S3Exception $e) {
         echo $e->getMessage() . "\n";
     }
-
 
 Example: Instantiating a client with global configuration
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

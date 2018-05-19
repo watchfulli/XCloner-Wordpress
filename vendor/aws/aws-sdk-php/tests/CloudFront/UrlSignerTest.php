@@ -4,11 +4,12 @@ namespace Aws\Test\CloudFront;
 use Aws\CloudFront\CloudFrontClient;
 use Aws\CloudFront\UrlSigner;
 use GuzzleHttp\Psr7\Uri;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers Aws\CloudFront\UrlSigner
  */
-class UrlSignerTest extends \PHPUnit_Framework_TestCase
+class UrlSignerTest extends TestCase
 {
     public function setUp()
     {
@@ -126,7 +127,7 @@ class UrlSignerTest extends \PHPUnit_Framework_TestCase
     public function testEnsuresUriSchemeIsValid()
     {
         $s = new UrlSigner('a', $_SERVER['CF_PRIVATE_KEY']);
-        $s->getSignedUrl('foo://bar.com', '+10 minutes');
+        $s->getSignedUrl('foo://bar.com', strtotime('+10 minutes'));
     }
 
     /**

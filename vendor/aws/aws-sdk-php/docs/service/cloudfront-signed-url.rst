@@ -2,7 +2,6 @@
 Amazon CloudFront Signed URL
 ============================
 
-
 Signing CloudFront URLs for Private Distributions
 -------------------------------------------------
 
@@ -38,13 +37,12 @@ custom policy.
 .. code-block:: php
 
     // Setup parameter values for the resource
-    $streamHostUrl = 'rtmp://example-distribution.cloudfront.net';
-    $resourceKey = 'videos/example.mp4';
+    $resourceKey = 'rtmp://example-distribution.cloudfront.net/videos/example.mp4';
     $expires = time() + 300;
 
     // Create a signed URL for the resource using the canned policy
     $signedUrlCannedPolicy = $cloudFront->getSignedUrl([
-        'url'         => $streamHostUrl . '/' . $resourceKey,
+        'url'         => $resourceKey,
         'expires'     => $expires,
         'private_key' => '/path/to/your/cloudfront-private-key.pem',
         'key_pair_id' => '<cloudfront key pair id>'
@@ -70,7 +68,7 @@ To use a custom policy, provide the ``policy`` key instead of ``expires``.
 
     // Create a signed URL for the resource using a custom policy
     $signedUrlCustomPolicy = $cloudFront->getSignedUrl([
-        'url'    => $streamHostUrl . '/' . $resourceKey,
+        'url'    => $resourceKey,
         'policy' => $customPolicy,
         'private_key' => '/path/to/your/cloudfront-private-key.pem',
         'key_pair_id' => '<cloudfront key pair id>'
@@ -105,7 +103,6 @@ but will require different client-side code.
         </script>
     </body>
     </html>
-
 
 Signing CloudFront Cookies for Private Distributions
 ----------------------------------------------------

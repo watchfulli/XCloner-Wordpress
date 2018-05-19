@@ -14,11 +14,12 @@ use Psr\Http\Message\RequestInterface;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\ResponseInterface;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers Aws\WrappedHttpHandler
  */
-class WrappedHttpHandlerTest extends \PHPUnit_Framework_TestCase
+class WrappedHttpHandlerTest extends TestCase
 {
     public function testParsesResponses()
     {
@@ -210,7 +211,7 @@ class WrappedHttpHandlerTest extends \PHPUnit_Framework_TestCase
     {
         $handler = function ($request, array $options) {
             $this->assertArrayHasKey('http_stats_receiver', $options);
-            $this->assertTrue(is_callable($options['http_stats_receiver']));
+            $this->assertInternalType('callable', $options['http_stats_receiver']);
             return new Response;
         };
 

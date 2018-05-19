@@ -6,7 +6,6 @@ use Aws\CommandInterface;
 use Aws\DynamoDb\DynamoDbClient;
 use Aws\Exception\AwsException;
 use Aws\Result;
-use Aws\S3\S3Client;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Promise;
 use GuzzleHttp\Promise\FulfilledPromise;
@@ -15,11 +14,12 @@ use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7;
 use Psr\Http\Message\RequestInterface;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers Aws\Waiter
  */
-class WaiterTest extends \PHPUnit_Framework_TestCase
+class WaiterTest extends TestCase
 {
     use UsesServiceTrait;
 
@@ -224,34 +224,34 @@ class WaiterTest extends \PHPUnit_Framework_TestCase
                         'signatureVersion' => 'v4'
                     ],
                 ];
-            } else {
-                return ['waiters' => [
-                    'TableExists' =>  [
-                        'delay' => function ($attempt) { return $attempt; },
-                        'maxAttempts' => 5,
-                        'operation' => 'DescribeTable',
-                        'acceptors' => [
-                            [
-                                'state' => 'success',
-                                'matcher' => 'path',
-                                'argument' => 'Table.TableStatus',
-                                'expected' => 'ACTIVE',
-                            ],
-                            [
-                                'state' => 'retry',
-                                'matcher' => 'error',
-                                'expected' => 'ResourceNotFoundException',
-                            ],
-                            [
-                                'state' => 'failed',
-                                'matcher' => 'path',
-                                'argument' => 'Table.TableStatus',
-                                'expected' => 'DELETING',
-                            ],
-                        ],
-                    ]
-                ]];
             }
+
+            return ['waiters' => [
+                'TableExists' =>  [
+                    'delay' => function ($attempt) { return $attempt; },
+                    'maxAttempts' => 5,
+                    'operation' => 'DescribeTable',
+                    'acceptors' => [
+                        [
+                            'state' => 'success',
+                            'matcher' => 'path',
+                            'argument' => 'Table.TableStatus',
+                            'expected' => 'ACTIVE',
+                        ],
+                        [
+                            'state' => 'retry',
+                            'matcher' => 'error',
+                            'expected' => 'ResourceNotFoundException',
+                        ],
+                        [
+                            'state' => 'failed',
+                            'matcher' => 'path',
+                            'argument' => 'Table.TableStatus',
+                            'expected' => 'DELETING',
+                        ],
+                    ],
+                ]
+            ]];
         };
     }
 
@@ -396,8 +396,8 @@ class WaiterTest extends \PHPUnit_Framework_TestCase
                     'result' => new Result(['@metadata' => ['statusCode' => 200]])
                 ]
             );
-        } else {
-            return new Result($data + ['@metadata' => ['statusCode' => 200]]);
         }
+
+        return new Result($data + ['@metadata' => ['statusCode' => 200]]);
     }
 }

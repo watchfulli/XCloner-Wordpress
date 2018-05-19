@@ -1,18 +1,13 @@
 <?php
 namespace Aws\Test\ElasticLoadBalancingV2;
 
-use Aws\ElasticLoadBalancingV2\ElasticLoadBalancingV2Client;
-use Aws\MockHandler;
-use Aws\Result;
 use Aws\Test\UsesServiceTrait;
-use Psr\Http\Message\RequestInterface;
-use GuzzleHttp\Promise;
-use GuzzleHttp\Psr7\Response;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers Aws\ElasticLoadBalancingV2\ElasticLoadBalancingV2Client
  */
-class ElasticLoadBalancingV2ClientTest extends \PHPUnit_Framework_TestCase
+class ElasticLoadBalancingV2ClientTest extends TestCase
 {
     use UsesServiceTrait;
 

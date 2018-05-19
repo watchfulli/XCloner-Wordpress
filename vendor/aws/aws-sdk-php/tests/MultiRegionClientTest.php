@@ -11,8 +11,9 @@ use Aws\Result;
 use GuzzleHttp\Promise\FulfilledPromise;
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\RequestInterface;
+use PHPUnit\Framework\TestCase;
 
-class MultiRegionClientTest extends \PHPUnit_Framework_TestCase
+class MultiRegionClientTest extends TestCase
 {
     /** @var MultiRegionClient */
     private $instance;
@@ -95,7 +96,7 @@ class MultiRegionClientTest extends \PHPUnit_Framework_TestCase
             });
         $this->mockRegionalClient->expects($this->once())
             ->method('getCommand')
-            ->with('baz', ['foo' => 'bar'])
+            ->with('baz', ['foo' => 'bar', '@http' => []])
             ->willReturn(new Command('Baz', [], $mockHandler));
 
         $this->instance->baz(['foo' => 'bar']);
@@ -121,7 +122,6 @@ class MultiRegionClientTest extends \PHPUnit_Framework_TestCase
         return [
             ['getConfig', ['someOption']],
             ['getCredentials', []],
-            ['getHandlerList', []],
             ['getApi', []],
             ['getEndpoint', []],
         ];

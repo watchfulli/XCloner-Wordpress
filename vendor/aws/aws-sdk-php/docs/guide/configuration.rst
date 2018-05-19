@@ -3,13 +3,15 @@ Configuration
 =============
 
 This guide describes client constructor options. These options can be provided
-in a client constructor or to the ``Aws\Sdk`` class.
-
+in a client constructor or to the ``Aws\Sdk`` class. The array of options
+provided to a specific type of client may vary based on which client you are
+creating. These custom client configuration options are described in the
+`API documentation <http://docs.aws.amazon.com/aws-sdk-php/latest/>`_ of each
+client.
 
 .. contents:: Configuration Options
     :depth: 1
     :local:
-
 
 The following example shows how to pass options into an Amazon S3 client
 constructor.
@@ -29,7 +31,6 @@ constructor.
 Refer to the :doc:`basic usage guide </getting-started/basic-usage>` for more
 information on constructing clients.
 
-
 api_provider
 ~~~~~~~~~~~~
 
@@ -41,7 +42,6 @@ an array of corresponding configuration data. The type value can be one of
 
 By default, the SDK will use an instance of ``Aws\Api\FileSystemApiProvider``
 that loads API files from the ``src/data`` folder of the SDK.
-
 
 credentials
 ~~~~~~~~~~~
@@ -131,7 +131,6 @@ You can find more information about providing credentials to a client in the
 
     Credentials are loaded and validated lazily when they are used.
 
-
 debug
 ~~~~~
 
@@ -212,7 +211,6 @@ auth_strings (array)
     SDK for PHP. Please provide the debug output for an isolated failure case
     when opening issues on the SDK.
 
-
 .. _config_stats:
 
 stats
@@ -282,7 +280,6 @@ timer (bool)
     // Inspect the total backoff delay inserted between retries.
     $stats = $result['@metadata']['transferStats']['total_retry_delay'];
 
-
 endpoint
 ~~~~~~~~
 
@@ -305,7 +302,6 @@ Here's an example of connecting to Amazon DynamoDB Local:
 See http://docs.aws.amazon.com/general/latest/gr/rande.html for a list of
 available regions and endpoints.
 
-
 endpoint_provider
 ~~~~~~~~~~~~~~~~~
 
@@ -326,7 +322,6 @@ Here's an example of how to create a minimal endpoint provider:
         // Return null when the provider cannot handle the parameters.
         return null;
     });
-
 
 handler
 ~~~~~~~
@@ -351,15 +346,16 @@ them in FIFO order.
     use Aws\DynamoDb\DynamoDbClient;
     use Aws\CommandInterface;
     use Psr\Http\Message\RequestInterface;
+    use Aws\Exception\AwsException;
 
     $mock = new MockHandler();
 
     // Return a mocked result.
-    $mock->append(new Result(['foo' => 'bar']);
+    $mock->append(new Result(['foo' => 'bar']));
 
     // You can provide a function to invoke. Here we throw a mock exception.
     $mock->append(function (CommandInterface $cmd, RequestInterface $req) {
-        return new AwsException('Mock exception', $command);
+        return new AwsException('Mock exception', $cmd);
     });
 
     // Create a client with the mock handler.
@@ -375,7 +371,6 @@ them in FIFO order.
     // This will throw the exception that was enqueued
     $client->listTables();
 
-
 .. _config_http:
 
 http
@@ -388,14 +383,13 @@ created by the SDK.
 
 The SDK supports the following configuration options:
 
-
 .. _http_connect_timeout:
 
 connect_timeout
 ^^^^^^^^^^^^^^^
 
 A float describing the number of seconds to wait while trying to connect to a
-server. Use ``60`` to wait indefinitely (the default behavior).
+server. Use ``0`` to wait indefinitely (the default behavior).
 
 .. code-block:: php
 
@@ -410,7 +404,6 @@ server. Use ``60`` to wait indefinitely (the default behavior).
         ]
     ]);
 
-
 .. _http_debug:
 
 debug
@@ -424,7 +417,6 @@ information provided by different HTTP handlers will vary.
 * Pass ``true`` to write debug output to STDOUT.
 * Pass a ``resource`` as returned by ``fopen`` to write debug output to a
   specific PHP stream resource.
-
 
 .. _http_decode_content:
 
@@ -463,7 +455,6 @@ responses. When not enabled, compressed response bodies may be inflated with a
         $compressedBody = $result['Body']; // This content is still gzipped.
         $inflatedBody = new InflateStream($result['Body']); // This is now readable.
 
-
 .. _http_delay:
 
 delay
@@ -473,7 +464,6 @@ delay
 
 The number of milliseconds to delay before sending the request. This is often
 used for delaying before retrying a request.
-
 
 .. _http_progress:
 
@@ -516,7 +506,6 @@ accepts the following arguments:
             }
         ]
     ]);
-
 
 .. _http_proxy:
 
@@ -564,7 +553,6 @@ You can use the ``HTTP_PROXY`` environment variable to configure an "http"
 protocol specific proxy, and the ``HTTPS_PROXY`` environment variable to
 configure an "https" specific proxy.
 
-
 .. _http_sink:
 
 sink
@@ -589,7 +577,6 @@ downloaded to.
     reaches 2MB, at which point the data will be written to a temporary file on
     disk.
 
-
 .. _http_sync:
 
 synchronous
@@ -599,7 +586,6 @@ synchronous
 
 The ``synchronous`` option informs the underlying HTTP handler that you intend
 on blocking on the result.
-
 
 .. _http_stream:
 
@@ -613,7 +599,6 @@ response body of a response from the web service rather than download it all
 up-front. For example, this option is relied upon in the Amazon S3 stream
 wrapper class to ensure that the data is streamed.
 
-
 .. _http_timeout:
 
 timeout
@@ -621,7 +606,7 @@ timeout
 
 :Type: ``float``
 
-A float describing the timeout of the request in seconds. Use ``60`` to wait
+A float describing the timeout of the request in seconds. Use ``0`` to wait
 indefinitely (the default behavior).
 
 .. code-block:: php
@@ -636,7 +621,6 @@ indefinitely (the default behavior).
             'timeout' => 5
         ]
     ]);
-
 
 .. _http_verify:
 
@@ -687,7 +671,6 @@ Much more detail on SSL certificates can be found on the
         ]
     ]);
 
-
 http_handler
 ~~~~~~~~~~~~
 
@@ -707,8 +690,6 @@ or rejected with an array of the following exception data:
   connection error. Setting this value to ``true`` will also allow the SDK to
   automatically retry the operation if needed.
 
-
-
 The SDK will automatically convert the given ``http_handler`` into a normal
 ``handler`` option by wrapping the provided ``http_handler`` with a
 ``Aws\WrappedHttpHandler`` object.
@@ -716,7 +697,6 @@ The SDK will automatically convert the given ``http_handler`` into a normal
 .. note::
 
     This option supersedes any provided ``handler`` option.
-
 
 profile
 ~~~~~~~
@@ -739,7 +719,6 @@ the "credentials" key to be ignored.
 
 See :doc:`credentials` for more information on configuring credentials and the
 INI file format.
-
 
 .. _cfg_region:
 
@@ -782,7 +761,6 @@ The following example disables retries for the Amazon DynamoDB client.
         'retries' => 0
     ]);
 
-
 scheme
 ~~~~~~
 
@@ -805,7 +783,6 @@ to "http".
 See http://docs.aws.amazon.com/general/latest/gr/rande.html for a list of
 endpoints whether or not a service supports the ``http`` scheme.
 
-
 service
 ~~~~~~~
 
@@ -816,7 +793,6 @@ Name of the service to utilize. This value will be supplied by default when
 using a client provided by the SDK (i.e., ``Aws\S3\S3Client``). This option
 is useful when testing a service that has not yet been published in the SDK
 but you have available on disk.
-
 
 signature_provider
 ~~~~~~~~~~~~~~~~~~
@@ -831,7 +807,6 @@ parameters. This provider is used to create signers utilized by the client.
 There are various functions provided by the SDK in the
 ``Aws\Signature\SignatureProvider`` class that can be used to create customized
 signature providers.
-
 
 signature_version
 ~~~~~~~~~~~~~~~~~
@@ -861,7 +836,6 @@ The following examples show how to configure an Amazon S3 client to use
     used by the SDK can create signature objects for "v4" and "anonymous"
     signature versions.
 
-
 ua_append
 ~~~~~~~~~
 
@@ -870,7 +844,6 @@ ua_append
 
 A string or array of strings that will be added to the user-agent string passed
 to the HTTP handler.
-
 
 validate
 ~~~~~~~~
@@ -907,7 +880,6 @@ constraints:
         'region'   => 'eu-west-1',
         'validate' => ['required' => true]
     ]);
-
 
 .. _cfg_version:
 

@@ -60,7 +60,12 @@ class BackblazeAdapter extends AbstractAdapter {
      */
     public function update($path, $contents, Config $config)
     {
-        echo 'update'; die;
+        $file = $this->getClient()->upload([
+            'BucketName' => $this->bucketName,
+            'FileName' => $path,
+            'Body' => $contents
+        ]);
+        return $this->getFileInfo($file);
     }
 
     /**
@@ -68,7 +73,12 @@ class BackblazeAdapter extends AbstractAdapter {
      */
     public function updateStream($path, $resource, Config $config)
     {
-        echo 'updateStream'; die;
+        $file = $this->getClient()->upload([
+            'BucketName' => $this->bucketName,
+            'FileName' => $path,
+            'Body' => $resource
+        ]);
+        return $this->getFileInfo($file);
     }
 
     /**
@@ -76,7 +86,14 @@ class BackblazeAdapter extends AbstractAdapter {
      */
     public function read($path)
     {
-        echo 'read'; die;
+        $file = $this->getClient()->getFile([
+            'BucketName' => $this->bucketName,
+            'FileName' => $path
+        ]);
+        $fileContent = $this->getClient()->download([
+            'FileId' => $file->getId()
+        ]);
+        return ['contents' => $fileContent];
     }
 
     /**
@@ -84,7 +101,7 @@ class BackblazeAdapter extends AbstractAdapter {
      */
     public function readStream($path)
     {
-        echo ''; die;
+        return false;
     }
 
     /**
@@ -92,18 +109,18 @@ class BackblazeAdapter extends AbstractAdapter {
      */
     public function rename($path, $newpath)
     {
-        echo 'rename'; die;
+        return false;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function copy($path, $newpath)
+    public function copy($path, $newPath)
     {
         return $this->getClient()->upload([
             'BucketName' => $this->bucketName,
-            'FileName' => $newpath,
-            'Body' => fopen($path)
+            'FileName' => $newPath,
+            'Body' => @file_get_contents($path)
         ]);
     }
 
@@ -130,7 +147,8 @@ class BackblazeAdapter extends AbstractAdapter {
     {
         return $this->getClient()->upload([
             'BucketName' => $this->bucketName,
-            'FileName' => $path
+            'FileName' => $path,
+            'Body' => ''
         ]);
     }
 
@@ -139,7 +157,7 @@ class BackblazeAdapter extends AbstractAdapter {
      */
     public function getMetadata($path)
     {
-        echo 'getMetadata'; die;
+        return false;
     }
 
     /**
@@ -147,7 +165,7 @@ class BackblazeAdapter extends AbstractAdapter {
      */
     public function getMimetype($path)
     {
-        echo 'getMimetype'; die;
+        return false;
     }
 
     /**

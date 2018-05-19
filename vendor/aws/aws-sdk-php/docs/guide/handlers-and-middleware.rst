@@ -8,7 +8,6 @@ is accessible through the ``getHandlerList()`` method of a client. You can
 retrieve the ``HandlerList`` of a client and modify it to add or remove client
 behavior.
 
-
 Handlers
 --------
 
@@ -48,7 +47,6 @@ You can also change the handler of a client after it is constructed using the
     // Set the handler of the client after it is constructed.
     $s3->getHandlerList()->setHandler($myHandler);
 
-
 Mock Handler
 ~~~~~~~~~~~~
 
@@ -64,6 +62,7 @@ them in FIFO order.
     use Aws\DynamoDb\DynamoDbClient;
     use Aws\CommandInterface;
     use Psr\Http\Message\RequestInterface;
+    use Aws\Exception\AwsException;
 
     $mock = new MockHandler();
 
@@ -72,7 +71,7 @@ them in FIFO order.
 
     // You can provide a function to invoke. Here we throw a mock exception.
     $mock->append(function (CommandInterface $cmd, RequestInterface $req) {
-        return new AwsException('Mock exception', $command);
+        return new AwsException('Mock exception', $cmd);
     });
 
     // Create a client with the mock handler.
@@ -87,7 +86,6 @@ them in FIFO order.
 
     // This will throw the exception that was enqueued
     $client->listTables();
-
 
 Middleware
 ----------
@@ -126,7 +124,6 @@ short-circuit the next handler and return a promise. The promise that is
 created by invoking the next handler can then be augmented using the ``then``
 method of the promise to modify the eventual result or error before giving
 returning the promise back up the stack of middlewares.
-
 
 HandlerList
 ~~~~~~~~~~~
@@ -172,7 +169,6 @@ init
         $client->getHandlerList()->appendInit($middleware, 'custom-name');
         // Prepend to the beginning of the step
         $client->getHandlerList()->prependInit($middleware, 'custom-name');
-
 
 validate
     This lifecycle step is used for validating the input parameters of a
@@ -246,13 +242,11 @@ sign
         // Prepend to the beginning of the step
         $client->getHandlerList()->prependSign($middleware, 'custom-name');
 
-
 Available Middleware
 ~~~~~~~~~~~~~~~~~~~~
 
 The SDK ships with several middlewares that can be used to augment the behavior
 of a client or to observe the execution of a command.
-
 
 .. _map-command:
 
@@ -283,7 +277,6 @@ The ``mapCommand`` function accepts a callable that accepts an
         }),
         'add-param'
     );
-
 
 .. _map-request:
 
@@ -324,7 +317,6 @@ Now when the command is executed, it will be sent with the custom header.
     end of ``build`` step. This is to ensure that a request has been been
     built before this middleware is invoked.
 
-
 mapResult
 ^^^^^^^^^
 
@@ -353,7 +345,6 @@ callable that accepts an ``Aws\ResultInterface`` argument and returns an
 
 Now when the command is executed, it the returned result will contain a ``foo``
 attribute.
-
 
 history
 ^^^^^^^
@@ -424,7 +415,6 @@ a the history middleware.
     // You can clear out the entries using clear
     $history->clear();
 
-
 tap
 ^^^
 
@@ -453,7 +443,6 @@ and an optional ``Psr\Http\Message\RequestInterface`` that is being executed.
             }
         }
     );
-
 
 Creating Custom handlers
 ------------------------

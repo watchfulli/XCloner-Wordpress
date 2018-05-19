@@ -32,7 +32,6 @@ bucket name followed by a forward slash and an optional object key or prefix:
     this permission level, it is recommended that you use S3 client operations
     directly.
 
-
 Downloading data
 ----------------
 
@@ -61,6 +60,9 @@ from Amazon S3.
         fclose($stream);
     }
 
+.. note::
+
+    File write errors are only returned when a call to ``fflush`` is made. These errors are not returned when an un-flushed ``fclose`` is called. The return value for ``fclose`` will be true if it closes the stream, regardless of any errors in response to its internal ``fflush``. These errors are also not returned when calling ``file_put_contents`` due to how it is implemented by PHP.
 
 Opening Seekable streams
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -96,7 +98,6 @@ cached data exceed 2MB, the data in the temp stream will transfer from memory
 to disk. Keep this in mind when downloading large files from Amazon S3 using
 the ``seekable`` stream context setting.
 
-
 Uploading data
 --------------
 
@@ -124,6 +125,9 @@ HTTP protocol does not allow simultaneous reading and writing.
     operation is internally buffered using a PHP temp stream until the stream
     is flushed or closed.
 
+.. note::
+
+    File write errors are only returned when a call to ``fflush`` is made. These errors are not returned when an un-flushed ``fclose`` is called. The return value for ``fclose`` will be true if it closes the stream, regardless of any errors in response to its internal ``fflush``. These errors are also not returned when calling ``file_put_contents`` due to how it is implemented by PHP.
 
 fopen modes
 -----------
@@ -142,7 +146,6 @@ a A write only stream. If the file already exists, it will be downloaded to a
   the stream will be appended to any previously uploaded data.
 x A write only stream. An error is raised if the file does not already exist.
 = =============================================================================
-
 
 Other object functions
 ----------------------
@@ -206,7 +209,6 @@ rename()        Rename an object by copying the object then deleting the
 
 =============== ================================================================
 
-
 .. note::
 
     While ``copy`` will generally work with the S3 stream wrapper, some errors
@@ -214,7 +216,6 @@ rename()        Rename an object by copying the object then deleting the
     in PHP. It is recommended that you use an instance of `Aws\S3\ObjectCopier
     <http://docs.aws.amazon.com/aws-sdk-php/v3/api/class-Aws.S3.ObjectCopier.html>`_
     instead.
-
 
 Working with buckets
 --------------------
@@ -250,7 +251,6 @@ You can delete buckets using the ``rmdir()`` function.
 .. note::
 
     A bucket can only be deleted if it is empty.
-
 
 Listing the contents of a bucket
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -301,7 +301,6 @@ function.
     foreach ($iter as $filename) {
         echo $filename . "\n";
     }
-
 
 Stream context options
 ----------------------

@@ -5,7 +5,6 @@ use Aws\Command;
 use Aws\Exception\AwsException;
 use Aws\Result;
 use Aws\S3\Exception\S3Exception;
-use Aws\S3\MultipartUploader;
 use Aws\S3\S3Client;
 use Aws\Test\UsesServiceTrait;
 use GuzzleHttp\Exception\ConnectException;
@@ -14,15 +13,15 @@ use GuzzleHttp\Promise;
 use GuzzleHttp\Promise\FulfilledPromise;
 use GuzzleHttp\Promise\RejectedPromise;
 use GuzzleHttp\Psr7;
-use GuzzleHttp\Psr7\FnStream;
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\StreamInterface;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers Aws\S3\S3Client
+ * @covers Aws\S3\S3ClientTrait
  */
-class S3ClientTest extends \PHPUnit_Framework_TestCase
+class S3ClientTest extends TestCase
 {
     use UsesServiceTrait;
 
@@ -77,6 +76,37 @@ class S3ClientTest extends \PHPUnit_Framework_TestCase
         ]);
         $command = $client->getCommand('GetObject', ['Bucket' => 'foo', 'Key' => 'bar']);
         $url = (string) $client->createPresignedRequest($command, 1342138769)->getUri();
+        $this->assertStringStartsWith('https://foo.s3.amazonaws.com/bar?', $url);
+        $this->assertContains('X-Amz-Expires=', $url);
+        $this->assertContains('X-Amz-Credential=', $url);
+        $this->assertContains('X-Amz-Signature=', $url);
+    }
+
+    public function testCreatesPresignedRequestsWithPathStyleFallback()
+    {
+        /** @var S3Client $client */
+        $client = $this->getTestClient('S3', [
+            'region'      => 'us-east-1',
+            'credentials' => ['key' => 'foo.baz', 'secret' => 'bar']
+        ]);
+        $command = $client->getCommand('GetObject', ['Bucket' => 'foo.baz', 'Key' => 'bar']);
+        $url = (string) $client->createPresignedRequest($command, 1342138769)->getUri();
+        $this->assertStringStartsWith('https://s3.amazonaws.com/foo.baz/bar?', $url);
+        $this->assertContains('X-Amz-Expires=', $url);
+        $this->assertContains('X-Amz-Credential=', $url);
+        $this->assertContains('X-Amz-Signature=', $url);
+    }
+
+    public function testCreatesPresignedRequestsWithPathStyle()
+    {
+        /** @var S3Client $client */
+        $client = $this->getTestClient('S3', [
+            'region'      => 'us-east-1',
+            'credentials' => ['key' => 'foo', 'secret' => 'bar'],
+            'use_path_style_endpoint' => true
+        ]);
+        $command = $client->getCommand('GetObject', ['Bucket' => 'foo', 'Key' => 'bar']);
+        $url = (string) $client->createPresignedRequest($command, 1342138769)->getUri();
         $this->assertStringStartsWith('https://s3.amazonaws.com/foo/bar?', $url);
         $this->assertContains('X-Amz-Expires=', $url);
         $this->assertContains('X-Amz-Credential=', $url);
@@ -104,7 +134,7 @@ class S3ClientTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($sent);
     }
 
-    public function testCreatesPresignedUrlsWithSpecialCharacters()
+    public function testCreatesPresignedUrlsWithSpecialCharactersWithPathStyleFallback()
     {
         $client = new S3Client([
             'region'      => 'us-east-1',
@@ -112,11 +142,30 @@ class S3ClientTest extends \PHPUnit_Framework_TestCase
             'credentials' => ['key' => 'foo', 'secret'  => 'bar']
         ]);
         $command = $client->getCommand('GetObject', [
-            'Bucket' => 'foobar test: abc',
+            'Bucket' => 'foobar.test.abc',
             'Key'    => '+%.a'
         ]);
         $url = $client->createPresignedRequest($command, 1342138769)->getUri();
-        $this->assertEquals('/foobar%20test%3A%20abc/%2B%25.a', $url->getPath());
+        $this->assertEquals('/foobar.test.abc/%2B%25.a', $url->getPath());
+        $query = Psr7\parse_query($url->getQuery());
+        $this->assertArrayHasKey('X-Amz-Credential', $query);
+        $this->assertArrayHasKey('X-Amz-Signature', $query);
+    }
+
+    public function testCreatesPresignedUrlsWithSpecialCharactersWithPathStyle()
+    {
+        $client = new S3Client([
+            'region'      => 'us-east-1',
+            'version'     => 'latest',
+            'credentials' => ['key' => 'foo', 'secret'  => 'bar'],
+            'use_path_style_endpoint' => true,
+        ]);
+        $command = $client->getCommand('GetObject', [
+            'Bucket' => 'foobar.test.abc',
+            'Key'    => '+%.a'
+        ]);
+        $url = $client->createPresignedRequest($command, 1342138769)->getUri();
+        $this->assertEquals('/foobar.test.abc/%2B%25.a', $url->getPath());
         $query = Psr7\parse_query($url->getQuery());
         $this->assertArrayHasKey('X-Amz-Credential', $query);
         $this->assertArrayHasKey('X-Amz-Signature', $query);
@@ -178,6 +227,25 @@ class S3ClientTest extends \PHPUnit_Framework_TestCase
             'region'      => 'us-east-1',
             'credentials' => false
         ]);
+        $this->assertEquals('https://foo.s3.amazonaws.com/bar', $s3->getObjectUrl('foo', 'bar'));
+    }
+
+    public function testReturnsObjectUrlWithPathStyleFallback()
+    {
+        $s3 = $this->getTestClient('S3', [
+            'region'      => 'us-east-1',
+            'credentials' => false,
+        ]);
+        $this->assertEquals('https://s3.amazonaws.com/foo.baz/bar', $s3->getObjectUrl('foo.baz', 'bar'));
+    }
+
+    public function testReturnsObjectUrlWithPathStyle()
+    {
+        $s3 = $this->getTestClient('S3', [
+            'region'      => 'us-east-1',
+            'credentials' => false,
+            'use_path_style_endpoint' => true
+        ]);
         $this->assertEquals('https://s3.amazonaws.com/foo/bar', $s3->getObjectUrl('foo', 'bar'));
     }
 
@@ -187,6 +255,33 @@ class S3ClientTest extends \PHPUnit_Framework_TestCase
         $s3 = $this->getTestClient('S3', [
             'region'      => 'us-east-1',
             'credentials' => false
+        ]);
+        $this->assertEquals(
+            'https://foo.s3.amazonaws.com/bar',
+            $s3->getObjectUrl('foo', 'bar')
+        );
+    }
+
+    public function testReturnsObjectUrlViaPathWithPathStyleFallback()
+    {
+        /** @var S3Client $s3 */
+        $s3 = $this->getTestClient('S3', [
+            'region'      => 'us-east-1',
+            'credentials' => false
+        ]);
+        $this->assertEquals(
+            'https://s3.amazonaws.com/foo.baz/bar',
+            $s3->getObjectUrl('foo.baz', 'bar')
+        );
+    }
+
+    public function testReturnsObjectUrlViaPathWithPathStyle()
+    {
+        /** @var S3Client $s3 */
+        $s3 = $this->getTestClient('S3', [
+            'region'      => 'us-east-1',
+            'credentials' => false,
+            'use_path_style_endpoint' => true
         ]);
         $this->assertEquals(
             'https://s3.amazonaws.com/foo.baz/bar',
@@ -273,7 +368,7 @@ class S3ClientTest extends \PHPUnit_Framework_TestCase
     public function testProxiesToObjectCopy()
     {
         $client = $this->getTestClient('S3');
-        $client->copy('fromBucket', 'fromKey', 'toBucket', 'toKey');
+        $client->copy('from-bucket', 'fromKey', 'to-bucket', 'toKey');
     }
 
     /**
@@ -673,6 +768,36 @@ EOXML;
         $this->assertSame('test/yearmonth=201601/', $response['CommonPrefixes'][0]['Prefix']);
     }
 
+    public function testListObjectsDefaultEncodingDoesNotCreateReferences()
+    {
+        $listObjects = $this->getUrlEncodedListObjectsResponse();
+        $client = new S3Client([
+            'version' => 'latest',
+            'region' => 'us-west-2',
+            'http_handler' => function () use ($listObjects) {
+                return new FulfilledPromise(new Response(200, [], $listObjects));
+            },
+        ]);
+
+        $response = $client->listObjects(['Bucket' => 'bucket']);
+        $this->assertSame('test/yearmonth=201601/file1', $response['Contents'][0]['Key']);
+        $this->assertSame('test/yearmonth=201601/', $response['CommonPrefixes'][0]['Prefix']);
+
+        $listObjectsCopy = $listObjects;
+        $listObjectsCopy = str_replace('file1', 'thisisatest', $listObjectsCopy);
+
+        $client = new S3Client([
+            'version' => 'latest',
+            'region' => 'us-west-2',
+            'http_handler' => function () use ($listObjects) {
+                return new FulfilledPromise(new Response(200, [], $listObjects));
+            },
+        ]);
+        $response = $client->listObjects(['Bucket' => 'bucket']);
+        $this->assertSame('test/yearmonth=201601/file1', $response['Contents'][0]['Key']);
+        $this->assertSame('test/yearmonth=201601/', $response['CommonPrefixes'][0]['Prefix']);
+    }
+
     public function testListObjectsDoesNotUrlDecodeEncodedKeysWhenEncodingSupplied()
     {
         $client = new S3Client([
@@ -723,7 +848,7 @@ EOXML;
             'region' => 'us-west-2',
             'http_handler' => function (RequestInterface $r, array $opts = []) {
                 $this->assertArrayHasKey('decode_content', $opts);
-                $this->assertSame(false, $opts['decode_content']);
+                $this->assertFalse($opts['decode_content']);
 
                 return Promise\promise_for(new Response);
             }
@@ -740,7 +865,7 @@ EOXML;
             'http' => ['decode_content' => false],
             'http_handler' => function (RequestInterface $r, array $opts = []) {
                 $this->assertArrayHasKey('decode_content', $opts);
-                $this->assertSame(false, $opts['decode_content']);
+                $this->assertFalse($opts['decode_content']);
 
                 return Promise\promise_for(new Response);
             }
@@ -756,7 +881,7 @@ EOXML;
             'region' => 'us-west-2',
             'http_handler' => function (RequestInterface $r, array $opts = []) {
                 $this->assertArrayHasKey('decode_content', $opts);
-                $this->assertSame(false, $opts['decode_content']);
+                $this->assertFalse($opts['decode_content']);
 
                 return Promise\promise_for(new Response);
             }
@@ -821,13 +946,17 @@ EOXML;
         $client->determineBucketRegion('bucket');
     }
 
-    public function testAppliesS3EndpointMiddleware()
+    public function testAppliesS3EndpointMiddlewareDualstackAccelerate()
     {
         // test applies s3-accelerate.dualstack for valid operations
         $handler = function (RequestInterface $req) {
             $this->assertSame(
                 'bucket.s3-accelerate.dualstack.amazonaws.com',
                 $req->getUri()->getHost()
+            );
+            $this->assertSame(
+                '/key',
+                $req->getUri()->getPath()
             );
             return Promise\promise_for(new Response);
         };
@@ -855,13 +984,20 @@ EOXML;
             '@use_accelerate_endpoint' => true,
             '@use_dual_stack_endpoint' => true,
         ]);
+    }
 
+    public function testAppliesS3EndpointMiddlewareDualstackInvalidAccelerate()
+    {
         // test applies dualstack solo for invalid accelerate operations
         // when both endpoint is enabled
         $handler = function (RequestInterface $req) {
             $this->assertSame(
-                's3.dualstack.us-west-2.amazonaws.com',
+                'bucket.s3.dualstack.us-west-2.amazonaws.com',
                 $req->getUri()->getHost()
+            );
+            $this->assertSame(
+                '/',
+                $req->getUri()->getPath()
             );
             return Promise\promise_for(new Response);
         };
@@ -887,7 +1023,47 @@ EOXML;
             '@use_accelerate_endpoint' => true,
             '@use_dual_stack_endpoint' => true,
         ]);
+    }
 
+    public function testAppliesS3EndpointMiddlewareDualstackInvalidAccelerateWithPathStyle()
+    {
+        // test applies dualstack solo for invalid accelerate operations
+        // when both endpoint is enabled and forcing path style
+        $handler = function (RequestInterface $req) {
+            $this->assertSame(
+                's3.dualstack.us-west-2.amazonaws.com',
+                $req->getUri()->getHost()
+            );
+            return Promise\promise_for(new Response);
+        };
+
+        $accelerateClient = new S3Client([
+            'version' => 'latest',
+            'region' => 'us-west-2',
+            'use_accelerate_endpoint' => true,
+            'use_dual_stack_endpoint' => true,
+            'use_path_style_endpoint' => true,
+            'http_handler' => $handler,
+        ]);
+        $accelerateClient->createBucket([
+            'Bucket' => 'bucket',
+        ]);
+
+        $client = new S3Client([
+            'version' => 'latest',
+            'region' => 'us-west-2',
+            'http_handler' => $handler,
+        ]);
+        $client->createBucket([
+            'Bucket' => 'bucket',
+            '@use_accelerate_endpoint' => true,
+            '@use_dual_stack_endpoint' => true,
+            '@use_path_style_endpoint' => true,
+        ]);
+    }
+
+    public function testAppliesS3EndpointMiddlewareAccelerate()
+    {
         // test applies s3-accelerate for valid operations
         $handler = function (RequestInterface $req) {
             $this->assertSame(
@@ -918,15 +1094,18 @@ EOXML;
             'Key' => 'key',
             '@use_accelerate_endpoint' => true,
         ]);
+    }
 
+    public function testAppliesS3EndpointMiddlewareDualstack()
+    {
         // test applies dualstack
         $handler = function (RequestInterface $req) {
             $this->assertSame(
-                's3.dualstack.us-west-2.amazonaws.com',
+                'bucket.s3.dualstack.us-west-2.amazonaws.com',
                 $req->getUri()->getHost()
             );
-            $this->assertContains(
-                'bucket',
+            $this->assertSame(
+                '/',
                 $req->getUri()->getPath()
             );
             return Promise\promise_for(new Response);
@@ -950,6 +1129,44 @@ EOXML;
         $client->createBucket([
             'Bucket' => 'bucket',
             '@use_dual_stack_endpoint' => true,
+        ]);
+    }
+
+    public function testAppliesS3EndpointMiddlewareDualstackWithPathStyle()
+    {
+        // test applies dualstack with path style
+        $handler = function (RequestInterface $req) {
+            $this->assertSame(
+                's3.dualstack.us-west-2.amazonaws.com',
+                $req->getUri()->getHost()
+            );
+            $this->assertSame(
+                '/bucket',
+                $req->getUri()->getPath()
+            );
+            return Promise\promise_for(new Response);
+        };
+
+        $dualStackClient = new S3Client([
+            'version' => 'latest',
+            'region' => 'us-west-2',
+            'use_dual_stack_endpoint' => true,
+            'use_path_style_endpoint' => true,
+            'http_handler' => $handler,
+        ]);
+        $dualStackClient->createBucket([
+            'Bucket' => 'bucket',
+        ]);
+
+        $client = new S3Client([
+            'version' => 'latest',
+            'region' => 'us-west-2',
+            'http_handler' => $handler,
+        ]);
+        $client->createBucket([
+            'Bucket' => 'bucket',
+            '@use_dual_stack_endpoint' => true,
+            '@use_path_style_endpoint' => true,
         ]);
     }
 }

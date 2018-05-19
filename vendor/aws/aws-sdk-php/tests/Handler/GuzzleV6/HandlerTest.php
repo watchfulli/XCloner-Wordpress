@@ -5,17 +5,17 @@ use Aws\Handler\GuzzleV6\GuzzleHandler;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Handler\MockHandler;
-use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Promise\RejectionException;
 use GuzzleHttp\Psr7;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\TransferStats;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers Aws\Handler\GuzzleV6\GuzzleHandler
  */
-class HandlerTest extends \PHPUnit_Framework_TestCase
+class HandlerTest extends TestCase
 {
     public function setUp()
     {

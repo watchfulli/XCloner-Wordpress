@@ -3,12 +3,13 @@ namespace Aws\Test\Api;
 
 use Aws\Api\Shape;
 use Aws\Api\ShapeMap;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \Aws\Api\Shape
  * @covers \Aws\Api\AbstractModel
  */
-class ShapeTest extends \PHPUnit_Framework_TestCase
+class ShapeTest extends TestCase
 {
     public function testImplementsArray()
     {
@@ -17,13 +18,13 @@ class ShapeTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($s['missing']);
         $s['abc'] = '123';
         $this->assertEquals('123', $s['abc']);
-        $this->assertTrue(isset($s['abc']));
+        $this->assertArrayHasKey('abc', $s);
         $this->assertEquals(
             ['metadata' => ['foo' => 'bar'], 'abc' => '123'],
             $s->toArray()
         );
         unset($s['abc']);
-        $this->assertFalse(isset($s['abc']));
+        $this->assertArrayNotHasKey('abc', $s);
     }
 
     /**

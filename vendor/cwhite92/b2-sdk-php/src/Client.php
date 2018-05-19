@@ -407,7 +407,7 @@ class Client
      */
     protected function authorizeAccount()
     {
-        $response = $this->client->request('GET', 'https://api.backblaze.com/b2api/v1/b2_authorize_account', [
+        $response = $this->client->request('GET', 'https://api.backblazeb2.com/b2api/v1/b2_authorize_account', [
             'auth' => [$this->accountId, $this->applicationKey]
         ]);
 

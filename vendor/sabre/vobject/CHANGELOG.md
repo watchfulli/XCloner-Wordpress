@@ -1,6 +1,38 @@
 ChangeLog
 =========
 
+4.1.6 (2018-04-20)
+------------------
+
+* #406, #407, #408, #409: Another round of performance improvements in serialization of properties (@gharlan, @staabm)
+* #410: Fixes in iTip for handling `BYDAY=SA,SO` (@gharlan)
+* #381: Fixes in iTip handling of `SCHEDULE-FORCE-SEND` (@alecpl)
+
+4.1.5 (2018-03-08)
+------------------
+
+* #404: Serialization: Performance boost for long properties (@gharlan)
+
+4.1.4 (2017-12-22)
+------------------
+
+* #383: Fix possible infinite loop in RRuleIterator, when the RRule FREQ
+  is YEARLY and it uses BYYEARDAY only (@mvdnes).
+* #392: Improved significant change detection. This should reduce the number of
+  unneeded update emails in scheduling systems. (@alecpl).
+* #395: Removed `Canada/East-Saskatchewan` timezone, as it got removed
+  from PHP as well. (@remicollet).
+
+
+4.1.3 (2017-10-18)
+------------------
+
+* #363: Repair script and de-duplicate properties that are only allowed once,
+  but appear more than once. (@ddolcimascolo).
+* #377: Addes Pacific Time (US & Canada) as exchange timezone
+* #384: Added fallback for VCards without `FN`
+
+
 4.1.2 (2016-12-15)
 ------------------
 

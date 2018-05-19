@@ -5,9 +5,9 @@ use Aws\Api\DateTimeResult;
 use Aws\CognitoIdentity\CognitoIdentityProvider;
 use Aws\MockHandler;
 use Aws\Result;
-use Aws\Test\UsesServiceTrait;
+use PHPUnit\Framework\TestCase;
 
-class CognitoIdentityProviderTest extends \PHPUnit_Framework_TestCase
+class CognitoIdentityProviderTest extends TestCase
 {
     public function testCreatesFromCognitoIdentity()
     {

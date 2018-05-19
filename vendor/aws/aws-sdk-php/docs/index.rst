@@ -8,6 +8,7 @@ AWS SDK for PHP
     getting-started/index
     guide/index
     service/index
+    examples/index
     faq
     glossary
 
@@ -23,7 +24,7 @@ External links: `API Docs <http://docs.aws.amazon.com/aws-sdk-php/v3/api/>`_
 | `GitHub <https://github.com/aws/aws-sdk-php>`_
 | `Twitter <https://twitter.com/awsforphp>`_
 | `Gitter <https://gitter.im/aws/aws-sdk-php>`_
-| `Blog <http://blogs.aws.amazon.com/php>`_
+| `Blog <https://aws.amazon.com/blogs/developer/category/php/>`_
 | `Forum <https://forums.aws.amazon.com/forum.jspa?forumID=80>`_
 | `Packagist <https://packagist.org/packages/aws/aws-sdk-php>`_
 
@@ -32,14 +33,12 @@ External links: `API Docs <http://docs.aws.amazon.com/aws-sdk-php/v3/api/>`_
     Are you migrating your project's code from using Version 2 of the SDK to
     Version 3? If so, you should read our :doc:`guide/migration`.
 
-
 Getting Started
 ---------------
 
 1. :doc:`getting-started/requirements`
 2. :doc:`getting-started/installation`
 3. :doc:`getting-started/basic-usage`
-
 
 SDK Guides
 ----------
@@ -55,7 +54,6 @@ SDK Guides
 * :doc:`guide/jmespath`
 * :doc:`guide/migration`
 
-
 Service-Specific Features
 -------------------------
 
@@ -69,7 +67,15 @@ Service-Specific Features
 * :doc:`service/s3-presigned-url`
 * :doc:`service/s3-stream-wrapper`
 * :doc:`service/s3-transfer`
+* :doc:`service/s3-encryption-client`
 
+Examples
+--------
+* :doc:`examples/cw-examples`
+* :doc:`examples/ec2-examples`
+* :doc:`examples/iam-examples`
+* :doc:`examples/s3-examples`
+* :doc:`examples/sqs-examples`
 
 Reference
 ---------
@@ -78,7 +84,6 @@ Reference
 * :doc:`glossary`
 * `Contributing to the SDK <https://github.com/aws/aws-sdk-php/blob/master/CONTRIBUTING.md>`_
 * `Guzzle Documentation <http://guzzlephp.org>`_
-
 
 .. _supported-services:
 

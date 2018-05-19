@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit bootstrap="./tests/bootstrap.php"
-         colors="true"
-         forceCoversAnnotation="true">
+         colors="true">
 
     <php>
         <!-- Specify the path to your CloudFront private key -->
@@ -25,9 +24,10 @@
             <directory suffix=".php">src</directory>
             <exclude>
                 <directory>src/data</directory>
-                <file>src/functions.php</file>
             </exclude>
         </whitelist>
     </filter>
-
+    <logging>
+        <log type="coverage-clover" target="clover.xml"/>
+    </logging>
 </phpunit>

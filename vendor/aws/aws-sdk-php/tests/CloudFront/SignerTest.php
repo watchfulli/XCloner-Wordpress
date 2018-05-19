@@ -3,8 +3,9 @@ namespace Aws\Test\CloudFront;
 
 use Aws\CloudFront\Policy;
 use Aws\CloudFront\Signer;
+use PHPUnit\Framework\TestCase;
 
-class SignerTest extends \PHPUnit_Framework_TestCase
+class SignerTest extends TestCase
 {
     /** @var Signer */
     private $instance;
@@ -51,11 +52,27 @@ class SignerTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('Key-Pair-Id', $signature);
     }
 
-    public function testReturnsExpiresForCannedPolicies()
+    public function getExpiresCases()
     {
-        $signature = $this->instance->getSignature('test.mp4', time() + 1000);
+        return [
+            [
+                time() + 1000
+            ],
+            [
+                (string) (time() + 1000)
+            ]
+        ];
+    }
+
+    /**
+     * @dataProvider getExpiresCases
+     */
+    public function testReturnsExpiresForCannedPolicies($expires)
+    {
+        $signature = $this->instance->getSignature('test.mp4', $expires);
 
         $this->assertArrayHasKey('Expires', $signature);
+        $this->assertInternalType('int', $signature['Expires']);
     }
 
     public function testReturnsPolicyForCustomPolicies()

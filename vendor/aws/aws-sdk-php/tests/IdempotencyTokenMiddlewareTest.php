@@ -9,11 +9,12 @@ use Aws\Api\ApiProvider;
 use Aws\Api\Service;
 use Aws\Command;
 use GuzzleHttp\Psr7\Request;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers Aws\IdempotencyTokenMiddleware
  */
-class IdempotencyTokenMiddlewareTest extends \PHPUnit_Framework_TestCase
+class IdempotencyTokenMiddlewareTest extends TestCase
 {
     public function testAutoFillsMemberWithIdempotencyTrait()
     {
@@ -23,7 +24,7 @@ class IdempotencyTokenMiddlewareTest extends \PHPUnit_Framework_TestCase
             $this->assertNotNull($command['ClientToken']);
             $regex = '/([a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})/';
             $this->assertRegExp($regex, $command['ClientToken']);
-            return \GuzzleHttp\Promise\promise_for(new Result([]));
+            return Promise\promise_for(new Result([]));
         });
 
         $provider = ApiProvider::defaultProvider();
@@ -55,7 +56,7 @@ class IdempotencyTokenMiddlewareTest extends \PHPUnit_Framework_TestCase
                 '00000000-0000-4000-8000-000000000000',
                 $command['ClientToken']
             );
-            return \GuzzleHttp\Promise\promise_for(new Result([]));
+            return Promise\promise_for(new Result([]));
         });
 
         $provider = ApiProvider::defaultProvider();

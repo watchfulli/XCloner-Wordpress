@@ -136,7 +136,7 @@ class NativeStreamContext extends \PHPUnit_Framework_Assert implements
      */
     public function theFileAtShouldContain($key, $contents)
     {
-        $this->assertSame($contents, file_get_contents($this->getS3Path($key)));
+        $this->assertStringEqualsFile($this->getS3Path($key), $contents);
     }
 
     /**
@@ -161,24 +161,6 @@ class NativeStreamContext extends \PHPUnit_Framework_Assert implements
     public function callingFstatShouldReportASizeOf($size)
     {
         $this->assertSame((int) $size, fstat($this->handle)['size']);
-    }
-
-    /**
-     * @Given I have cleared the last error
-     */
-    public function iHaveClearedTheLastError()
-    {
-        while (error_get_last()) {
-            error_clear_last();
-        }
-    }
-
-    /**
-     * @Then no errors should have been raised
-     */
-    public function errorsShouldHaveBeenRaised()
-    {
-        $this->assertNull(error_get_last());
     }
 
     /**

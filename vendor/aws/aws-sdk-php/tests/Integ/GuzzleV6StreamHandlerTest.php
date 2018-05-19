@@ -2,8 +2,9 @@
 namespace Aws\Test\Integ;
 
 use GuzzleHttp\Handler\StreamHandler;
+use PHPUnit\Framework\TestCase;
 
-class GuzzleV6StreamHandlerTest extends \PHPUnit_Framework_TestCase
+class GuzzleV6StreamHandlerTest extends TestCase
 {
     use IntegUtils;
 
@@ -18,7 +19,10 @@ class GuzzleV6StreamHandlerTest extends \PHPUnit_Framework_TestCase
     {
         $handler = new StreamHandler();
 
-        $s3 = $this->getSdk()->createS3(['http_handler' => $handler]);
+        $s3 = $this->getSdk()->createS3([
+            'http_handler' => $handler,
+            'use_path_style_endpoint' => true
+        ]);
         $result = $s3->listBuckets();
         $this->assertNotEmpty($result->search('Owner.ID'));
 

@@ -19,11 +19,12 @@ use GuzzleHttp\Psr7;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Promise;
 use Psr\Http\Message\RequestInterface;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers Aws\Middleware
  */
-class MiddlewareTest extends \PHPUnit_Framework_TestCase
+class MiddlewareTest extends TestCase
 {
     public function setup()
     {
@@ -78,7 +79,7 @@ class MiddlewareTest extends \PHPUnit_Framework_TestCase
         $list = new HandlerList();
         $mock = function ($command, $request) {
             $this->assertTrue($request->hasHeader('aws-sdk-invocation-id'));
-            return \GuzzleHttp\Promise\promise_for(
+            return Promise\promise_for(
                 new Result(['@metadata' => ['statusCode' => 200]])
             );
         };
@@ -93,7 +94,7 @@ class MiddlewareTest extends \PHPUnit_Framework_TestCase
         $list = new HandlerList();
         $mock = function ($command, $request) use (&$req) {
             $req = $request;
-            return \GuzzleHttp\Promise\promise_for(
+            return Promise\promise_for(
                 new Result(['@metadata' => ['statusCode' => 200]])
             );
         };

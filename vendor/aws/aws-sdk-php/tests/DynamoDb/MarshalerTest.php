@@ -6,11 +6,12 @@ use Aws\DynamoDb\BinaryValue;
 use Aws\DynamoDb\NumberValue;
 use Aws\DynamoDb\SetValue;
 use GuzzleHttp\Psr7;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers Aws\DynamoDb\Marshaler
  */
-class MarshalerTest extends \PHPUnit_Framework_TestCase
+class MarshalerTest extends TestCase
 {
     const ERROR = 'ERROR';
 
@@ -374,8 +375,8 @@ JSON;
         $set = new SetValue(['foo', 'bar', 'baz']);
         $this->assertEquals(['foo', 'bar', 'baz'], $set->toArray());
         $this->assertEquals('["foo","bar","baz"]', json_encode($set));
-        $this->assertEquals(3, count($set));
-        $this->assertEquals(3, iterator_count($set));
+        $this->assertCount(3, $set);
+        $this->assertCount(3, $set);
     }
 
     public function testUnmarshalItemDoesNotCreateReferences()

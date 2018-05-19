@@ -2,7 +2,6 @@
 Paginators
 ==========
 
-
 Introduction
 ------------
 
@@ -32,7 +31,6 @@ object using ``foreach`` to get individual ``Aws\Result`` objects.
         }
     }
 
-
 Paginator Objects
 -----------------
 
@@ -50,7 +48,6 @@ returns up to 1000 objects at a time, so if your bucket has ~10000 objects, then
 the paginator would need to do 10 requests total. When you iterate through the
 results, the first request is executed when you start iterating, the second in
 the second iteration of the loop, and so forth.
-
 
 Enumerating Data from Results
 -----------------------------
@@ -91,7 +88,6 @@ of a bucket), you could do the following.
     foreach ($results->search($expression) as $item) {
         echo $item . "\n";
     }
-
 
 .. _async_paginators:
 
@@ -143,7 +139,7 @@ downstream promises.
         ->then(function ($result) {
             // Result would be the last result to the deleteAsync operation.
         })
-        ->otherwise($reason) {
+        ->otherwise(function ($reason) {
             // Reason would be an exception that was encountered either in the
             // call to deleteAsync or calls performed while iterating.
         });

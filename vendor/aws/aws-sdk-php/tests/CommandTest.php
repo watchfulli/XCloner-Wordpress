@@ -3,12 +3,13 @@ namespace Aws\Test;
 
 use Aws\Command;
 use Aws\HandlerList;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers Aws\Command
  * @covers Aws\HasDataTrait
  */
-class CommandTest extends \PHPUnit_Framework_TestCase
+class CommandTest extends TestCase
 {
     public function testHasName()
     {
@@ -67,15 +68,15 @@ class CommandTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('baz', $c['bar']);
         $this->assertNull($c['boo']);
         $this->assertEquals('boo', $c['qux']);
-        $this->assertTrue(isset($c['qux']));
-        $this->assertFalse(isset($c['boo']));
+        $this->assertArrayHasKey('qux', $c);
+        $this->assertArrayNotHasKey('boo', $c);
 
         $c['boo'] = 'hi!';
-        $this->assertTrue(isset($c['boo']));
+        $this->assertArrayHasKey('boo', $c);
         $this->assertEquals('hi!', $c['boo']);
 
         unset($c['boo']);
-        $this->assertFalse(isset($c['boo']));
+        $this->assertArrayNotHasKey('boo', $c);
         $this->assertNull($c['boo']);
     }
 }

@@ -5,8 +5,9 @@ use Aws\Result;
 use Aws\ResultInterface;
 use Aws\S3\MultipartCopy;
 use Aws\Test\UsesServiceTrait;
+use PHPUnit\Framework\TestCase;
 
-class MultipartCopyTest extends \PHPUnit_Framework_TestCase
+class MultipartCopyTest extends TestCase
 {
     use UsesServiceTrait;
 
@@ -101,5 +102,41 @@ class MultipartCopyTest extends \PHPUnit_Framework_TestCase
         $configProp->setAccessible(true);
 
         $this->assertSame($configProp->getValue($classicMup), $configProp->getValue($putObjectMup));
+    }
+
+    public function testS3MultipartCopyParams()
+    {
+        /** @var \Aws\S3\S3Client $client */
+        $client = $this->getTestClient('s3');
+        $copyOptions = [
+            'bucket' => 'foo',
+            'key' => 'bar',
+            'source_metadata' => new Result(['ContentLength' => 11 * self::MB]),
+            'params'          => ['RequestPayer' => 'test'],
+            'before_initiate' => function($command) {
+                $this->assertEquals('test', $command['RequestPayer']);
+            },
+            'before_upload'   => function($command) {
+                $this->assertEquals('test', $command['RequestPayer']);
+            },
+            'before_complete' => function($command) {
+                $this->assertEquals('test', $command['RequestPayer']);
+            }
+        ];
+        $url = 'http://foo.s3.amazonaws.com/bar';
+
+        $this->addMockResults($client, [
+            new Result(['UploadId' => 'baz']),
+            new Result(['ETag' => 'A']),
+            new Result(['ETag' => 'B']),
+            new Result(['ETag' => 'C']),
+            new Result(['Location' => $url])
+        ]);
+
+        $uploader = new MultipartCopy($client, '/bucket/key', $copyOptions);
+        $result = $uploader->upload();
+
+        $this->assertTrue($uploader->getState()->isCompleted());
+        $this->assertEquals($url, $result['ObjectURL']);
     }
 }

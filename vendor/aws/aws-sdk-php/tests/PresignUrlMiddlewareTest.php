@@ -5,13 +5,13 @@ use Aws\CommandInterface;
 use Aws\Ec2\Ec2Client;
 use Aws\Rds\RdsClient;
 use Aws\Result;
-use Aws\Test\UsesServiceTrait;
 use Psr\Http\Message\RequestInterface;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers Aws\PresignUrlMiddleware
  */
-class PresignUrlMiddlewareTest extends \PHPUnit_Framework_TestCase
+class PresignUrlMiddlewareTest extends TestCase
 {
     use UsesServiceTrait;
 
@@ -80,6 +80,24 @@ class PresignUrlMiddlewareTest extends \PHPUnit_Framework_TestCase
             'KmsKeyId' => '238f8ec9-71da-4530-8ec9-009f4a90fef5',
             'SourceDBSnapshotIdentifier' => 'arn:aws:rds:us-west-2:123456789012:snapshot:rds:my-snapshot',
             'TargetDBSnapshotIdentifier' => 'my-snapshot-copy',
+        ]);
+    }
+
+    public function testNoPreSignedUrlWhenDifferentSourceRegionRequired()
+    {
+        $rds = new RdsClient([
+            'region'  => 'us-east-2',
+            'version' => 'latest',
+            'handler' => function (CommandInterface $cmd, RequestInterface $r) {
+                $this->assertNull($cmd['PreSignedUrl']);
+                $this->assertSame('us-east-2', $cmd['DestinationRegion']);
+
+                return new Result;
+            },
+        ]);
+        $rds->createDBInstanceReadReplica([
+            'DBInstanceIdentifier' => 'test-replica',
+            'SourceDBInstanceIdentifier' => 'test-source',
         ]);
     }
 }

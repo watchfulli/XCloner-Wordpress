@@ -4,11 +4,12 @@ namespace Aws\Test;
 use Aws\Endpoint\EndpointProvider;
 use Aws\Endpoint\Partition;
 use Aws\Endpoint\PartitionEndpointProvider;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \Aws\Endpoint\PartitionEndpointProvider
  */
-class PartitionEndpointProviderTest extends \PHPUnit_Framework_TestCase
+class PartitionEndpointProviderTest extends TestCase
 {
     /**
      * @dataProvider endpointProvider
@@ -53,7 +54,7 @@ class PartitionEndpointProviderTest extends \PHPUnit_Framework_TestCase
             [
                 ['region' => 'us-west-2', 'service' => 's3'],
                 [
-                    'endpoint' => 'https://s3-us-west-2.amazonaws.com',
+                    'endpoint' => 'https://s3.us-west-2.amazonaws.com',
                     'signatureVersion' => 's3v4',
                     'signingRegion' => 'us-west-2',
                     'signingName' => 's3',
@@ -89,7 +90,7 @@ class PartitionEndpointProviderTest extends \PHPUnit_Framework_TestCase
             [
                 ['region' => 'us-gov-west-1', 'service' => 's3'],
                 [
-                    'endpoint' => 'https://s3-us-gov-west-1.amazonaws.com',
+                    'endpoint' => 'https://s3.us-gov-west-1.amazonaws.com',
                     'signatureVersion' => 's3v4',
                     'signingRegion' => 'us-gov-west-1',
                     'signingName' => 's3',
@@ -251,7 +252,7 @@ class PartitionEndpointProviderTest extends \PHPUnit_Framework_TestCase
             [$partitions, 'ap-northeast-1', 'monitoring', 'monitoring.ap-northeast-1.amazonaws.com'],
             [$partitions, 'ap-northeast-1', 'rds', 'rds.ap-northeast-1.amazonaws.com'],
             [$partitions, 'ap-northeast-1', 'redshift', 'redshift.ap-northeast-1.amazonaws.com'],
-            [$partitions, 'ap-northeast-1', 's3', 's3-ap-northeast-1.amazonaws.com'],
+            [$partitions, 'ap-northeast-1', 's3', 's3.ap-northeast-1.amazonaws.com'],
             [$partitions, 'ap-northeast-1', 'sdb', 'sdb.ap-northeast-1.amazonaws.com'],
             [$partitions, 'ap-northeast-1', 'sns', 'sns.ap-northeast-1.amazonaws.com'],
             [$partitions, 'ap-northeast-1', 'sqs', 'sqs.ap-northeast-1.amazonaws.com'],
@@ -281,7 +282,7 @@ class PartitionEndpointProviderTest extends \PHPUnit_Framework_TestCase
             [$partitions, 'ap-southeast-1', 'monitoring', 'monitoring.ap-southeast-1.amazonaws.com'],
             [$partitions, 'ap-southeast-1', 'rds', 'rds.ap-southeast-1.amazonaws.com'],
             [$partitions, 'ap-southeast-1', 'redshift', 'redshift.ap-southeast-1.amazonaws.com'],
-            [$partitions, 'ap-southeast-1', 's3', 's3-ap-southeast-1.amazonaws.com'],
+            [$partitions, 'ap-southeast-1', 's3', 's3.ap-southeast-1.amazonaws.com'],
             [$partitions, 'ap-southeast-1', 'sdb', 'sdb.ap-southeast-1.amazonaws.com'],
             [$partitions, 'ap-southeast-1', 'sns', 'sns.ap-southeast-1.amazonaws.com'],
             [$partitions, 'ap-southeast-1', 'sqs', 'sqs.ap-southeast-1.amazonaws.com'],
@@ -314,7 +315,7 @@ class PartitionEndpointProviderTest extends \PHPUnit_Framework_TestCase
             [$partitions, 'ap-southeast-2', 'monitoring', 'monitoring.ap-southeast-2.amazonaws.com'],
             [$partitions, 'ap-southeast-2', 'rds', 'rds.ap-southeast-2.amazonaws.com'],
             [$partitions, 'ap-southeast-2', 'redshift', 'redshift.ap-southeast-2.amazonaws.com'],
-            [$partitions, 'ap-southeast-2', 's3', 's3-ap-southeast-2.amazonaws.com'],
+            [$partitions, 'ap-southeast-2', 's3', 's3.ap-southeast-2.amazonaws.com'],
             [$partitions, 'ap-southeast-2', 'sdb', 'sdb.ap-southeast-2.amazonaws.com'],
             [$partitions, 'ap-southeast-2', 'sns', 'sns.ap-southeast-2.amazonaws.com'],
             [$partitions, 'ap-southeast-2', 'sqs', 'sqs.ap-southeast-2.amazonaws.com'],
@@ -406,7 +407,7 @@ class PartitionEndpointProviderTest extends \PHPUnit_Framework_TestCase
             [$partitions, 'eu-west-1', 'monitoring', 'monitoring.eu-west-1.amazonaws.com'],
             [$partitions, 'eu-west-1', 'rds', 'rds.eu-west-1.amazonaws.com'],
             [$partitions, 'eu-west-1', 'redshift', 'redshift.eu-west-1.amazonaws.com'],
-            [$partitions, 'eu-west-1', 's3', 's3-eu-west-1.amazonaws.com'],
+            [$partitions, 'eu-west-1', 's3', 's3.eu-west-1.amazonaws.com'],
             [$partitions, 'eu-west-1', 'sdb', 'sdb.eu-west-1.amazonaws.com'],
             [$partitions, 'eu-west-1', 'sns', 'sns.eu-west-1.amazonaws.com'],
             [$partitions, 'eu-west-1', 'sqs', 'sqs.eu-west-1.amazonaws.com'],
@@ -434,7 +435,7 @@ class PartitionEndpointProviderTest extends \PHPUnit_Framework_TestCase
             [$partitions, 'sa-east-1', 'kms', 'kms.sa-east-1.amazonaws.com'],
             [$partitions, 'sa-east-1', 'monitoring', 'monitoring.sa-east-1.amazonaws.com'],
             [$partitions, 'sa-east-1', 'rds', 'rds.sa-east-1.amazonaws.com'],
-            [$partitions, 'sa-east-1', 's3', 's3-sa-east-1.amazonaws.com'],
+            [$partitions, 'sa-east-1', 's3', 's3.sa-east-1.amazonaws.com'],
             [$partitions, 'sa-east-1', 'sdb', 'sdb.sa-east-1.amazonaws.com'],
             [$partitions, 'sa-east-1', 'sns', 'sns.sa-east-1.amazonaws.com'],
             [$partitions, 'sa-east-1', 'sqs', 'sqs.sa-east-1.amazonaws.com'],
@@ -511,7 +512,7 @@ class PartitionEndpointProviderTest extends \PHPUnit_Framework_TestCase
             [$partitions, 'us-gov-west-1', 'monitoring', 'monitoring.us-gov-west-1.amazonaws.com'],
             [$partitions, 'us-gov-west-1', 'rds', 'rds.us-gov-west-1.amazonaws.com'],
             [$partitions, 'us-gov-west-1', 'redshift', 'redshift.us-gov-west-1.amazonaws.com'],
-            [$partitions, 'us-gov-west-1', 's3', 's3-us-gov-west-1.amazonaws.com'],
+            [$partitions, 'us-gov-west-1', 's3', 's3.us-gov-west-1.amazonaws.com'],
             [$partitions, 'us-gov-west-1', 'sns', 'sns.us-gov-west-1.amazonaws.com'],
             [$partitions, 'us-gov-west-1', 'sqs', 'sqs.us-gov-west-1.amazonaws.com'],
             [$partitions, 'us-gov-west-1', 'sts', 'sts.us-gov-west-1.amazonaws.com'],
@@ -536,7 +537,7 @@ class PartitionEndpointProviderTest extends \PHPUnit_Framework_TestCase
             [$partitions, 'us-west-1', 'logs', 'logs.us-west-1.amazonaws.com'],
             [$partitions, 'us-west-1', 'monitoring', 'monitoring.us-west-1.amazonaws.com'],
             [$partitions, 'us-west-1', 'rds', 'rds.us-west-1.amazonaws.com'],
-            [$partitions, 'us-west-1', 's3', 's3-us-west-1.amazonaws.com'],
+            [$partitions, 'us-west-1', 's3', 's3.us-west-1.amazonaws.com'],
             [$partitions, 'us-west-1', 'sdb', 'sdb.us-west-1.amazonaws.com'],
             [$partitions, 'us-west-1', 'sns', 'sns.us-west-1.amazonaws.com'],
             [$partitions, 'us-west-1', 'sqs', 'sqs.us-west-1.amazonaws.com'],
@@ -576,7 +577,7 @@ class PartitionEndpointProviderTest extends \PHPUnit_Framework_TestCase
             [$partitions, 'us-west-2', 'monitoring', 'monitoring.us-west-2.amazonaws.com'],
             [$partitions, 'us-west-2', 'rds', 'rds.us-west-2.amazonaws.com'],
             [$partitions, 'us-west-2', 'redshift', 'redshift.us-west-2.amazonaws.com'],
-            [$partitions, 'us-west-2', 's3', 's3-us-west-2.amazonaws.com'],
+            [$partitions, 'us-west-2', 's3', 's3.us-west-2.amazonaws.com'],
             [$partitions, 'us-west-2', 'sdb', 'sdb.us-west-2.amazonaws.com'],
             [$partitions, 'us-west-2', 'sns', 'sns.us-west-2.amazonaws.com'],
             [$partitions, 'us-west-2', 'sqs', 'sqs.us-west-2.amazonaws.com'],

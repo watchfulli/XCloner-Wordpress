@@ -7,16 +7,18 @@ use Aws\Exception\AwsException;
 use Aws\MockHandler;
 use Aws\Result;
 use Aws\RetryMiddleware;
-use GuzzleHttp\Promise;
+use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Promise\RejectedPromise;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\RequestInterface;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers Aws\RetryMiddleware
  */
-class RetryMiddlewareTest extends \PHPUnit_Framework_TestCase
+class RetryMiddlewareTest extends TestCase
 {
     public function testAddRetryHeader()
     {
@@ -79,6 +81,38 @@ class RetryMiddlewareTest extends \PHPUnit_Framework_TestCase
             $err = new \Error('e');
             $this->assertFalse($decider(0, $command, $request, null, $err));
         }
+    }
+
+    public function testDeciderRetriesWhenCurlErrorCodeMatches()
+    {
+        if (!extension_loaded('curl')) {
+            $this->markTestSkipped('Test skipped on no cURL extension');
+        }
+        $decider = RetryMiddleware::createDefaultDecider();
+        $command = new Command('foo');
+        $request = new Request('GET', 'http://www.example.com');
+        $version = (string) ClientInterface::VERSION;
+        if ($version[0] === '6') {
+            $previous = new RequestException(
+                'test',
+                $request,
+                null,
+                null,
+                ['errno' => CURLE_RECV_ERROR]
+            );
+        } elseif ($version[0] === '5') {
+            $previous = new RequestException(
+                'cURL error ' . CURLE_RECV_ERROR . ': test',
+                new \GuzzleHttp\Message\Request('GET', 'http://www.example.com')
+            );
+        }
+        $err = new AwsException(
+            'e',
+            $command,
+            ['connection_error' => false],
+            $previous
+        );
+        $this->assertTrue($decider(0, $command, $request, null, $err));
     }
 
     public function awsErrorCodeProvider()

@@ -4,16 +4,17 @@ namespace Aws\Test\DynamoDb;
 use Aws\Command;
 use Aws\DynamoDb\DynamoDbClient;
 use Aws\DynamoDb\Exception\DynamoDbException;
-use Aws\HandlerList;
 use Aws\Test\UsesServiceTrait;
 use GuzzleHttp\Promise\RejectedPromise;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\Stream;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \Aws\DynamoDb\DynamoDbClient
+ * @runTestsInSeparateProcesses
  */
-class DynamoDbClientTest extends \PHPUnit_Framework_TestCase
+class DynamoDbClientTest extends TestCase
 {
     use UsesServiceTrait;
 
