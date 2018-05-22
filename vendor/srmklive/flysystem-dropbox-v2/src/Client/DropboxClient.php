@@ -462,8 +462,9 @@ class DropboxClient
                 $this->request
             ),
         ];
-
-        if (!empty($this->content)) {
+        if (!empty($this->content) ||
+               $this->apiEndpoint == 'files/upload_session/finish') {
+            // The upload_session/finish API requires a Content-Type, always
             $headers['Content-Type'] = 'application/octet-stream';
         }
 
@@ -500,6 +501,10 @@ class DropboxClient
      */
     protected function normalizePath($path)
     {
+        if (preg_match("/^id:.*|^rev:.*|^(ns:[0-9]+(\/.*)?)/", $path) === 1) {
+            return $path;
+        }
+
         $path = (trim($path, '/') === '') ? '' : '/'.$path;
 
         return str_replace('//', '/', $path);

@@ -5,7 +5,7 @@ namespace Srmklive\Dropbox\Adapter;
 use League\Flysystem\Adapter\AbstractAdapter;
 use League\Flysystem\Adapter\Polyfill\NotSupportingVisibilityTrait;
 use League\Flysystem\Config;
-use LogicException;
+use League\Flysystem\Util\MimeType;
 use Srmklive\Dropbox\Client\DropboxClient;
 use Srmklive\Dropbox\Exceptions\BadRequest;
 use Srmklive\Dropbox\ParseResponse;
@@ -219,7 +219,7 @@ class DropboxAdapter extends AbstractAdapter
      */
     public function getMimetype($path)
     {
-        throw new LogicException("The Dropbox API v2 does not support mimetypes. Given path: `{$path}`.");
+        return ['mimetype' => MimeType::detectByFilename($path)];
     }
 
     /**

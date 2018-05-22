@@ -6,7 +6,7 @@
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/srmklive/flysystem-dropbox-v2/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/srmklive/flysystem-dropbox-v2/?branch=master)
 [![Coverage Status](https://coveralls.io/repos/github/srmklive/flysystem-dropbox-v2/badge.svg?branch=master)](https://coveralls.io/github/srmklive/flysystem-dropbox-v2?branch=master)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/5140968d-c422-4a3d-94e0-c1301f2ad3bb/small.png)](https://insight.sensiolabs.com/projects/5140968d-c422-4a3d-94e0-c1301f2ad3bb)
-[![Build status](https://ci.appveyor.com/api/projects/status/ye1r3ouphy218awd?svg=true)](https://ci.appveyor.com/project/srmklive/flysystem-dropbox-v2)
+[![Build status](https://ci.appveyor.com/api/projects/status/02ws0t7clh77s9rq?svg=true)](https://ci.appveyor.com/project/srmklive/flysystem-dropbox-v2)
 
 This package contains a [Flysystem](https://flysystem.thephpleague.com/) adapter for Dropbox API v2.
 

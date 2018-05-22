@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.56.4",
+            "version": "3.56.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "03273bb5c1d8098ff6c23b3fa9ee444c4cc1dcee"
+                "reference": "d5b8f10a6e51174fab6a0222e1f0dfae2323e75d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/03273bb5c1d8098ff6c23b3fa9ee444c4cc1dcee",
-                "reference": "03273bb5c1d8098ff6c23b3fa9ee444c4cc1dcee",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/d5b8f10a6e51174fab6a0222e1f0dfae2323e75d",
+                "reference": "d5b8f10a6e51174fab6a0222e1f0dfae2323e75d",
                 "shasum": ""
             },
             "require": {
@@ -84,7 +84,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2018-05-18T19:53:15+00:00"
+            "time": "2018-05-21T20:15:18+00:00"
         },
         {
             "name": "components/jquery",
@@ -1628,16 +1628,16 @@
         },
         {
             "name": "srmklive/flysystem-dropbox-v2",
-            "version": "v1.0.6",
+            "version": "v1.0.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/srmklive/flysystem-dropbox-v2.git",
-                "reference": "4d46205ec09247e936656724102bc5ba27c95587"
+                "reference": "26d893a0ccb01f5406cc814485f6715bad4426c0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/srmklive/flysystem-dropbox-v2/zipball/4d46205ec09247e936656724102bc5ba27c95587",
-                "reference": "4d46205ec09247e936656724102bc5ba27c95587",
+                "url": "https://api.github.com/repos/srmklive/flysystem-dropbox-v2/zipball/26d893a0ccb01f5406cc814485f6715bad4426c0",
+                "reference": "26d893a0ccb01f5406cc814485f6715bad4426c0",
                 "shasum": ""
             },
             "require": {
@@ -1646,7 +1646,7 @@
                 "php": ">=5.5.9"
             },
             "require-dev": {
-                "phpunit/phpunit": "^4.8|^5.7|^6.0"
+                "phpunit/phpunit": "^4.8|^5.7|^6.0|^7.0"
             },
             "type": "library",
             "autoload": {
@@ -1673,7 +1673,7 @@
                 "srmklive",
                 "v2"
             ],
-            "time": "2017-10-20T15:24:32+00:00"
+            "time": "2018-05-19T19:08:49+00:00"
         },
         {
             "name": "vakata/jstree",
