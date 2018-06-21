@@ -112,6 +112,11 @@ Immigration Attorney Montana <a href="https://www.immigrationlawofmt.com" target
 
 == Changelog ==
 
+= 4.0.8 = 
+* updated vendor library dependencies, AWS, phpseclib
+* TAR compression fix
+* 7.2 compatibility checks and fixes
+
 = 4.0.7 =
 * added log fixes for Wordpress cron
 * remove storage fixes
