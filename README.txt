@@ -22,7 +22,7 @@ Project is actively maintained through github https://github.com/ovidiul/XCloner
 
 <strong>Requirements:</strong>
 
-PHP 5.4+ with mod CURL installed
+PHP 5.6+ with mod CURL installed
 
 <strong>Features:</strong>
 
