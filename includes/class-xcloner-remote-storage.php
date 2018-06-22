@@ -379,9 +379,9 @@ class Xcloner_Remote_Storage{
 	{
 		$this->logger->info(sprintf("Creating the AZURE BLOB remote storage connection"), array(""));
 		
-		if (version_compare(phpversion(), '5.5.0', '<')) 
+		if (version_compare(phpversion(), '5.6.0', '<')) 
 		{
-				throw new Exception("AZURE BLOB requires PHP 5.5 to be installed!");
+				throw new Exception("AZURE BLOB requires PHP 5.6 to be installed!");
 		}
 		
 		if (!class_exists('XmlWriter')) 
@@ -410,9 +410,9 @@ class Xcloner_Remote_Storage{
 	{
 		$this->logger->info(sprintf("Creating the DROPBOX remote storage connection"), array(""));
 		
-		if (version_compare(phpversion(), '5.5.0', '<')) 
+		if (version_compare(phpversion(), '5.6.0', '<')) 
 		{
-				throw new Exception("DROPBOX requires PHP 5.5 to be installed!");
+				throw new Exception("DROPBOX requires PHP 5.6 to be installed!");
 		}
 		
 		$client = new DropboxClient(get_option("xcloner_dropbox_access_token"));
@@ -429,9 +429,9 @@ class Xcloner_Remote_Storage{
 	{
 		$this->logger->info(sprintf("Creating the S3 remote storage connection"), array(""));
 		
-		if (version_compare(phpversion(), '5.5.0', '<')) 
+		if (version_compare(phpversion(), '5.6.0', '<')) 
 		{
-				throw new Exception("S3 class requires PHP 5.5 to be installed!");
+				throw new Exception("S3 class requires PHP 5.6 to be installed!");
 		}
 		
 		if (!class_exists('XmlWriter')) 
@@ -473,9 +473,9 @@ class Xcloner_Remote_Storage{
 	{
 		$this->logger->info(sprintf("Creating the BACKBLAZE remote storage connection"), array(""));
 		
-		if (version_compare(phpversion(), '5.5.0', '<')) 
+		if (version_compare(phpversion(), '5.6.0', '<')) 
 		{
-				throw new Exception("BACKBLAZE API requires PHP 5.5 to be installed!");
+				throw new Exception("BACKBLAZE API requires PHP 5.6 to be installed!");
 		}
 		
 		
@@ -493,9 +493,9 @@ class Xcloner_Remote_Storage{
 	{
 		$this->logger->info(sprintf("Creating the WEBDAV remote storage connection"), array(""));
 		
-		if (version_compare(phpversion(), '5.5.0', '<')) 
+		if (version_compare(phpversion(), '5.6.0', '<')) 
 		{
-				throw new Exception("WEBDAV API requires PHP 5.5 to be installed!");
+				throw new Exception("WEBDAV API requires PHP 5.6 to be installed!");
 		}
 		
 		$settings = array(
@@ -586,9 +586,9 @@ class Xcloner_Remote_Storage{
 	public function get_gdrive_filesystem()
 	{
 		
-		if (version_compare(phpversion(), '5.5.0', '<')) 
+		if (version_compare(phpversion(), '5.6.0', '<')) 
 		{
-				throw new Exception("Google Drive API requires PHP 5.5 to be installed!");
+				throw new Exception("Google Drive API requires PHP 5.6 to be installed!");
 		}
 		
 		$this->logger->info(sprintf("Creating the Google Drive remote storage connection"), array(""));
