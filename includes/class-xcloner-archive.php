@@ -52,8 +52,10 @@ class Xcloner_Archive extends Tar
 	}
 
 	/*
-	 *
 	 * Rename backup archive
+	 *
+	 * @param string $old_name
+	 * @param string $new_name
 	 *
 	 */
 	public function rename_archive($old_name, $new_name)
@@ -101,6 +103,7 @@ class Xcloner_Archive extends Tar
 	 *
 	 * Returns the backup archive name
 	 *
+	 * @return string archive name
 	 */
 	public function get_archive_name()
 	{
@@ -111,6 +114,7 @@ class Xcloner_Archive extends Tar
 	 *
 	 * Returns the multipart naming for the backup archive
 	 *
+	 * @return string multi-part backup name
 	 */
 	public function get_archive_name_multipart()
 	{
@@ -132,6 +136,14 @@ class Xcloner_Archive extends Tar
 	 *
 	 * Send notification error by E-Mail
 	 *
+	 * @param $to
+	 * @param $from
+	 * @param $subject
+	 * @param $backup_name
+	 * @param $params
+	 * @param $error_message
+	 *
+	 * @return bool
 	 */
 	public function send_notification_error($to, $from, $subject, $backup_name, $params, $error_message)
 	{
@@ -160,6 +172,15 @@ class Xcloner_Archive extends Tar
 	 *
 	 * Send backup archive notfication by E-Mail
 	 *
+	 * @param $to
+	 * @param $from
+	 * @param $subject
+	 * @param $backup_name
+	 * @param $params
+	 * @param string $error_message
+	 * @param array $additional
+	 *
+	 * @return bool
 	 */
 	public function send_notification($to, $from, $subject, $backup_name, $params, $error_message="", $additional = array())
 	{
@@ -446,8 +467,19 @@ class Xcloner_Archive extends Tar
 		$this->logger->info(sprintf("Closing the backup archive %s with 2*512 zero bytes blocks.", $this->get_archive_name_with_extension()));
 		$this->backup_archive->close();
 
-		if($return['extra']['backup_part'])
+		/**
+		 * XCloner HOOK backup_archive_finished.
+		 *
+		 * This will get triggered when a backup archive is finished writing.
+		 */
+		//do_action('backup_archive_finished', $this->backup_archive, $this);
+
+		//updating archive_info
+		$archive_info = $this->filesystem->get_storage_path_file_info($this->get_archive_name_with_extension());
+
+		if($return['extra']['backup_part']){
 			$this->write_multipart_file($this->get_archive_name_with_extension());
+		}
 
 		$return['extra']['start_at_line'] = $extra_params['start_at_line']-1;
 

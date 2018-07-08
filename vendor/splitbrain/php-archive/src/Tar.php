@@ -68,7 +68,7 @@ class Tar extends Archive
             throw new ArchiveIOException('Could not open file for reading: '.$this->file);
         }
         $this->closed = false;
-        
+
         if($start_byte)
 			fseek($this->fh, $start_byte);
     }
@@ -89,16 +89,16 @@ class Tar extends Archive
         if ($this->closed || !$this->file) {
             throw new ArchiveIOException('Can not read from a closed archive');
         }
-		
+
 		$files_counter = 0;
         $result = array();
-        
+
         while ($read = $this->readbytes(512)) {
             $header = $this->parseHeader($read);
             if (!is_array($header)) {
                 continue;
             }
-            
+
             if($files_limit)
             {
 				if(++$files_counter > $files_limit)
@@ -108,16 +108,16 @@ class Tar extends Archive
 					return $return;
 				}
 			}
-			
+
 			if($header['typeflag'] == 5)
 				$header['size'] = 0;
-				
+
             $this->skipbytes(ceil($header['size'] / 512) * 512);
             $result[] = $this->header2fileinfo($header);
         }
-		
+
 		$return['extracted_files'] = $result;
-		
+
         $this->close();
         return $return;
     }
@@ -159,16 +159,16 @@ class Tar extends Archive
 				@mkdir($outdir, 0755, true);
 			else
 				@chmod($outdir, 0777);
-        
+
         //@mkdir($outdir, 0777, true);
-        
+
         if (!is_dir($outdir)) {
             throw new ArchiveIOException("Could not create directory '$outdir'");
         }
-		
+
 		$files_counter = 0;
 		$return = array();
-		
+
         $extracted = array();
         while ($dat = $this->readbytes(512)) {
             // read the file header
@@ -176,7 +176,7 @@ class Tar extends Archive
             if (!is_array($header)) {
                 continue;
             }
-            
+
             if($files_limit)
             {
 				if(++$files_counter > $files_limit)
@@ -186,7 +186,7 @@ class Tar extends Archive
 					return $return;
 				}
 			}
-            
+
             $fileinfo = $this->header2fileinfo($header);
 
             // apply strip rules
@@ -210,7 +210,7 @@ class Tar extends Archive
             if (!$fileinfo->getIsdir()) {
 				if(file_exists($output))
 					unlink($output);
-					
+
                 $fp = fopen($output, "wb");
                 if (!$fp) {
                     throw new ArchiveIOException('Could not open file for writing: '.$output);
@@ -236,9 +236,9 @@ class Tar extends Archive
         }
 
         $this->close();
-        
+
         $return['extracted_files'] = $extracted;
-        
+
         return $return;
     }
 
@@ -294,25 +294,25 @@ class Tar extends Archive
         if ($this->closed) {
             throw new ArchiveIOException('Archive has been closed, files can no longer be added');
         }
-		
+
 		if(is_dir($file))
 		{
 			$this->writeFileHeader($fileinfo);
 			return;
 		}
-		
+
         $fp = fopen($file, 'rb');
         if (!$fp) {
             throw new ArchiveIOException('Could not open file for reading: '.$file);
         }
-		
+
         // create file header
         if(is_resource($this->fh))
         {
 			$archive_header_position = ftell($this->fh);
 		}
         $this->writeFileHeader($fileinfo);
-			
+
         // write data
         while (!feof($fp)) {
             $data = fread($fp, 512);
@@ -325,15 +325,15 @@ class Tar extends Archive
             $packed = pack("a512", $data);
             $this->writebytes($packed);
         }
-        
+
         $file_offset = ftell($fp);
-        
+
         //rewrite header with new size if file size changed while reading
         if(is_resource($this->fh) && $file_offset && $file_offset != $fileinfo->getSize())
         {
 			$archive_current_position = ftell($this->fh);
 			fseek($this->fh, $archive_header_position);
-			
+
 			$fileinfo->setSize(ftell($fp));
 			$this->writeFileHeader($fileinfo);
 
@@ -495,11 +495,11 @@ class Tar extends Archive
 
         return $written;
     }
-	
+
 	public function appendFileData($file, $fileinfo = '', $start = 0, $limit = 0)
     {
 		$end = $start+($limit*512);
-		
+
 		//check to see if we are at the begining of writing the file
 		if(!$start)
 		{
@@ -507,11 +507,11 @@ class Tar extends Archive
 				$fileinfo = FileInfo::fromPath($file, $fileinfo);
 	        }
 		}
-		
+
         if ($this->closed) {
             throw new ArchiveIOException('Archive has been closed, files can no longer be added');
         }
-        
+
         if(is_dir($file))
 		{
 			$this->writeFileHeader($fileinfo);
@@ -519,9 +519,9 @@ class Tar extends Archive
 		}
 
         $fp = fopen($file, 'rb');
-        
+
         fseek($fp, $start);
-        
+
         if (!$fp) {
             throw new ArchiveIOException('Could not open file for reading: '.$file);
         }
@@ -531,7 +531,7 @@ class Tar extends Archive
 		{
 			$this->writeFileHeader($fileinfo);
 		}
-		
+
 		$bytes = 0;
         // write data
         while ($end >=ftell($fp) and !feof($fp) ) {
@@ -545,20 +545,20 @@ class Tar extends Archive
             $packed = pack("a512", $data);
             $bytes += $this->writebytes($packed);
         }
-        
-        
-        
+
+
+
         //if we are not at the end of file, we return the current position for incremental writing
         if(!feof($fp))
 			$last_position = ftell($fp);
 		else
 			$last_position = -1;
-	
+
         fclose($fp);
-        
+
         return $last_position;
     }
-    
+
 	public function openForAppend($file = '')
     {
 
@@ -586,9 +586,9 @@ class Tar extends Archive
         }
         $this->writeaccess = true;
         $this->closed      = false;
-        
+
     }
-    
+
     /**
      * Skip forward in the open file pointer
      *
@@ -716,17 +716,17 @@ class Tar extends Archive
             "a100filename/a8perm/a8uid/a8gid/a12size/a12mtime/a8checksum/a1typeflag/a100link/a6magic/a2version/a32uname/a32gname/a8devmajor/a8devminor/a155prefix",
             $block
         );
-        
+
         if(DecOct($header['typeflag']) == DecOct(''))
         {
 			$header['typeflag'] = (string)0;
 		}
-		
+
         if (!$header) {
             throw new ArchiveCorruptedException('Failed to parse header');
         }
         $return['checksum'] = OctDec(trim($header['checksum']));
-        
+
         if ($return['checksum'] != $chks) {
 			//print_r($header);exit;
             throw new ArchiveCorruptedException('Header does not match it\'s checksum for ');
@@ -747,7 +747,7 @@ class Tar extends Archive
         if (trim($header['prefix'])) {
             $return['filename'] = trim($header['prefix']).'/'.$return['filename'];
         }
-		
+
         // Handle Long-Link and PAX entries from GNU Tar
         if ($return['typeflag'] == 'L') {
             // following data block(s) is the filename

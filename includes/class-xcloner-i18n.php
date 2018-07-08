@@ -43,5 +43,4 @@ class Xcloner_i18n {
 	}
 
 
-
 }

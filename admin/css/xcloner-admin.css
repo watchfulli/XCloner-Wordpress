@@ -6,8 +6,9 @@
 
 html {
     font-family: GillSans, Calibri, Trebuchet, sans-serif;
-  }
-/* 
+}
+
+/*
 @font-face {
   font-family: 'Material Icons';
   font-style: normal;
@@ -20,139 +21,135 @@ html {
        url(../fontsMaterialIcons-Regular.ttf) format('truetype');
 }*/
 
-
-
-h1{
-	font-size: 23px;
+h1 {
+    font-size: 23px;
 }
 
-h2{
-	font-size: 18px;
+h2 {
+    font-size: 18px;
 }
 
-.input-field{
-	margin-top: 0px;
+.input-field {
+    margin-top: 0px;
 }
 
 td, th {
-	padding-top: 0px !important;
+    padding-top: 0px !important;
 }
 
 .form-table th {
-	padding-top: 10px !important;
+    padding-top: 10px !important;
 }
 
 a.nav-tab.col {
     padding: 10px;
 }
 
-
-span.shorten_string{
-	cursor: pointer;
+span.shorten_string {
+    cursor: pointer;
 }
 
-.card-panel{
-	min-height: 60px;
+.card-panel {
+    min-height: 60px;
 }
 
-
-.dashboard .additional_system_info{
-	display: none;
+.dashboard .additional_system_info {
+    display: none;
 }
 
-.nav-tab-wrapper li{
-	margin-bottom: 0px;
+.nav-tab-wrapper li {
+    margin-bottom: 0px;
 }
 
-.nav-tab-wrapper-content .tab-content{
-	display: none;
+.nav-tab-wrapper-content .tab-content {
+    display: none;
 }
 
-.nav-tab-wrapper-content .tab-content.active{
-	display: block;
+.nav-tab-wrapper-content .tab-content.active {
+    display: block;
 }
 
 .input-field label.active {
-	font-size: 1rem;
-}
-
-.xcloner-debugger .console{
-	height: 450px;
-	min-height: 300px;
-	overflow: auto;
-}
-
-#error_modal textarea{
-	height: 150px;
-}
-
-#error_modal .msg{
-	font-size: 14px;
-}
-
-#generate_backup .backup-status, #generate_backup ul.backup-status > li{
-	display: none;
-}
-
-ul.backup-name{
-	margin-top: 1.78rem;
-}
-
-#generate_backup .status-body ul.backup-name li, #generate_backup ul.logged-databases  li{
-	font-weight: bold;
-}
-
-#generate_backup .backup-done .collapsible-body {
-	margin-top: 1.83rem;
-}
-
-#generate_backup .status-body > ul, #generate_backup .status-body ul.logged-tables{
-	margin: 5px 10px;
-	max-height: 200px;
-    overflow-y: auto;
-	margin-top: 1.78rem;
-}
-
-#generate_backup .action-buttons .cancel, 
-#generate_backup .action-buttons .restart{
-	display: none;
-} 
-
-.modal-footer .modal-close.btn-flat{
-	color: #fff;
-}
-
-.collapsible-body{
-	padding: 0px 10px;
-}
-
-.select-wrapper+label {
     font-size: 1rem;
 }
 
-#schedule_backup .server-time h2{
-	color: #fff;
+.xcloner-debugger .console {
+    height: 450px;
+    min-height: 300px;
+    overflow: auto;
 }
 
-#schedule_backup_success{
-	display: none;
+#error_modal textarea {
+    height: 150px;
 }
 
-#scheduled_backups_wrapper .dataTables_length, 
-#manage_backups_wrapper  .dataTables_length{
-	display: none;
+#error_modal .msg {
+    font-size: 14px;
 }
 
-table#scheduled_backups{
-	font-size: 16px;
+#generate_backup .backup-status, #generate_backup ul.backup-status > li {
+    display: none;
 }
 
-#scheduled_backups td, #scheduled_backups th{
-	padding-top: 8px !important;
+ul.backup-name {
+    margin-top: 1.78rem;
 }
 
-#scheduled_backups i.status{
-	color: #fff;
+#generate_backup .status-body ul.backup-name li, #generate_backup ul.logged-databases li {
+    font-weight: bold;
+}
+
+#generate_backup .backup-done .collapsible-body {
+    margin-top: 1.83rem;
+}
+
+#generate_backup .status-body > ul, #generate_backup .status-body ul.logged-tables {
+    margin: 5px 10px;
+    max-height: 200px;
+    overflow-y: auto;
+    margin-top: 1.78rem;
+}
+
+#generate_backup .action-buttons .cancel,
+#generate_backup .action-buttons .restart {
+    display: none;
+}
+
+.modal-footer .modal-close.btn-flat {
+    color: #fff;
+}
+
+.collapsible-body {
+    padding: 0px 10px;
+}
+
+.select-wrapper + label {
+    font-size: 1rem;
+}
+
+#schedule_backup .server-time h2 {
+    color: #fff;
+}
+
+#schedule_backup_success {
+    display: none;
+}
+
+#scheduled_backups_wrapper .dataTables_length,
+#manage_backups_wrapper .dataTables_length {
+    display: none;
+}
+
+table#scheduled_backups {
+    font-size: 16px;
+}
+
+#scheduled_backups td, #scheduled_backups th {
+    padding-top: 8px !important;
+}
+
+#scheduled_backups i.status {
+    color: #fff;
 }
 
 .site-backup_page_xcloner_scheduled_backups_page #server_time h2 {
@@ -161,236 +158,239 @@ table#scheduled_backups{
     padding: 10px 10px 5px 10px;
 }
 
-textarea.materialize-textarea{
-	overflow: auto;
-	resize: auto;
+textarea.materialize-textarea {
+    overflow: auto;
+    resize: auto;
 }
 
 #scheduled_backups .edit, #scheduled_backups .status.active, #scheduled_backups .delete,
 #manage_backups .download, #manage_backups .cloud-upload, #manage_backups .delete, #manage_backups .list-backup-content,
-.backup-done .download, .backup-done .cloud-upload, .backup-done .delete, .backup-done .list-backup-content, 
-#manage_backups .copy-remote-to-local,#manage_backups .expand-multipart{
-	color: #4db6ac;
+.backup-done .download, .backup-done .cloud-upload, .backup-done .delete, .backup-done .list-backup-content,
+#manage_backups .copy-remote-to-local, #manage_backups .expand-multipart {
+    color: #4db6ac;
 }
 
-#scheduled_backups .status.inactive{
-	color: #d32f2f ;
+#scheduled_backups .status.inactive {
+    color: #d32f2f;
 }
 
-table.dataTable thead th, table.dataTable tfoot th{
-	padding-left: 10px;
+table.dataTable thead th, table.dataTable tfoot th {
+    padding-left: 10px;
 }
 
-table.dataTable tr.odd { background-color: #fff; } 
-table.dataTable tr.even { background-color: #f3f3f3; }
-
-#manage_backups ul.multipart{
-	margin-left: 20px;
-	display: none;
+table.dataTable tr.odd {
+    background-color: #fff;
 }
 
-#manage_backups ul.multipart li{
-	padding: 5px;
-	list-style-type: square;
-}
- 
-a.expand-multipart.remove{
-	display: none;
+table.dataTable tr.even {
+    background-color: #f3f3f3;
 }
 
-.remote-storage .label label{
-	font-size:16px;
-}
-.remote-storage .label{
-	padding-top: 25px;
+#manage_backups ul.multipart {
+    margin-left: 20px;
+    display: none;
 }
 
-.remote-storage .collapsible-header{
-	padding: 2px 5px;
+#manage_backups ul.multipart li {
+    padding: 5px;
+    list-style-type: square;
 }
 
-
-#manage_backups td.checkbox{
-	vertical-align: top;
+a.expand-multipart.remove {
+    display: none;
 }
 
-#remote_storage_modal{
-	min-height: 350px;
+.remote-storage .label label {
+    font-size: 16px;
 }
 
-#remote_storage_modal .label label{
-	font-size: 16px;
+.remote-storage .label {
+    padding-top: 25px;
 }
 
-#remote_storage_modal .label{
-	padding-top: 25px;
+.remote-storage .collapsible-header {
+    padding: 2px 5px;
 }
 
-#remote_storage_modal .status{
-	display: none;
+#manage_backups td.checkbox {
+    vertical-align: top;
 }
 
-#remote_storage_modal .status-text.error{
-	color: red;
+#remote_storage_modal {
+    min-height: 350px;
 }
 
-#remote_storage_modal .status-text{
-	font-weight: bold;
+#remote_storage_modal .label label {
+    font-size: 16px;
 }
 
-#backup-status h5{
+#remote_storage_modal .label {
+    padding-top: 25px;
+}
+
+#remote_storage_modal .status {
+    display: none;
+}
+
+#remote_storage_modal .status-text.error {
+    color: red;
+}
+
+#remote_storage_modal .status-text {
+    font-weight: bold;
+}
+
+#backup-status h5 {
     font-size: 18px;
 }
 
-#backup-status .row .item .title{
+#backup-status .row .item .title {
     width: 100px;
     display: inline-block;
     font-weight: bold;
 }
 
-.xcloner-restore li.steps{
-	display: none;
+.xcloner-restore li.steps {
+    display: none;
 }
 
-.xcloner-restore .steps.show{
-	display: block;
+.xcloner-restore .steps.show {
+    display: block;
 }
 
-.xcloner-restore li .collapsible-body{
-	padding: 25px 10px 15px 10px;
+.xcloner-restore li .collapsible-body {
+    padding: 25px 10px 15px 10px;
 }
 
-.xcloner-restore select.browser-default{
-	height: 36px;
-	font-size: 18px;
+.xcloner-restore select.browser-default {
+    height: 36px;
+    font-size: 18px;
 }
 
-.xcloner-restore .steps .progress{
-	display: none;
+.xcloner-restore .steps .progress {
+    display: none;
 }
 
-.xcloner-restore .status > div{
-	margin: 10px 0px 0px 0px;
+.xcloner-restore .status > div {
+    margin: 10px 0px 0px 0px;
 }
 
-.xcloner-restore .toggler{
-	display: inline-block;
+.xcloner-restore .toggler {
+    display: inline-block;
 }
 
-.xcloner-restore .toggler .normal{
-	display: block;
+.xcloner-restore .toggler .normal {
+    display: block;
 }
 
-.xcloner-restore .toggler .cancel{
-	display: none;
+.xcloner-restore .toggler .cancel {
+    display: none;
 }
 
-.xcloner-restore .toggler.cancel .normal{
-	display: none;
+.xcloner-restore .toggler.cancel .normal {
+    display: none;
 }
 
-.xcloner-restore .toggler.cancel .cancel{
-	display: block;
+.xcloner-restore .toggler.cancel .cancel {
+    display: block;
 }
 
-.xcloner-restore ul.text-steps li{
-	list-style-type: decimal;
+.xcloner-restore ul.text-steps li {
+    list-style-type: decimal;
 }
 
-.xcloner-restore ul.text-steps li.warning{
-	color: red;
+.xcloner-restore ul.text-steps li.warning {
+    color: red;
 }
 
-.xcloner-restore ul.text-steps ul li{
-	list-style-type: disc;
+.xcloner-restore ul.text-steps ul li {
+    list-style-type: disc;
 }
 
-.xcloner-restore ul.text-steps ul{
-	margin: 10px;
+.xcloner-restore ul.text-steps ul {
+    margin: 10px;
 }
 
-.xcloner-restore ul.text-steps{
-	margin-left: 20px;
+.xcloner-restore ul.text-steps {
+    margin-left: 20px;
 }
 
-.xcloner-restore .restore-remote-backup-step .files-list{
-	max-height: 250px;
+.xcloner-restore .restore-remote-backup-step .files-list {
+    max-height: 250px;
     overflow: auto;
     margin: 10px 5px;
 }
 
-#backup_cotent_modal .modal-content .files-list span{
-	cursor: pointer;
+#backup_cotent_modal .modal-content .files-list span {
+    cursor: pointer;
 }
 
-.xcloner-restore .query-box{
-	display: none;
+.xcloner-restore .query-box {
+    display: none;
 }
 
-.xcloner-restore .query-box .query-list{
-	height: 10rem;
+.xcloner-restore .query-box .query-list {
+    height: 10rem;
 }
 
-.xcloner-restore .restore-remote-database-step h5{
-	margin-top: -10px;
+.xcloner-restore .restore-remote-database-step h5 {
+    margin-top: -10px;
     margin-bottom: 25px;
 }
 
-
-.regex_pattern{
-	cursor: pointer;
-	font-weight: bold;
+.regex_pattern {
+    cursor: pointer;
+    font-weight: bold;
 }
 
-.jstree-icon.jstree-checkbox.jstree-checkbox-disabled{
-	opacity: 0.3;
+.jstree-icon.jstree-checkbox.jstree-checkbox-disabled {
+    opacity: 0.3;
 }
 
-#xcloner_regex_exclude{
-	height: 5rem;
+#xcloner_regex_exclude {
+    height: 5rem;
 }
 
 ul.xcloner_regex_exclude_limit li:nth-of-type(n+2) {
-    display:none;
+    display: none;
 }
 
-.xcloner-restore .btn.waves-effect.waves-light.grey{
-	margin-top: -2px;
+.xcloner-restore .btn.waves-effect.waves-light.grey {
+    margin-top: -2px;
 }
 
-.xcloner-restore #xcloner_restore_finish{
-	display: none;
+.xcloner-restore #xcloner_restore_finish {
+    display: none;
 }
 
-ul.files-list li{
-	padding: 0px;
-	white-space: pre;
+ul.files-list li {
+    padding: 0px;
+    white-space: pre;
 }
 
-#manage_backups_wrapper #manage_backups_filter{
-	min-width: 250px;
+#manage_backups_wrapper #manage_backups_filter {
+    min-width: 250px;
 }
 
-#generate_backup_form .progress, .xcloner-restore .progress{
-	width: 100% !important;
+#generate_backup_form .progress, .xcloner-restore .progress {
+    width: 100% !important;
     height: 4px !important;
 }
 
-i.backup_warning{
-	color: red;
+i.backup_warning {
+    color: red;
 }
 
-.col.remote-storage-selection{
-	padding-top: 20px;
+.col.remote-storage-selection {
+    padding-top: 20px;
 }
 
 .remote-storage #authentification_code {
-	display: none;
+    display: none;
 }
 
-
-@media only screen and (min-width: 993px){
-	.dashboard .backup-ready{
-		float: right;
-	}
+@media only screen and (min-width: 993px) {
+    .dashboard .backup-ready {
+        float: right;
+    }
 }
