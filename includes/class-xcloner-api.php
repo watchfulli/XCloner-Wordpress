@@ -575,7 +575,7 @@ class Xcloner_Api {
 				}
 
 				$data[] = array(
-					'id'       => $table['name'],
+					'id'       => $database.".".$table['name'],
 					'parent'   => $database,
 					'text'     => $table['name'] . " (" . (int) $table['records'] . ")",
 					'children' => false,

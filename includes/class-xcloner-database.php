@@ -90,7 +90,7 @@ class Xcloner_Database extends wpdb {
 	 *
 	 * @return mixed
 	 */
-	public function start_database_recursion( $params, $extra_params, $init = 0 ) {
+		public function start_database_recursion( $params, $extra_params, $init = 0 ) {
 		$tables             = array();
 		$return['finished'] = 0;
 		$return['stats']    = array(
@@ -284,7 +284,7 @@ class Xcloner_Database extends wpdb {
 			$tablesList[ $inc ]['excluded'] = 0;
 
 			if ( sizeof( $included ) and is_array( $included ) ) {
-				if ( ! in_array( $table, $included ) ) {
+				if ( ! in_array( $database.".".$table, $included ) && ! in_array( $table, $included )) {
 					$tablesList[ $inc ]['excluded'] = 1;
 					$this->log( sprintf( __( "Excluding table %s.%s from backup" ), $table, $database ) );
 				}
@@ -398,12 +398,12 @@ class Xcloner_Database extends wpdb {
 					}
 
 					//table is excluded
-					if ( $tableInfo[2] ) {
+					if ( $tableInfo[2] == 1) {
 						continue;
 					}
 
 					$next = $startAtRecord + $this->recordsPerSession;
-
+					
 					// $tableInfo[1] number of records in the table
 					$table        = explode( "`.`", $tableInfo[0] );
 					$tableName    = str_replace( "`", "", $table[1] );
