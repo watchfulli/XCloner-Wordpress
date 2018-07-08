@@ -568,14 +568,14 @@ class Xcloner_File_System {
 	public function estimate_read_write_time() {
 		$tmp_file = ".xcloner" . substr( md5( time() ), 0, 5 );
 
-		$start_time = microtime();
+		$start_time = microtime(true);
 
 		$data = str_repeat( rand( 0, 9 ), 1024 * 1024 ); //write 1MB data
 
 		try {
 			$this->tmp_filesystem->write( $tmp_file, $data );
 
-			$end_time = microtime() - $start_time;
+			$end_time = microtime(true) - $start_time;
 
 			$return['writing_time'] = $end_time;
 
@@ -657,11 +657,13 @@ class Xcloner_File_System {
 	public function estimate_reading_time( $tmp_file ) {
 		$this->logger->debug( sprintf( ( "Estimating file system reading time" ) ) );
 
-		$start_time = microtime();
+		$start_time = microtime(true);
 
-		$this->tmp_filesystem->read( $tmp_file );
+		if($this->tmp_filesystem->has($tmp_file)) {
+			$this->tmp_filesystem->read( $tmp_file );
+		}
 
-		$end_time = microtime() - $start_time;
+		$end_time = microtime(true) - $start_time;
 
 		return $end_time;
 
