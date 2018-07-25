@@ -32,7 +32,6 @@
       <path value="$PROJECT_DIR$/vendor/sabre/dav" />
       <path value="$PROJECT_DIR$/vendor/league/flysystem-aws-s3-v3" />
       <path value="$PROJECT_DIR$/vendor/composer" />
-      <path value="$PROJECT_DIR$/vendor/cwhite92/b2-sdk-php" />
       <path value="$PROJECT_DIR$/vendor/defuse/php-encryption" />
     </include_path>
   </component>
