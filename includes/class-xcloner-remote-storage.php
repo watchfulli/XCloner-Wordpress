@@ -19,7 +19,7 @@ use Aws\S3\S3Client;
 use League\Flysystem\AwsS3v3\AwsS3Adapter;
 
 use Mhetreramesh\Flysystem\BackblazeAdapter;
-use ChrisWhite\B2\Client as B2Client;
+use BackblazeB2\Client as B2Client;
 
 use Sabre\DAV\Client as SabreClient;
 use League\Flysystem\WebDAV\WebDAVAdapter;

@@ -25,7 +25,7 @@ $ composer require mhetreramesh/flysystem-backblaze
 ``` php
 use Mhetreramesh\Flysystem\BackblazeAdapter;
 use League\Flysystem\Filesystem;
-use ChrisWhite\B2\Client;
+use BackblazeB2\Client;
 
 $client = new Client($accountId, $applicationKey);
 $adapter = new BackblazeAdapter($client,$bucketName);

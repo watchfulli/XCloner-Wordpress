@@ -303,7 +303,6 @@ class Xcloner_File_System {
 			$list = $this->get_storage_filesystem( $storage_selection )->listContents();
 		}
 
-
 		$backup_files = array();
 		$parents      = array();
 
