@@ -281,7 +281,8 @@ class Xcloner_Archive extends Tar
         }
 
         if ($this->xcloner_settings->get_xcloner_option('xcloner_enable_log')) {
-            $body .= __("Latest 50 Log Lines: ") . "<br />" . implode("<br />\n", $this->logger->getLastDebugLines(50));
+            $body .= __("Latest 50 Log Lines: ") . "<br />" . implode("<br />\n",
+                                                                        $this->logger->getLastDebugLines(50));
         }
 
         $attachments = $this->filesystem->get_backup_attachments();
@@ -651,7 +652,8 @@ class Xcloner_Archive extends Tar
 
             if ($this->filesystem->get_tmp_filesystem()->has($tmp_file)) {
                 $is_tmp = 1;
-                $last_position = $this->backup_archive->appendFileData($this->filesystem->get_tmp_filesystem_adapter()->applyPathPrefix($tmp_file),
+                $last_position = $this->backup_archive->appendFileData($this->filesystem->get_tmp_filesystem_adapter()
+                                                        ->applyPathPrefix($tmp_file),
                     $file_info['target_path'], $start_at_byte, $byte_limit);
             } else {
                 $is_tmp = 0;
@@ -732,7 +734,8 @@ class Xcloner_Archive extends Tar
      * @param string $file path to the original file
      * @param int $start starting reading position in file
      * @param int $end end position in reading multiple with 512
-     * @param string|FileInfo $fileinfo either the name to us in archive (string) or a FileInfo oject with all meta data, empty to take from original
+     * @param string|FileInfo $fileinfo either the name to us in archive (string) or a FileInfo oject with
+     * all meta data, empty to take from original
      * @throws ArchiveIOException
      */
     /*

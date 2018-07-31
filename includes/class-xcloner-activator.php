@@ -1,16 +1,6 @@
 <?php
 
 /**
- * Fired during plugin activation
- *
- * @link       http://www.thinkovi.com
- * @since      1.0.0
- *
- * @package    Xcloner
- * @subpackage Xcloner/includes
- */
-
-/**
  * Fired during plugin activation.
  *
  * This class defines all code necessary to run during the plugin's activation.
@@ -19,6 +9,7 @@
  * @package    Xcloner
  * @subpackage Xcloner/includes
  * @author     Liuta Ovidiu <info@thinkovi.com>
+ * @link       http://www.thinkovi.com
  */
 class Xcloner_Activator {
 
