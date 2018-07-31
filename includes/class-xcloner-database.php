@@ -21,6 +21,9 @@
  */
 
 
+/**
+ * Class Xcloner_Database
+ */
 class Xcloner_Database extends wpdb {
 
 
@@ -38,7 +41,15 @@ class Xcloner_Database extends wpdb {
 	private $TEMP_DBPROCESS_FILE = ".database";
 	private $TEMP_DUMP_FILE = "database-backup.sql";
 
-	public function __construct( Xcloner $xcloner_container, $wp_user = "", $wp_pass = "", $wp_db = "", $wp_host = "" ) {
+    /**
+     * Xcloner_Database constructor.
+     * @param Xcloner $xcloner_container
+     * @param string $wp_user
+     * @param string $wp_pass
+     * @param string $wp_db
+     * @param string $wp_host
+     */
+    public function __construct( Xcloner $xcloner_container, $wp_user = "", $wp_pass = "", $wp_db = "", $wp_host = "" ) {
 		$this->logger           = $xcloner_container->get_xcloner_logger()->withName( "xcloner_database" );
 		$this->xcloner_settings = $xcloner_container->get_xcloner_settings();
 		$this->fs               = $xcloner_container->get_xcloner_filesystem();
@@ -155,7 +166,11 @@ class Xcloner_Database extends wpdb {
 		return $return;
 	}
 
-	public function log( $message = "" ) {
+    /**
+     * Logs a message
+     * @param string $message
+     */
+    public function log( $message = "" ) {
 
 		if ( $message ) {
 			$this->logger->info( $message, array( "" ) );
@@ -205,7 +220,12 @@ class Xcloner_Database extends wpdb {
 
 	}
 
-	public function get_database_num_tables( $database ) {
+    /**
+     * Return the number of tables from database
+     * @param $database
+     * @return int
+     */
+    public function get_database_num_tables( $database ) {
 		$this->logger->debug( sprintf( __( "Getting number of tables in %s" ), $database ) );
 
 		$query = "show tables in `" . $database . "`";
@@ -216,7 +236,11 @@ class Xcloner_Database extends wpdb {
 		return count( $res );
 	}
 
-	public function get_all_databases() {
+    /**
+     * Return an array of existing databases
+     * @return array
+     */
+    public function get_all_databases() {
 		$this->logger->debug( ( "Getting all databases" ) );
 
 		$query = "SHOW DATABASES;";
@@ -296,7 +320,13 @@ class Xcloner_Database extends wpdb {
 
 	}
 
-	public function write_backup_process_list( $dbname, $incl_tables ) {
+    /**
+     * Generates a backup dump process list
+     * @param $dbname
+     * @param $incl_tables
+     * @return mixed
+     */
+    public function write_backup_process_list( $dbname, $incl_tables ) {
 		$return['total_records'] = 0;
 		$return['tables_count']  = 0;
 
@@ -337,7 +367,11 @@ class Xcloner_Database extends wpdb {
 	 * @param string $table - the source table
 	 * @return int $count
 	 */
-	public function countRecords( $table ) {
+    /**
+     * @param $table
+     * @return int
+     */
+    public function countRecords( $table ) {
 
 		$table = "`" . $this->dbname . "`.`$table`";
 
@@ -540,7 +574,13 @@ class Xcloner_Database extends wpdb {
 
 	}
 
-	public function dump_structure( $databaseName, $tableName, $dumpfile ) {
+    /**
+     * Dump structure for database
+     * @param $databaseName
+     * @param $tableName
+     * @param $dumpfile
+     */
+    public function dump_structure( $databaseName, $tableName, $dumpfile ) {
 		$this->log( sprintf( __( "Dumping the structure for %s.%s table" ), $databaseName, $tableName ) );
 
 		$line = ( "\n#\n# Table structure for table `$tableName`\n#\n\n" );
@@ -567,7 +607,12 @@ class Xcloner_Database extends wpdb {
 
 	}
 
-	public function data_footers( $dumpfile ) {
+    /**
+     * Write the dump footer data
+     * @param $dumpfile
+     * @return mixed
+     */
+    public function data_footers( $dumpfile ) {
 		$this->logger->debug( sprintf( ( "Writing dump footers in file" ), $dumpfile ) );
 		// we finished the dump file, not return the size of it
 		$this->fs->get_tmp_filesystem_append()->write( $dumpfile, "\n#\n# Finished at: " . date( "M j, Y \a\\t H:i" ) . "\n#" );
@@ -582,7 +627,11 @@ class Xcloner_Database extends wpdb {
 
 	}
 
-	public function resetcountRecords() {
+    /**
+     * Resets the record counter to 0
+     * @return int
+     */
+    public function resetcountRecords() {
 
 		$this->countRecords = 0;
 
@@ -590,14 +639,24 @@ class Xcloner_Database extends wpdb {
 
 	}
 
-	public function getcountRecords() {
+    /**
+     * Returns the current records count
+     * @return int
+     */
+    public function getcountRecords() {
 
 		return $this->countRecords;
 
 	}
 
 
-	public function data_headers( $file, $database ) {
+    /**
+     * Writing the dump default headers
+     * @param $file
+     * @param $database
+     * @return mixed
+     */
+    public function data_headers( $file, $database ) {
 		$this->logger->debug( sprintf( ( "Writing dump header for %s database in file" ), $database, $file ) );
 
 		$return = "";
