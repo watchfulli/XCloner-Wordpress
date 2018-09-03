@@ -33,8 +33,6 @@ use League\Flysystem\Adapter\Ftp as Adapter;
 
 use League\Flysystem\Sftp\SftpAdapter;
 
-#use League\Flysystem\Dropbox\DropboxAdapter;
-#use Dropbox\Client;
 use Srmklive\Dropbox\Client\DropboxClient;
 use Srmklive\Dropbox\Adapter\DropboxAdapter;
 
@@ -50,6 +48,9 @@ use BackblazeB2\Client as B2Client;
 use Sabre\DAV\Client as SabreClient;
 use League\Flysystem\WebDAV\WebDAVAdapter;
 
+/**
+ * Class Xcloner_Remote_Storage
+ */
 class Xcloner_Remote_Storage {
 
 	private $gdrive_app_name = "XCloner Backup and Restore";

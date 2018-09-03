@@ -105,7 +105,7 @@ class Xcloner_Database extends wpdb
             $wp_db = $this->xcloner_settings->get_db_database();
         }
 
-        parent::__construct($wp_user, $wp_pass, $wp_db, $wp_host);
+        return parent::__construct($wp_user, $wp_pass, $wp_db, $wp_host);
 
         //$this->use_mysqli = true;
     }
@@ -125,7 +125,7 @@ class Xcloner_Database extends wpdb
 
         $this->headers();
 
-        $this->suppress_errors = true;
+        $this->suppress_errors = false;
     }
 
     /**
@@ -148,10 +148,17 @@ class Xcloner_Database extends wpdb
             "database_count" => 0,
         );
 
+        //we check to see if database backup is enabled
         if (!$this->xcloner_settings->get_enable_mysql_backup()) {
             $return['finished'] = 1;
 
             return $return;
+        }
+
+        //we check to see if the database connection is valid
+        if( !$this->dbh ) {
+            $this->logger->error(__("Could not connect to database."));
+            throw new Exception('Could not connect to the specified database.');
         }
 
         $this->logger->debug(__("Starting database backup process"));
@@ -220,6 +227,7 @@ class Xcloner_Database extends wpdb
             }
             if ($this->last_error) {
                 $this->logger->error($this->last_error, array(""));
+                throw new Exception("MYSQL ERROR: ".$this->last_error);
             }
         }
 
@@ -274,6 +282,7 @@ class Xcloner_Database extends wpdb
         $query = "show tables in `" . $database . "`";
 
         $res = $this->get_results($query);
+
         $this->log();
 
         return count($res);
@@ -334,6 +343,7 @@ class Xcloner_Database extends wpdb
         $this->logger->debug(sprintf(("Listing tables in %s database"), $database));
 
         $tables = $this->get_results("SHOW TABLES in `" . $database . "`");
+
         $this->log();
 
         foreach ($tables as $table) {
@@ -489,7 +499,12 @@ class Xcloner_Database extends wpdb
 
                     // $tableInfo[1] number of records in the table
                     $table = explode("`.`", $tableInfo[0]);
-                    $tableName = str_replace("`", "", $table[1]);
+                    $tableName = "";
+
+                    if( isset($table[1]) ) {
+                        $tableName = str_replace("`", "", $table[1]);
+                    }
+
                     $databaseName = str_replace("`", "", $table[0]);
 
                     //return something to the browser
