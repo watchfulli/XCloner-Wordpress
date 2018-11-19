@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="39ab983f-dc9c-4c20-b630-01e4185fe901" name="Default" comment="">
+      <change beforePath="" afterPath="$PROJECT_DIR$/vendor/bin/generate-defuse-key" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/vendor/defuse/php-encryption/.gitignore" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/vendor/defuse/php-encryption/.php_cs" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/vendor/defuse/php-encryption/LICENSE" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/vendor/defuse/php-encryption/README.md" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/vendor/defuse/php-encryption/bin/generate-defuse-key" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/vendor/defuse/php-encryption/composer.json" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/vendor/defuse/php-encryption/dist/Makefile" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/vendor/defuse/php-encryption/dist/box.json" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/vendor/defuse/php-encryption/dist/signingkey.asc" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/vendor/defuse/php-encryption/docs/CryptoDetails.md" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/vendor/defuse/php-encryption/docs/FAQ.md" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/vendor/defuse/php-encryption/docs/InstallingAndVerifying.md" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/vendor/defuse/php-encryption/docs/InternalDeveloperDocs.md" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/vendor/defuse/php-encryption/docs/Tutorial.md" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/vendor/defuse/php-encryption/docs/UpgradingFromV1.2.md" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/vendor/defuse/php-encryption/docs/classes/Crypto.md" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/vendor/defuse/php-encryption/docs/classes/File.md" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/vendor/defuse/php-encryption/docs/classes/Key.md" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/vendor/defuse/php-encryption/docs/classes/KeyProtectedByPassword.md" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/vendor/defuse/php-encryption/psalm.xml" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/vendor/defuse/php-encryption/src/Core.php" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/vendor/defuse/php-encryption/src/Crypto.php" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/vendor/defuse/php-encryption/src/DerivedKeys.php" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/vendor/defuse/php-encryption/src/Encoding.php" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/vendor/defuse/php-encryption/src/Exception/BadFormatException.php" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/vendor/defuse/php-encryption/src/Exception/CryptoException.php" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/vendor/defuse/php-encryption/src/Exception/EnvironmentIsBrokenException.php" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/vendor/defuse/php-encryption/src/Exception/IOException.php" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/vendor/defuse/php-encryption/src/Exception/WrongKeyOrModifiedCiphertextException.php" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/vendor/defuse/php-encryption/src/File.php" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/vendor/defuse/php-encryption/src/Key.php" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/vendor/defuse/php-encryption/src/KeyOrPassword.php" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/vendor/defuse/php-encryption/src/KeyProtectedByPassword.php" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/vendor/defuse/php-encryption/src/RuntimeTests.php" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/vendor/paragonie/random_compat/LICENSE" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/vendor/paragonie/random_compat/build-phar.sh" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/vendor/paragonie/random_compat/composer.json" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/vendor/paragonie/random_compat/dist/random_compat.phar.pubkey" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/vendor/paragonie/random_compat/dist/random_compat.phar.pubkey.asc" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/vendor/paragonie/random_compat/lib/byte_safe_strings.php" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/vendor/paragonie/random_compat/lib/cast_to_int.php" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/vendor/paragonie/random_compat/lib/error_polyfill.php" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/vendor/paragonie/random_compat/lib/random.php" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/vendor/paragonie/random_compat/lib/random_bytes_com_dotnet.php" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/vendor/paragonie/random_compat/lib/random_bytes_dev_urandom.php" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/vendor/paragonie/random_compat/lib/random_bytes_libsodium.php" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/vendor/paragonie/random_compat/lib/random_bytes_libsodium_legacy.php" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/vendor/paragonie/random_compat/lib/random_bytes_mcrypt.php" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/vendor/paragonie/random_compat/lib/random_int.php" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/vendor/paragonie/random_compat/other/build_phar.php" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/vendor/paragonie/random_compat/psalm-autoload.php" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/vendor/paragonie/random_compat/psalm.xml" />
+      <change beforePath="$PROJECT_DIR$/composer.json" afterPath="$PROJECT_DIR$/composer.json" />
+      <change beforePath="$PROJECT_DIR$/composer.lock" afterPath="$PROJECT_DIR$/composer.lock" />
+      <change beforePath="$PROJECT_DIR$/includes/class-xcloner-archive.php" afterPath="$PROJECT_DIR$/includes/class-xcloner-archive.php" />
+      <change beforePath="$PROJECT_DIR$/includes/class-xcloner.php" afterPath="$PROJECT_DIR$/includes/class-xcloner.php" />
+      <change beforePath="$PROJECT_DIR$/vendor/composer/autoload_files.php" afterPath="$PROJECT_DIR$/vendor/composer/autoload_files.php" />
+      <change beforePath="$PROJECT_DIR$/vendor/composer/autoload_psr4.php" afterPath="$PROJECT_DIR$/vendor/composer/autoload_psr4.php" />
+      <change beforePath="$PROJECT_DIR$/vendor/composer/autoload_static.php" afterPath="$PROJECT_DIR$/vendor/composer/autoload_static.php" />
+      <change beforePath="$PROJECT_DIR$/vendor/composer/installed.json" afterPath="$PROJECT_DIR$/vendor/composer/installed.json" />
+      <change beforePath="$PROJECT_DIR$/vendor/splitbrain/php-archive/src/Tar.php" afterPath="$PROJECT_DIR$/vendor/splitbrain/php-archive/src/Tar.php" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ComposerSettings" doNotAsk="true" synchronizationState="SYNCHRONIZE">
+    <pharConfigPath>$PROJECT_DIR$/composer.json</pharConfigPath>
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="xcloner.php" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/xcloner.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="133">
+              <caret line="121" column="17" lean-forward="false" selection-start-line="121" selection-start-column="17" selection-end-line="121" selection-end-column="17" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsFlowSettings">
+    <service-enabled>true</service-enabled>
+    <exe-path />
+    <other-services-enabled>true</other-services-enabled>
+    <auto-save>true</auto-save>
+  </component>
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+    <sorting>DEFINITION_ORDER</sorting>
+  </component>
+  <component name="PhpDebugGeneral" break_at_first_line="true" listening_started="true" />
+  <component name="PhpServers">
+    <servers>
+      <server host="localhost" id="534b5e9b-84ac-409b-b1d7-15492792396c" name="MAMP PHP" port="8888" use_path_mappings="true" />
+    </servers>
+  </component>
+  <component name="PhpWebServerValidation" path_to_validation_script="$PROJECT_DIR$/../../../" selected_validation_type="LOCAL" web_path_to_validation_script="http://localhost:8888/wordpress/" />
+  <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" interpreter_name="PHP">
+    <include_path>
+      <path value="$PROJECT_DIR$/vendor/league/flysystem-azure" />
+      <path value="$PROJECT_DIR$/vendor/league/flysystem-aws-s3-v3" />
+      <path value="$PROJECT_DIR$/vendor/mhetreramesh/flysystem-backblaze" />
+      <path value="$PROJECT_DIR$/vendor/league/flysystem-webdav" />
+      <path value="$PROJECT_DIR$/vendor/gliterd/backblaze-b2" />
+      <path value="$PROJECT_DIR$/vendor/cwhite92/b2-sdk-php" />
+      <path value="$PROJECT_DIR$/vendor/league/flysystem" />
+      <path value="$PROJECT_DIR$/vendor/league/flysystem-sftp" />
+      <path value="$PROJECT_DIR$/vendor/composer" />
+      <path value="$PROJECT_DIR$/vendor/sabre/event" />
+      <path value="$PROJECT_DIR$/vendor/defuse/php-encryption" />
+      <path value="$PROJECT_DIR$/vendor/microsoft/azure-storage" />
+      <path value="$PROJECT_DIR$/vendor/sabre/uri" />
+      <path value="$PROJECT_DIR$/vendor/sabre/xml" />
+      <path value="$PROJECT_DIR$/vendor/sabre/http" />
+      <path value="$PROJECT_DIR$/vendor/splitbrain/php-archive" />
+      <path value="$PROJECT_DIR$/vendor/monolog/monolog" />
+      <path value="$PROJECT_DIR$/vendor/mikey179/vfsStream" />
+      <path value="$PROJECT_DIR$/vendor/srmklive/flysystem-dropbox-v2" />
+      <path value="$PROJECT_DIR$/vendor/paragonie/random_compat" />
+      <path value="$PROJECT_DIR$/vendor/vakata/jstree" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/promises" />
+      <path value="$PROJECT_DIR$/vendor/psr/http-message" />
+      <path value="$PROJECT_DIR$/vendor/psr/log" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/guzzle" />
+      <path value="$PROJECT_DIR$/vendor/sabre/dav" />
+      <path value="$PROJECT_DIR$/vendor/sabre/vobject" />
+      <path value="$PROJECT_DIR$/vendor/components/jquery" />
+      <path value="$PROJECT_DIR$/vendor/aws/aws-sdk-php" />
+      <path value="$PROJECT_DIR$/vendor/mtdowling/jmespath.php" />
+      <path value="$PROJECT_DIR$/vendor/phpseclib/phpseclib" />
+    </include_path>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="69" />
+    <option name="y" value="23" />
+    <option name="width" value="1851" />
+    <option name="height" value="777" />
+  </component>
+  <component name="ProjectInspectionProfilesVisibleTreeState">
+    <entry key="Project Default">
+      <profile-state>
+        <expanded-state>
+          <State>
+            <id />
+          </State>
+          <State>
+            <id>PHP</id>
+          </State>
+        </expanded-state>
+        <selected-state>
+          <State>
+            <id>PhpCSValidationInspection</id>
+          </State>
+        </selected-state>
+      </profile-state>
+    </entry>
+  </component>
+  <component name="ProjectView">
+    <navigator currentView="ProjectPane" proportions="" version="1">
+      <flattenPackages />
+      <showMembers />
+      <showModules />
+      <showLibraryContents />
+      <hideEmptyPackages />
+      <abbreviatePackageNames />
+      <autoscrollToSource />
+      <autoscrollFromSource />
+      <sortByType />
+      <manualOrder />
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="Scratches" />
+      <pane id="Scope" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="xcloner-backup-and-restore" type="b2602c69:ProjectViewProjectNode" />
+              <item name="wordpress" type="2a2b976b:PhpTreeStructureProvider$1" />
+            </path>
+            <path>
+              <item name="xcloner-backup-and-restore" type="b2602c69:ProjectViewProjectNode" />
+              <item name="wordpress" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="wp-content" type="2a2b976b:PhpTreeStructureProvider$1" />
+            </path>
+            <path>
+              <item name="xcloner-backup-and-restore" type="b2602c69:ProjectViewProjectNode" />
+              <item name="wordpress" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="wp-content" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="plugins" type="2a2b976b:PhpTreeStructureProvider$1" />
+            </path>
+            <path>
+              <item name="xcloner-backup-and-restore" type="b2602c69:ProjectViewProjectNode" />
+              <item name="wordpress" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="wp-content" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="plugins" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="xcloner-backup-and-restore" type="2a2b976b:PhpTreeStructureProvider$1" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="settings.editor.selected.configurable" value="Errors" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager" selected="PHP Web Page.Localhost">
+    <configuration name="xcloner.php" type="JavascriptDebugType" factoryName="JavaScript Debug" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/xcloner-backup-and-restore/xcloner.php" />
+    <configuration name="Localhost" type="PhpWebAppRunConfigurationType" factoryName="PHP Web Application" server_name="MAMP PHP" start_url="/wordpress/" />
+    <configuration default="true" type="PhpWebAppRunConfigurationType" factoryName="PHP Web Application" server_name="Localhost" />
+    <list size="2">
+      <item index="0" class="java.lang.String" itemvalue="PHP Web Page.Localhost" />
+      <item index="1" class="java.lang.String" itemvalue="JavaScript Debug.xcloner.php" />
+    </list>
+    <recent_temporary>
+      <list size="1">
+        <item index="0" class="java.lang.String" itemvalue="JavaScript Debug.xcloner.php" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="ShelveChangesManager" show_recycled="false">
+    <option name="remove_strategy" value="false" />
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="39ab983f-dc9c-4c20-b630-01e4185fe901" name="Default" comment="" />
+      <created>1530183005071</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1530183005071</updated>
+      <workItem from="1530183006445" duration="1676000" />
+      <workItem from="1530184743209" duration="1031000" />
+      <workItem from="1530188165276" duration="301000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="3008000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="48" y="23" width="1232" height="777" extended-state="6" />
+    <layout>
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16558442" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Docker" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.38014185" sideWeight="0.67855215" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.38014185" sideWeight="0.32144788" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <ignored-roots>
+      <path value="$PROJECT_DIR$/../../../.." />
+    </ignored-roots>
+  </component>
+  <component name="WordPressConfiguration" enabled="true">
+    <wordpressPath>$PROJECT_DIR$/../../..</wordpressPath>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/xcloner.php</url>
+          <line>121</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+      </breakpoints>
+      <breakpoints-dialog>
+        <breakpoints-dialog />
+      </breakpoints-dialog>
+      <option name="time" value="4" />
+    </breakpoint-manager>
+    <watches-manager />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/xcloner.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/xcloner.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/xcloner.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="133">
+          <caret line="121" column="17" lean-forward="false" selection-start-line="121" selection-start-column="17" selection-end-line="121" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>
