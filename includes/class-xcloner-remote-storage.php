@@ -447,7 +447,6 @@ class Xcloner_Remote_Storage {
 
 		}
 
-
 		$client = new S3Client( $credentials );
 
 		$adapter    = new AwsS3Adapter( $client, get_option( "xcloner_aws_bucket_name" ), get_option( "xcloner_aws_prefix" ) );
