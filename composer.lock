@@ -1,7 +1,7 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
     "content-hash": "920a4f6a39e43da5eab4ff35b172d146",
@@ -129,56 +129,6 @@
             "time": "2018-03-04T13:23:48+00:00"
         },
         {
-            "name": "cwhite92/b2-sdk-php",
-            "version": "v1.3.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/cwhite92/b2-sdk-php.git",
-                "reference": "68c054af3c857f08506e9ee9f3c017972cb6bee8"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/cwhite92/b2-sdk-php/zipball/68c054af3c857f08506e9ee9f3c017972cb6bee8",
-                "reference": "68c054af3c857f08506e9ee9f3c017972cb6bee8",
-                "shasum": ""
-            },
-            "require": {
-                "guzzlehttp/guzzle": "^6.1",
-                "php": ">=5.5.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "4.8.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "ChrisWhite\\B2\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Chris White",
-                    "email": "chris@cwhite.me",
-                    "homepage": "https://cwhite.me"
-                }
-            ],
-            "description": "A SDK for working with B2 cloud storage.",
-            "homepage": "https://github.com/cwhite92/b2-sdk-php",
-            "keywords": [
-                "b2",
-                "backblaze",
-                "backup",
-                "cloud",
-                "filesystem",
-                "storage"
-            ],
-            "time": "2016-08-24T13:31:19+00:00"
-        },
-        {
             "name": "defuse/php-encryption",
             "version": "v2.2.0",
             "source": {
@@ -243,16 +193,16 @@
         },
         {
             "name": "gliterd/backblaze-b2",
-            "version": "0.0.3",
+            "version": "1.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/gliterd/backblaze-b2.git",
-                "reference": "eeaedb198fe10e0fb7d94ffaa9aa6ab207d7e9c6"
+                "reference": "5427b10b93b0ba24f06f80623b502c7d1d7fcd72"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/gliterd/backblaze-b2/zipball/eeaedb198fe10e0fb7d94ffaa9aa6ab207d7e9c6",
-                "reference": "eeaedb198fe10e0fb7d94ffaa9aa6ab207d7e9c6",
+                "url": "https://api.github.com/repos/gliterd/backblaze-b2/zipball/5427b10b93b0ba24f06f80623b502c7d1d7fcd72",
+                "reference": "5427b10b93b0ba24f06f80623b502c7d1d7fcd72",
                 "shasum": ""
             },
             "require": {
@@ -260,7 +210,9 @@
                 "php": ">=5.5.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "4.8.*"
+                "phpunit/phpunit": "4.8.*",
+                "scrutinizer/ocular": "~1.1",
+                "squizlabs/php_codesniffer": "~2.3"
             },
             "type": "library",
             "autoload": {
@@ -291,7 +243,7 @@
                 "filesystem",
                 "storage"
             ],
-            "time": "2017-08-09T13:57:57+00:00"
+            "time": "2018-07-03T11:52:32+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -749,24 +701,24 @@
         },
         {
             "name": "mhetreramesh/flysystem-backblaze",
-            "version": "1.0.10",
+            "version": "1.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/gliterd/flysystem-backblaze.git",
-                "reference": "3f753cbce283edc9774a62c10690699533a7b86e"
+                "reference": "bce0372dfe40baa1e16b54e93c3400a568059070"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/gliterd/flysystem-backblaze/zipball/3f753cbce283edc9774a62c10690699533a7b86e",
-                "reference": "3f753cbce283edc9774a62c10690699533a7b86e",
+                "url": "https://api.github.com/repos/gliterd/flysystem-backblaze/zipball/bce0372dfe40baa1e16b54e93c3400a568059070",
+                "reference": "bce0372dfe40baa1e16b54e93c3400a568059070",
                 "shasum": ""
             },
             "require": {
-                "cwhite92/b2-sdk-php": "^1.2",
                 "gliterd/backblaze-b2": "*",
                 "league/flysystem": "~1.0",
                 "mikey179/vfsstream": "*",
-                "php": ">=5.5.0"
+                "php": ">=5.6.0",
+                "psr/http-message-implementation": "*"
             },
             "require-dev": {
                 "phpunit/phpunit": "~4.0||~5.0",
@@ -800,7 +752,7 @@
                 "client",
                 "filesystem"
             ],
-            "time": "2017-12-20T16:10:51+00:00"
+            "time": "2018-06-29T12:06:41+00:00"
         },
         {
             "name": "microsoft/azure-storage",

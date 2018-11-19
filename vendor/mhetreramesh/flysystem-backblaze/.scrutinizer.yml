@@ -27,3 +27,7 @@ tools:
         enabled: true
     php_cpd:
         enabled: true
+build:
+    environment:
+        php:
+            version: 7.1

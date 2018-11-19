@@ -1,4 +1,30 @@
 <?php
+/**
+ * XCloner - Backup and Restore backup plugin for Wordpress
+ *
+ * class-xcloner-remote-storage.php
+ * @author Liuta Ovidiu <info@thinkovi.com>
+ *
+ *        This program is free software; you can redistribute it and/or modify
+ *        it under the terms of the GNU General Public License as published by
+ *        the Free Software Foundation; either version 2 of the License, or
+ *        (at your option) any later version.
+ *
+ *        This program is distributed in the hope that it will be useful,
+ *        but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *        GNU General Public License for more details.
+ *
+ *        You should have received a copy of the GNU General Public License
+ *        along with this program; if not, write to the Free Software
+ *        Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ *        MA 02110-1301, USA.
+ *
+ * @link https://github.com/ovidiul/XCloner-Wordpress
+ *
+ * @modified 7/25/18 2:15 PM
+ *
+ */
 
 use League\Flysystem\Config;
 use League\Flysystem\Filesystem;
@@ -7,8 +33,6 @@ use League\Flysystem\Adapter\Ftp as Adapter;
 
 use League\Flysystem\Sftp\SftpAdapter;
 
-#use League\Flysystem\Dropbox\DropboxAdapter;
-#use Dropbox\Client;
 use Srmklive\Dropbox\Client\DropboxClient;
 use Srmklive\Dropbox\Adapter\DropboxAdapter;
 
@@ -19,11 +43,14 @@ use Aws\S3\S3Client;
 use League\Flysystem\AwsS3v3\AwsS3Adapter;
 
 use Mhetreramesh\Flysystem\BackblazeAdapter;
-use ChrisWhite\B2\Client as B2Client;
+use BackblazeB2\Client as B2Client;
 
 use Sabre\DAV\Client as SabreClient;
 use League\Flysystem\WebDAV\WebDAVAdapter;
 
+/**
+ * Class Xcloner_Remote_Storage
+ */
 class Xcloner_Remote_Storage {
 
 	private $gdrive_app_name = "XCloner Backup and Restore";

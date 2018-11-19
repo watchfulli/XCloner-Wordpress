@@ -2,10 +2,11 @@
 
 namespace Mhetreramesh\Flysystem;
 
-use ChrisWhite\B2\Client;
+use BackblazeB2\Client;
 use League\Flysystem\Adapter\AbstractAdapter;
 use League\Flysystem\Adapter\Polyfill\NotSupportingVisibilityTrait;
 use League\Flysystem\Config;
+use GuzzleHttp\Psr7;
 
 class BackblazeAdapter extends AbstractAdapter {
 
@@ -101,7 +102,19 @@ class BackblazeAdapter extends AbstractAdapter {
      */
     public function readStream($path)
     {
-        return false;
+        $stream = Psr7\stream_for();
+        $download = $this->getClient()->download([
+            'BucketName' => $this->bucketName,
+            'FileName' => $path,
+            'SaveAs' => $stream,
+        ]);
+        $stream->seek(0);
+        try {
+            $resource = Psr7\StreamWrapper::getResource($stream);
+        } catch (InvalidArgumentException $e) {
+            return false;
+        }
+        return $download === true ? ['stream' => $resource] : false;
     }
 
     /**
@@ -204,11 +217,24 @@ class BackblazeAdapter extends AbstractAdapter {
         $fileObjects = $this->getClient()->listFiles([
             'BucketName' => $this->bucketName,
         ]);
-        $result = [];
-        foreach ($fileObjects as $fileObject) {
-            $result[] = $this->getFileInfo($fileObject);
+        if ($recursive === true && $directory === '') {
+            $regex = '/^.*$/';
+        } else if ($recursive === true && $directory !== '') {
+            $regex = '/^' . preg_quote($directory) . '\/.*$/';
+        } else if ($recursive === false && $directory === '') {
+            $regex = '/^(?!.*\\/).*$/';
+        } else if ($recursive === false && $directory !== '') {
+            $regex = '/^' . preg_quote($directory) . '\/(?!.*\\/).*$/';
+        } else {
+            throw new \InvalidArgumentException();
         }
-        return $result;
+        $fileObjects = array_filter($fileObjects, function ($fileObject) use ($directory, $regex) {
+            return 1 === preg_match($regex, $fileObject->getName());
+        });
+        $normalized = array_map(function ($fileObject) {
+            return $this->getFileInfo($fileObject);
+        }, $fileObjects);
+        return array_values($normalized);
     }
 
     /**
