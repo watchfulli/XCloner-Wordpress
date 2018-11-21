@@ -86,7 +86,7 @@ class Xcloner_Remote_Storage {
 			"text"             => "S3",
 			"aws_enable"       => "int",
 			"aws_key"          => "string",
-			"aws_secret"       => "string",
+			"aws_secret"       => "raw",
 			"aws_endpoint"     => "string",
 			"aws_region"       => "string",
 			"aws_bucket_name"  => "string",
@@ -97,7 +97,7 @@ class Xcloner_Remote_Storage {
 			"text"                 => "Dropbox",
 			"dropbox_enable"       => "int",
 			"dropbox_access_token" => "string",
-			"dropbox_app_secret"   => "string",
+			"dropbox_app_secret"   => "raw",
 			"dropbox_prefix"       => "string",
 			"dropbox_cleanup_days" => "float",
 		),
@@ -123,7 +123,7 @@ class Xcloner_Remote_Storage {
 			"webdav_enable"        => "int",
 			"webdav_url"           => "string",
 			"webdav_username"      => "string",
-			"webdav_password"      => "string",
+			"webdav_password"      => "raw",
 			"webdav_target_folder" => "string",
 			"webdav_cleanup_days"  => "float",
 		),
@@ -133,7 +133,7 @@ class Xcloner_Remote_Storage {
 			"gdrive_enable"        => "int",
 			"gdrive_access_code"   => "string",
 			"gdrive_client_id"     => "string",
-			"gdrive_client_secret" => "string",
+			"gdrive_client_secret" => "raw",
 			"gdrive_target_folder" => "string",
 			"gdrive_cleanup_days"  => "float",
 			"gdrive_empty_trash"   => "int",
@@ -167,7 +167,63 @@ class Xcloner_Remote_Storage {
 		$this->xcloner_file_system  = $xcloner_container->get_xcloner_filesystem();
 		$this->logger               = $xcloner_container->get_xcloner_logger()->withName( "xcloner_remote_storage" );
 		$this->xcloner              = $xcloner_container;
+
+		foreach($this->storage_fields as $main_key=>$array){
+
+		    if(is_array($array)) {
+                foreach ($array as $key => $type) {
+
+                    if( $type == "raw") {
+                        add_filter("pre_update_option_" . $this->storage_fields['option_prefix'] . $key,
+                            function ($value) {
+
+                                return $this->simple_crypt($value, 'e');
+
+                            }, 10, 1);
+
+                        add_filter("option_" . $this->storage_fields['option_prefix'] . $key, function ($value) {
+
+                            return $this->simple_crypt($value, 'd');
+
+                        }, 10, 1);
+                    }
+
+                }
+            }
+        }
+
 	}
+
+    /**
+     * Encrypts and Decrypt a string based on openssl lib
+     *
+     * @param $string
+     * @param string $action
+     * @return string
+     */
+    private function simple_crypt( $string, $action = 'e' ) {
+        // you may change these values to your own
+        $secret_key = NONCE_KEY;
+        $secret_iv = NONCE_SALT;
+
+        $output = $string;
+        $encrypt_method = "AES-256-CBC";
+        $key = hash( 'sha256', $secret_key );
+        $iv = substr( hash( 'sha256', $secret_iv ), 0, 16 );
+
+        if( $action == 'e' && function_exists('openssl_encrypt')) {
+            $output = base64_encode( openssl_encrypt( $string, $encrypt_method, $key, 0, $iv ) );
+        }
+        else if( $action == 'd' && function_exists('openssl_decrypt') && base64_decode( $string )){
+            $decrypt = openssl_decrypt( base64_decode( $string ), $encrypt_method, $key, 0, $iv );
+            if($decrypt) {
+                //we check if decrypt was succesful
+                $output = $decrypt;
+            }
+        }
+
+        return $output;
+    }
 
 	private function get_xcloner_container() {
 		return $this->xcloner_container;
