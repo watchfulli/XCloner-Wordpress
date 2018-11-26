@@ -112,6 +112,15 @@ Immigration Attorney Montana <a href="https://www.immigrationlawofmt.com" target
 
 == Changelog ==
 
+= 4.0.9 =
+* remote storage password encryption addon for database
+* vendor cleanup packages
+* database silent fail fix
+* copyright changes
+* jstree fix database display
+* microtime float div fix
+* manage backups data order fix
+
 = 4.0.8 = 
 * updated vendor library dependencies, AWS, phpseclib
 * TAR compression fix
