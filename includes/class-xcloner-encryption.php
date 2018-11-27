@@ -145,9 +145,9 @@ class Xcloner_Encryption
 }
 
 try {
-    if ($argv[1] == "-e") {
+    if (isset($argv[1]) && $argv[1] == "-e") {
         Xcloner_Encryption::encryptFile($argv[2], $argv[2] . ".enc");
-    } elseif ($argv[1] == "-d") {
+    } elseif (isset($argv[1]) && $argv[1] == "-d") {
         Xcloner_Encryption::decryptFile($argv[2], $argv[2] . ".out");
     }
 }catch(\Exception $e) {
