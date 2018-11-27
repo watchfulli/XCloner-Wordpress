@@ -9,8 +9,7 @@
         "league/flysystem-aws-s3-v3": "^1.0",
         "mhetreramesh/flysystem-backblaze": "^1.0",
         "league/flysystem-webdav": "^1.0",
-        "srmklive/flysystem-dropbox-v2": "^1.0",
-        "defuse/php-encryption": "^2.2"
+        "srmklive/flysystem-dropbox-v2": "^1.0"
     },
     "prefer-stable": true
 }
