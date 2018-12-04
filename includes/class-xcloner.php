@@ -83,6 +83,7 @@ class Xcloner {
 	private $xcloner_scheduler;
 	private $xcloner_remote_storage;
 	private $xcloner_file_transfer;
+	private $xcloner_encryption;
 	/**
 	 * Define the core functionality of the plugin.
 	 *
@@ -160,6 +161,11 @@ class Xcloner {
 	public function get_xcloner_file_transfer()
 	{
 		return $this->xcloner_file_transfer;
+	}
+
+	public function get_xcloner_encryption()
+	{
+		return $this->xcloner_encryption;
 	}
 
 	public function check_dependencies(){
@@ -294,6 +300,11 @@ class Xcloner {
 		 * The class responsible for the XCloner Scheduler methods.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-xcloner-scheduler.php';
+
+        /**
+         * The class responsible for the XCloner Encryption methods.
+         */
+        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-xcloner-encryption.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the public-facing
@@ -540,6 +551,7 @@ class Xcloner {
 			$this->xcloner_scheduler 		= new Xcloner_Scheduler($this);
 			$this->xcloner_remote_storage 	= new Xcloner_Remote_Storage($this);
 			$this->xcloner_file_transfer 	= new Xcloner_File_Transfer($this);
+			$this->xcloner_encryption    	= new Xcloner_Encryption($this);
 
 			$xcloner_api 					= new Xcloner_Api($this);
 
@@ -561,6 +573,8 @@ class Xcloner {
 			add_action( 'wp_ajax_download_restore_script', 		array($xcloner_api,'download_restore_script')  );
 			add_action( 'wp_ajax_copy_backup_remote_to_local', 	array($xcloner_api,'copy_backup_remote_to_local')  );
 			add_action( 'wp_ajax_restore_backup', 				array($xcloner_api,'restore_backup')  );
+			add_action( 'wp_ajax_backup_encryption', 			array($xcloner_api,'backup_encryption')  );
+			add_action( 'wp_ajax_backup_decryption', 			array($xcloner_api,'backup_decryption')  );
 			add_action( 'admin_notices', 						array($this, 'xcloner_error_admin_notices' ));
 
         }

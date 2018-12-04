@@ -54,6 +54,33 @@ class Xcloner_Settings {
 		return $path;
 	}
 
+	public function get_xcloner_encryption_key() {
+
+	    if(!get_option('xcloner_encryption_key') )
+        {
+	        return $this->randomString(35);
+        }
+
+	    return get_option('xcloner_encryption_key');
+    }
+
+    /**
+     * Create a random string
+     * @author	XEWeb <>
+     * @param $length the length of the string to create
+     * @return $str the string
+     */
+    private function randomString($length = 6) {
+        $str = "";
+        $characters = array_merge(range('A','Z'), range('a','z'), range('0','9'));
+        $max = count($characters) - 1;
+        for ($i = 0; $i < $length; $i++) {
+            $rand = mt_rand(0, $max);
+            $str .= $characters[$rand];
+        }
+        return $str;
+    }
+
 	public function get_xcloner_tmp_path_suffix() {
 		return "xcloner" . $this->get_hash();
 	}
@@ -301,22 +328,40 @@ class Xcloner_Settings {
 		);
 
 		register_setting( 'xcloner_general_settings_group', 'xcloner_store_path', array(
-			$this->xcloner_sanitization,
-			"sanitize_input_as_absolute_path"
-		) );
-		add_settings_field(
-			'xcloner_store_path',
-			__( 'Backup Storage Location', 'xcloner-backup-and-restore' ),
-			array( $this, 'do_form_text_field' ),
-			'xcloner_settings_page',
-			'xcloner_general_settings_group',
-			array(
-				'xcloner_store_path',
-				__( 'Location where XCloner will store the Backup archives.', 'xcloner-backup-and-restore' ),
-				$this->get_xcloner_store_path(),
-				//'disabled'
-			)
-		);
+            $this->xcloner_sanitization,
+            "sanitize_input_as_absolute_path"
+        ) );
+        add_settings_field(
+            'xcloner_store_path',
+            __( 'Backup Storage Location', 'xcloner-backup-and-restore' ),
+            array( $this, 'do_form_text_field' ),
+            'xcloner_settings_page',
+            'xcloner_general_settings_group',
+            array(
+                'xcloner_store_path',
+                __( 'Location where XCloner will store the Backup archives.', 'xcloner-backup-and-restore' ),
+                $this->get_xcloner_store_path(),
+                //'disabled'
+            )
+        );
+
+        register_setting( 'xcloner_general_settings_group', 'xcloner_encryption_key', array(
+            $this->xcloner_sanitization,
+            "sanitize_input_as_string"
+        ) );
+        add_settings_field(
+            'xcloner_encryption_key',
+            __( 'Backup Encryption Key', 'xcloner-backup-and-restore' ),
+            array( $this, 'do_form_text_field' ),
+            'xcloner_settings_page',
+            'xcloner_general_settings_group',
+            array(
+                'xcloner_encryption_key',
+                __( 'Backup Encryption Key used to Encrypt/Decrypt backups.', 'xcloner-backup-and-restore' ),
+                $this->get_xcloner_encryption_key(),
+                //'disabled'
+            )
+        );
 
 		register_setting( 'xcloner_general_settings_group', 'xcloner_enable_log', array(
 			$this->xcloner_sanitization,
@@ -581,6 +626,19 @@ class Xcloner_Settings {
 				sprintf( __( 'Enable this option if you want the XCloner Temporary Path to be within your XCloner Storage Location', 'xcloner-backup-and-restore' ), $this->get_table_prefix() )
 			)
 		);
+
+        register_setting( 'xcloner_system_settings_group', 'xcloner_disable_email_notification' );
+        add_settings_field(
+            'xcloner_disable_email_notification',
+            __( 'Disable Email Notifications', 'xcloner-backup-and-restore' ),
+            array( $this, 'do_form_switch_field' ),
+            'xcloner_system_settings_page',
+            'xcloner_system_settings_group',
+            array(
+                'xcloner_disable_email_notification',
+                sprintf( __( 'Enable this option if you want the XCloner to NOT send email notifications on successful backups', 'xcloner-backup-and-restore' ), $this->get_table_prefix() )
+            )
+        );
 
 		//REGISTERING THE 'CLEANUP SECTION' FIELDS
 		register_setting( 'xcloner_cleanup_settings_group', 'xcloner_cleanup_retention_limit_days', array(

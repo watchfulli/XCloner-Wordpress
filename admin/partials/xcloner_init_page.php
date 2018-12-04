@@ -89,7 +89,7 @@ if ( $requirements->check_backup_ready_status() ) {
                             <div class="row">
                                 <h5><?php echo __( "Latest Backup", 'xcloner-backup-and-restore' ) ?></h5>
                                 <blockquote>
-									<?php if ( $latest_backup ): ?>
+									<?php if ( isset($latest_backup) ): ?>
                                         <div class="item">
                                             <div class="title"><?php echo __( "Backup Name", 'xcloner-backup-and-restore' ) ?>
                                                 :

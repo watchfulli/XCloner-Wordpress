@@ -333,7 +333,10 @@ class Xcloner_Scheduler {
 		}
 
 		try {
-
+            if( get_option('xcloner_disable_email_notification') ) {
+                //we disable email notifications
+                $schedule['backup_params']->email_notification = "";
+            }
 			$this->_xcloner_scheduler_callback( $id, $schedule );
 
 		} catch ( Exception $e ) {

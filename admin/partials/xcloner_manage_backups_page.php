@@ -3,6 +3,7 @@
 $xcloner_file_system = $this->get_xcloner_container()->get_xcloner_filesystem();
 $xcloner_sanitization = $this->get_xcloner_container()->get_xcloner_sanitization();
 $xcloner_remote_storage = $this->get_xcloner_container()->get_xcloner_remote_storage();
+$xcloner_encryption = $this->get_xcloner_container()->get_xcloner_encryption();
 $storage_selection = "";
 
 if (isset($_GET['storage_selection']) and $_GET['storage_selection']) {
@@ -12,7 +13,6 @@ if (isset($_GET['storage_selection']) and $_GET['storage_selection']) {
 $backup_list = $xcloner_file_system->get_backup_archives_list($storage_selection);
 
 $available_storages = $xcloner_remote_storage->get_available_storages();
-
 
 ?>
 
@@ -125,6 +125,19 @@ $available_storages = $xcloner_remote_storage->get_available_storages();
                                                title="<?php echo __('List Backup Content',
                                                    'xcloner-backup-and-restore') ?>"><i
                                                         class="material-icons">folder_open</i></a>
+
+                                            <?php if($xcloner_encryption->is_encrypted_file($child[0])) :?>
+                                                <a href="#<?php echo $child[0] ?>" class="backup-decryption"
+                                                   title="<?php echo __('Backup Decryption', 'xcloner-backup-and-restore') ?>">
+                                                    <i class="material-icons">enhanced_encryption</i>
+                                                </a>
+                                            <?php else: ?>
+                                                <a href="#<?php echo $child[0] ?>" class="backup-encryption"
+                                                   title="<?php echo __('Backup Encryption', 'xcloner-backup-and-restore') ?>">
+                                                    <i class="material-icons">no_encryption</i>
+                                                </a>
+                                            <?php endif?>
+
                                         <?php elseif ($storage_selection != "gdrive" && !$xcloner_file_system->get_storage_filesystem()->has($child[0])): ?>
                                             <a href="#<?php echo $child[0] ?>" class="copy-remote-to-local"
                                                title="<?php echo __('Push Backup To Local Storage',
@@ -156,9 +169,22 @@ $available_storages = $xcloner_remote_storage->get_available_storages();
                                         class="material-icons">folder_open</i></a>
                         <?php endif; ?>
 
+                        <?php if($xcloner_encryption->is_encrypted_file($file_info['basename'])) :?>
+                            <a href="#<?php echo $file_info['basename'] ?>" class="backup-decryption"
+                               title="<?php echo __('Backup Decryption', 'xcloner-backup-and-restore') ?>">
+                                <i class="material-icons">enhanced_encryption</i>
+                            </a>
+                        <?php else: ?>
+                            <a href="#<?php echo $file_info['basename'] ?>" class="backup-encryption"
+                               title="<?php echo __('Backup Encryption', 'xcloner-backup-and-restore') ?>">
+                                <i class="material-icons">no_encryption</i>
+                            </a>
+                        <?php endif?>
+
                         <a href="#<?php echo $file_info['basename'] ?>" class="delete"
-                           title="<?php echo __('Delete Backup', 'xcloner-backup-and-restore') ?>"><i
-                                    class="material-icons">delete</i></a>
+                           title="<?php echo __('Delete Backup', 'xcloner-backup-and-restore') ?>">
+                            <i class="material-icons">delete</i>
+                        </a>
                         <?php if ($storage_selection and !$file_exists_on_local_storage): ?>
                             <a href="#<?php echo $file_info['basename']; ?>" class="copy-remote-to-local"
                                title="<?php echo __('Push Backup To Local Storage', 'xcloner-backup-and-restore') ?>"><i
@@ -188,6 +214,51 @@ $available_storages = $xcloner_remote_storage->get_available_storages();
                 <div class="indeterminate"></div>
             </div>
             <ul class="files-list"></ul>
+        </div>
+    </div>
+
+    <!-- Backup Encryption Modal-->
+    <div id="backup_encryption_modal" class="modal">
+        <div class="modal-content">
+            <h4><?php echo sprintf(__("Backup Content Encryption", 'xcloner-backup-and-restore'), "") ?></h4>
+            <h5 class="backup-name"></h5>
+
+            <div class="progress">
+                <div class="determinate"></div>
+            </div>
+            <div class="notice">
+                <p>
+                    <?php echo __("This option will encrypt your backup archive with your current XCloner Encryption Key.", 'xcloner-backup-and-restore') ?>
+                </p>
+                <p class="center-align">
+                    <a class="waves-effect waves-light btn"><?php echo __("START ENCRYPTION", 'xcloner-backup-and-restore') ?></a>
+                </p>
+            </div>
+            <ul class="files-list">
+            </ul>
+        </div>
+    </div>
+
+    <!-- Backup Decryption Modal-->
+    <div id="backup_decryption_modal" class="modal">
+        <div class="modal-content">
+            <h4><?php echo sprintf(__("Backup Content Decryption", 'xcloner-backup-and-restore'), "") ?></h4>
+            <h5 class="backup-name"></h5>
+
+            <div class="progress">
+                <div class="determinate"></div>
+            </div>
+            <div class="notice">
+                <p>
+                    <?php echo __("This option will decrypt your backup archive with your current XCloner Encryption Key, requires PHP openssl library installed.", 'xcloner-backup-and-restore') ?>
+                </p>
+                <p class="center-align">
+                    <a class="waves-effect waves-light btn"><?php echo __("START DECRYPTION", 'xcloner-backup-and-restore') ?></a>
+                </p>
+            </div>
+            <ul class="files-list">
+
+            </ul>
         </div>
     </div>
 
