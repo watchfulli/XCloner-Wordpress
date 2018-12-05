@@ -920,18 +920,18 @@ $gdrive_construct = $remote_storage->gdrive_construct();
 
                             <div class="row">
                                 <div class="col s12 m3 label">
-                                    <label for="gdrive_empty_trash"><?php echo __( "Keeps Deleted Backups in Trash", 'xcloner-backup-and-restore' ) ?></label>
+                                    <label for="gdrive_empty_trash"><?php echo __( "Automatically Empty Trash?", 'xcloner-backup-and-restore' ) ?></label>
                                 </div>
                                 <div class=" col s12 m6 input-field inline">
                                     <input name="xcloner_gdrive_empty_trash" type="radio" value="0"
                                            id="gdrive_empty_trash_off" <?php if ( ! get_option( "xcloner_gdrive_empty_trash", 0 ) )
 										echo "checked" ?> />
-                                    <label for="gdrive_empty_trash_off"><?php echo __( "Enabled", 'xcloner-backup-and-restore' ) ?></label>
+                                    <label for="gdrive_empty_trash_off"><?php echo __( "Disabled", 'xcloner-backup-and-restore' ) ?></label>
 
                                     <input name="xcloner_gdrive_empty_trash" type="radio" value="1"
                                            id="gdrive_empty_trash_on" <?php if ( get_option( "xcloner_gdrive_empty_trash", 0 ) )
 										echo "checked" ?> />
-                                    <label for="gdrive_empty_trash_on"><?php echo __( "Disabled", 'xcloner-backup-and-restore' ) ?></label>
+                                    <label for="gdrive_empty_trash_on"><?php echo __( "Enabled", 'xcloner-backup-and-restore' ) ?></label>
                                 </div>
                             </div>
 

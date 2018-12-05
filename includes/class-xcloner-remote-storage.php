@@ -667,10 +667,10 @@ class Xcloner_Remote_Storage {
 
 		$service = new \Google_Service_Drive( $client );
 
-		/*if( get_option("xcloner_gdrive_empty_trash",0) ){
+		if( get_option("xcloner_gdrive_empty_trash",0) ){
 			$this->logger->info(sprintf("Doing a Google Drive emptyTrash call"), array(""));
 			$service->files->emptyTrash();
-		}*/
+		}
 
 		$parent = 'root';
 		$dir    = basename( get_option( "xcloner_gdrive_target_folder" ) );
