@@ -323,7 +323,7 @@ jQuery(document).ready(function () {
             {"width": "25%"},
             {"width": "5%"},
             {"width": "5%"},
-            {"width": 10%"},
+            {"width": "10%"},
         ],
         "oLanguage": {
             "sSearch": "",
