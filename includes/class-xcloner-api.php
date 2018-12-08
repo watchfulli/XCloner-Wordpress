@@ -48,6 +48,7 @@ class Xcloner_Api
     private $xcloner_file_system;
     private $xcloner_requirements;
     private $xcloner_sanitization;
+    private $xcloner_encryption;
     private $archive_system;
     private $form_params;
     private $logger;
@@ -75,14 +76,15 @@ class Xcloner_Api
 
         $this->xcloner_container = $xcloner_container;
 
-        $this->xcloner_settings = $xcloner_container->get_xcloner_settings();
-        $this->logger = $xcloner_container->get_xcloner_logger()->withName("xcloner_api");
-        $this->xcloner_file_system = $xcloner_container->get_xcloner_filesystem();
-        $this->xcloner_sanitization = $xcloner_container->get_xcloner_sanitization();
-        $this->xcloner_requirements = $xcloner_container->get_xcloner_requirements();
-        $this->archive_system = $xcloner_container->get_archive_system();
-        $this->xcloner_database = $xcloner_container->get_xcloner_database();
-        $this->xcloner_scheduler = $xcloner_container->get_xcloner_scheduler();
+        $this->xcloner_settings         = $xcloner_container->get_xcloner_settings();
+        $this->logger                   = $xcloner_container->get_xcloner_logger()->withName("xcloner_api");
+        $this->xcloner_file_system      = $xcloner_container->get_xcloner_filesystem();
+        $this->xcloner_sanitization     = $xcloner_container->get_xcloner_sanitization();
+        $this->xcloner_requirements     = $xcloner_container->get_xcloner_requirements();
+        $this->archive_system           = $xcloner_container->get_archive_system();
+        $this->xcloner_database         = $xcloner_container->get_xcloner_database();
+        $this->xcloner_scheduler        = $xcloner_container->get_xcloner_scheduler();
+        $this->xcloner_encryption       = $xcloner_container->get_xcloner_encryption();
 
         if (isset($_POST['API_ID'])) {
             $this->logger->info("Processing ajax request ID " . substr($this->xcloner_sanitization->sanitize_input_as_string($_POST['API_ID']),
@@ -773,6 +775,96 @@ class Xcloner_Api
         return $this->send_response($data);
     }
 
+    /**
+     *  API Incremental Backup Encryption Method
+     */
+    public function backup_encryption()
+    {
+        $this->check_access();
+
+        $backup_parts = array();
+        $return = array();
+
+        $source_backup_file = $this->xcloner_sanitization->sanitize_input_as_string($_POST['file']);
+        $start = $this->xcloner_sanitization->sanitize_input_as_int($_POST['start']);
+        $iv = $this->xcloner_sanitization->sanitize_input_as_int($_POST['iv']);
+        $return['part'] = $this->xcloner_sanitization->sanitize_input_as_int($_POST['part']);
+
+        $backup_file = $source_backup_file;
+
+        if ($this->xcloner_file_system->is_multipart($backup_file)) {
+            $backup_parts = $this->xcloner_file_system->get_multipart_files($backup_file);
+            $backup_file = $backup_parts[$return['part']];
+        }
+
+        $return['processing_file'] = $backup_file;
+        $return['total_size'] = filesize($this->xcloner_settings->get_xcloner_store_path() . DS . $backup_file);
+
+        try {
+            $return = array_merge($return,
+                $this->xcloner_encryption->encrypt_file($backup_file, "", "", $start, urldecode($iv)));
+        }catch(\Exception $e){
+            $return['error'] = true;
+            $return['message'] = $e->getMessage();
+        }
+
+        //echo strlen($return['iv']);exit;
+
+        if($return['finished']) {
+            if ($this->xcloner_file_system->is_multipart($source_backup_file)) {
+                $return['start'] = 0;
+
+                ++$return['part'];
+
+                if ($return['part'] < sizeof($backup_parts)) {
+                    $return['finished'] = 0;
+                }
+
+            }
+        }
+
+        $this->send_response($return, 0);
+    }
+
+    /**
+     *  API Incremental Backup Decryption Method
+     */
+    public function backup_decryption()
+    {
+        $this->check_access();
+
+        $backup_parts = array();
+        $return = array();
+
+        $source_backup_file = $this->xcloner_sanitization->sanitize_input_as_string($_POST['file']);
+        $start = $this->xcloner_sanitization->sanitize_input_as_int($_POST['start']);
+        $iv = $this->xcloner_sanitization->sanitize_input_as_int($_POST['iv']);
+        $return['part'] = $this->xcloner_sanitization->sanitize_input_as_int($_POST['part']);
+
+        $backup_file = $source_backup_file;
+
+        if ($this->xcloner_file_system->is_multipart($backup_file)) {
+            $backup_parts = $this->xcloner_file_system->get_multipart_files($backup_file);
+            $backup_file = $backup_parts[$return['part']];
+        }
+
+        $return['processing_file'] = $backup_file;
+        $return['total_size'] = filesize($this->xcloner_settings->get_xcloner_store_path() . DS . $backup_file);
+
+        try {
+            $return = array_merge($return,
+                $this->xcloner_encryption->decrypt_file($backup_file, "", "", $start, urldecode($iv)));
+        }catch(\Exception $e){
+            $return['error'] = true;
+            $return['message'] = $e->getMessage();
+        }
+
+        $this->send_response($return, 0);
+    }
+
+    /**
+     * API method to list internal backup files
+     */
     public function list_backup_files()
     {
         $this->check_access();

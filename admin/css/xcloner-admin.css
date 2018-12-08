@@ -166,7 +166,8 @@ textarea.materialize-textarea {
 #scheduled_backups .edit, #scheduled_backups .status.active, #scheduled_backups .delete,
 #manage_backups .download, #manage_backups .cloud-upload, #manage_backups .delete, #manage_backups .list-backup-content,
 .backup-done .download, .backup-done .cloud-upload, .backup-done .delete, .backup-done .list-backup-content,
-#manage_backups .copy-remote-to-local, #manage_backups .expand-multipart {
+#manage_backups .copy-remote-to-local, #manage_backups .expand-multipart,
+#manage_backups .backup-encryption, #manage_backups  .backup-decryption {
     color: #4db6ac;
 }
 

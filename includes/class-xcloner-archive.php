@@ -576,9 +576,11 @@ class Xcloner_Archive extends Tar
      * Write multipart file components
      *
      */
-    private function write_multipart_file($path)
+    private function write_multipart_file($path = "")
     {
-        $path = $this->get_archive_name_with_extension();
+        if(!$path) {
+            $path = $this->get_archive_name_with_extension();
+        }
 
         $file = $this->filesystem->get_filesystem("storage_filesystem_append")->getMetadata($path);
         //print_r($file_info);
