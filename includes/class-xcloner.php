@@ -575,6 +575,7 @@ class Xcloner {
 			add_action( 'wp_ajax_restore_backup', 				array($xcloner_api,'restore_backup')  );
 			add_action( 'wp_ajax_backup_encryption', 			array($xcloner_api,'backup_encryption')  );
 			add_action( 'wp_ajax_backup_decryption', 			array($xcloner_api,'backup_decryption')  );
+			add_action( 'wp_ajax_get_manage_backups_list', 		array($xcloner_api,'get_manage_backups_list')  );
 			add_action( 'admin_notices', 						array($this, 'xcloner_error_admin_notices' ));
 
         }

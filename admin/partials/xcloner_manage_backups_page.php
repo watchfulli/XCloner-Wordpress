@@ -10,11 +10,15 @@ if (isset($_GET['storage_selection']) and $_GET['storage_selection']) {
     $storage_selection = $xcloner_sanitization->sanitize_input_as_string($_GET['storage_selection']);
 }
 
-$backup_list = $xcloner_file_system->get_backup_archives_list($storage_selection);
+//$backup_list = $xcloner_file_system->get_backup_archives_list($storage_selection);
 
 $available_storages = $xcloner_remote_storage->get_available_storages();
 
 ?>
+
+<script>
+    var storage_selection = '<?=$storage_selection?>';
+</script>
 
 <div class="row">
     <div class="col s12 m6 l9">
@@ -40,7 +44,7 @@ $available_storages = $xcloner_remote_storage->get_available_storages();
         <?php endif ?>
     </div>
 
-    <table id="manage_backups">
+    <table id="manage_backups" style="width:100%">
         <thead>
         <tr class="grey lighten-2">
             <th class="no-sort">
@@ -61,7 +65,7 @@ $available_storages = $xcloner_remote_storage->get_available_storages();
 
 
         <?php
-        $i = 0;
+        /*$i = 0;
         foreach ($backup_list as $file_info):?>
             <?php
             if ($storage_selection == "gdrive") {
@@ -196,7 +200,7 @@ $available_storages = $xcloner_remote_storage->get_available_storages();
                 </tr>
 
             <?php endif ?>
-        <?php endforeach ?>
+        <?php endforeach */?>
 
         </tbody>
     </table>

@@ -44,7 +44,15 @@ class Xcloner_Encryption
      */
     public function is_encrypted_file($filename) {
         if(stristr( $filename, self::FILE_ENCRYPTION_SUFFIX)) {
-            return true;
+
+            $fp = fopen($this->xcloner_settings->get_xcloner_store_path() . DS .$filename, 'r');
+            $encryption_length = fread($fp, 16);
+            fclose($fp);
+            if(is_numeric($encryption_length)) {
+                return true;
+            }
+
+            //return true;
         }
 
         return false;
@@ -97,7 +105,8 @@ class Xcloner_Encryption
         }
 
         if(!$iv) {
-            $iv = openssl_random_pseudo_bytes(16);
+            //$iv = openssl_random_pseudo_bytes(16);
+            $iv = str_pad(self::FILE_ENCRYPTION_BLOCKS, 16, "0000000000000000", STR_PAD_LEFT);
         }
 
         if( !$start ) {
@@ -205,6 +214,11 @@ class Xcloner_Encryption
         if ( $fpOut ) {
             if ($fpIn = fopen($this->xcloner_settings->get_xcloner_store_path() . DS .$source, 'rb')) {
 
+                $encryption_length = (int)fread($fpIn, 16);
+                if(!$encryption_length) {
+                    $encryption_length = self::FILE_ENCRYPTION_BLOCKS;
+                }
+
                 fseek($fpIn, $start);
 
                 // Get the initialzation vector from the beginning of the file
@@ -215,7 +229,7 @@ class Xcloner_Encryption
                 if (!feof($fpIn)) {
 
                     // we have to read one block more for decrypting than for encrypting
-                    $ciphertext = fread($fpIn, 16 * (self::FILE_ENCRYPTION_BLOCKS + 1));
+                    $ciphertext = fread($fpIn, 16 * ($encryption_length + 1));
                     $plaintext = openssl_decrypt($ciphertext, 'AES-128-CBC', $key_digest, OPENSSL_RAW_DATA, $iv);
 
                     if(!$plaintext){

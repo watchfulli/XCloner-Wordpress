@@ -1677,17 +1677,17 @@
     },
     {
         "name": "vakata/jstree",
-        "version": "3.3.5",
-        "version_normalized": "3.3.5.0",
+        "version": "3.3.7",
+        "version_normalized": "3.3.7.0",
         "source": {
             "type": "git",
             "url": "https://github.com/vakata/jstree.git",
-            "reference": "0097fab41981daf36c234b73b683166daabd5f28"
+            "reference": "bc5187e5826244dee5ebdc0e9db2e2652fefe928"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/vakata/jstree/zipball/0097fab41981daf36c234b73b683166daabd5f28",
-            "reference": "0097fab41981daf36c234b73b683166daabd5f28",
+            "url": "https://api.github.com/repos/vakata/jstree/zipball/bc5187e5826244dee5ebdc0e9db2e2652fefe928",
+            "reference": "bc5187e5826244dee5ebdc0e9db2e2652fefe928",
             "shasum": ""
         },
         "require": {
@@ -1696,7 +1696,7 @@
         "suggest": {
             "robloach/component-installer": "Allows installation of Components via Composer"
         },
-        "time": "2018-01-02T08:13:23+00:00",
+        "time": "2018-11-06T21:15:47+00:00",
         "type": "component",
         "extra": {
             "component": {

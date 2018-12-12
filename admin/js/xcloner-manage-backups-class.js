@@ -1,12 +1,13 @@
 /** global: ajaxurl */
 /** global: Materialize */
+var dataTable = "";
 
 class Xcloner_Manage_Backups {
 
     constructor() {
         this.file_counter = 0
         this.storage_selection = "";
-
+        this.dataTable = "";
         //this.edit_modal = jQuery('.modal').modal();
     }
 
@@ -126,6 +127,7 @@ class Xcloner_Manage_Backups {
                     } else {
                         jQuery("#backup_encryption_modal .progress > div").addClass('determinate').removeClass("indeterminate").css('width', "100%")
                         jQuery("#backup_encryption_modal .modal-content .files-list").text("Done Encrypting.")
+                        dataTable.ajax.reload();
                     }
 
                 },
@@ -148,9 +150,9 @@ class Xcloner_Manage_Backups {
         jQuery("#backup_encryption_modal .notice").show();
 
         jQuery("#backup_encryption_modal a.btn").attr('onclick', "var xcloner_manage_backups = new Xcloner_Manage_Backups();xcloner_manage_backups.backup_encryption('"+backup_file+"', true)");
+        jQuery("#backup_encryption_modal .modal-content .files-list").text("").removeClass("error");
 
         if( start ) {
-            jQuery("#backup_encryption_modal .modal-content .files-list").text("").removeClass("error");
             jQuery("#backup_encryption_modal .notice").hide();
             this.backup_encryption_callback(backup_file)
         }
@@ -188,6 +190,7 @@ class Xcloner_Manage_Backups {
                     } else {
                         jQuery("#backup_decryption_modal .progress > div").addClass('determinate').removeClass("indeterminate").css('width', "100%")
                         jQuery("#backup_decryption_modal .modal-content .files-list").text("Done Decrypting.")
+                        dataTable.ajax.reload();
                     }
 
                 },
@@ -209,9 +212,9 @@ class Xcloner_Manage_Backups {
         jQuery("#backup_decryption_modal .notice").show();
 
         jQuery("#backup_decryption_modal a.btn").attr('onclick', "var xcloner_manage_backups = new Xcloner_Manage_Backups();xcloner_manage_backups.backup_decryption('"+backup_file+"', true)");
+        jQuery("#backup_decryption_modal .modal-content .files-list").text("").removeClass("error");
 
         if( start ) {
-            jQuery("#backup_decryption_modal .modal-content .files-list").text("").removeClass("error");
             jQuery("#backup_decryption_modal .notice").hide();
             this.backup_decryption_callback(backup_file)
         }
@@ -295,12 +298,7 @@ jQuery(document).ready(function () {
 
     xcloner_manage_backups.storage_selection = getUrlParam('storage_selection');
 
-    jQuery("a.expand-multipart").on("click", function () {
-        jQuery(this).parent().find("ul.multipart").toggle();
-        jQuery(this).parent().find("a.expand-multipart.remove").toggle();
-        jQuery(this).parent().find("a.expand-multipart.add").toggle();
-    })
-    var dataTable = jQuery('#manage_backups').DataTable({
+    dataTable = jQuery('#manage_backups').DataTable({
         'responsive': true,
         'bFilter': true,
         "order": [[2, "desc"]],
@@ -323,15 +321,21 @@ jQuery(document).ready(function () {
             {"width": "25%"},
             {"width": "5%"},
             {"width": "5%"},
-            {"width": "10%"},
+            {"width": "9%"},
         ],
         "oLanguage": {
             "sSearch": "",
             "sSearchPlaceholder": 'Search Backups',
         },
-        //"ajax": ajaxurl+"?action=get_backup_list",
+        "ajax": ajaxurl+"?action=get_manage_backups_list&storage_selection="+storage_selection,
         "fnDrawCallback": function (oSettings) {
 
+            jQuery("a.expand-multipart").on("click", function () {
+                jQuery(this).parent().find("ul.multipart").toggle();
+                jQuery(this).parent().find("a.expand-multipart.remove").toggle();
+                jQuery(this).parent().find("a.expand-multipart.add").toggle();
+            })
+            
             jQuery(this).off("click", ".delete").on("click", ".delete", function (e) {
 
                 var hash = jQuery(this).attr('href');
@@ -415,12 +419,11 @@ jQuery(document).ready(function () {
     jQuery("#local_storage_upload_modal").modal();
 
     jQuery("#storage_selection").on("change", function () {
-        console.log(jQuery(this).val());
         window.location = window.location.href.split('&storage_selection')[0] + "&storage_selection=" + jQuery(this).val();
     })
 
     jQuery('.modal').on('hide',function(){
-        //alert('ok')
+        alert('ok')
     })
 
 
