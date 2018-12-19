@@ -155,12 +155,12 @@ class Xcloner_Encryption
 
                 }
             } else {
-                $this->logger->error('Unable to read source file for encryption');
-                throw new \Exception("Unable to read source file for encryption");
+                $this->logger->error('Unable to read source file for encryption.');
+                throw new \Exception("Unable to read source file for encryption.");
             }
         } else {
-            $this->logger->error('Unable to write destination file for encryption');
-            throw new \Exception("Unable to write destination file for encryption");
+            $this->logger->error('Unable to write destination file for encryption.');
+            throw new \Exception("Unable to write destination file for encryption.");
         }
 
         $this->verify_encrypted_file($dest);
@@ -191,6 +191,7 @@ class Xcloner_Encryption
         if(!$key){
             $key = self::get_backup_encryption_key();
         }
+
         $key_digest = openssl_digest ($key, "md5", true);
 
         if(!$dest) {

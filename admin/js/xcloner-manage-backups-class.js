@@ -116,7 +116,8 @@ class Xcloner_Manage_Backups {
                     }
 
                     if (response.error) {
-                        jQuery("#backup_encryption_modal .files-list").addClass("error").prepend(response.message)
+                        jQuery("#backup_encryption_modal .notice").show();
+                        jQuery("#backup_encryption_modal .files-list").addClass("error").prepend(response.message+" ")
                         jQuery("#backup_encryption_modal .progress > div").addClass("determinate").removeClass("indeterminate").css('width', "100%")
                         return;
                     }
@@ -161,11 +162,13 @@ class Xcloner_Manage_Backups {
     backup_decryption_callback(backup_file, start = 0, part = 0, iv = 0) {
         var $this = this;
 
+        var decryption_key = jQuery('#backup_decryption_modal #decryption_key').val();
+
         if (backup_file) {
             jQuery.ajax({
                 url: ajaxurl,
                 method: 'post',
-                data: {action: 'backup_decryption', file: backup_file, start: start, part: part, iv: iv},
+                data: {action: 'backup_decryption', file: backup_file, start: start, part: part, iv: iv, decryption_key: decryption_key},
                 success: function (response) {
 
                     if(!response.start){
@@ -181,6 +184,7 @@ class Xcloner_Manage_Backups {
                     if (response.error) {
                         jQuery("#backup_decryption_modal .files-list").addClass("error").prepend(response.message+" ")
                         jQuery("#backup_decryption_modal .progress > div").addClass("determinate").removeClass("indeterminate").css('width', "100%")
+                        jQuery("#backup_decryption_modal .notice").show();
                         return;
                     }
 
@@ -327,7 +331,7 @@ jQuery(document).ready(function () {
             "sSearch": "",
             "sSearchPlaceholder": 'Search Backups',
         },
-        "ajax": ajaxurl+"?action=get_manage_backups_list&storage_selection="+storage_selection,
+        "ajax": ajaxurl+"?action=get_manage_backups_list&storage_selection="+xcloner_manage_backups.storage_selection,
         "fnDrawCallback": function (oSettings) {
 
             jQuery("a.expand-multipart").on("click", function () {
@@ -335,7 +339,7 @@ jQuery(document).ready(function () {
                 jQuery(this).parent().find("a.expand-multipart.remove").toggle();
                 jQuery(this).parent().find("a.expand-multipart.add").toggle();
             })
-            
+
             jQuery(this).off("click", ".delete").on("click", ".delete", function (e) {
 
                 var hash = jQuery(this).attr('href');
