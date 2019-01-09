@@ -106,8 +106,8 @@ class Xcloner_File_Transfer extends Xcloner_File_System
         curl_setopt($ch, CURLOPT_URL, $this->target_url);
 
         curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 1);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 60);
         curl_setopt($ch, CURLOPT_TIMEOUT, 1200);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -116,6 +116,7 @@ class Xcloner_File_Transfer extends Xcloner_File_System
         curl_setopt($ch, CURLOPT_VERBOSE, true);
 
         $original_result = curl_exec($ch);
+
 
         $this->get_tmp_filesystem()->delete($tmp_filename);
 

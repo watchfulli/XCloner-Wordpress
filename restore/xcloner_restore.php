@@ -105,8 +105,12 @@ class Xcloner_Restore
 	private $logger;
 	private $backup_storage_dir;
 	private $parent_api;
-	
-	
+
+    /**
+     * Xcloner_Restore constructor.
+     * @param string $parent_api
+     * @throws Exception
+     */
 	public function __construct($parent_api = "")
 	{
 		register_shutdown_function(array($this, 'exception_handler'));
@@ -145,7 +149,10 @@ class Xcloner_Restore
 		}
 
 	}
-	
+
+    /**
+     * Exception handler method
+     */
 	public function exception_handler() {
 		
 		$error = error_get_last();
@@ -156,7 +163,11 @@ class Xcloner_Restore
 		}
 	
 	}
-	
+
+    /**
+     * @param $type
+     * @return mixed|string
+     */
 	private function friendly_error_type($type) {
 	    static $levels=null;
 	    if ($levels===null) {
@@ -175,7 +186,13 @@ class Xcloner_Restore
 		
 		return $filename;
 	}
-	
+
+    /**
+     * Init method
+     *
+     * @return mixed|void
+     * @throws Exception
+     */
 	public function init()
 	{
 		if(isset($_POST['xcloner_action']) and $_POST['xcloner_action'])
@@ -198,7 +215,13 @@ class Xcloner_Restore
 		
 		return $this->check_system();
 	}
-	
+
+    /**
+     * Write file method
+     *
+     * @return bool|int
+     * @throws Exception
+     */
 	public function write_file_action()
 	{
 		if(isset($_POST['file']))
@@ -242,7 +265,17 @@ class Xcloner_Restore
 		return $bytes_written;
 		
 	}
-	
+
+    /**
+     * Connect to mysql server method
+     *
+     * @param $remote_mysql_host
+     * @param $remote_mysql_user
+     * @param $remote_mysql_pass
+     * @param $remote_mysql_db
+     * @return mysqli
+     * @throws Exception
+     */
 	public function mysql_connect($remote_mysql_host, $remote_mysql_user, $remote_mysql_pass, $remote_mysql_db )
 	{
 		$this->logger->info(sprintf('Connecting to mysql database %s with %s@%s', $remote_mysql_db, $remote_mysql_user, $remote_mysql_host));
@@ -263,7 +296,12 @@ class Xcloner_Restore
 			
 		return $mysqli;	
 	}
-	
+
+    /**
+     * Restore mysql backup file
+     *
+     * @throws Exception
+     */
 	public function restore_mysql_backup_action()
 	{
 		$mysqldump_file 	= filter_input(INPUT_POST, 'mysqldump_file', FILTER_SANITIZE_STRING);
@@ -393,7 +431,15 @@ class Xcloner_Restore
 		
 		$this->send_response(200, $return);
 	}
-	
+
+    /**
+     * Url replace method inside database backup file
+     *
+     * @param $search
+     * @param $replace
+     * @param $query
+     * @return mixed|string|string[]|null
+     */
 	private function url_replace($search, $replace, $query)
 	{
 		$this->logger->info(sprintf("Doing url replace on query with length %s", strlen($query)), array("QUERY_REPLACE"));
@@ -415,7 +461,12 @@ class Xcloner_Restore
 		
 		return $query;
 	}
-	
+
+    /**
+     * List backup files method
+     *
+     * @throws \League\Flysystem\FileNotFoundException
+     */
 	public function list_backup_files_action()
 	{
 		$backup_parts = array();
@@ -480,7 +531,12 @@ class Xcloner_Restore
 		
 		$this->send_response(200, $return);
 	}
-	
+
+    /**
+     * Finish backup restore method
+     *
+     * @throws \League\Flysystem\FileNotFoundException
+     */
 	public function restore_finish_action()
 	{
 		$remote_path 		= filter_input(INPUT_POST, 'remote_path', FILTER_SANITIZE_STRING);
@@ -520,7 +576,13 @@ class Xcloner_Restore
 		$return = "Restore Process Finished.";
 		$this->send_response(200, $return);
 	}
-	
+
+    /**
+     * Delete backup temporary folder
+     *
+     * @param $remote_path
+     * @return bool
+     */
 	private function delete_backup_temporary_folder($remote_path)
 	{
 		$this->target_adapter = new Local($remote_path ,LOCK_EX, 'SKIP_LINKS');
@@ -547,7 +609,12 @@ class Xcloner_Restore
 		return true;
 	
 	}
-	
+
+    /**
+     * Delete restore script method
+     *
+     * @throws \League\Flysystem\FileNotFoundException
+     */
 	private function delete_self()
 	{
 		if($this->filesystem->has("vendor.phar"))
@@ -579,7 +646,15 @@ class Xcloner_Restore
 		}
 		
 	}
-	
+
+    /**
+     * Update Wordpress url in wp-config.php method
+     * @param $wp_path
+     * @param $url
+     * @param $mysqli
+     * @return bool
+     * @throws Exception
+     */
 	private function update_wp_url($wp_path, $url, $mysqli)
 	{
 		$wp_config = $wp_path.DS."wp-config.php";
@@ -606,7 +681,18 @@ class Xcloner_Restore
 		
 		return true;
 	}
-	
+
+    /**
+     * Update local wp-config.php file method
+     *
+     * @param $remote_path
+     * @param $remote_mysql_host
+     * @param $remote_mysql_user
+     * @param $remote_mysql_pass
+     * @param $remote_mysql_db
+     * @return string
+     * @throws Exception
+     */
 	private function update_wp_config($remote_path, $remote_mysql_host, $remote_mysql_user, $remote_mysql_pass, $remote_mysql_db)
 	{
 		$wp_config = $remote_path.DS."wp-config.php";
@@ -637,7 +723,11 @@ class Xcloner_Restore
 		return $wp_config;
 		
 	}
-	
+
+    /**
+     * List mysqldump database backup files
+     *
+     */
 	public function list_mysqldump_backups_action()
 	{
 		$source_backup_file = filter_input(INPUT_POST, 'backup_file', FILTER_SANITIZE_STRING);
@@ -686,7 +776,13 @@ class Xcloner_Restore
 		
 		$this->send_response(200, $return);
 	}
-	
+
+    /**
+     * Get backup hash method
+     *
+     * @param $backup_file
+     * @return bool
+     */
 	private function get_hash_from_backup($backup_file)
 	{
 		if(!$backup_file)
@@ -699,7 +795,12 @@ class Xcloner_Restore
 		
 		return false;
 	}
-	
+
+    /**
+     * List backup archives found on local system
+     *
+     * @throws \League\Flysystem\FileNotFoundException
+     */
 	public function list_backup_archives_action()
 	{
 		$local_backup_file = filter_input(INPUT_POST, 'local_backup_file', FILTER_SANITIZE_STRING);
@@ -757,7 +858,13 @@ class Xcloner_Restore
 		$this->send_response(200, $return);
 		
 	}
-	
+
+    /**
+     * Restore backup archive to local path
+     *
+     * @throws \League\Flysystem\FileNotFoundException
+     * @throws \splitbrain\PHPArchive\ArchiveIOException
+     */
 	public function restore_backup_to_path_action()
 	{
 		$source_backup_file 	= filter_input(INPUT_POST, 'backup_file', FILTER_SANITIZE_STRING);
@@ -831,7 +938,10 @@ class Xcloner_Restore
 		
 		$this->send_response(200, $return);
 	}
-	
+
+    /**
+     * Get current directory method
+     */
 	public function get_current_directory_action()
 	{	
 		global $wpdb;
@@ -864,7 +974,12 @@ class Xcloner_Restore
 		
 		$this->send_response(200, $return);
 	}
-	
+
+    /**
+     * Check current filesystem
+     *
+     * @throws Exception
+     */
 	public function check_system()
 	{
 		//check if i can write
@@ -885,23 +1000,36 @@ class Xcloner_Restore
 		
 		$this->send_response(200, $return);
 	}
-	
-	private function return_bytes($val) {
-	    $val = trim($val);
-	    $last = strtolower($val[strlen($val)-1]);
-	    switch($last) {
-	        // The 'G' modifier is available since PHP 5.1.0
-	        case 'g':
-	            $val *= 1024;
-	        case 'm':
-	            $val *= 1024;
-	        case 'k':
-	            $val *= 1024;
-	    }
-	
-	    return $val;
-	}
-	
+
+    /**
+     * Return bytes from human readable value
+     *
+     * @param $val
+     * @return int
+     *
+     */
+    private function return_bytes($val) {
+        $numeric_val = (int)trim($val);
+        $last = strtolower($val[strlen($val)-1]);
+        switch($last) {
+            // The 'G' modifier is available since PHP 5.1.0
+            case 'g':
+                $numeric_val *= 1024;
+            case 'm':
+                $numeric_val *= 1024;
+            case 'k':
+                $numeric_val *= 1024;
+        }
+
+        return $numeric_val;
+    }
+
+    /**
+     * Check if backup archive os multipart
+     *
+     * @param $backup_name
+     * @return bool
+     */
 	public function is_multipart($backup_name)
 	{
 		if(stristr($backup_name, "-multipart"))
@@ -909,7 +1037,14 @@ class Xcloner_Restore
 		
 		return false;	
 	}
-	
+
+    /**
+     * Get backup archive size
+     *
+     * @param $backup_name
+     * @return bool|false|int
+     * @throws \League\Flysystem\FileNotFoundException
+     */
 	public function get_backup_size($backup_name)
 	{
 		$backup_size = $this->filesystem->getSize($backup_name);
@@ -922,7 +1057,13 @@ class Xcloner_Restore
 		
 		return $backup_size;
 	}
-	
+
+    /**
+     * Get multipart backup files list
+     * @param $backup_name
+     * @return array
+     * @throws \League\Flysystem\FileNotFoundException
+     */
 	public function get_multipart_files($backup_name)
 	{
 		$files = array();
@@ -942,7 +1083,15 @@ class Xcloner_Restore
 		
 		return $files;
 	}
-	
+
+    /**
+     * Sort_by method
+     *
+     * @param $array
+     * @param $field
+     * @param string $direction
+     * @return bool
+     */
 	private function sort_by( &$array, $field, $direction = 'asc')
 	{
 		$direction = strtolower($direction);
@@ -961,7 +1110,13 @@ class Xcloner_Restore
 	
 	    return true;
 	}
-		
+
+    /**
+     * Send response method
+     *
+     * @param int $status
+     * @param $response
+     */
 	public static function send_response($status = 200, $response)
 	{
 		header("Access-Control-Allow-Origin: *");
@@ -983,10 +1138,13 @@ class Xcloner_Restore
 		echo json_encode($return);
 		exit;
 	}
-	
-	/*
-	 * Serialize fix methods below for mysql query lines
-	 */ 
+
+    /**
+     * Serialize fix methods below for mysql query lines
+     *
+     * @param $query
+     * @return string|string[]|null
+     */
 	 
 	function do_serialized_fix($query)
 	{
@@ -1004,18 +1162,35 @@ class Xcloner_Restore
 	              return $data;
 	            }, $query);
 	}
-	
+
+    /**
+     * Unescape quotes method
+     *
+     * @param $value
+     * @return mixed
+     */
 	private function unescape_quotes($value) {
 		return str_replace('\"', '"', $value);
 	}
-	
+
+    /**
+     * Unescape mysql method
+     *
+     * @param $value
+     * @return mixed
+     */
 	private function unescape_mysql($value) {
 		return str_replace(array("\\\\", "\\0", "\\n", "\\r", "\Z",  "\'", '\"'),
 						   array("\\",   "\0",  "\n",  "\r",  "\x1a", "'", '"'), 
 						   $value);
-	}	
-	
-	
+	}
+
+    /**
+     * Check if string is in serialized format
+     *
+     * @param $s
+     * @return bool
+     */
 	private function has_serialized($s)
 	{
 		if(
