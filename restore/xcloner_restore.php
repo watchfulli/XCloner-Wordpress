@@ -1092,24 +1092,43 @@ class Xcloner_Restore
      * @param string $direction
      * @return bool
      */
-	private function sort_by( &$array, $field, $direction = 'asc')
-	{
-		$direction = strtolower($direction);
-		
-	    usort($array, create_function('$a, $b', '
-	        $a = $a["' . $field . '"];
-	        $b = $b["' . $field . '"];
-	
-	        if ($a == $b)
-	        {
-	            return 0;
-	        }
-	
-	        return ($a ' . ($direction == 'desc' ? '>' : '<') .' $b) ? -1 : 1;
-	    '));
-	
-	    return true;
-	}
+    private function sort_by( &$array, $field, $direction = 'asc')
+    {
+        $direction = strtolower($direction);
+
+        usort($array,
+            function($a, $b) use($field, $direction){
+
+                $a = $a[$field];
+                $b = $b[$field];
+
+                if ($a == $b)
+                {
+                    return 0;
+                }
+
+                if($direction == 'desc') {
+                    if($a > $b) {
+                        return -1;
+                    }
+                    else{
+                        return 1;
+                    }
+                }else {
+                    if($a < $b) {
+                        return -1;
+                    }
+                    else{
+                        return 1;
+                    }
+                }
+
+                //return ($a.($direction == 'desc' ? '>' : '<').$b) ? -1 : 1;
+            }
+        );
+
+        return true;
+    }
 
     /**
      * Send response method
