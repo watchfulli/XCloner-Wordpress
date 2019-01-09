@@ -245,6 +245,11 @@ class Xcloner_Backup {
         jQuery(".backup-done .download").attr("href", "#" + json.extra.backup_parent);
         jQuery(".backup-done .list-backup-content").attr("href", "#" + json.extra.backup_parent);
 
+        if( jQuery('#backup_options #backup_encrypt').is(':checked')) {
+            this.do_backup_encryption();
+            return;
+        }
+
         //this.restart_backup();
         this.do_backup_done()
     }
@@ -266,6 +271,56 @@ class Xcloner_Backup {
         jQuery(elem).find('.progress .determinate').css('width', '0%');
 
         this.do_ajax(elem, 'backup_files', 1);
+    }
+
+    do_backup_encryption_callback(elem, action, response) {
+
+        if (response.extra) {
+            this.params.extra = response.extra;
+        }
+
+        jQuery(".backup-encryption .last-logged-file").text('encrypting ' + response.processing_file+' ...');
+
+        if (response.total_size !== undefined) {
+            jQuery(".backup-encryption .progress > div").removeClass('indeterminate').addClass("determinate");
+            var percent = parseInt(response.start * 100) / parseInt(response.total_size)
+            jQuery(".backup-encryption .progress .determinate").css('width', parseInt(percent) + "%")
+        }
+
+        if (response.error) {
+            jQuery(".backup-encryption .status-body").show();
+            jQuery(".backup-encryption .status-body").addClass("error").prepend(response.message+" ")
+            jQuery(".backup-encryption .progress > div").addClass("determinate").removeClass("indeterminate").css('width', "100%")
+            return;
+        }
+
+        if (!response.finished /*&& !this.cancel*/) {
+
+            this.do_ajax(elem, action);
+            return false;
+        }
+
+        //finished
+        jQuery(elem).find('.progress > div').css('width', '100%');
+        jQuery(".backup-encryption .last-logged-file").text('done');
+
+        //this.do_backup_database();
+        this.do_backup_done()
+
+    }
+
+    do_backup_encryption() {
+        if (this.cancel)
+            return false;
+
+        var elem = "#generate_backup ul.backup-status li.backup-encryption";
+        jQuery(elem).show();
+        jQuery(elem + ' .status-body').show();
+        jQuery(elem).find('.collapsible-header').trigger('click');
+
+        jQuery(elem).find('.progress .determinate').css('width', '0%');
+
+        this.do_ajax(elem, 'backup_encryption', 1);
     }
 
     do_backup_done() {

@@ -357,7 +357,7 @@ class Xcloner_Settings {
             'xcloner_general_settings_group',
             array(
                 'xcloner_encryption_key',
-                __( 'Backup Encryption Key used to Encrypt/Decrypt backups.', 'xcloner-backup-and-restore' ),
+                __( 'Backup Encryption Key used to Encrypt/Decrypt backups, you might want to save this somewhere else as well.', 'xcloner-backup-and-restore' ),
                 $this->get_xcloner_encryption_key(),
                 //'disabled'
             )

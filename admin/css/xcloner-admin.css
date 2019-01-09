@@ -398,6 +398,10 @@ i.backup_warning {
     margin-left: 0px;
 }
 
+#backup_options .row{
+    min-height: 30px;
+}
+
 @media only screen and (min-width: 993px) {
     .dashboard .backup-ready {
         float: right;

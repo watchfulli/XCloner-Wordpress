@@ -77,6 +77,30 @@ $tab                    = 1;
             </div>
 
             <div class="row">
+                <div class="input-field col s6 m5 l4">
+                    <i class="material-icons prefix">enhanced_encryption</i>
+                    <label for="backup_comments"><?php echo __( 'Encrypt Backup', 'xcloner-backup-and-restore' ) ?></label>
+
+                </div>
+                <div class="input-field col s6 m5 l2">
+                    <div class="switch">
+                        <label>
+                            Off
+                            <input type="checkbox" name="backup_encrypt" id="backup_encrypt" value="1">
+                            <span class="lever"></span>
+                            On
+                        </label>
+                    </div>
+                </div>
+
+                <div class="hide-on-small-only s12 m2">
+                    <a class="btn-floating tooltipped btn-small" data-position="right" data-delay="50"
+                       data-tooltip="<?php echo __( 'Enable this option if you want to encrypt the final backup', 'xcloner-backup-and-restore' ) ?>"
+                       data-tooltip-id=""><i class="material-icons">help_outline</i></a>
+                </div>
+            </div>
+
+            <div class="row">
                 <div class="input-field col s12 m10 l6">
                     <i class="material-icons prefix">input</i>
                     <textarea name="backup_comments" id="backup_comments" class="materialize-textarea"></textarea>
@@ -224,6 +248,21 @@ $tab                    = 1;
                                     <div class="col l9 s12">
                                         <ul class="backup-name"></ul>
                                     </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="backup-encryption">
+                            <div class="collapsible-header">
+                                <i class="material-icons">enhanced_encryption</i><?php echo __( 'Encrypting Backup Data...', 'xcloner-backup-and-restore' ) ?>
+
+                                <p class="right"><span class="status"></span></p>
+
+                                <div>
+                                    <p class="right"><span class="last-logged-file"></span></p>
+                                </div>
+
+                                <div class="progress">
+                                    <div class="determinate" style="width:0%"></div>
                                 </div>
                             </div>
                         </li>

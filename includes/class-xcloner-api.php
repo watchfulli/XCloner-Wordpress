@@ -179,6 +179,7 @@ class Xcloner_Api
                 $this->form_params['backup_params']['diff_start_date'] = "";
             }
             $this->form_params['backup_params']['schedule_name'] = $this->xcloner_sanitization->sanitize_input_as_string($_POST['schedule_name']);
+            $this->form_params['backup_params']['backup_encrypt'] = $this->xcloner_sanitization->sanitize_input_as_int($_POST['backup_encrypt']);
             $this->form_params['backup_params']['start_at'] = strtotime($_POST['schedule_start_date']);
             $this->form_params['backup_params']['schedule_frequency'] = $this->xcloner_sanitization->sanitize_input_as_string($_POST['schedule_frequency']);
             $this->form_params['backup_params']['schedule_storage'] = $this->xcloner_sanitization->sanitize_input_as_string($_POST['schedule_storage']);
@@ -787,10 +788,37 @@ class Xcloner_Api
         $backup_parts = array();
         $return = array();
 
-        $source_backup_file = $this->xcloner_sanitization->sanitize_input_as_string($_POST['file']);
-        $start = $this->xcloner_sanitization->sanitize_input_as_int($_POST['start']);
-        $iv = $this->xcloner_sanitization->sanitize_input_as_int($_POST['iv']);
-        $return['part'] = $this->xcloner_sanitization->sanitize_input_as_int($_POST['part']);
+
+        if (isset($_POST['data'])) {
+            $params = json_decode(stripslashes($_POST['data']));
+
+            $this->process_params($params);
+            $source_backup_file = $this->xcloner_sanitization->sanitize_input_as_string($this->form_params['extra']['backup_parent']);
+
+            if(isset($this->form_params['extra']['start'])) {
+                $start = $this->xcloner_sanitization->sanitize_input_as_int($this->form_params['extra']['start']);
+            }else{
+                $start = 0;
+            }
+
+            if(isset($this->form_params['extra']['iv'])) {
+                $iv = $this->xcloner_sanitization->sanitize_input_as_int($this->form_params['extra']['iv']);
+            }else{
+                $iv = "";
+            }
+
+            if(isset($this->form_params['extra']['part'])) {
+                $return['part'] = (int)$this->xcloner_sanitization->sanitize_input_as_int($this->form_params['extra']['part']);
+            }else{
+                $return['part'] = 0;
+            }
+
+        }else{
+            $source_backup_file = $this->xcloner_sanitization->sanitize_input_as_string($_POST['file']);
+            $start = $this->xcloner_sanitization->sanitize_input_as_int($_POST['start']);
+            $iv = $this->xcloner_sanitization->sanitize_input_as_int($_POST['iv']);
+            $return['part'] = (int)$this->xcloner_sanitization->sanitize_input_as_int($_POST['part']);
+        }
 
         $backup_file = $source_backup_file;
 
@@ -808,6 +836,7 @@ class Xcloner_Api
         }catch(\Exception $e){
             $return['error'] = true;
             $return['message'] = $e->getMessage();
+            $return['error_message'] = $e->getMessage();
         }
 
         //echo strlen($return['iv']);exit;
@@ -823,6 +852,10 @@ class Xcloner_Api
                 }
 
             }
+        }
+
+        if (isset($_POST['data'])) {
+            $return['extra'] = array_merge($this->form_params['extra'],  $return);
         }
 
         $this->send_response($return, 0);
@@ -860,6 +893,19 @@ class Xcloner_Api
         }catch(\Exception $e){
             $return['error'] = true;
             $return['message'] = $e->getMessage();
+        }
+
+        if($return['finished']) {
+            if ($this->xcloner_file_system->is_multipart($source_backup_file)) {
+                $return['start'] = 0;
+
+                ++$return['part'];
+
+                if ($return['part'] < sizeof($backup_parts)) {
+                    $return['finished'] = 0;
+                }
+
+            }
         }
 
         $this->send_response($return, 0);
@@ -1000,8 +1046,12 @@ class Xcloner_Api
                                        'xcloner-backup-and-restore') ?>"><i
                                             class="material-icons">cloud_upload</i></a>
                             <?php endif ?>
-
-                            <?php if($this->xcloner_encryption->is_encrypted_file($file_info['basename'])) :?>
+                            <?php
+                            $basename = $file_info['basename'];
+                            if(isset($file_info['childs']) and sizeof($file_info['childs']))
+                                $basename = $file_info['childs'][0][0];
+                            ?>
+                            <?php if($this->xcloner_encryption->is_encrypted_file($basename)) :?>
                                 <a href="#<?php echo $file_info['basename'] ?>" class="backup-decryption"
                                    title="<?php echo __('Backup Decryption', 'xcloner-backup-and-restore') ?>">
                                     <i class="material-icons">enhanced_encryption</i>
@@ -1056,6 +1106,12 @@ class Xcloner_Api
         if ($this->xcloner_file_system->is_multipart($backup_file)) {
             $backup_parts = $this->xcloner_file_system->get_multipart_files($backup_file);
             $backup_file = $backup_parts[$return['part']];
+        }
+
+        if($this->xcloner_encryption->is_encrypted_file($backup_file)) {
+            $return['error'] = true;
+            $return['message'] = __("Backup archive is encrypted, please decrypt it first before you can list it's content.", "xcloner-backup-and-restore");
+            $this->send_response($return, 0);
         }
 
         try {

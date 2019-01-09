@@ -43,16 +43,11 @@ class Xcloner_Encryption
      * @return bool
      */
     public function is_encrypted_file($filename) {
-        if(stristr( $filename, self::FILE_ENCRYPTION_SUFFIX)) {
-
-            $fp = fopen($this->xcloner_settings->get_xcloner_store_path() . DS .$filename, 'r');
-            $encryption_length = fread($fp, 16);
-            fclose($fp);
-            if(is_numeric($encryption_length)) {
-                return true;
-            }
-
-            //return true;
+        $fp = fopen($this->xcloner_settings->get_xcloner_store_path() . DS .$filename, 'r');
+        $encryption_length = fread($fp, 16);
+        fclose($fp);
+        if(is_numeric($encryption_length)) {
+            return true;
         }
 
         return false;
@@ -78,7 +73,7 @@ class Xcloner_Encryption
      */
     public function get_decrypted_target_backup_file_name( $filename ) {
 
-        return str_replace(self::FILE_ENCRYPTION_SUFFIX, self::FILE_DECRYPTION_SUFFIX, $filename);
+        return str_replace(self::FILE_ENCRYPTION_SUFFIX, "", $filename) . self::FILE_DECRYPTION_SUFFIX;
     }
 
     /**
@@ -92,8 +87,11 @@ class Xcloner_Encryption
      * @param bool $verfication   Weather we should we try to verify the decryption.
      * @return string|false  Returns the file name that has been created or FALSE if an error occured
     */
-    public function encrypt_file($source, $dest = "" , $key= "", $start = 0, $iv = 0, $verification = false)
+    public function encrypt_file($source, $dest = "" , $key= "", $start = 0, $iv = 0, $verification = true)
     {
+
+        $this->logger->info(sprintf('Encrypting file %s at position %d', $source, $start));
+
         //$key = substr(sha1($key, true), 0, 16);
         if(!$key){
             $key = self::get_backup_encryption_key();
@@ -104,7 +102,7 @@ class Xcloner_Encryption
             $dest = $this->get_encrypted_target_backup_file_name($source);
         }
 
-        if(!$iv) {
+        if(!$iv || !$start) {
             //$iv = openssl_random_pseudo_bytes(16);
             $iv = str_pad(self::FILE_ENCRYPTION_BLOCKS, 16, "0000000000000000", STR_PAD_LEFT);
         }
@@ -122,9 +120,10 @@ class Xcloner_Encryption
                 fwrite($fpOut, $iv);
             }
 
-            if ($fpIn = fopen($this->xcloner_settings->get_xcloner_store_path() . DS .$source, 'rb')) {
+            if (file_exists($this->xcloner_settings->get_xcloner_store_path() . DS .$source) &&
+                $fpIn = fopen($this->xcloner_settings->get_xcloner_store_path() . DS .$source, 'rb')) {
 
-                fseek($fpIn, $start);
+                fseek($fpIn, (int)$start);
 
                 if (!feof($fpIn)) {
 
@@ -165,10 +164,20 @@ class Xcloner_Encryption
 
         $this->verify_encrypted_file($dest);
 
+        //we replace the original backup with the encrypted one
+        if( copy($this->xcloner_settings->get_xcloner_store_path() . DS .$dest,
+             $this->xcloner_settings->get_xcloner_store_path() . DS .$source) ) {
+            unlink($this->xcloner_settings->get_xcloner_store_path() . DS .$dest);
+        }
+
+
         return array("target_file" => $dest, "finished" => 1);
     }
 
     public function verify_encrypted_file($file) {
+
+        $this->logger->info(sprintf('Verifying encrypted file %s', $file));
+
         $this->verification = true;
         $this->decrypt_file($file);
         $this->verification = false;
@@ -187,6 +196,8 @@ class Xcloner_Encryption
      */
     public function decrypt_file($source, $dest = "", $key = "", $start = 0, $iv = 0)
     {
+        $this->logger->info(sprintf('Decrypting file %s at position %d', $source, $start));
+
         //$key = substr(sha1($key, true), 0, 16);
         if(!$key){
             $key = self::get_backup_encryption_key();
@@ -213,14 +224,15 @@ class Xcloner_Encryption
         }
 
         if ( $fpOut ) {
-            if ($fpIn = fopen($this->xcloner_settings->get_xcloner_store_path() . DS .$source, 'rb')) {
+            if ( file_exists($this->xcloner_settings->get_xcloner_store_path() . DS .$source) &&
+                $fpIn = fopen($this->xcloner_settings->get_xcloner_store_path() . DS .$source, 'rb')) {
 
                 $encryption_length = (int)fread($fpIn, 16);
                 if(!$encryption_length) {
                     $encryption_length = self::FILE_ENCRYPTION_BLOCKS;
                 }
 
-                fseek($fpIn, $start);
+                fseek($fpIn, (int)$start);
 
                 // Get the initialzation vector from the beginning of the file
                 if(!$iv) {
@@ -274,6 +286,12 @@ class Xcloner_Encryption
         } else {
             $this->logger->error('Unable to write destination file for decryption');
             throw new \Exception("Unable to write destination file for decryption");
+        }
+
+        //we replace the original backup with the encrypted one
+        if( !$this->verification && copy($this->xcloner_settings->get_xcloner_store_path() . DS .$dest,
+            $this->xcloner_settings->get_xcloner_store_path() . DS .$source) ) {
+            unlink($this->xcloner_settings->get_xcloner_store_path() . DS .$dest);
         }
 
         return array("target_file" => $dest, "finished" => 1);

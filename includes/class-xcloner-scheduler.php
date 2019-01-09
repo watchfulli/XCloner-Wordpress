@@ -11,6 +11,7 @@ class Xcloner_Scheduler {
 	private $xcloner_settings;
 	private $logger;
 	private $xcloner_file_system;
+	private $xcloner_encryption;
 
 	private $allowed_schedules = array( "hourly", "twicedaily", "daily", "weekly", "monthly" );
 
@@ -82,7 +83,6 @@ class Xcloner_Scheduler {
 		$data['backup_params']  = $params->backup_params;
 		$data['table_params']   = json_encode( $params->database );
 		$data['excluded_files'] = json_encode( $params->excluded_files );
-
 
 		return $data;
 	}
@@ -214,6 +214,7 @@ class Xcloner_Scheduler {
 
 		//$this->xcloner_settings 		= $this->get_xcloner_container()->get_xcloner_settings();		
 		$this->xcloner_file_system    = $this->get_xcloner_container()->get_xcloner_filesystem();
+		$this->xcloner_encryption    = $this->get_xcloner_container()->get_xcloner_encryption();
 		$this->xcloner_database       = $this->get_xcloner_container()->get_xcloner_database();
 		$this->archive_system         = $this->get_xcloner_container()->get_archive_system();
 		$this->logger                 = $this->get_xcloner_container()->get_xcloner_logger()->withName( "xcloner_scheduler" );
@@ -278,11 +279,39 @@ class Xcloner_Scheduler {
 		}
 		$this->logger->info( sprintf( "File archive process FINISHED." ), array( "CRON" ) );
 
-		//getting the last backup archive file
-		$return['extra']['backup_parent'] = $this->archive_system->get_archive_name_with_extension();
+        //getting the last backup archive file
+        $return['extra']['backup_parent'] = $this->archive_system->get_archive_name_with_extension();
 		if ( $this->xcloner_file_system->is_part( $this->archive_system->get_archive_name_with_extension() ) ) {
 			$return['extra']['backup_parent'] = $this->archive_system->get_archive_name_multipart();
 		}
+
+		//Encrypting the backup archive
+        $return['finished'] = 0;
+        $part = 0;
+
+        if( $schedule['backup_params']->backup_encrypt){
+            $this->logger->info( sprintf( "Encrypting backup archive %s.", $return['extra']['backup_parent'] ), array( "CRON" ) );
+
+            $backup_file = $return['extra']['backup_parent'];
+
+            if ($this->xcloner_file_system->is_multipart($return['extra']['backup_parent'])) {
+                $backup_parts = $this->xcloner_file_system->get_multipart_files($return['extra']['backup_parent']);
+                $backup_file = $backup_parts[$part];
+            }
+
+            while ( ! $return['finished'] ) {
+                $return = $this->xcloner_encryption->encrypt_file( $backup_file );
+
+                if($return['finished']) {
+                    ++$part;
+
+                    if ($part < sizeof($backup_parts)) {
+                        $return['finished'] = 0;
+                        $backup_file = $backup_parts[$part];
+                    }
+                }
+            }
+        }
 
 		$this->update_last_backup( $schedule['id'], $return['extra']['backup_parent'] );
 
