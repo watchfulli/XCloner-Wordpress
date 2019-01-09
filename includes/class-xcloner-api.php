@@ -867,6 +867,8 @@ class Xcloner_Api
 
     public function get_manage_backups_list() {
 
+        $storage_selection = "";
+
         if (isset($_GET['storage_selection']) and $_GET['storage_selection']) {
             $storage_selection = $this->xcloner_sanitization->sanitize_input_as_string($_GET['storage_selection']);
         }
