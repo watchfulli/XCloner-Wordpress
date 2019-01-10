@@ -95,9 +95,20 @@ $available_storages     = $xcloner_remote_storage->get_available_storages();
                 <div id="scheduler_settings" class="tab-content active">
 
                     <div class="row">
-                        <div class="input-field col s12">
+                        <div class="input-field col s12 l6">
                             <input placeholder="" name="schedule_name" id="schedule_name" type="text" required value="">
                             <label for="schedule_name"><?php echo __( 'Schedule Name', 'xcloner-backup-and-restore' ) ?></label>
+                        </div>
+                        <div class="input-field col s12 l6">
+                            <div class="switch">
+                                <label>
+                                    Off
+                                    <input type="checkbox" name="backup_encrypt" id="backup_encrypt" value="1">
+                                    <span class="lever"></span>
+                                    On
+                                </label>
+                            </div>
+                            <label style="top:-0.8em">Encrypt Backup</label>
                         </div>
                         <!--<div class="input-field inline col s12 l6">
 						<select id="backup_type" class="" name="backup_type" id="backup_type">

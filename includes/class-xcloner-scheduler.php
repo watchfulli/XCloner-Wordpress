@@ -187,6 +187,9 @@ class Xcloner_Scheduler {
 	}
 
 	public function update_last_backup( $schedule_id, $last_backup ) {
+
+	    $this->logger->info(sprintf('Updating last backup %s for schedule id #%s', $last_backup, $schedule_id));
+
 		$schedule['last_backup'] = $last_backup;
 
 		$update = $this->db->update(
@@ -285,8 +288,11 @@ class Xcloner_Scheduler {
 			$return['extra']['backup_parent'] = $this->archive_system->get_archive_name_multipart();
 		}
 
+		//Updating schedule last backup archive
+        $this->update_last_backup( $schedule['id'], $return['extra']['backup_parent'] );
+
 		//Encrypting the backup archive
-        $return['finished'] = 0;
+        $return_encrypted['finished'] = 0;
         $part = 0;
 
         if( $schedule['backup_params']->backup_encrypt){
@@ -299,22 +305,21 @@ class Xcloner_Scheduler {
                 $backup_file = $backup_parts[$part];
             }
 
-            while ( ! $return['finished'] ) {
-                $return = $this->xcloner_encryption->encrypt_file( $backup_file );
+            while ( ! $return_encrypted['finished'] ) {
+                $return_encrypted = $this->xcloner_encryption->encrypt_file( $backup_file );
 
-                if($return['finished']) {
+                if($return_encrypted['finished']) {
                     ++$part;
 
                     if ($part < sizeof($backup_parts)) {
-                        $return['finished'] = 0;
+                        $return_encrypted['finished'] = 0;
                         $backup_file = $backup_parts[$part];
                     }
                 }
             }
         }
 
-		$this->update_last_backup( $schedule['id'], $return['extra']['backup_parent'] );
-
+        //Sending backup to remote storage
 		if ( isset( $schedule['remote_storage'] ) && $schedule['remote_storage'] && array_key_exists( $schedule['remote_storage'], $this->xcloner_remote_storage->get_available_storages() ) ) {
 			$backup_file = $return['extra']['backup_parent'];
 
@@ -328,6 +333,7 @@ class Xcloner_Scheduler {
 			}
 		}
 
+		//Sending email notification
 		if ( isset( $schedule['backup_params']->email_notification ) and $to = $schedule['backup_params']->email_notification ) {
 			try {
 				$from                      = "";
@@ -348,11 +354,13 @@ class Xcloner_Scheduler {
 
 		}
 
+		//Removing the tmp filesystem used for backup
 		$this->xcloner_file_system->remove_tmp_filesystem();
 
+		//Backup Storage Cleanup
 		$this->xcloner_file_system->backup_storage_cleanup();
 
-		//DO TMP FILESYSTEM CLEANUP
+		//Filesystem Cleanup
 		$this->xcloner_file_system->cleanup_tmp_directories();
 	}
 

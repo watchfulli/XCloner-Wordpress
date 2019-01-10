@@ -402,6 +402,10 @@ i.backup_warning {
     min-height: 30px;
 }
 
+.input-field .switch label {
+    color: #000;
+}
+
 @media only screen and (min-width: 993px) {
     .dashboard .backup-ready {
         float: right;

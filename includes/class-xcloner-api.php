@@ -972,7 +972,7 @@ class Xcloner_Api
                                         <?php
                                         $child_exists_on_local_storage = true;
                                         if ($storage_selection) {
-                                            if (!$xcloner_file_system->get_storage_filesystem()->has($child[0])) {
+                                            if (!$this->xcloner_file_system->get_storage_filesystem()->has($child[0])) {
                                                 $child_exists_on_local_storage = false;
                                             }
                                         }
@@ -1004,7 +1004,7 @@ class Xcloner_Api
                                                 </a>
                                             <?php endif?>
 
-                                        <?php elseif ($storage_selection != "gdrive" && !$xcloner_file_system->get_storage_filesystem()->has($child[0])): ?>
+                                        <?php elseif ($storage_selection != "gdrive" && !$this->xcloner_file_system->get_storage_filesystem()->has($child[0])): ?>
                                             <a href="#<?php echo $child[0] ?>" class="copy-remote-to-local"
                                                title="<?php echo __('Push Backup To Local Storage',
                                                    'xcloner-backup-and-restore') ?>"><i
