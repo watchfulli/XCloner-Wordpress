@@ -21,8 +21,17 @@ class Xcloner_Encryption
     public function __construct(Xcloner $xcloner_container)
     {
         $this->xcloner_container = $xcloner_container;
-        $this->xcloner_settings  = $xcloner_container->get_xcloner_settings();
-        $this->logger            = $xcloner_container->get_xcloner_logger()->withName( "xcloner_encryption" );
+        if(method_exists($xcloner_container, 'get_xcloner_settings')) {
+            $this->xcloner_settings = $xcloner_container->get_xcloner_settings();
+        }else{
+            $this->xcloner_settings = "";
+        }
+
+        if(method_exists($xcloner_container, 'get_xcloner_logger')) {
+            $this->logger = $xcloner_container->get_xcloner_logger()->withName("xcloner_encryption");
+        }else{
+            $this->logger = "";
+        }
     }
 
     /**
@@ -32,7 +41,11 @@ class Xcloner_Encryption
      */
     public function get_backup_encryption_key()
     {
-        return $this->xcloner_settings->get_xcloner_encryption_key();
+        if(is_object($this->xcloner_settings)) {
+            return $this->xcloner_settings->get_xcloner_encryption_key();
+        }
+
+        return false;
 
     }
 
@@ -43,7 +56,7 @@ class Xcloner_Encryption
      * @return bool
      */
     public function is_encrypted_file($filename) {
-        $fp = fopen($this->xcloner_settings->get_xcloner_store_path() . DS .$filename, 'r');
+        $fp = fopen($this->get_xcloner_path() .$filename, 'r');
         $encryption_length = fread($fp, 16);
         fclose($fp);
         if(is_numeric($encryption_length)) {
@@ -87,10 +100,11 @@ class Xcloner_Encryption
      * @param bool $verfication   Weather we should we try to verify the decryption.
      * @return string|false  Returns the file name that has been created or FALSE if an error occured
     */
-    public function encrypt_file($source, $dest = "" , $key= "", $start = 0, $iv = 0, $verification = true)
+    public function encrypt_file($source, $dest = "" , $key= "", $start = 0, $iv = 0, $verification = true, $recursive = false)
     {
-
-        $this->logger->info(sprintf('Encrypting file %s at position %d', $source, $start));
+        if(is_object($this->logger)) {
+            $this->logger->info(sprintf('Encrypting file %s at position %d with IV %s', $source, $start, $iv));
+        }
 
         //$key = substr(sha1($key, true), 0, 16);
         if(!$key){
@@ -98,8 +112,10 @@ class Xcloner_Encryption
         }
         $key_digest = openssl_digest ($key, "md5", true);
 
+        $keep_local = 1;
         if(!$dest) {
             $dest = $this->get_encrypted_target_backup_file_name($source);
+            $keep_local = 0;
         }
 
         if(!$iv || !$start) {
@@ -108,9 +124,9 @@ class Xcloner_Encryption
         }
 
         if( !$start ) {
-            $fpOut = fopen($this->xcloner_settings->get_xcloner_store_path() . DS .$dest, 'w');
+            $fpOut = fopen($this->get_xcloner_path() .$dest, 'w');
         }else{
-            $fpOut = fopen($this->xcloner_settings->get_xcloner_store_path() . DS .$dest, 'a');
+            $fpOut = fopen($this->get_xcloner_path() .$dest, 'a');
         }
 
         if ( $fpOut ) {
@@ -120,8 +136,8 @@ class Xcloner_Encryption
                 fwrite($fpOut, $iv);
             }
 
-            if (file_exists($this->xcloner_settings->get_xcloner_store_path() . DS .$source) &&
-                $fpIn = fopen($this->xcloner_settings->get_xcloner_store_path() . DS .$source, 'rb')) {
+            if (file_exists($this->get_xcloner_path() .$source) &&
+                $fpIn = fopen($this->get_xcloner_path() .$source, 'rb')) {
 
                 fseek($fpIn, (int)$start);
 
@@ -144,30 +160,40 @@ class Xcloner_Encryption
                         fclose($fpIn);
                         //echo "\n NEW:".$key.md5($iv);
                         //self::encryptFile($source, $dest, $key, $start, $iv);
-                        return array(
-                            "start" => $start,
-                            "iv" => urlencode($iv),
-                            "target_file" => $dest,
-                            "finished" => 0
-                        );
+                        if($recursive ){
+                            $this->encrypt_file($source, $dest, $key, $start, ($iv), $verification, $recursive);
+                        }else {
+                            return array(
+                                "start" => $start,
+                                "iv" => urlencode($iv),
+                                "target_file" => $dest,
+                                "finished" => 0
+                            );
+                        }
                     }
 
                 }
             } else {
-                $this->logger->error('Unable to read source file for encryption.');
+                if(is_object($this->logger)) {
+                    $this->logger->error('Unable to read source file for encryption.');
+                }
                 throw new \Exception("Unable to read source file for encryption.");
             }
         } else {
-            $this->logger->error('Unable to write destination file for encryption.');
+            if(is_object($this->logger)) {
+                $this->logger->error('Unable to write destination file for encryption.');
+            }
             throw new \Exception("Unable to write destination file for encryption.");
         }
 
-        $this->verify_encrypted_file($dest);
+        if($verification) {
+            $this->verify_encrypted_file($dest);
+        }
 
         //we replace the original backup with the encrypted one
-        if( copy($this->xcloner_settings->get_xcloner_store_path() . DS .$dest,
-             $this->xcloner_settings->get_xcloner_store_path() . DS .$source) ) {
-            unlink($this->xcloner_settings->get_xcloner_store_path() . DS .$dest);
+        if( !$keep_local && copy($this->get_xcloner_path() .$dest,
+             $this->get_xcloner_path() .$source) ) {
+            unlink($this->get_xcloner_path() .$dest);
         }
 
 
@@ -175,8 +201,9 @@ class Xcloner_Encryption
     }
 
     public function verify_encrypted_file($file) {
-
-        $this->logger->info(sprintf('Verifying encrypted file %s', $file));
+        if(is_object($this->logger)) {
+            $this->logger->info(sprintf('Verifying encrypted file %s', $file));
+        }
 
         $this->verification = true;
         $this->decrypt_file($file);
@@ -194,9 +221,11 @@ class Xcloner_Encryption
      * @param string $iv   The IV key to use.
      * @return string|false  Returns the file name that has been created or FALSE if an error occured
      */
-    public function decrypt_file($source, $dest = "", $key = "", $start = 0, $iv = 0)
+    public function decrypt_file($source, $dest = "", $key = "", $start = 0, $iv = 0, $recursive = false)
     {
-        $this->logger->info(sprintf('Decrypting file %s at position %d', $source, $start));
+        if(is_object($this->logger)) {
+            $this->logger->info(sprintf('Decrypting file %s at position %d', $source, $start));
+        }
 
         //$key = substr(sha1($key, true), 0, 16);
         if(!$key){
@@ -205,27 +234,29 @@ class Xcloner_Encryption
 
         $key_digest = openssl_digest ($key, "md5", true);
 
+        $keep_local = 1;
         if(!$dest) {
             $dest = $this->get_decrypted_target_backup_file_name($source);
+            $keep_local = 0;
         }
 
         if( !$start ) {
             if($this->verification){
                 $fpOut = fopen("php://stdout", 'w');
             }else {
-                $fpOut = fopen($this->xcloner_settings->get_xcloner_store_path() . DS . $dest, 'w');
+                $fpOut = fopen($this->get_xcloner_path() . $dest, 'w');
             }
         }else{
             if($this->verification){
                 $fpOut = fopen("php://stdout", 'a');
             }else {
-                $fpOut = fopen($this->xcloner_settings->get_xcloner_store_path() . DS . $dest, 'a');
+                $fpOut = fopen($this->get_xcloner_path() . $dest, 'a');
             }
         }
 
         if ( $fpOut ) {
-            if ( file_exists($this->xcloner_settings->get_xcloner_store_path() . DS .$source) &&
-                $fpIn = fopen($this->xcloner_settings->get_xcloner_store_path() . DS .$source, 'rb')) {
+            if ( file_exists($this->get_xcloner_path() .$source) &&
+                $fpIn = fopen($this->get_xcloner_path() .$source, 'rb')) {
 
                 $encryption_length = (int)fread($fpIn, 16);
                 if(!$encryption_length) {
@@ -246,8 +277,10 @@ class Xcloner_Encryption
                     $plaintext = openssl_decrypt($ciphertext, 'AES-128-CBC', $key_digest, OPENSSL_RAW_DATA, $iv);
 
                     if(!$plaintext){
-                        unlink($this->xcloner_settings->get_xcloner_store_path() . DS . $dest);
-                        $this->logger->error('Backup decryption failed, please check your provided Encryption Key.');
+                        unlink($this->get_xcloner_path() . $dest);
+                        if(is_object($this->logger)) {
+                            $this->logger->error('Backup decryption failed, please check your provided Encryption Key.');
+                        }
                         throw new \Exception("Backup decryption failed, please check your provided Encryption Key.");
                     }
 
@@ -264,49 +297,71 @@ class Xcloner_Encryption
 
                     if(!feof($fpIn)) {
                         fclose($fpIn);
-                        if($this->verification) {
+                        if($this->verification || $recursive) {
                             $ciphertext = "";
                             $plaintext = "";
-                            $this->decrypt_file($source, $dest, $key, $start, $iv);
+                            $this->decrypt_file($source, $dest, $key, $start, $iv, $recursive);
                         }else {
-                            return array(
-                                "start" => $start,
-                                "iv" => urlencode($iv),
-                                "target_file" => $dest,
-                                "finished" => 0
-                            );
+                                return array(
+                                    "start" => $start,
+                                    "iv" => urlencode($iv),
+                                    "target_file" => $dest,
+                                    "finished" => 0
+                                );
                         }
                     }
 
                 }
             } else {
-                $this->logger->error('Unable to read source file for decryption');
+                if(is_object($this->logger)) {
+                    $this->logger->error('Unable to read source file for decryption');
+                }
                 throw new \Exception("Unable to read source file for decryption");
             }
         } else {
-            $this->logger->error('Unable to write destination file for decryption');
+            if(is_object($this->logger)) {
+                $this->logger->error('Unable to write destination file for decryption');
+            }
             throw new \Exception("Unable to write destination file for decryption");
         }
 
         //we replace the original backup with the encrypted one
-        if( !$this->verification && copy($this->xcloner_settings->get_xcloner_store_path() . DS .$dest,
-            $this->xcloner_settings->get_xcloner_store_path() . DS .$source) ) {
-            unlink($this->xcloner_settings->get_xcloner_store_path() . DS .$dest);
+        if( !$keep_local && !$this->verification && copy($this->get_xcloner_path()  .$dest,
+            $this->get_xcloner_path()  .$source) ) {
+            unlink($this->get_xcloner_path()  .$dest);
         }
 
         return array("target_file" => $dest, "finished" => 1);
     }
 
+    public function get_xcloner_path(){
+        if(is_object($this->xcloner_settings)) {
+            return $this->xcloner_settings->get_xcloner_store_path() . DS;
+        }
+
+        return null;
+    }
+
 }
 
-/*
+
 try {
-    if (isset($argv[1]) && $argv[1] == "-e") {
-        Xcloner_Encryption::encrypt_file($argv[2], $argv[2] . ".enc");
-    } elseif (isset($argv[1]) && $argv[1] == "-d") {
-        Xcloner_Encryption::decrypt_file($argv[2], $argv[2] . ".out");
+
+    if(isset($argv[1])) {
+
+        class Xcloner {
+            public function __construct()
+            {
+            }
+        }
+        $xcloner_encryption = new Xcloner_Encryption( new Xcloner() );
+
+        if ($argv[1] == "-e") {
+            $xcloner_encryption->encrypt_file($argv[2], $argv[2] . ".enc", $argv[4], '', '', '', true);
+        } elseif ($argv[1] == "-d") {
+            $xcloner_encryption->decrypt_file($argv[2], $argv[2] . ".out", $argv[4], '', '', true);
+        }
     }
 }catch(\Exception $e) {
     echo "CAUGHT: " . $e->getMessage();
 }
-*/

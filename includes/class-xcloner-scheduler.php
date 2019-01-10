@@ -293,7 +293,11 @@ class Xcloner_Scheduler {
 
 		//Encrypting the backup archive
         $return_encrypted['finished'] = 0;
+        $return_encrypted['start'] = 0;
+        $return_encrypted['iv'] = '';
+        $return_encrypted['target_file'] = '';
         $part = 0;
+        $backup_parts = array();
 
         if( $schedule['backup_params']->backup_encrypt){
             $this->logger->info( sprintf( "Encrypting backup archive %s.", $return['extra']['backup_parent'] ), array( "CRON" ) );
@@ -306,7 +310,15 @@ class Xcloner_Scheduler {
             }
 
             while ( ! $return_encrypted['finished'] ) {
-                $return_encrypted = $this->xcloner_encryption->encrypt_file( $backup_file );
+                $return_encrypted = $this->xcloner_encryption->encrypt_file(
+                                            $backup_file,
+                                            "",
+                                            "",
+                                            "",
+                                            "",
+                                            "",
+                                            true
+                );
 
                 if($return_encrypted['finished']) {
                     ++$part;
