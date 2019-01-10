@@ -112,6 +112,13 @@ Immigration Attorney Montana <a href="https://www.immigrationlawofmt.com" target
 
 == Changelog ==
 
+= 4.1.0 =
+* added AES-128-CBC backup encryption and decryption option
+* manage backup fixes
+* scheduled backup screen fixes and addon backup encryption option
+* automated backups encryption option addon
+* generate backups encrypt option addon
+
 = 4.0.9 =
 * remote storage password encryption addon for database
 * vendor cleanup packages
