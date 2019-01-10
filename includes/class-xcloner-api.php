@@ -802,7 +802,7 @@ class Xcloner_Api
             }
 
             if(isset($this->form_params['extra']['iv'])) {
-                $iv = $this->xcloner_sanitization->sanitize_input_as_int($this->form_params['extra']['iv']);
+                $iv = $this->xcloner_sanitization->sanitize_input_as_raw($this->form_params['extra']['iv']);
             }else{
                 $iv = "";
             }
@@ -816,7 +816,7 @@ class Xcloner_Api
         }else{
             $source_backup_file = $this->xcloner_sanitization->sanitize_input_as_string($_POST['file']);
             $start = $this->xcloner_sanitization->sanitize_input_as_int($_POST['start']);
-            $iv = $this->xcloner_sanitization->sanitize_input_as_int($_POST['iv']);
+            $iv = $this->xcloner_sanitization->sanitize_input_as_raw($_POST['iv']);
             $return['part'] = (int)$this->xcloner_sanitization->sanitize_input_as_int($_POST['part']);
         }
 
@@ -831,8 +831,10 @@ class Xcloner_Api
         $return['total_size'] = filesize($this->xcloner_settings->get_xcloner_store_path() . DS . $backup_file);
 
         try {
+            $this->logger->info(json_encode($_POST));
+            $this->logger->info($iv);
             $return = array_merge($return,
-                $this->xcloner_encryption->encrypt_file($backup_file, "", "", $start, urldecode($iv)));
+                $this->xcloner_encryption->encrypt_file($backup_file, "", "", $start, base64_decode($iv)));
         }catch(\Exception $e){
             $return['error'] = true;
             $return['message'] = $e->getMessage();
@@ -873,7 +875,7 @@ class Xcloner_Api
 
         $source_backup_file = $this->xcloner_sanitization->sanitize_input_as_string($_POST['file']);
         $start = $this->xcloner_sanitization->sanitize_input_as_int($_POST['start']);
-        $iv = $this->xcloner_sanitization->sanitize_input_as_int($_POST['iv']);
+        $iv = $this->xcloner_sanitization->sanitize_input_as_raw($_POST['iv']);
         $decryption_key = $this->xcloner_sanitization->sanitize_input_as_raw($_POST['decryption_key']);;
         $return['part'] = $this->xcloner_sanitization->sanitize_input_as_int($_POST['part']);
 
@@ -889,7 +891,7 @@ class Xcloner_Api
 
         try {
             $return = array_merge($return,
-                $this->xcloner_encryption->decrypt_file($backup_file, "", $decryption_key, $start, urldecode($iv)));
+                $this->xcloner_encryption->decrypt_file($backup_file, "", $decryption_key, $start, base64_decode($iv)));
         }catch(\Exception $e){
             $return['error'] = true;
             $return['message'] = $e->getMessage();

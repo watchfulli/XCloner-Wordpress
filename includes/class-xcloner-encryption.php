@@ -103,7 +103,7 @@ class Xcloner_Encryption
     public function encrypt_file($source, $dest = "" , $key= "", $start = 0, $iv = 0, $verification = true, $recursive = false)
     {
         if(is_object($this->logger)) {
-            $this->logger->info(sprintf('Encrypting file %s at position %d with IV %s', $source, $start, $iv));
+            $this->logger->info(sprintf('Encrypting file %s at position %d IV %s', $source, $start, base64_encode($iv)));
         }
 
         //$key = substr(sha1($key, true), 0, 16);
@@ -163,9 +163,15 @@ class Xcloner_Encryption
                         if($recursive ){
                             $this->encrypt_file($source, $dest, $key, $start, ($iv), $verification, $recursive);
                         }else {
+
+                            if(($iv) != base64_decode(base64_encode($iv)))
+                            {
+                                throw new \Exception('Could not encode IV for transport');
+                            }
+
                             return array(
                                 "start" => $start,
-                                "iv" => urlencode($iv),
+                                "iv" => base64_encode($iv),
                                 "target_file" => $dest,
                                 "finished" => 0
                             );
@@ -224,7 +230,7 @@ class Xcloner_Encryption
     public function decrypt_file($source, $dest = "", $key = "", $start = 0, $iv = 0, $recursive = false)
     {
         if(is_object($this->logger)) {
-            $this->logger->info(sprintf('Decrypting file %s at position %d', $source, $start));
+            $this->logger->info(sprintf('Decrypting file %s at position %d with IV %s', $source, $start, base64_encode($iv)));
         }
 
         //$key = substr(sha1($key, true), 0, 16);
@@ -302,13 +308,19 @@ class Xcloner_Encryption
                             $plaintext = "";
                             $this->decrypt_file($source, $dest, $key, $start, $iv, $recursive);
                         }else {
-                                return array(
-                                    "start" => $start,
-                                    "iv" => urlencode($iv),
-                                    "target_file" => $dest,
-                                    "finished" => 0
-                                );
-                        }
+                            if(($iv) != base64_decode(base64_encode($iv)))
+                            {
+                                throw new \Exception('Could not encode IV for transport');
+                            }
+
+                            return array(
+                                "start" => $start,
+                                "encryption_length" => $encryption_length,
+                                "iv" => base64_encode($iv),
+                                "target_file" => $dest,
+                                "finished" => 0
+                            );
+                    }
                     }
 
                 }
@@ -359,7 +371,7 @@ try {
         if ($argv[1] == "-e") {
             $xcloner_encryption->encrypt_file($argv[2], $argv[2] . ".enc", $argv[4], '', '', '', true);
         } elseif ($argv[1] == "-d") {
-            $xcloner_encryption->decrypt_file($argv[2], $argv[2] . ".out", $argv[4], '', '', true);
+            $xcloner_encryption->decrypt_file($argv[2], $argv[2] . ".dec", $argv[4], '', '', true);
         }
     }
 }catch(\Exception $e) {

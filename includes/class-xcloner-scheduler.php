@@ -316,7 +316,7 @@ class Xcloner_Scheduler {
                                             "",
                                             "",
                                             "",
-                                            "",
+                                            true,
                                             true
                 );
 
