@@ -16,6 +16,7 @@ class Xcloner_Encryption
 
 	private $xcloner_settings;
 	private $logger;
+	private $xcloner_container;
 	private $verification = false;
 
     /**
@@ -61,11 +62,13 @@ class Xcloner_Encryption
 	 */
 	public function is_encrypted_file($filename) {
 		$fp = fopen($this->get_xcloner_path().$filename, 'r');
-		$encryption_length = fread($fp, 16);
-		fclose($fp);
-		if (is_numeric($encryption_length)) {
-			return true;
-		}
+		if($fp) {
+            $encryption_length = fread($fp, 16);
+            fclose($fp);
+            if (is_numeric($encryption_length)) {
+                return true;
+            }
+        }
 
 		return false;
 
@@ -112,7 +115,7 @@ class Xcloner_Encryption
 
 		//$key = substr(sha1($key, true), 0, 16);
 		if (!$key) {
-			$key = self::get_backup_encryption_key();
+			$key = $this->get_backup_encryption_key();
 		}
 		$key_digest = openssl_digest($key, "md5", true);
 
@@ -242,7 +245,7 @@ class Xcloner_Encryption
 
 		//$key = substr(sha1($key, true), 0, 16);
 		if (!$key) {
-			$key = self::get_backup_encryption_key();
+			$key = $this->get_backup_encryption_key();
 		}
 
 		$key_digest = openssl_digest($key, "md5", true);
@@ -379,9 +382,9 @@ try {
 		$xcloner_encryption = new Xcloner_Encryption(new Xcloner());
 
 		if ($argv[1] == "-e") {
-			$xcloner_encryption->encrypt_file($argv[2], $argv[2].".enc", $argv[4], '', '', '', true);
+			$xcloner_encryption->encrypt_file($argv[2], $argv[2].".enc", $argv[4], 0, 0, '', true);
 		} elseif ($argv[1] == "-d") {
-			$xcloner_encryption->decrypt_file($argv[2], $argv[2].".dec", $argv[4], '', '', true);
+			$xcloner_encryption->decrypt_file($argv[2], $argv[2].".dec", $argv[4], 0, 0, true);
 		}
 	}
 }catch (\Exception $e) {

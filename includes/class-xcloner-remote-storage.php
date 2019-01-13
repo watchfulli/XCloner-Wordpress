@@ -162,7 +162,11 @@ class Xcloner_Remote_Storage {
 	private $logger;
 	private $xcloner;
 
-	public function __construct( Xcloner $xcloner_container ) {
+    /**
+     * Xcloner_Remote_Storage constructor.
+     * @param Xcloner $xcloner_container
+     */
+    public function __construct( Xcloner $xcloner_container ) {
 		$this->xcloner_sanitization = $xcloner_container->get_xcloner_sanitization();
 		$this->xcloner_file_system  = $xcloner_container->get_xcloner_filesystem();
 		$this->logger               = $xcloner_container->get_xcloner_logger()->withName( "xcloner_remote_storage" );
@@ -226,7 +230,7 @@ class Xcloner_Remote_Storage {
 	}
 
 	private function get_xcloner_container() {
-		return $this->xcloner_container;
+		return $this->xcloner;
 	}
 
 	public function get_available_storages() {

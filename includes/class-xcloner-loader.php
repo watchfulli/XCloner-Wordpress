@@ -60,7 +60,7 @@ class Xcloner_Loader
 	protected $filters;
 
     /**
-     * @var xcloner_plugin
+     * @var Xcloner
      */
     private $xcloner_plugin;
 
