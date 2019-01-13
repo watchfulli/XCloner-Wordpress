@@ -113,7 +113,7 @@ class Xcloner {
 
 	}
 
-	public function get_xcloner_settings()
+	/*public function get_xcloner_settings()
 	{
 		return $this->xcloner_settings;
 	}
@@ -166,7 +166,16 @@ class Xcloner {
 	public function get_xcloner_encryption()
 	{
 		return $this->xcloner_encryption;
-	}
+	}*/
+
+    public function __call($property, $args) {
+
+        $property = str_replace("get_", "", $property);
+
+        if(property_exists($this, $property)){
+            return $this->$property;
+        }
+    }
 
 	public function check_dependencies() {
 
