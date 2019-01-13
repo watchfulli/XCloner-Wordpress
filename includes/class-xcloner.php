@@ -423,8 +423,8 @@ class Xcloner {
 	}
 
 	/*
-	 * @method get_xcloner_logger()
-	 * @method get_xcloner_settings()
+	 * @method static $this get_xcloner_logger()
+	 * @method static $this get_xcloner_settings()
 	 * type = core|plugin|theme|translation
 	 */
 	public function pre_auto_update($type, $item, $context)
@@ -562,7 +562,7 @@ class Xcloner {
 	}
 
     /**
-     * @method get_xcloner_scheduler()
+     * @method get_xcloner_settings()
      * @throws Exception
      */
 	private function define_ajax_hooks()
@@ -631,6 +631,9 @@ class Xcloner {
 			settings_errors('xcloner_error_message');
 		}
 
+    /**
+     * @method get_xcloner_scheduler()
+     */
 	public function define_cron_hooks()
 	{
 		//registering new schedule intervals
