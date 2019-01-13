@@ -1232,8 +1232,6 @@ class Xcloner_Api
 
 		$xcloner_remote_storage = $this->get_xcloner_container()->get_xcloner_remote_storage();
 
-		$return = array();
-
 		try {
 			if (method_exists($xcloner_remote_storage, "upload_backup_to_storage")) {
 				$return = call_user_func_array(array(
@@ -1282,7 +1280,7 @@ class Xcloner_Api
 
 		ob_end_clean();
 
-		$adapter = new Local(dirname(__DIR__), LOCK_EX, 'SKIP_LINKS');
+		$adapter = new Local(dirname(__DIR__), LOCK_EX, SKIP_LINKS);
 		$xcloner_plugin_filesystem = new Filesystem($adapter, new Config([
 			'disable_asserts' => true,
 		]));
@@ -1338,9 +1336,10 @@ class Xcloner_Api
 		try {
             unlink($tmp_file);
         }catch(Exception $e) {
+		    //We are not interested in the error here
         }
 
-		exit;
+		die();
 	}
 
 	/*
