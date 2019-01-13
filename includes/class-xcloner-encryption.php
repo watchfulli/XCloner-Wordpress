@@ -241,9 +241,9 @@ class Xcloner_Encryption
 	 */
 	public function decrypt_file($source, $dest = "", $key = "", $start = 0, $iv = 0, $recursive = false)
 	{
-		//if (is_object($this->logger)) {
+		if (is_object($this->logger)) {
 			$this->logger->info(sprintf('Decrypting file %s at position %d with IV %s', $source, $start, base64_encode($iv)));
-		//}
+		}
 
 		//$key = substr(sha1($key, true), 0, 16);
 		if (!$key) {
@@ -258,26 +258,21 @@ class Xcloner_Encryption
 			$keep_local = 0;
 		}
 
-		$write_mode = 'a';
 		if (!$start) {
-            $write_mode = 'w';
-        }
+			if ($this->verification) {
+				$fpOut = fopen("php://stdout", 'w');
+			} else {
+				$fpOut = fopen($this->get_xcloner_path().$dest, 'w');
+			}
+		} else {
+			if ($this->verification) {
+				$fpOut = fopen("php://stdout", 'a');
+			} else {
+				$fpOut = fopen($this->get_xcloner_path().$dest, 'a');
+			}
+		}
 
-        if ($this->verification) {
-            $fpOut = fopen("php://stdout", $write_mode);
-        } else {
-            $fpOut = fopen($this->get_xcloner_path().$dest, $write_mode);
-        }
-
-
-		if (!$fpOut) {
-            //if (is_object($this->logger)) {
-                $this->logger->error('Unable to write destination file for decryption');
-            //}
-            throw new \Exception("Unable to write destination file for decryption");
-        }
-
-
+		if (is_resource($fpOut)) {
 			if (file_exists($this->get_xcloner_path().$source) &&
 				$fpIn = fopen($this->get_xcloner_path().$source, 'rb')) {
 
@@ -301,9 +296,9 @@ class Xcloner_Encryption
 
 					if (!$plaintext) {
 						unlink($this->get_xcloner_path().$dest);
-						//if (is_object($this->logger)) {
+						if (is_object($this->logger)) {
 							$this->logger->error('Backup decryption failed, please check your provided Encryption Key.');
-						//}
+						}
 						throw new \Exception("Backup decryption failed, please check your provided Encryption Key.");
 					}
 
@@ -342,11 +337,17 @@ class Xcloner_Encryption
 
 				}
 			} else {
-				//if (is_object($this->logger)) {
+				if (is_object($this->logger)) {
 					$this->logger->error('Unable to read source file for decryption');
-				//}
+				}
 				throw new \Exception("Unable to read source file for decryption");
 			}
+		} else {
+			if (is_object($this->logger)) {
+				$this->logger->error('Unable to write destination file for decryption');
+			}
+			throw new \Exception("Unable to write destination file for decryption");
+		}
 
 		//we replace the original backup with the encrypted one
 		if (!$keep_local && !$this->verification && copy($this->get_xcloner_path().$dest,
