@@ -52,7 +52,7 @@ class Xcloner_File_Transfer extends Xcloner_File_System
     }
 
     /**
-     * @return string
+     * @return mixed
      */
     public function get_target()
     {
@@ -81,7 +81,7 @@ class Xcloner_File_Transfer extends Xcloner_File_System
 
         $binary_data = fread($fp, $this->transfer_limit);
 
-        $tmp_filename = "xcloner_upload_".substr(md5(time()), 0, 5);
+        $tmp_filename = "xcloner_upload_" . substr(md5(time()), 0, 5);
 
         $this->get_tmp_filesystem()->write($tmp_filename, $binary_data);
 
@@ -123,7 +123,7 @@ class Xcloner_File_Transfer extends Xcloner_File_System
         $result = json_decode($original_result);
 
         if (!$result) {
-            throw new Exception("We have received no valid response from the remote host, original message: ".$original_result);
+            throw new Exception("We have received no valid response from the remote host, original message: " . $original_result);
         }
 
         if ($result->status != 200) {
@@ -142,7 +142,7 @@ class Xcloner_File_Transfer extends Xcloner_File_System
     }
 
     /**
-     * @param string $filename
+     * @param $filename
      * @param string $mimetype
      * @param string $postname
      *

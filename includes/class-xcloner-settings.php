@@ -7,10 +7,10 @@ class Xcloner_Settings {
 	private $xcloner_sanitization;
 	private $xcloner_container;
 
-	public function __construct(Xcloner $xcloner_container, $hash = "") {
+	public function __construct( Xcloner $xcloner_container, $hash = "" ) {
 		$this->xcloner_container = $xcloner_container;
-		if (isset($hash)) {
-			$this->set_hash($hash);
+		if ( isset( $hash ) ) {
+			$this->set_hash( $hash );
 		}
 	}
 
@@ -18,37 +18,37 @@ class Xcloner_Settings {
 		return $this->xcloner_container;
 	}
 
-	public function get_logger_filename($include_hash = 0) {
-		if ($include_hash) {
-			$filename = sprintf($this->logger_file_hash, $this->get_hash());
+	public function get_logger_filename( $include_hash = 0 ) {
+		if ( $include_hash ) {
+			$filename = sprintf( $this->logger_file_hash, $this->get_hash() );
 		} else {
-			$filename = sprintf($this->logger_file, $this->get_server_unique_hash(5));
+			$filename = sprintf( $this->logger_file, $this->get_server_unique_hash( 5 ) );
 		}
 
 		return $filename;
 	}
 
 	public function get_xcloner_start_path() {
-		if (!get_option('xcloner_start_path') or !is_dir(get_option('xcloner_start_path'))) {
-			$path = realpath(ABSPATH);
+		if ( ! get_option( 'xcloner_start_path' ) or ! is_dir( get_option( 'xcloner_start_path' ) ) ) {
+			$path = realpath( ABSPATH );
 		} else {
-			$path = get_option('xcloner_start_path');
+			$path = get_option( 'xcloner_start_path' );
 		}
 
 		return $path;
 	}
 
-	public function get_xcloner_dir_path($dir) {
-		$path = self::get_xcloner_start_path().DS.$dir;
+	public function get_xcloner_dir_path( $dir ) {
+		$path = self::get_xcloner_start_path() . DS . $dir;
 
 		return $path;
 	}
 
 	public function get_xcloner_store_path() {
-		if (!get_option('xcloner_store_path') or !is_dir(get_option('xcloner_store_path'))) {
-			$path = realpath(XCLONER_STORAGE_PATH);
+		if ( ! get_option( 'xcloner_store_path' ) or ! is_dir( get_option( 'xcloner_store_path' ) ) ) {
+			$path = realpath( XCLONER_STORAGE_PATH );
 		} else {
-			$path = get_option('xcloner_store_path');
+			$path = get_option( 'xcloner_store_path' );
 		}
 
 		return $path;
@@ -56,82 +56,82 @@ class Xcloner_Settings {
 
 	public function get_xcloner_encryption_key() {
 
-		if(!get_option('xcloner_encryption_key') )
-		{
-			return $this->randomString(35);
-		}
+	    if(!get_option('xcloner_encryption_key') )
+        {
+	        return $this->randomString(35);
+        }
 
-		return get_option('xcloner_encryption_key');
-	}
+	    return get_option('xcloner_encryption_key');
+    }
 
-	/**
-	 * Create a random string
-	 * @author	XEWeb <>
-	 * @param $length the length of the string to create
-	 * @return $str the string
-	 */
-	private function randomString($length = 6) {
-		$str = "";
-		$characters = array_merge(range('A','Z'), range('a','z'), range('0','9'));
-		$max = count($characters) - 1;
-		for ($i = 0; $i < $length; $i++) {
-			$rand = mt_rand(0, $max);
-			$str .= $characters[$rand];
-		}
-		return $str;
-	}
+    /**
+     * Create a random string
+     * @author	XEWeb <>
+     * @param $length the length of the string to create
+     * @return $str the string
+     */
+    private function randomString($length = 6) {
+        $str = "";
+        $characters = array_merge(range('A','Z'), range('a','z'), range('0','9'));
+        $max = count($characters) - 1;
+        for ($i = 0; $i < $length; $i++) {
+            $rand = mt_rand(0, $max);
+            $str .= $characters[$rand];
+        }
+        return $str;
+    }
 
 	public function get_xcloner_tmp_path_suffix() {
-		return "xcloner".$this->get_hash();
+		return "xcloner" . $this->get_hash();
 	}
 
 
-	public function get_xcloner_tmp_path($suffix = true) {
-		if (get_option('xcloner_force_tmp_path_site_root')) {
+	public function get_xcloner_tmp_path( $suffix = true ) {
+		if ( get_option( 'xcloner_force_tmp_path_site_root' ) ) {
 			$path = $this->get_xcloner_store_path();
 		} else {
 
 			$path = sys_get_temp_dir();
-			if (!is_dir($path)) {
-				@mkdir($path);
-				@chmod($path, 0777);
+			if ( ! is_dir( $path ) ) {
+				@mkdir( $path );
+				@chmod( $path, 0777 );
 			}
 
-			if (!is_dir($path) or !is_writeable($path)) {
+			if ( ! is_dir( $path ) or ! is_writeable( $path ) ) {
 				$path = $this->get_xcloner_store_path();
 			}
 		}
 
-		if ($suffix) {
-			$path = $path.DS.".".$this->get_xcloner_tmp_path_suffix();
+		if ( $suffix ) {
+			$path = $path . DS . "." . $this->get_xcloner_tmp_path_suffix();
 		}
 
 		return $path;
 	}
 
 	public function get_enable_mysql_backup() {
-		if (get_option('xcloner_enable_mysql_backup')) {
+		if ( get_option( 'xcloner_enable_mysql_backup' ) ) {
 			return true;
 		}
 
 		return false;
 	}
 
-	public function get_backup_extension_name($ext = "") {
-		if (!$ext) {
-			if (get_option('xcloner_backup_compression_level')) {
+	public function get_backup_extension_name( $ext = "" ) {
+		if ( ! $ext ) {
+			if ( get_option( 'xcloner_backup_compression_level' ) ) {
 				$ext = ".tgz";
 			} else {
 				$ext = ".tar";
 			}
 		}
 
-		return ($this->get_hash()).$ext;
+		return ( $this->get_hash() ) . $ext;
 	}
 
 	public function get_hash() {
-		if (!$this->hash) {
-			$this->set_hash("-".$this->get_server_unique_hash(5));
+		if ( ! $this->hash ) {
+			$this->set_hash( "-" . $this->get_server_unique_hash( 5 ) );
 		}
 
 		//echo $this->hash;	
@@ -139,27 +139,27 @@ class Xcloner_Settings {
 	}
 
 	public function generate_new_hash() {
-		$hash = "-".md5(rand());
+		$hash = "-" . md5( rand() );
 
-		$this->set_hash(substr($hash, 0, 6));
+		$this->set_hash( substr( $hash, 0, 6 ) );
 
 		return $hash;
 	}
 
-	public function set_hash($hash = "") {
-		if (substr($hash, 0, 1) != "-" and strlen($hash)) {
-			$hash = "-".$hash;
+	public function set_hash( $hash = "" ) {
+		if ( substr( $hash, 0, 1 ) != "-" and strlen( $hash ) ) {
+			$hash = "-" . $hash;
 		}
 
-		$this->hash = substr($hash, 0, 6);
+		$this->hash = substr( $hash, 0, 6 );
 
 		return $this;
 	}
 
 	public function get_default_backup_name() {
-		$data = parse_url(get_site_url());
+		$data = parse_url( get_site_url() );
 
-		$backup_name = "backup_[domain]".(isset($data['port']) ? "_".$data['port'] : "")."-[time]-".($this->get_enable_mysql_backup() ? "sql" : "nosql");
+		$backup_name = "backup_[domain]" . ( isset( $data['port'] ) ? "_" . $data['port'] : "" ) . "-[time]-" . ( $this->get_enable_mysql_backup() ? "sql" : "nosql" );
 
 		return $backup_name;
 	}
@@ -167,7 +167,7 @@ class Xcloner_Settings {
 	public function get_db_hostname() {
 		global $wpdb;
 
-		if (!$data = get_option('xcloner_mysql_hostname')) {
+		if ( ! $data = get_option( 'xcloner_mysql_hostname' ) ) {
 			$data = $wpdb->dbhost;
 		}
 
@@ -177,7 +177,7 @@ class Xcloner_Settings {
 	public function get_db_username() {
 		global $wpdb;
 
-		if (!$data = get_option('xcloner_mysql_username')) {
+		if ( ! $data = get_option( 'xcloner_mysql_username' ) ) {
 			$data = $wpdb->dbuser;
 		}
 
@@ -187,7 +187,7 @@ class Xcloner_Settings {
 	public function get_db_password() {
 		global $wpdb;
 
-		if (!$data = get_option('xcloner_mysql_password')) {
+		if ( ! $data = get_option( 'xcloner_mysql_password' ) ) {
 			$data = $wpdb->dbpassword;
 		}
 
@@ -197,7 +197,7 @@ class Xcloner_Settings {
 	public function get_db_database() {
 		global $wpdb;
 
-		if (!$data = get_option('xcloner_mysql_database')) {
+		if ( ! $data = get_option( 'xcloner_mysql_database' ) ) {
 			$data = $wpdb->dbname;
 		}
 
@@ -210,9 +210,6 @@ class Xcloner_Settings {
 		return $wpdb->prefix;
 	}
 
-	/**
-	 * @param string $option
-	 */
 	public function get_xcloner_option( $option ) {
 		$data = get_option( $option );
 
@@ -234,20 +231,20 @@ class Xcloner_Settings {
 		$this->xcloner_sanitization = $this->get_xcloner_container()->get_xcloner_sanitization();
 
 		//ADDING MISSING OPTIONS
-		if (false == get_option('xcloner_mysql_settings_page')) {
-			add_option('xcloner_mysql_settings_page');
+		if ( false == get_option( 'xcloner_mysql_settings_page' ) ) {
+			add_option( 'xcloner_mysql_settings_page' );
 		} // end if
 
-		if (false == get_option('xcloner_cron_settings_page')) {
-			add_option('xcloner_cron_settings_page');
+		if ( false == get_option( 'xcloner_cron_settings_page' ) ) {
+			add_option( 'xcloner_cron_settings_page' );
 		} // end if
 
-		if (false == get_option('xcloner_system_settings_page')) {
-			add_option('xcloner_system_settings_page');
+		if ( false == get_option( 'xcloner_system_settings_page' ) ) {
+			add_option( 'xcloner_system_settings_page' );
 		} // end if
 
-		if (false == get_option('xcloner_cleanup_settings_page')) {
-			add_option('xcloner_cleanup_settings_page');
+		if ( false == get_option( 'xcloner_cleanup_settings_page' ) ) {
+			add_option( 'xcloner_cleanup_settings_page' );
 		} // end if
 
 
@@ -255,31 +252,31 @@ class Xcloner_Settings {
 		//GENERAL section
 		add_settings_section(
 			'xcloner_general_settings_group',
-			__(' '),
-			array($this, 'xcloner_settings_section_cb'),
+			__( ' ' ),
+			array( $this, 'xcloner_settings_section_cb' ),
 			'xcloner_settings_page'
 		);
 		//MYSQL section
 		add_settings_section(
 			'xcloner_mysql_settings_group',
-			__(' '),
-			array($this, 'xcloner_settings_section_cb'),
+			__( ' ' ),
+			array( $this, 'xcloner_settings_section_cb' ),
 			'xcloner_mysql_settings_page'
 		);
 
 		//SYSTEM section
 		add_settings_section(
 			'xcloner_system_settings_group',
-			__('These are advanced options recommended for developers!', 'xcloner-backup-and-restore'),
-			array($this, 'xcloner_settings_section_cb'),
+			__( 'These are advanced options recommended for developers!', 'xcloner-backup-and-restore' ),
+			array( $this, 'xcloner_settings_section_cb' ),
 			'xcloner_system_settings_page'
 		);
 
 		//CLEANUP section
 		add_settings_section(
 			'xcloner_cleanup_settings_group',
-			__(' '),
-			array($this, 'xcloner_settings_section_cb'),
+			__( ' ' ),
+			array( $this, 'xcloner_settings_section_cb' ),
 			'xcloner_cleanup_settings_page'
 		);
 
@@ -331,40 +328,40 @@ class Xcloner_Settings {
 		);
 
 		register_setting( 'xcloner_general_settings_group', 'xcloner_store_path', array(
-			$this->xcloner_sanitization,
-			"sanitize_input_as_absolute_path"
-		) );
-		add_settings_field(
-			'xcloner_store_path',
-			__( 'Backup Storage Location', 'xcloner-backup-and-restore' ),
-			array( $this, 'do_form_text_field' ),
-			'xcloner_settings_page',
-			'xcloner_general_settings_group',
-			array(
-				'xcloner_store_path',
-				__( 'Location where XCloner will store the Backup archives.', 'xcloner-backup-and-restore' ),
-				$this->get_xcloner_store_path(),
-				//'disabled'
-			)
-		);
+            $this->xcloner_sanitization,
+            "sanitize_input_as_absolute_path"
+        ) );
+        add_settings_field(
+            'xcloner_store_path',
+            __( 'Backup Storage Location', 'xcloner-backup-and-restore' ),
+            array( $this, 'do_form_text_field' ),
+            'xcloner_settings_page',
+            'xcloner_general_settings_group',
+            array(
+                'xcloner_store_path',
+                __( 'Location where XCloner will store the Backup archives.', 'xcloner-backup-and-restore' ),
+                $this->get_xcloner_store_path(),
+                //'disabled'
+            )
+        );
 
-		register_setting( 'xcloner_general_settings_group', 'xcloner_encryption_key', array(
-			$this->xcloner_sanitization,
-			"sanitize_input_as_string"
-		) );
-		add_settings_field(
-			'xcloner_encryption_key',
-			__( 'Backup Encryption Key', 'xcloner-backup-and-restore' ),
-			array( $this, 'do_form_text_field' ),
-			'xcloner_settings_page',
-			'xcloner_general_settings_group',
-			array(
-				'xcloner_encryption_key',
-				__( 'Backup Encryption Key used to Encrypt/Decrypt backups, you might want to save this somewhere else as well.', 'xcloner-backup-and-restore' ),
-				$this->get_xcloner_encryption_key(),
-				//'disabled'
-			)
-		);
+        register_setting( 'xcloner_general_settings_group', 'xcloner_encryption_key', array(
+            $this->xcloner_sanitization,
+            "sanitize_input_as_string"
+        ) );
+        add_settings_field(
+            'xcloner_encryption_key',
+            __( 'Backup Encryption Key', 'xcloner-backup-and-restore' ),
+            array( $this, 'do_form_text_field' ),
+            'xcloner_settings_page',
+            'xcloner_general_settings_group',
+            array(
+                'xcloner_encryption_key',
+                __( 'Backup Encryption Key used to Encrypt/Decrypt backups, you might want to save this somewhere else as well.', 'xcloner-backup-and-restore' ),
+                $this->get_xcloner_encryption_key(),
+                //'disabled'
+            )
+        );
 
 		register_setting( 'xcloner_general_settings_group', 'xcloner_enable_log', array(
 			$this->xcloner_sanitization,
@@ -630,18 +627,18 @@ class Xcloner_Settings {
 			)
 		);
 
-		register_setting( 'xcloner_system_settings_group', 'xcloner_disable_email_notification' );
-		add_settings_field(
-			'xcloner_disable_email_notification',
-			__( 'Disable Email Notifications', 'xcloner-backup-and-restore' ),
-			array( $this, 'do_form_switch_field' ),
-			'xcloner_system_settings_page',
-			'xcloner_system_settings_group',
-			array(
-				'xcloner_disable_email_notification',
-				sprintf( __( 'Enable this option if you want the XCloner to NOT send email notifications on successful backups', 'xcloner-backup-and-restore' ), $this->get_table_prefix() )
-			)
-		);
+        register_setting( 'xcloner_system_settings_group', 'xcloner_disable_email_notification' );
+        add_settings_field(
+            'xcloner_disable_email_notification',
+            __( 'Disable Email Notifications', 'xcloner-backup-and-restore' ),
+            array( $this, 'do_form_switch_field' ),
+            'xcloner_system_settings_page',
+            'xcloner_system_settings_group',
+            array(
+                'xcloner_disable_email_notification',
+                sprintf( __( 'Enable this option if you want the XCloner to NOT send email notifications on successful backups', 'xcloner-backup-and-restore' ), $this->get_table_prefix() )
+            )
+        );
 
 		//REGISTERING THE 'CLEANUP SECTION' FIELDS
 		register_setting( 'xcloner_cleanup_settings_group', 'xcloner_cleanup_retention_limit_days', array(
@@ -736,26 +733,26 @@ class Xcloner_Settings {
 	}
 
 	// text field content cb
-	public function do_form_text_field($params) {
-		if (!isset($params['3'])) {
+	public function do_form_text_field( $params ) {
+		if ( ! isset( $params['3'] ) ) {
 			$params[3] = 0;
 		}
-		if (!isset($params['2'])) {
+		if ( ! isset( $params['2'] ) ) {
 			$params[2] = 0;
 		}
 
-		list($fieldname, $label, $value, $disabled) = $params;
+		list( $fieldname, $label, $value, $disabled ) = $params;
 
-		if (!$value) {
-			$value = get_option($fieldname);
+		if ( ! $value ) {
+			$value = get_option( $fieldname );
 		}
 		// output the field
 		?>
         <div class="row">
             <div class="input-field col s10 m10 l8">
-                <input class="validate" <?php echo ($disabled) ? "disabled" : "" ?> name="<?php echo $fieldname ?>"
+                <input class="validate" <?php echo ( $disabled ) ? "disabled" : "" ?> name="<?php echo $fieldname ?>"
                        id="<?php echo $fieldname ?>" type="text" class="validate"
-                       value="<?php echo isset($value) ? esc_attr($value) : ''; ?>">
+                       value="<?php echo isset( $value ) ? esc_attr( $value ) : ''; ?>">
             </div>
             <div class="col s2 m2 ">
                 <a class="btn-floating tooltipped btn-small" data-position="left" data-delay="50"
@@ -768,26 +765,26 @@ class Xcloner_Settings {
 	}
 
 	// textarea field content cb
-	public function do_form_textarea_field($params) {
-		if (!isset($params['3'])) {
+	public function do_form_textarea_field( $params ) {
+		if ( ! isset( $params['3'] ) ) {
 			$params[3] = 0;
 		}
-		if (!isset($params['2'])) {
+		if ( ! isset( $params['2'] ) ) {
 			$params[2] = 0;
 		}
 
-		list($fieldname, $label, $value, $disabled) = $params;
+		list( $fieldname, $label, $value, $disabled ) = $params;
 
-		if (!$value) {
-			$value = get_option($fieldname);
+		if ( ! $value ) {
+			$value = get_option( $fieldname );
 		}
 		// output the field
 		?>
         <div class="row">
             <div class="input-field col s10 m10 l8">
-                <textarea class="validate" <?php echo ($disabled) ? "disabled" : "" ?> name="<?php echo $fieldname ?>"
+                <textarea class="validate" <?php echo ( $disabled ) ? "disabled" : "" ?> name="<?php echo $fieldname ?>"
                           id="<?php echo $fieldname ?>" type="text" class="validate"
-                          value=""><?php echo isset($value) ? esc_attr($value) : ''; ?></textarea>
+                          value=""><?php echo isset( $value ) ? esc_attr( $value ) : ''; ?></textarea>
             </div>
             <div class="col s2 m2 ">
                 <a class="btn-floating tooltipped btn-small" data-position="center" data-html="true" data-delay="50"
@@ -796,39 +793,39 @@ class Xcloner_Settings {
             <div class="col s12">
                 <ul class="xcloner_regex_exclude_limit">
                     <li>Exclude all except .php file: <span
-                                class="regex_pattern"><?php echo htmlentities('(.*)\.(.+)$(?<!(php))') ?></span></li>
+                                class="regex_pattern"><?php echo htmlentities( '(.*)\.(.+)$(?<!(php))' ) ?></span></li>
                     <li>Exclude all except .php and .txt: <span
-                                class="regex_pattern"> <?php echo htmlentities('(.*)\.(.+)$(?<!(php|txt))') ?></span>
+                                class="regex_pattern"> <?php echo htmlentities( '(.*)\.(.+)$(?<!(php|txt))' ) ?></span>
                     </li>
                     <li>Exclude all .avi files: <span
-                                class="regex_pattern"> <?php echo htmlentities('(.*)\.(.+)$(?<=(avi))') ?></span></li>
+                                class="regex_pattern"> <?php echo htmlentities( '(.*)\.(.+)$(?<=(avi))' ) ?></span></li>
                     <li>Exclude all .jpg,.gif and .png files: <span
-                                class="regex_pattern"> <?php echo htmlentities('(.*)\.(.+)$(?<=(gif|png|jpg))') ?></span>
+                                class="regex_pattern"> <?php echo htmlentities( '(.*)\.(.+)$(?<=(gif|png|jpg))' ) ?></span>
                     </li>
                     <li>Exclude all .svn and .git: <span
-                                class="regex_pattern"> <?php echo htmlentities('(.*)\.(svn|git)(.*)$') ?></span></li>
+                                class="regex_pattern"> <?php echo htmlentities( '(.*)\.(svn|git)(.*)$' ) ?></span></li>
                     <li>Exclude root directory /test: <span
-                                class="regex_pattern"> <?php echo htmlentities('\/test(.*)$') ?></span> or <span
-                                class="regex_pattern"> <?php echo htmlentities('test(.*)$') ?></span></li>
+                                class="regex_pattern"> <?php echo htmlentities( '\/test(.*)$' ) ?></span> or <span
+                                class="regex_pattern"> <?php echo htmlentities( 'test(.*)$' ) ?></span></li>
                     <li>Exclude the wp-admin folder: <span
-                                class="regex_pattern"> <?php echo htmlentities('(\/wp-admin)(.*)$') ?></span></li>
+                                class="regex_pattern"> <?php echo htmlentities( '(\/wp-admin)(.*)$' ) ?></span></li>
                     <li>Exclude the wp-content/uploads folder: <span
-                                class="regex_pattern"> <?php echo htmlentities('(\/wp-content\/uploads)(.*)$') ?></span>
+                                class="regex_pattern"> <?php echo htmlentities( '(\/wp-content\/uploads)(.*)$' ) ?></span>
                     </li>
                     <li>Exclude the wp-admin, wp-includes and wp-config.php: <span
-                                class="regex_pattern"> <?php echo htmlentities('\/(wp-admin|wp-includes|wp-config.php)(.*)$') ?></span>
+                                class="regex_pattern"> <?php echo htmlentities( '\/(wp-admin|wp-includes|wp-config.php)(.*)$' ) ?></span>
                     </li>
                     <li>Exclude wp-content/updraft and wp/content/uploads/wp_all_backup folder :<span
                                 class="regex_pattern">\/(wp-content\/updraft|\/wp-content\/uploads\/wp_all_backup)(.*)$</span>
                     </li>
                     <li>Exclude all cache folders from wp-content/ and it's subdirectories: <span
-                                class="regex_pattern"> <?php echo htmlentities('\/wp-content(.*)\/cache($|\/)(.*)') ?></span>
+                                class="regex_pattern"> <?php echo htmlentities( '\/wp-content(.*)\/cache($|\/)(.*)' ) ?></span>
                     </li>
                     <li>Exclude wp-content/cache/ folder: <span
-                                class="regex_pattern"> <?php echo htmlentities('\/wp-content\/cache(.*)') ?></span>
+                                class="regex_pattern"> <?php echo htmlentities( '\/wp-content\/cache(.*)' ) ?></span>
                     </li>
                     <li>Exclude all error_log files: <span
-                                class="regex_pattern"> <?php echo htmlentities('(.*)error_log$') ?></span></li>
+                                class="regex_pattern"> <?php echo htmlentities( '(.*)error_log$' ) ?></span></li>
                 </ul>
             </div>
         </div>
@@ -838,26 +835,26 @@ class Xcloner_Settings {
 	}
 
 	// number field content cb
-	public function do_form_number_field($params) {
-		if (!isset($params['3'])) {
+	public function do_form_number_field( $params ) {
+		if ( ! isset( $params['3'] ) ) {
 			$params[3] = 0;
 		}
-		if (!isset($params['2'])) {
+		if ( ! isset( $params['2'] ) ) {
 			$params[2] = 0;
 		}
 
-		list($fieldname, $label, $value, $disabled) = $params;
+		list( $fieldname, $label, $value, $disabled ) = $params;
 
-		if (!$value) {
-			$value = get_option($fieldname);
+		if ( ! $value ) {
+			$value = get_option( $fieldname );
 		}
 		// output the field
 		?>
         <div class="row">
             <div class="input-field col s10 m5 l3">
-                <input class="validate" <?php echo ($disabled) ? "disabled" : "" ?> name="<?php echo $fieldname ?>"
+                <input class="validate" <?php echo ( $disabled ) ? "disabled" : "" ?> name="<?php echo $fieldname ?>"
                        id="<?php echo $fieldname ?>" type="number" class="validate"
-                       value="<?php echo isset($value) ? esc_attr($value) : ''; ?>">
+                       value="<?php echo isset( $value ) ? esc_attr( $value ) : ''; ?>">
             </div>
             <div class="col s2 m2 ">
                 <a class="btn-floating tooltipped btn-small" data-html="true" data-position="center" data-delay="50"
@@ -869,22 +866,22 @@ class Xcloner_Settings {
 		<?php
 	}
 
-	public function do_form_range_field($params) {
-		if (!isset($params['4'])) {
+	public function do_form_range_field( $params ) {
+		if ( ! isset( $params['4'] ) ) {
 			$params[4] = 0;
 		}
 
-		list($fieldname, $label, $range_start, $range_end, $disabled) = $params;
-		$value = get_option($fieldname);
+		list( $fieldname, $label, $range_start, $range_end, $disabled ) = $params;
+		$value = get_option( $fieldname );
 		?>
         <div class="row">
             <div class="input-field col s10 m10 l8">
                 <p class="range-field">
-                    <input <?php echo ($disabled) ? "disabled" : "" ?> type="range" name="<?php echo $fieldname ?>"
+                    <input <?php echo ( $disabled ) ? "disabled" : "" ?> type="range" name="<?php echo $fieldname ?>"
                                                                          id="<?php echo $fieldname ?>"
                                                                          min="<?php echo $range_start ?>"
                                                                          max="<?php echo $range_end ?>"
-                                                                         value="<?php echo isset($value) ? esc_attr($value) : ''; ?>"/>
+                                                                         value="<?php echo isset( $value ) ? esc_attr( $value ) : ''; ?>"/>
                 </p>
             </div>
             <div class="col s2 m2 ">
@@ -896,22 +893,22 @@ class Xcloner_Settings {
 	}
 
 
-	public function do_form_switch_field($params) {
-		if (!isset($params['2'])) {
+	public function do_form_switch_field( $params ) {
+		if ( ! isset( $params['2'] ) ) {
 			$params[2] = 0;
 		}
-		list($fieldname, $label, $disabled) = $params;
-		$value = get_option($fieldname);
+		list( $fieldname, $label, $disabled ) = $params;
+		$value = get_option( $fieldname );
 		?>
         <div class="row">
             <div class="input-field col s10 m5 l3">
                 <div class="switch">
                     <label>
                         Off
-                        <input <?php echo ($disabled) ? "disabled" : "" ?> type="checkbox"
+                        <input <?php echo ( $disabled ) ? "disabled" : "" ?> type="checkbox"
                                                                              name="<?php echo $fieldname ?>"
                                                                              id="<?php echo $fieldname ?>"
-                                                                             value="1" <?php echo ($value) ? 'checked="checked"' : ''; ?>
+                                                                             value="1" <?php echo ( $value ) ? 'checked="checked"' : ''; ?>
                         ">
                         <span class="lever"></span>
                         On
