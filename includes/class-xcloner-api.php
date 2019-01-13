@@ -291,6 +291,9 @@ class Xcloner_Api
      */
 	public function backup_files()
 	{
+        $return = array();
+        $additional = array();
+
 		$this->check_access();
 
 		$params = json_decode(stripslashes($_POST['data']));
@@ -353,6 +356,8 @@ class Xcloner_Api
      */
 	public function backup_database()
 	{
+        $data = array();
+
 		$this->check_access();
 
 		$params = json_decode(stripslashes($_POST['data']));
@@ -387,6 +392,8 @@ class Xcloner_Api
      */
 	public function scan_filesystem()
 	{
+        $data = array();
+
 		$this->check_access();
 
 		$params = json_decode(stripslashes($_POST['data']));
@@ -670,6 +677,8 @@ class Xcloner_Api
      */
 	public function get_scheduler_list()
 	{
+        $return = array();
+
 		$this->check_access();
 
 		$scheduler = $this->xcloner_scheduler;
@@ -752,6 +761,8 @@ class Xcloner_Api
      */
 	public function delete_schedule_by_id()
 	{
+        $data = array();
+
 		$this->check_access();
 
 		$schedule_id = $this->xcloner_sanitization->sanitize_input_as_int($_GET['id']);
@@ -768,6 +779,8 @@ class Xcloner_Api
      */
 	public function delete_backup_by_name()
 	{
+        $data = array();
+
 		$this->check_access();
 
 		$backup_name = $this->xcloner_sanitization->sanitize_input_as_string($_POST['name']);
@@ -915,6 +928,9 @@ class Xcloner_Api
 
 	public function get_manage_backups_list() {
 
+        $this->check_access();
+
+        $return = array();
 		$storage_selection = "";
 
 		if (isset($_GET['storage_selection']) and $_GET['storage_selection']) {
@@ -1098,6 +1114,7 @@ class Xcloner_Api
 		$this->check_access();
 
 		$backup_parts = array();
+        $return = array();
 
 		$source_backup_file = $this->xcloner_sanitization->sanitize_input_as_string($_POST['file']);
 		$start = $this->xcloner_sanitization->sanitize_input_as_int($_POST['start']);
@@ -1365,6 +1382,8 @@ class Xcloner_Api
 	{
 		$this->check_access();
 
+        $return = array();
+        
 		$return['part'] = 0;
 		$return['total_parts'] = 0;
 		$return['uploaded_size'] = 0;
