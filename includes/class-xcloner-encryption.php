@@ -136,7 +136,7 @@ class Xcloner_Encryption
 			$fpOut = fopen($this->get_xcloner_path().$dest, 'a');
 		}
 
-		if ($fpOut) {
+		if (is_resource($fpOut)) {
 
 			// Put the initialization vector to the beginning of the file
 			if (!$start) {
@@ -270,7 +270,7 @@ class Xcloner_Encryption
 			}
 		}
 
-		if ($fpOut) {
+		if (is_resource($fpOut)) {
 			if (file_exists($this->get_xcloner_path().$source) &&
 				$fpIn = fopen($this->get_xcloner_path().$source, 'rb')) {
 
