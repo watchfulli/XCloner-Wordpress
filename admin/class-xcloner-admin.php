@@ -144,7 +144,10 @@ class Xcloner_Admin {
 
 	}
 
-	public function xcloner_remote_storage_page() {
+    /**
+     * Returns the XCloner Storage Page
+     */
+    public function xcloner_remote_storage_page() {
 		$xcloner_sanitization = $this->get_xcloner_container()->get_xcloner_sanitization();
 		$remote_storage       = $this->get_xcloner_container()->get_xcloner_remote_storage();
 
