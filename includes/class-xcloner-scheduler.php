@@ -26,7 +26,7 @@ class Xcloner_Scheduler {
 		$wpdb->show_errors = false;
 
 		$this->xcloner_container = $xcloner_container;
-		$this->xcloner_settings  = $xcloner_container->get_xcloner_settings();
+		$this->xcloner_settings  = $this->xcloner_container->get_xcloner_settings();
 
 		$this->scheduler_table = $this->db->prefix . $this->scheduler_table;
 	}
@@ -57,7 +57,7 @@ class Xcloner_Scheduler {
 		return $list;
 	}
 
-	public function get_next_run_schedule( $xcloner_file_system = "" ) {
+	public function get_next_run_schedule( ) {
 		$list = $this->get_scheduler_list( $return_only_enabled = 1 );
 
 		return $list;
@@ -171,6 +171,8 @@ class Xcloner_Scheduler {
 	}
 
 	public function update_hash( $schedule_id, $hash ) {
+        $schedule = array();
+
 		$schedule['hash'] = $hash;
 
 		$update = $this->db->update(
