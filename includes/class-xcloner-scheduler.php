@@ -104,8 +104,8 @@ class Xcloner_Scheduler {
 			$hook = 'xcloner_scheduler_'.$schedule->id;
 
 			if($timestamp = wp_next_scheduled($hook, array($schedule->id))) {
-                wp_unschedule_event($timestamp, $hook, array($schedule->id));
-            }
+				wp_unschedule_event($timestamp, $hook, array($schedule->id));
+			}
 		}
 	}
 
@@ -128,8 +128,8 @@ class Xcloner_Scheduler {
 
 			} elseif (!$schedule->status) {
 				if($timestamp = wp_next_scheduled($hook, array($schedule->id))) {
-                    wp_unschedule_event($timestamp, $hook, array($schedule->id));
-                }
+					wp_unschedule_event($timestamp, $hook, array($schedule->id));
+				}
 			}
 		}
 
@@ -140,8 +140,8 @@ class Xcloner_Scheduler {
 		$hook     = 'xcloner_scheduler_'.$schedule->id;
 
 		if( $timestamp = wp_next_scheduled($hook, array($schedule->id))) {
-            wp_unschedule_event($timestamp, $hook, array($schedule->id));
-        }
+			wp_unschedule_event($timestamp, $hook, array($schedule->id));
+		}
 
 		if ($schedule->status) {
 
@@ -155,12 +155,12 @@ class Xcloner_Scheduler {
 	}
 
 	public function disable_single_cron($schedule_id) {
-        $schedule = array();
+		$schedule = array();
 		$hook      = 'xcloner_scheduler_'.$schedule_id;
 
 		if($timestamp = wp_next_scheduled($hook, array($schedule_id))) {
-            wp_unschedule_event($timestamp, $hook, array($schedule_id));
-        }
+			wp_unschedule_event($timestamp, $hook, array($schedule_id));
+		}
 
 		$schedule['status'] = 0;
 
@@ -177,7 +177,7 @@ class Xcloner_Scheduler {
 		return $update;
 	}
 
-	public function update_hash( $schedule_id, $hash ) {
+	public function update_hash($schedule_id, $hash) {
 		$schedule = array();
 
 		$schedule['hash'] = $hash;
@@ -196,7 +196,7 @@ class Xcloner_Scheduler {
 	}
 
 	public function update_last_backup($schedule_id, $last_backup) {
-        $schedule = array();
+		$schedule = array();
 
 		$this->logger->info(sprintf('Updating last backup %s for schedule id #%s', $last_backup, $schedule_id));
 
@@ -222,88 +222,88 @@ class Xcloner_Scheduler {
 		$xcloner = new XCloner();
 		$xcloner->init();
 		$this->set_xcloner_container( $xcloner );
-        $return_encrypted = array();
-        $return = array();
-        $additional = array();
+		$return_encrypted = array();
+		$return = array();
+		$additional = array();
 
 		#$hash = $this->xcloner_settings->get_hash();
 		#$this->get_xcloner_container()->get_xcloner_settings()->set_hash($hash);
 
 		//$this->xcloner_settings 		= $this->get_xcloner_container()->get_xcloner_settings();		
 		$this->xcloner_file_system    = $this->get_xcloner_container()->get_xcloner_filesystem();
-		$this->xcloner_encryption    = $this->get_xcloner_container()->get_xcloner_encryption();
+		$this->xcloner_encryption = $this->get_xcloner_container()->get_xcloner_encryption();
 		$this->xcloner_database       = $this->get_xcloner_container()->get_xcloner_database();
 		$this->archive_system         = $this->get_xcloner_container()->get_archive_system();
-		$this->logger                 = $this->get_xcloner_container()->get_xcloner_logger()->withName( "xcloner_scheduler" );
+		$this->logger                 = $this->get_xcloner_container()->get_xcloner_logger()->withName("xcloner_scheduler");
 		$this->xcloner_remote_storage = $this->get_xcloner_container()->get_xcloner_remote_storage();
 
-		$this->logger->info( sprintf( "New schedule hash is %s", $this->xcloner_settings->get_hash() ) );
+		$this->logger->info(sprintf("New schedule hash is %s", $this->xcloner_settings->get_hash()));
 
-		if ( isset( $schedule['backup_params']->diff_start_date ) && $schedule['backup_params']->diff_start_date ) {
-			$this->xcloner_file_system->set_diff_timestamp_start( $schedule['backup_params']->diff_start_date );
+		if (isset($schedule['backup_params']->diff_start_date) && $schedule['backup_params']->diff_start_date) {
+			$this->xcloner_file_system->set_diff_timestamp_start($schedule['backup_params']->diff_start_date);
 		}
 
-		if ( $schedule['recurrence'] == "single" ) {
-			$this->disable_single_cron( $schedule['id'] );
+		if ($schedule['recurrence'] == "single") {
+			$this->disable_single_cron($schedule['id']);
 		}
 
-		if ( ! $schedule ) {
-			$this->logger->info( sprintf( "Could not load schedule with id'%s'", $id ), array( "CRON" ) );
+		if (!$schedule) {
+			$this->logger->info(sprintf("Could not load schedule with id'%s'", $id), array("CRON"));
 
 			return;
 		}
 
 		//echo $this->get_xcloner_container()->get_xcloner_settings()->get_hash(); exit;
 
-		$this->update_hash( $schedule['id'], $this->xcloner_settings->get_hash() );
+		$this->update_hash($schedule['id'], $this->xcloner_settings->get_hash());
 
-		$this->logger->info( sprintf( "Starting cron schedule '%s'", $schedule['name'] ), array( "CRON" ) );
+		$this->logger->info(sprintf("Starting cron schedule '%s'", $schedule['name']), array("CRON"));
 
-		$this->xcloner_file_system->set_excluded_files( json_decode( $schedule['excluded_files'] ) );
+		$this->xcloner_file_system->set_excluded_files(json_decode($schedule['excluded_files']));
 
 		$init     = 1;
 		$continue = 1;
 
-		while ( $continue ) {
-			$continue = $this->xcloner_file_system->start_file_recursion( $init );
+		while ($continue) {
+			$continue = $this->xcloner_file_system->start_file_recursion($init);
 
 			$init = 0;
 		}
 
-		$this->logger->info( sprintf( "File scan finished" ), array( "CRON" ) );
+		$this->logger->info(sprintf("File scan finished"), array("CRON"));
 
-		$this->logger->info( sprintf( "Starting the database backup" ), array( "CRON" ) );
+		$this->logger->info(sprintf("Starting the database backup"), array("CRON"));
 
 		$init               = 1;
 		$return['finished'] = 0;
 
-		while ( ! $return['finished'] ) {
-			$return = $this->xcloner_database->start_database_recursion( (array) json_decode( $schedule['table_params'] ), $return, $init );
+		while (!$return['finished']) {
+			$return = $this->xcloner_database->start_database_recursion((array)json_decode($schedule['table_params']), $return, $init);
 			$init   = 0;
 		}
 
-		$this->logger->info( sprintf( "Database backup done" ), array( "CRON" ) );
+		$this->logger->info(sprintf("Database backup done"), array("CRON"));
 
-		$this->logger->info( sprintf( "Starting file archive process" ), array( "CRON" ) );
+		$this->logger->info(sprintf("Starting file archive process"), array("CRON"));
 
 		$init               = 0;
 		$return['finished'] = 0;
 		$return['extra']    = array();
 
-		while ( ! $return['finished'] ) {
-			$return = $this->archive_system->start_incremental_backup( (array) $schedule['backup_params'], $return['extra'], $init );
+		while (!$return['finished']) {
+			$return = $this->archive_system->start_incremental_backup((array)$schedule['backup_params'], $return['extra'], $init);
 			$init   = 0;
 		}
-		$this->logger->info( sprintf( "File archive process FINISHED." ), array( "CRON" ) );
+		$this->logger->info(sprintf("File archive process FINISHED."), array("CRON"));
 
 		//getting the last backup archive file
 		$return['extra']['backup_parent'] = $this->archive_system->get_archive_name_with_extension();
-		if ( $this->xcloner_file_system->is_part( $this->archive_system->get_archive_name_with_extension() ) ) {
+		if ($this->xcloner_file_system->is_part($this->archive_system->get_archive_name_with_extension())) {
 			$return['extra']['backup_parent'] = $this->archive_system->get_archive_name_multipart();
 		}
 
 		//Updating schedule last backup archive
-		$this->update_last_backup( $schedule['id'], $return['extra']['backup_parent'] );
+		$this->update_last_backup($schedule['id'], $return['extra']['backup_parent']);
 
 		//Encrypting the backup archive
 		$return_encrypted['finished'] = 0;
@@ -313,8 +313,8 @@ class Xcloner_Scheduler {
 		$part = 0;
 		$backup_parts = array();
 
-		if( $schedule['backup_params']->backup_encrypt){
-			$this->logger->info( sprintf( "Encrypting backup archive %s.", $return['extra']['backup_parent'] ), array( "CRON" ) );
+		if ($schedule['backup_params']->backup_encrypt) {
+			$this->logger->info(sprintf("Encrypting backup archive %s.", $return['extra']['backup_parent']), array("CRON"));
 
 			$backup_file = $return['extra']['backup_parent'];
 
@@ -323,7 +323,7 @@ class Xcloner_Scheduler {
 				$backup_file = $backup_parts[$part];
 			}
 
-			while ( ! $return_encrypted['finished'] ) {
+			while (!$return_encrypted['finished']) {
 				$return_encrypted = $this->xcloner_encryption->encrypt_file(
 											$backup_file,
 											"",
@@ -334,7 +334,7 @@ class Xcloner_Scheduler {
 											true
 				);
 
-				if($return_encrypted['finished']) {
+				if ($return_encrypted['finished']) {
 					++$part;
 
 					if ($part < sizeof($backup_parts)) {
@@ -346,37 +346,37 @@ class Xcloner_Scheduler {
 		}
 
 		//Sending backup to remote storage
-		if ( isset( $schedule['remote_storage'] ) && $schedule['remote_storage'] && array_key_exists( $schedule['remote_storage'], $this->xcloner_remote_storage->get_available_storages() ) ) {
+		if (isset($schedule['remote_storage']) && $schedule['remote_storage'] && array_key_exists($schedule['remote_storage'], $this->xcloner_remote_storage->get_available_storages())) {
 			$backup_file = $return['extra']['backup_parent'];
 
-			$this->logger->info( sprintf( "Transferring backup to remote storage %s", strtoupper( $schedule['remote_storage'] ) ), array( "CRON" ) );
+			$this->logger->info(sprintf("Transferring backup to remote storage %s", strtoupper($schedule['remote_storage'])), array("CRON"));
 
-			if ( method_exists( $this->xcloner_remote_storage, "upload_backup_to_storage" ) ) {
-				call_user_func_array( array(
+			if (method_exists($this->xcloner_remote_storage, "upload_backup_to_storage")) {
+				call_user_func_array(array(
 					$this->xcloner_remote_storage,
 					"upload_backup_to_storage"
-				), array( $backup_file, $schedule['remote_storage'] ) );
+				), array($backup_file, $schedule['remote_storage']));
 			}
 		}
 
 		//Sending email notification
-		if ( isset( $schedule['backup_params']->email_notification ) and $to = $schedule['backup_params']->email_notification ) {
+		if (isset($schedule['backup_params']->email_notification) and $to = $schedule['backup_params']->email_notification) {
 			try {
 				$from                      = "";
 				$additional['lines_total'] = $return['extra']['lines_total'];
-				$subject                   = sprintf( __( "%s - new backup generated %s" ), $schedule['name'], $return['extra']['backup_parent'] );
+				$subject                   = sprintf(__("%s - new backup generated %s"), $schedule['name'], $return['extra']['backup_parent']);
 
-				$this->archive_system->send_notification( $to, $from, $subject, $return['extra']['backup_parent'], $schedule, "", $additional );
+				$this->archive_system->send_notification($to, $from, $subject, $return['extra']['backup_parent'], $schedule, "", $additional);
 
-			} catch ( Exception $e ) {
-				$this->logger->error( $e->getMessage() );
+			}catch (Exception $e) {
+				$this->logger->error($e->getMessage());
 			}
 		}
 
 		//CHECK IF WE SHOULD DELETE BACKUP AFTER REMOTE TRANSFER IS DONE
-		if ( $schedule['remote_storage'] && $this->xcloner_settings->get_xcloner_option( 'xcloner_cleanup_delete_after_remote_transfer' ) ) {
-			$this->logger->info( sprintf( "Deleting %s from local storage matching rule xcloner_cleanup_delete_after_remote_transfer", $return['extra']['backup_parent'] ) );
-			$this->xcloner_file_system->delete_backup_by_name( $return['extra']['backup_parent'] );
+		if ($schedule['remote_storage'] && $this->xcloner_settings->get_xcloner_option('xcloner_cleanup_delete_after_remote_transfer')) {
+			$this->logger->info(sprintf("Deleting %s from local storage matching rule xcloner_cleanup_delete_after_remote_transfer", $return['extra']['backup_parent']));
+			$this->xcloner_file_system->delete_backup_by_name($return['extra']['backup_parent']);
 
 		}
 
@@ -390,28 +390,28 @@ class Xcloner_Scheduler {
 		$this->xcloner_file_system->cleanup_tmp_directories();
 	}
 
-	public function xcloner_scheduler_callback( $id, $schedule = "" ) {
-		if ( $id ) {
-			$schedule = $this->get_schedule_by_id( $id );
+	public function xcloner_scheduler_callback($id, $schedule = "") {
+		if ($id) {
+			$schedule = $this->get_schedule_by_id($id);
 		}
 
 		try {
-			if( get_option('xcloner_disable_email_notification') ) {
+			if (get_option('xcloner_disable_email_notification')) {
 				//we disable email notifications
 				$schedule['backup_params']->email_notification = "";
 			}
-			$this->_xcloner_scheduler_callback( $id, $schedule );
+			$this->_xcloner_scheduler_callback($id, $schedule);
 
-		} catch ( Exception $e ) {
+		}catch (Exception $e) {
 
 			//send email to site admin if email notification is not set in the scheduler
-			if ( ! isset( $schedule['backup_params']->email_notification ) || ! $schedule['backup_params']->email_notification ) {
-				$schedule['backup_params']->email_notification = get_option( 'admin_email' );
+			if (!isset($schedule['backup_params']->email_notification) || !$schedule['backup_params']->email_notification) {
+				$schedule['backup_params']->email_notification = get_option('admin_email');
 			}
 
-			if ( isset( $schedule['backup_params']->email_notification ) && $to = $schedule['backup_params']->email_notification ) {
+			if (isset($schedule['backup_params']->email_notification) && $to = $schedule['backup_params']->email_notification) {
 				$from = "";
-				$this->archive_system->send_notification( $to, $from, $schedule['name'] . " - backup error", "", "", $e->getMessage() );
+				$this->archive_system->send_notification($to, $from, $schedule['name']." - backup error", "", "", $e->getMessage());
 			}
 
 		}

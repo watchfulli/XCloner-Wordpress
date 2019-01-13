@@ -253,7 +253,7 @@ class Xcloner_Restore
 				try {
 					unlink($_FILES['blob']['tmp_name']);
 				}catch (Exception $e) {
-                    //silent message
+					//silent message
 				}
 
 			}elseif (isset($_POST['blob'])) {
@@ -424,18 +424,18 @@ class Xcloner_Restore
 				
 			}
 
-            $return['start'] = ftell($fp);
+			$return['start'] = ftell($fp);
 
-            $this->logger->info(sprintf("Executed %s queries of size %s bytes", $line_count, ($return['start'] - $start)));
+			$this->logger->info(sprintf("Executed %s queries of size %s bytes", $line_count, ($return['start'] - $start)));
 
-            if (!feof($fp))
-            {
-                $return['finished'] = 0;
-            } else {
-                $this->logger->info(sprintf("Mysql Import Done."));
-            }
+			if (!feof($fp))
+			{
+				$return['finished'] = 0;
+			} else {
+				$this->logger->info(sprintf("Mysql Import Done."));
+			}
 
-            fclose($fp);
+			fclose($fp);
 		}
 		
 		$this->send_response(200, $return);

@@ -52,7 +52,7 @@ class Xcloner_i18n
 		load_plugin_textdomain(
 			'xcloner-backup-and-restore',
 			false,
-			dirname(dirname(plugin_basename(__FILE__))) . '/languages/'
+			dirname(dirname(plugin_basename(__FILE__))).'/languages/'
 		);
 
 	}

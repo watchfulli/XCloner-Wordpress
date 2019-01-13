@@ -59,24 +59,24 @@ class Xcloner_Loader
 	 */
 	protected $filters;
 
-    /**
-     * @var Xcloner
-     */
-    private $xcloner_plugin;
+	/**
+	 * @var Xcloner
+	 */
+	private $xcloner_plugin;
 
-    /**
-     * @var Xcloner
-     */
-    private $xcloner_container;
+	/**
+	 * @var Xcloner
+	 */
+	private $xcloner_container;
 
 
-    /**
-     * Initialize the collections used to maintain the actions and filters.
-     *
-     * Xcloner_Loader constructor.
-     * @param Xcloner $xcloner_container
-     */
-    public function __construct(Xcloner $xcloner_container)
+	/**
+	 * Initialize the collections used to maintain the actions and filters.
+	 *
+	 * Xcloner_Loader constructor.
+	 * @param Xcloner $xcloner_container
+	 */
+	public function __construct(Xcloner $xcloner_container)
 	{
 
 		$this->actions = array();
@@ -86,10 +86,10 @@ class Xcloner_Loader
 
 	}
 
-    /**
-     * Add XCloner to Admin Menu
-     */
-    public function xcloner_backup_add_admin_menu()
+	/**
+	 * Add XCloner to Admin Menu
+	 */
+	public function xcloner_backup_add_admin_menu()
 	{
 		if (function_exists('add_menu_page')) {
 			add_menu_page(__('Site Backup', 'xcloner-backup-and-restore'),

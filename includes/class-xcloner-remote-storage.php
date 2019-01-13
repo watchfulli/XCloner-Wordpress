@@ -162,11 +162,11 @@ class Xcloner_Remote_Storage {
 	private $logger;
 	private $xcloner;
 
-    /**
-     * Xcloner_Remote_Storage constructor.
-     * @param Xcloner $xcloner_container
-     */
-    public function __construct( Xcloner $xcloner_container ) {
+	/**
+	 * Xcloner_Remote_Storage constructor.
+	 * @param Xcloner $xcloner_container
+	 */
+	public function __construct( Xcloner $xcloner_container ) {
 		$this->xcloner_sanitization = $xcloner_container->get_xcloner_sanitization();
 		$this->xcloner_file_system  = $xcloner_container->get_xcloner_filesystem();
 		$this->logger               = $xcloner_container->get_xcloner_logger()->withName( "xcloner_remote_storage" );
@@ -205,22 +205,22 @@ class Xcloner_Remote_Storage {
 	 * @param string $action
 	 * @return string
 	 */
-	private function simple_crypt( $string, $action = 'e' ) {
+	private function simple_crypt($string, $action = 'e') {
 		// you may change these values to your own
 		$secret_key = NONCE_KEY;
 		$secret_iv = NONCE_SALT;
 
 		$output = $string;
 		$encrypt_method = "AES-256-CBC";
-		$key = hash( 'sha256', $secret_key );
-		$iv = substr( hash( 'sha256', $secret_iv ), 0, 16 );
+		$key = hash('sha256', $secret_key);
+		$iv = substr(hash('sha256', $secret_iv), 0, 16);
 
-		if( $action == 'e' && function_exists('openssl_encrypt')) {
-			$output = base64_encode( openssl_encrypt( $string, $encrypt_method, $key, 0, $iv ) );
+		if ($action == 'e' && function_exists('openssl_encrypt')) {
+			$output = base64_encode(openssl_encrypt($string, $encrypt_method, $key, 0, $iv));
 		}
-		else if( $action == 'd' && function_exists('openssl_decrypt') && base64_decode( $string )){
-			$decrypt = openssl_decrypt( base64_decode( $string ), $encrypt_method, $key, 0, $iv );
-			if($decrypt) {
+		else if ($action == 'd' && function_exists('openssl_decrypt') && base64_decode($string)) {
+			$decrypt = openssl_decrypt(base64_decode($string), $encrypt_method, $key, 0, $iv);
+			if ($decrypt) {
 				//we check if decrypt was succesful
 				$output = $decrypt;
 			}
@@ -235,121 +235,121 @@ class Xcloner_Remote_Storage {
 
 	public function get_available_storages() {
 		$return = array();
-		foreach ( $this->storage_fields as $storage => $data ) {
-			$check_field = $this->storage_fields["option_prefix"] . $storage . "_enable";
-			if ( get_option( $check_field ) ) {
-				$return[ $storage ] = $data['text'];
+		foreach ($this->storage_fields as $storage => $data) {
+			$check_field = $this->storage_fields["option_prefix"].$storage."_enable";
+			if (get_option($check_field)) {
+				$return[$storage] = $data['text'];
 			}
 		}
 
 		return $return;
 	}
 
-	public function save( $action = "ftp" ) {
-		if ( ! $action ) {
+	public function save($action = "ftp") {
+		if (!$action) {
 			return false;
 		}
 
-		$storage = $this->xcloner_sanitization->sanitize_input_as_string( $action );
-		$this->logger->debug( sprintf( "Saving the remote storage %s options", strtoupper( $action ) ) );
+		$storage = $this->xcloner_sanitization->sanitize_input_as_string($action);
+		$this->logger->debug(sprintf("Saving the remote storage %s options", strtoupper($action)));
 
-		if ( is_array( $this->storage_fields[ $storage ] ) ) {
-			foreach ( $this->storage_fields[ $storage ] as $field => $validation ) {
-				$check_field     = $this->storage_fields["option_prefix"] . $field;
-				$sanitize_method = "sanitize_input_as_" . $validation;
+		if (is_array($this->storage_fields[$storage])) {
+			foreach ($this->storage_fields[$storage] as $field => $validation) {
+				$check_field     = $this->storage_fields["option_prefix"].$field;
+				$sanitize_method = "sanitize_input_as_".$validation;
 
-				if ( ! isset( $_POST[ $check_field ] ) ) {
-					$_POST[ $check_field ] = 0;
+				if (!isset($_POST[$check_field])) {
+					$_POST[$check_field] = 0;
 				}
 
-				if ( ! method_exists( $this->xcloner_sanitization, $sanitize_method ) ) {
+				if (!method_exists($this->xcloner_sanitization, $sanitize_method)) {
 					$sanitize_method = "sanitize_input_as_string";
 				}
 
-				$sanitized_value = $this->xcloner_sanitization->$sanitize_method( stripslashes( $_POST[ $check_field ] ) );
-				update_option( $check_field, $sanitized_value );
+				$sanitized_value = $this->xcloner_sanitization->$sanitize_method(stripslashes($_POST[$check_field]));
+				update_option($check_field, $sanitized_value);
 			}
 
-			$this->xcloner->trigger_message( __( "%s storage settings saved.", 'xcloner-backup-and-restore' ), "success", $this->storage_fields[ $action ]['text'] );
+			$this->xcloner->trigger_message(__("%s storage settings saved.", 'xcloner-backup-and-restore'), "success", $this->storage_fields[$action]['text']);
 		}
 
 	}
 
-	public function check( $action = "ftp" ) {
+	public function check($action = "ftp") {
 		try {
-			$this->verify_filesystem( $action );
-			$this->xcloner->trigger_message( __( "%s connection is valid.", 'xcloner-backup-and-restore' ), "success", $this->storage_fields[ $action ]['text'] );
-			$this->logger->debug( sprintf( "Connection to remote storage %s is valid", strtoupper( $action ) ) );
-		} catch ( Exception $e ) {
-			$this->xcloner->trigger_message( "%s connection error: " . $e->getMessage(), "error", $this->storage_fields[ $action ]['text'] );
+			$this->verify_filesystem($action);
+			$this->xcloner->trigger_message(__("%s connection is valid.", 'xcloner-backup-and-restore'), "success", $this->storage_fields[$action]['text']);
+			$this->logger->debug(sprintf("Connection to remote storage %s is valid", strtoupper($action)));
+		}catch (Exception $e) {
+			$this->xcloner->trigger_message("%s connection error: ".$e->getMessage(), "error", $this->storage_fields[$action]['text']);
 		}
 	}
 
 	/**
 	 * @param string $storage_type
 	 */
-	public function verify_filesystem( $storage_type ) {
-		$method = "get_" . $storage_type . "_filesystem";
+	public function verify_filesystem($storage_type) {
+		$method = "get_".$storage_type."_filesystem";
 
-		$this->logger->info( sprintf( "Checking validity of the remote storage %s filesystem", strtoupper( $storage_type ) ) );
+		$this->logger->info(sprintf("Checking validity of the remote storage %s filesystem", strtoupper($storage_type)));
 
-		if ( ! method_exists( $this, $method ) ) {
+		if (!method_exists($this, $method)) {
 			return false;
 		}
 
-		list( $adapter, $filesystem ) = $this->$method();
+		list($adapter, $filesystem) = $this->$method();
 
-		$test_file = substr( ".xcloner_" . md5( time() ), 0, 15 );
+		$test_file = substr(".xcloner_".md5(time()), 0, 15);
 
-		if ( $storage_type == "gdrive" ) {
-			if ( ! is_array( $filesystem->listContents() ) ) {
-				throw new Exception( __( "Could not read data", 'xcloner-backup-and-restore' ) );
+		if ($storage_type == "gdrive") {
+			if (!is_array($filesystem->listContents())) {
+				throw new Exception(__("Could not read data", 'xcloner-backup-and-restore'));
 			}
-			$this->logger->debug( sprintf( "I can list data from remote storage %s", strtoupper( $storage_type ) ) );
+			$this->logger->debug(sprintf("I can list data from remote storage %s", strtoupper($storage_type)));
 
 			return true;
 		}
 
 		//testing write access
-		if ( ! $filesystem->write( $test_file, "data" ) ) {
-			throw new Exception( __( "Could not write data", 'xcloner-backup-and-restore' ) );
+		if (!$filesystem->write($test_file, "data")) {
+			throw new Exception(__("Could not write data", 'xcloner-backup-and-restore'));
 		}
-		$this->logger->debug( sprintf( "I can write data to remote storage %s", strtoupper( $storage_type ) ) );
+		$this->logger->debug(sprintf("I can write data to remote storage %s", strtoupper($storage_type)));
 
 		//testing read access
-		if ( ! $filesystem->has( $test_file ) ) {
-			throw new Exception( __( "Could not read data", 'xcloner-backup-and-restore' ) );
+		if (!$filesystem->has($test_file)) {
+			throw new Exception(__("Could not read data", 'xcloner-backup-and-restore'));
 		}
-		$this->logger->debug( sprintf( "I can read data to remote storage %s", strtoupper( $storage_type ) ) );
+		$this->logger->debug(sprintf("I can read data to remote storage %s", strtoupper($storage_type)));
 
 		//delete test file
-		if ( ! $filesystem->delete( $test_file ) ) {
-			throw new Exception( __( "Could not delete data", 'xcloner-backup-and-restore' ) );
+		if (!$filesystem->delete($test_file)) {
+			throw new Exception(__("Could not delete data", 'xcloner-backup-and-restore'));
 		}
-		$this->logger->debug( sprintf( "I can delete data to remote storage %s", strtoupper( $storage_type ) ) );
+		$this->logger->debug(sprintf("I can delete data to remote storage %s", strtoupper($storage_type)));
 
 		return true;
 	}
 
-	public function upload_backup_to_storage( $file, $storage ) {
-		if ( ! $this->xcloner_file_system->get_storage_filesystem()->has( $file ) ) {
-			$this->logger->info( sprintf( "File not found %s in local storage", $file ) );
+	public function upload_backup_to_storage($file, $storage) {
+		if (!$this->xcloner_file_system->get_storage_filesystem()->has($file)) {
+			$this->logger->info(sprintf("File not found %s in local storage", $file));
 
 			return false;
 		}
 
-		$method = "get_" . $storage . "_filesystem";
+		$method = "get_".$storage."_filesystem";
 
-		if ( ! method_exists( $this, $method ) ) {
+		if (!method_exists($this, $method)) {
 			return false;
 		}
 
-		list( $remote_storage_adapter, $remote_storage_filesystem ) = $this->$method();
+		list($remote_storage_adapter, $remote_storage_filesystem) = $this->$method();
 
 		//doing remote storage cleaning here
-		$this->clean_remote_storage( $storage, $remote_storage_filesystem );
+		$this->clean_remote_storage($storage, $remote_storage_filesystem);
 
-		$this->logger->info( sprintf( "Transferring backup %s to remote storage %s", $file, strtoupper( $storage ) ), array( "" ) );
+		$this->logger->info(sprintf("Transferring backup %s to remote storage %s", $file, strtoupper($storage)), array(""));
 
 		/*if(!$this->xcloner_file_system->get_storage_filesystem()->has($file))
 		{
