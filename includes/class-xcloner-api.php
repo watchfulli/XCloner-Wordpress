@@ -112,7 +112,7 @@ class Xcloner_Api
     private function check_access()
 	{
 		if (function_exists('current_user_can') && !current_user_can('manage_options')) {
-			die("Not allowed access here!");
+            $this->send_response(json_encode("Not allowed access here!"));
 		}
 	}
 
@@ -301,7 +301,7 @@ class Xcloner_Api
 		$init = (int)$_POST['init'];
 
 		if ($params === null) {
-			die('{"status":false,"msg":"The post_data parameter must be valid JSON"}');
+			return $this->send_response('{"status":false,"msg":"The post_data parameter must be valid JSON"}');
 		}
 
 		$this->process_params($params);
@@ -365,7 +365,7 @@ class Xcloner_Api
 		$init = (int)$_POST['init'];
 
 		if ($params === null) {
-			die('{"status":false,"msg":"The post_data parameter must be valid JSON"}');
+			return $this->send_response('{"status":false,"msg":"The post_data parameter must be valid JSON"}');
 		}
 
 		$this->process_params($params);
@@ -400,7 +400,7 @@ class Xcloner_Api
 		$init = (int)$_POST['init'];
 
 		if ($params === null) {
-			die('{"status":false,"msg":"The post_data parameter must be valid JSON"}');
+            $this->send_response('{"status":false,"msg":"The post_data parameter must be valid JSON"}');
 		}
 
 		$this->process_params($params);
@@ -1266,6 +1266,8 @@ class Xcloner_Api
 	{
 		$this->check_access();
 
+        $return = array();
+
 		$xcloner_remote_storage = $this->get_xcloner_container()->get_xcloner_remote_storage();
 
 		$return['finished'] = $xcloner_remote_storage->change_storage_status($_POST['id'], $_POST['value']);
@@ -1376,7 +1378,8 @@ class Xcloner_Api
 			echo $buffer;
 		}
 		fclose($read_stream);
-		exit;
+
+        wp_die();
 
 	}
 
@@ -1479,6 +1482,5 @@ class Xcloner_Api
 		}
 		wp_send_json($data);
 
-		die();
 	}
 }
