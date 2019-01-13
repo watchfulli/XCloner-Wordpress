@@ -46,6 +46,7 @@ class Xcloner_Api
 	private $xcloner_database;
 	private $xcloner_settings;
 	private $xcloner_file_system;
+	private $xcloner_scheduler;
 	private $xcloner_requirements;
 	private $xcloner_sanitization;
 	private $xcloner_encryption;
@@ -104,12 +105,11 @@ class Xcloner_Api
 		return $this->xcloner_container;
 	}
 
-	/**
-	 * Check if user has access to this class
-	 * @return die() returns die() if user is not allowed
-	 * @link http://www.wordpress.org
-	 */
-	private function check_access()
+
+    /**
+     * Checks API access
+     */
+    private function check_access()
 	{
 		if (function_exists('current_user_can') && !current_user_can('manage_options')) {
 			die("Not allowed access here!");
@@ -970,7 +970,7 @@ class Xcloner_Api
                             <ul class="multipart">
                                 <?php foreach ($file_info['childs'] as $child): ?>
                                     <li>
-                                        <?php echo $child[0] ?> (<?php echo size_format($child[2]) ?>)
+                                        <?php echo $child[0] ?> (<?php echo esc_html(size_format($child[2])) ?>)
                                         <?php
 										$child_exists_on_local_storage = true;
 										if ($storage_selection) {
@@ -1030,7 +1030,7 @@ class Xcloner_Api
 						?>
 
                     <?php ob_start(); ?>
-                        <?php echo size_format($file_info['size']) ?>
+                        <?php echo esc_html(size_format($file_info['size'])) ?>
                     <?php
 						$return['data'][$i][] = ob_get_contents();
 						ob_end_clean();
