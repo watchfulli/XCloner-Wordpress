@@ -62,7 +62,7 @@ class Xcloner_Encryption
 	 */
 	public function is_encrypted_file($filename) {
 		$fp = fopen($this->get_xcloner_path().$filename, 'r');
-		if ($fp) {
+		if (is_resource($fp)) {
 			$encryption_length = fread($fp, 16);
 			fclose($fp);
 			if (is_numeric($encryption_length)) {
@@ -105,9 +105,10 @@ class Xcloner_Encryption
 	 * @param int $start   Start position for reading when doing incremental mode.
 	 * @param integer $iv   The IV key to use.
 	 * @param bool $verification   Weather we should we try to verify the decryption.
-	 * @return string|false  Returns the file name that has been created or FALSE if an error occured
+	 * @return array|false  Returns array or FALSE if an error occured
+     * @throws Exception
 	 */
-	public function encrypt_file($source, $dest = "", $key = "", $start = 0, $iv = 0, $verification = true, $recursive = false)
+	public function encrypt_file($source, $dest = "", $key = "", $start = 0, $iv = "", $verification = true, $recursive = false)
 	{
 		if (is_object($this->logger)) {
 			$this->logger->info(sprintf('Encrypting file %s at position %d IV %s', $source, $start, base64_encode($iv)));
@@ -235,7 +236,8 @@ class Xcloner_Encryption
 	 * @param string $key    The key used for the decryption (must be the same as for encryption)
 	 * @param int $start   Start position for reading when doing incremental mode.
 	 * @param integer $iv   The IV key to use.
-	 * @return string|false  Returns the file name that has been created or FALSE if an error occured
+	 * @return array|false  Returns array or FALSE if an error occured
+     * @throws Exception
 	 */
 	public function decrypt_file($source, $dest = "", $key = "", $start = 0, $iv = 0, $recursive = false)
 	{
