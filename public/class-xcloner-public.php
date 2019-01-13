@@ -45,10 +45,8 @@ class Xcloner_Public {
 	 *
 	 * @since    1.0.0
 	 *
-	 * @param      string $plugin_name The name of the plugin.
-	 * @param      string $version The version of this plugin.
 	 */
-	public function __construct( Xcloner $xcloner_container ) {
+	public function __construct(Xcloner $xcloner_container) {
 
 		$this->plugin_name = $xcloner_container->get_plugin_name();
 		$this->version     = $xcloner_container->get_version();
@@ -74,7 +72,7 @@ class Xcloner_Public {
 		 * class.
 		 */
 
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/xcloner-public.css', array(), $this->version, 'all' );
+		wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__).'css/xcloner-public.css', array(), $this->version, 'all');
 
 	}
 
@@ -97,7 +95,7 @@ class Xcloner_Public {
 		 * class.
 		 */
 
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/xcloner-public.js', array( 'jquery' ), $this->version, false );
+		wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__).'js/xcloner-public.js', array('jquery'), $this->version, false);
 
 	}
 
