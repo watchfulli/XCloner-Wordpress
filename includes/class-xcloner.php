@@ -84,6 +84,7 @@ class Xcloner {
 	private $xcloner_remote_storage;
 	private $xcloner_file_transfer;
 	private $xcloner_encryption;
+
 	/**
 	 * Define the core functionality of the plugin.
 	 *
@@ -113,7 +114,17 @@ class Xcloner {
 
 	}
 
-	/*public function get_xcloner_settings()
+    /**
+     * Retrieve the version number of the plugin.
+     *
+     * @since     1.0.0
+     * @return    string    The version number of the plugin.
+     */
+    /*public function get_version() {
+        return $this->version;
+    }
+
+    public function get_xcloner_settings()
 	{
 		return $this->xcloner_settings;
 	}
@@ -412,6 +423,8 @@ class Xcloner {
 	}
 
 	/*
+	 * @method get_xcloner_logger()
+	 * @method get_xcloner_settings()
 	 * type = core|plugin|theme|translation
 	 */
 	public function pre_auto_update($type, $item, $context)
@@ -548,6 +561,10 @@ class Xcloner {
 		return (isset($levels[$type]) ? $levels[$type] : "Error #{$type}");
 	}
 
+    /**
+     * @method get_xcloner_scheduler()
+     * @throws Exception
+     */
 	private function define_ajax_hooks()
 	{
 		//adding the pre-update hook
@@ -681,16 +698,6 @@ class Xcloner {
 	 */
 	public function get_loader() {
 		return $this->loader;
-	}
-
-	/**
-	 * Retrieve the version number of the plugin.
-	 *
-	 * @since     1.0.0
-	 * @return    string    The version number of the plugin.
-	 */
-	public function get_version() {
-		return $this->version;
 	}
 
 	public function xcloner_display()
