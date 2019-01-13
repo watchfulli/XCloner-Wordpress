@@ -45,7 +45,7 @@ class Xcloner_Encryption
             return $this->xcloner_settings->get_xcloner_encryption_key();
         }
 
-        return false;
+        return "";
 
     }
 
@@ -97,7 +97,7 @@ class Xcloner_Encryption
      * @param string $key    The key used for the encryption
      * @param int $start   Start position for reading when doing incremental mode.
      * @param string $iv   The IV key to use.
-     * @param bool $verfication   Weather we should we try to verify the decryption.
+     * @param bool $verification   Weather we should we try to verify the decryption.
      * @return string|false  Returns the file name that has been created or FALSE if an error occured
     */
     public function encrypt_file($source, $dest = "" , $key= "", $start = 0, $iv = 0, $verification = true, $recursive = false)

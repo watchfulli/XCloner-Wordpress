@@ -246,8 +246,13 @@ class Xcloner_Restore
 				
 				if(!$bytes_written = fwrite($fp, $blob))
 					throw new Exception("Unable to write data to file $target_file");
-				
-				@unlink($_FILES['blob']['tmp_name']);
+
+				try {
+                    unlink($_FILES['blob']['tmp_name']);
+                }catch(Exception $e){
+
+                }
+
 			}elseif(isset($_POST['blob'])){
 				$this->logger->debug(sprintf('Writing %s bytes to file %s starting position %s using POST blob', strlen($_POST['blob']), $target_file, $_POST['start']));
 				
@@ -1213,10 +1218,10 @@ class Xcloner_Restore
 	private function has_serialized($s)
 	{
 		if(
-		    stristr($s, '{' ) != false &&
-		    stristr($s, '}' ) != false &&
-		    stristr($s, ';' ) != false &&
-		    stristr($s, ':' ) != false
+		    stristr($s, '{' ) !== false &&
+		    stristr($s, '}' ) !== false &&
+		    stristr($s, ';' ) !== false &&
+		    stristr($s, ':' ) !== false
 		    ){
 		    return true;
 		}else{
