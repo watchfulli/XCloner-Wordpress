@@ -180,7 +180,6 @@ class Xcloner_Database extends wpdb {
 	 *
 	 * name: headers
 	 * @param
-	 * @return
 	 */
 	private function headers()
 	{

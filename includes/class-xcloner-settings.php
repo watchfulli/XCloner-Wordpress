@@ -68,7 +68,7 @@ class Xcloner_Settings {
 	 * Create a random string
 	 * @author	XEWeb <>
 	 * @param $length the length of the string to create
-	 * @return $str the string
+	 * @return string
 	 */
 	private function randomString($length = 6) {
 		$str = "";
