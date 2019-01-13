@@ -103,12 +103,12 @@ class Xcloner_Encryption
 	 * @param string $dest   File name where the encryped file should be written to.
 	 * @param string $key    The key used for the encryption
 	 * @param int $start   Start position for reading when doing incremental mode.
-	 * @param integer $iv   The IV key to use.
+	 * @param string $iv   The IV key to use.
 	 * @param bool $verification   Weather we should we try to verify the decryption.
 	 * @return array|false  Returns array or FALSE if an error occured
      * @throws Exception
 	 */
-	public function encrypt_file($source, $dest = "", $key = "", $start = 0, $iv = "", $verification = true, $recursive = false)
+	public function encrypt_file($source, $dest = "", $key = "", $start = 0, $iv = 0, $verification = true, $recursive = false)
 	{
 		if (is_object($this->logger)) {
 			$this->logger->info(sprintf('Encrypting file %s at position %d IV %s', $source, $start, base64_encode($iv)));
@@ -235,7 +235,7 @@ class Xcloner_Encryption
 	 * @param string $dest   File name where the decryped file should be written to.
 	 * @param string $key    The key used for the decryption (must be the same as for encryption)
 	 * @param int $start   Start position for reading when doing incremental mode.
-	 * @param integer $iv   The IV key to use.
+	 * @param string $iv   The IV key to use.
 	 * @return array|false  Returns array or FALSE if an error occured
      * @throws Exception
 	 */
