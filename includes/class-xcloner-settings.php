@@ -29,7 +29,7 @@ class Xcloner_Settings {
 	}
 
 	public function get_xcloner_start_path() {
-		if (!get_option('xcloner_start_path') or !is_dir(get_option('xcloner_start_path'))) {
+		if (!get_option('xcloner_start_path') or !is_dir(/** @scrutinizer ignore-type */get_option('xcloner_start_path'))) {
 			$path = realpath(ABSPATH);
 		} else {
 			$path = get_option('xcloner_start_path');
@@ -39,13 +39,13 @@ class Xcloner_Settings {
 	}
 
 	public function get_xcloner_dir_path($dir) {
-		$path = self::get_xcloner_start_path().DS.$dir;
+		$path = $this->get_xcloner_start_path().DS.$dir;
 
 		return $path;
 	}
 
 	public function get_xcloner_store_path() {
-		if (!get_option('xcloner_store_path') or !is_dir(get_option('xcloner_store_path'))) {
+		if (!get_option('xcloner_store_path') or !is_dir(/** @scrutinizer ignore-type */get_option('xcloner_store_path'))) {
 			$path = realpath(XCLONER_STORAGE_PATH);
 		} else {
 			$path = get_option('xcloner_store_path');
@@ -93,8 +93,12 @@ class Xcloner_Settings {
 
 			$path = sys_get_temp_dir();
 			if (!is_dir($path)) {
-				@mkdir($path);
-				@chmod($path, 0777);
+			    try {
+                    mkdir($path);
+                    chmod($path, 0777);
+                }catch(Exception $e){
+			        //silent catch
+                }
 			}
 
 			if (!is_dir($path) or !is_writeable($path)) {
