@@ -1023,10 +1023,13 @@ class Xcloner_Restore
 		switch ($last) {
 			// The 'G' modifier is available since PHP 5.1.0
 			case 'g':
+			    //gigabytes
 				$numeric_val *= 1024;
 			case 'm':
+			    //megabytes
 				$numeric_val *= 1024;
 			case 'k':
+			    //kilobytes
 				$numeric_val *= 1024;
 		}
 
