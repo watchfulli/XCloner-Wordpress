@@ -106,6 +106,9 @@ class Xcloner_Restore
 	private $backup_storage_dir;
 	private $parent_api;
 
+	private $target_adapter;
+	private $target_filesystem;
+
 	/**
 	 * Xcloner_Restore constructor.
 	 * @param string $parent_api
@@ -250,7 +253,7 @@ class Xcloner_Restore
 				try {
 					unlink($_FILES['blob']['tmp_name']);
 				}catch (Exception $e) {
-
+                    //silent message
 				}
 
 			}elseif (isset($_POST['blob'])) {
@@ -347,6 +350,7 @@ class Xcloner_Restore
 		
 		$line_count = 0;
 		$query = "";
+		$return = array();
 		$return['finished'] = 1;
 		$return['backup_file']	= $mysqldump_file;
 		$return['backup_size']	= filesize($mysql_backup_file);
@@ -419,20 +423,20 @@ class Xcloner_Restore
 				$line_count++;
 				
 			}
+
+            $return['start'] = ftell($fp);
+
+            $this->logger->info(sprintf("Executed %s queries of size %s bytes", $line_count, ($return['start'] - $start)));
+
+            if (!feof($fp))
+            {
+                $return['finished'] = 0;
+            } else {
+                $this->logger->info(sprintf("Mysql Import Done."));
+            }
+
+            fclose($fp);
 		}
-		
-		$return['start'] = ftell($fp);
-		
-		$this->logger->info(sprintf("Executed %s queries of size %s bytes", $line_count, ($return['start'] - $start)));
-		
-		if (!feof($fp))
-		{
-			$return['finished'] = 0;
-		} else {
-			$this->logger->info(sprintf("Mysql Import Done."));
-		}
-		
-		fclose($fp);
 		
 		$this->send_response(200, $return);
 	}
