@@ -856,7 +856,7 @@ class Xcloner_Api
 
 		//echo strlen($return['iv']);exit;
 
-		if ($return['finished']) {
+		if (isset($return['finished']) && $return['finished']) {
 			if ($this->xcloner_file_system->is_multipart($source_backup_file)) {
 				$return['start'] = 0;
 
