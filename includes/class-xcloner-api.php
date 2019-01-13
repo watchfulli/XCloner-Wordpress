@@ -403,7 +403,7 @@ class Xcloner_Api
 			die('{"status":false,"msg":"The post_data parameter must be valid JSON"}');
 		}
 
-		$hash = $this->process_params($params);
+		$this->process_params($params);
 
 		$this->xcloner_file_system->set_excluded_files($this->form_params['excluded_files']);
 
@@ -939,7 +939,6 @@ class Xcloner_Api
 		$available_storages = $this->xcloner_remote_storage->get_available_storages();
 
 		$backup_list = $this->xcloner_file_system->get_backup_archives_list($storage_selection);
-		$return = array();
 
 		$i = -1;
 		foreach ($backup_list as $file_info):?>
@@ -1226,6 +1225,8 @@ class Xcloner_Api
 	{
 		$this->check_access();
 
+        $return = array();
+
 		$backup_file = $this->xcloner_sanitization->sanitize_input_as_string($_POST['file']);
 		$storage_type = $this->xcloner_sanitization->sanitize_input_as_string($_POST['storage_type']);
 
@@ -1277,7 +1278,7 @@ class Xcloner_Api
 	{
 		$this->check_access();
 
-		@ob_end_clean();
+		ob_end_clean();
 
 		$adapter = new Local(dirname(__DIR__), LOCK_EX, 'SKIP_LINKS');
 		$xcloner_plugin_filesystem = new Filesystem($adapter, new Config([
@@ -1332,7 +1333,11 @@ class Xcloner_Api
 
 		}
 
-		@unlink($tmp_file);
+		try {
+            unlink($tmp_file);
+        }catch(Exception $e) {
+        }
+
 		exit;
 	}
 
@@ -1345,7 +1350,7 @@ class Xcloner_Api
 	{
 		$this->check_access();
 
-		@ob_end_clean();
+		ob_end_clean();
 
 		$backup_name = $this->xcloner_sanitization->sanitize_input_as_string($_GET['name']);
 
@@ -1363,7 +1368,7 @@ class Xcloner_Api
 		header('Content-Type: application/octet-stream');
 		header('Content-Length: ' . $metadata['size']);
 
-		@ob_end_clean();
+		ob_end_clean();
 
 		$chunkSize = 1024 * 1024;
 		while (!feof($read_stream)) {
@@ -1383,7 +1388,7 @@ class Xcloner_Api
 		$this->check_access();
 
         $return = array();
-        
+
 		$return['part'] = 0;
 		$return['total_parts'] = 0;
 		$return['uploaded_size'] = 0;
