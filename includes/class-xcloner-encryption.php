@@ -316,8 +316,8 @@ class Xcloner_Encryption
 					if (!feof($fpIn)) {
 						fclose($fpIn);
 						if ($this->verification || $recursive) {
-							$ciphertext = "";
-							$plaintext = "";
+							unset($ciphertext);
+							unset($plaintext);
 							$this->decrypt_file($source, $dest, $key, $start, $iv, $recursive);
 						} else {
 							if (($iv) != base64_decode(base64_encode($iv)))
