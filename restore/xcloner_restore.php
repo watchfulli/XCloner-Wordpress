@@ -1167,8 +1167,8 @@ class Xcloner_Restore
 			$return['message'] = $response;
 		}
 		
-		echo json_encode($return);
-		exit;
+		die (json_encode($return) );
+
 	}
 
 	/**

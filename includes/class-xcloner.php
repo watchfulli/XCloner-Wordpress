@@ -612,7 +612,11 @@ class Xcloner {
 
 	}
 
-	function add_new_intervals($schedules)
+    /**
+     * @param $schedules
+     * @return mixed
+     */
+	public function add_new_intervals($schedules)
 	{
 		//weekly scheduler interval
 		$schedules['weekly'] = array(
@@ -676,7 +680,7 @@ class Xcloner {
 		return $this->version;
 	}
 
-	function xcloner_display()
+	public function xcloner_display()
 	{
 		// check user capabilities
 		if (!current_user_can('manage_options')) {
