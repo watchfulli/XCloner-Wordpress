@@ -385,8 +385,8 @@ class Xcloner {
 		if(defined('DOING_CRON') || !isset($_POST['hash']))
 		{
 			add_action( 'shutdown', function(){
-				$this->xcloner_file_system = new Xcloner_File_System($this);
-				$this->xcloner_file_system->remove_tmp_filesystem();
+				$this->xcloner_filesystem = new Xcloner_File_System($this);
+				$this->xcloner_filesystem->remove_tmp_filesystem();
 			});
 		}
 
