@@ -412,6 +412,10 @@ class Xcloner {
 			return false;
 		}
 
+		$exclude_files = array();
+		$regex = "";
+		$data = "";
+
 		$this->get_xcloner_logger()->info(sprintf("Doing automatic backup before %s upgrade, pre_auto_update hook.", $type));
 
 		$content_dir = str_replace(ABSPATH, "", WP_CONTENT_DIR);
@@ -523,7 +527,7 @@ class Xcloner {
 
 	}
 
-	function friendly_error_type($type) {
+	public function friendly_error_type($type) {
 		static $levels = null;
 		if ($levels === null) {
 			$levels = [];
@@ -587,7 +591,7 @@ class Xcloner {
 		}
 	}
 
-	function add_plugin_action_links($links, $file) {
+	public function add_plugin_action_links($links, $file) {
 		if ($file == plugin_basename(dirname(dirname(__FILE__)).'/xcloner.php'))
 		{
 			$links[] = '<a href="admin.php?page=xcloner_settings_page">'.__('Settings', 'xcloner-backup-and-restore').'</a>';
