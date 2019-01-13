@@ -155,7 +155,9 @@ class Xcloner_Scheduler {
 	}
 
 	public function disable_single_cron($schedule_id) {
+        $schedule = array();
 		$hook      = 'xcloner_scheduler_'.$schedule_id;
+
 		if($timestamp = wp_next_scheduled($hook, array($schedule_id))) {
             wp_unschedule_event($timestamp, $hook, array($schedule_id));
         }
@@ -194,6 +196,7 @@ class Xcloner_Scheduler {
 	}
 
 	public function update_last_backup($schedule_id, $last_backup) {
+        $schedule = array();
 
 		$this->logger->info(sprintf('Updating last backup %s for schedule id #%s', $last_backup, $schedule_id));
 
@@ -215,9 +218,13 @@ class Xcloner_Scheduler {
 	private function _xcloner_scheduler_callback( $id, $schedule ) {
 		set_time_limit( 0 );
 
+
 		$xcloner = new XCloner();
 		$xcloner->init();
 		$this->set_xcloner_container( $xcloner );
+        $return_encrypted = array();
+        $return = array();
+        $additional = array();
 
 		#$hash = $this->xcloner_settings->get_hash();
 		#$this->get_xcloner_container()->get_xcloner_settings()->set_hash($hash);
