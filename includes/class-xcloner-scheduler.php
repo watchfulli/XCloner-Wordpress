@@ -103,7 +103,7 @@ class Xcloner_Scheduler {
 		foreach ($list as $schedule) {
 			$hook = 'xcloner_scheduler_'.$schedule->id;
 
-			if($timestamp = wp_next_scheduled($hook, array($schedule->id))) {
+			if ($timestamp = wp_next_scheduled($hook, array($schedule->id))) {
 				wp_unschedule_event($timestamp, $hook, array($schedule->id));
 			}
 		}
@@ -127,7 +127,7 @@ class Xcloner_Scheduler {
 				}
 
 			} elseif (!$schedule->status) {
-				if($timestamp = wp_next_scheduled($hook, array($schedule->id))) {
+				if ($timestamp = wp_next_scheduled($hook, array($schedule->id))) {
 					wp_unschedule_event($timestamp, $hook, array($schedule->id));
 				}
 			}
@@ -139,7 +139,7 @@ class Xcloner_Scheduler {
 		$schedule = $this->get_schedule_by_id_object($id);
 		$hook     = 'xcloner_scheduler_'.$schedule->id;
 
-		if( $timestamp = wp_next_scheduled($hook, array($schedule->id))) {
+		if ($timestamp = wp_next_scheduled($hook, array($schedule->id))) {
 			wp_unschedule_event($timestamp, $hook, array($schedule->id));
 		}
 
@@ -156,9 +156,9 @@ class Xcloner_Scheduler {
 
 	public function disable_single_cron($schedule_id) {
 		$schedule = array();
-		$hook      = 'xcloner_scheduler_'.$schedule_id;
+		$hook = 'xcloner_scheduler_'.$schedule_id;
 
-		if($timestamp = wp_next_scheduled($hook, array($schedule_id))) {
+		if ($timestamp = wp_next_scheduled($hook, array($schedule_id))) {
 			wp_unschedule_event($timestamp, $hook, array($schedule_id));
 		}
 
@@ -215,13 +215,13 @@ class Xcloner_Scheduler {
 		return $update;
 	}
 
-	private function _xcloner_scheduler_callback( $id, $schedule ) {
-		set_time_limit( 0 );
+	private function _xcloner_scheduler_callback($id, $schedule) {
+		set_time_limit(0);
 
 
 		$xcloner = new XCloner();
 		$xcloner->init();
-		$this->set_xcloner_container( $xcloner );
+		$this->set_xcloner_container($xcloner);
 		$return_encrypted = array();
 		$return = array();
 		$additional = array();

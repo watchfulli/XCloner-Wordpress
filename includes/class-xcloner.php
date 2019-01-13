@@ -612,10 +612,10 @@ class Xcloner {
 
 	}
 
-    /**
-     * @param $schedules
-     * @return mixed
-     */
+	/**
+	 * @param $schedules
+	 * @return mixed
+	 */
 	public function add_new_intervals($schedules)
 	{
 		//weekly scheduler interval

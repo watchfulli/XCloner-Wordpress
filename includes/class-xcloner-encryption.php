@@ -62,7 +62,7 @@ class Xcloner_Encryption
 	 */
 	public function is_encrypted_file($filename) {
 		$fp = fopen($this->get_xcloner_path().$filename, 'r');
-		if($fp) {
+		if ($fp) {
 			$encryption_length = fread($fp, 16);
 			fclose($fp);
 			if (is_numeric($encryption_length)) {
