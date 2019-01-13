@@ -10,7 +10,13 @@ class Xcloner_Logger extends Logger {
 	private $max_logger_files = 7;
 	private $main_logger_url;
 
-	public function __construct(Xcloner $xcloner_container, $logger_name = "xcloner_logger") {
+    /**
+     * Xcloner_Logger constructor.
+     * @param Xcloner $xcloner_container
+     * @param string $logger_name
+     * @throws Exception
+     */
+    public function __construct(Xcloner $xcloner_container, $logger_name = "xcloner_logger") {
 		if (!$xcloner_container->get_xcloner_settings()) {
 			$xcloner_settings = new Xcloner_Settings($xcloner_container);
 		} else {
@@ -70,11 +76,18 @@ class Xcloner_Logger extends Logger {
 		//return $this;
 	}
 
-	function get_main_logger_url() {
+    /**
+     * @return string|null
+     */
+    function get_main_logger_url() {
 		return $this->main_logger_url;
 	}
 
-	function getLastDebugLines($totalLines = 200) {
+    /**
+     * @param int $totalLines
+     * @return array|bool
+     */
+    function getLastDebugLines($totalLines = 200) {
 		$lines = array();
 
 		if (!file_exists($this->main_logger_url) or !is_readable($this->main_logger_url)) {
