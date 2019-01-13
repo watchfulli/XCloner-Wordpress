@@ -90,7 +90,7 @@ class Xcloner_Api
 		$this->xcloner_remote_storage   = $xcloner_container->get_xcloner_remote_storage();
 
 		if (isset($_POST['API_ID'])) {
-			$this->logger->info("Processing ajax request ID " . substr($this->xcloner_sanitization->sanitize_input_as_string($_POST['API_ID']),
+			$this->logger->info("Processing ajax request ID ".substr($this->xcloner_sanitization->sanitize_input_as_string($_POST['API_ID']),
 					0, 15));
 		}
 
@@ -106,13 +106,13 @@ class Xcloner_Api
 	}
 
 
-    /**
-     * Checks API access
-     */
-    private function check_access()
+	/**
+	 * Checks API access
+	 */
+	private function check_access()
 	{
 		if (function_exists('current_user_can') && !current_user_can('manage_options')) {
-            $this->send_response(json_encode("Not allowed access here!"));
+			$this->send_response(json_encode("Not allowed access here!"));
 		}
 	}
 
@@ -131,13 +131,13 @@ class Xcloner_Api
 
 
 		$data['recordsPerSession'] = $this->xcloner_settings->get_xcloner_option('xcloner_database_records_per_request');
-		$data['TEMP_DBPROCESS_FILE'] = $this->xcloner_settings->get_xcloner_tmp_path() . DS . ".database";
-		$data['TEMP_DUMP_FILE'] = $this->xcloner_settings->get_xcloner_tmp_path() . DS . "database-sql.sql";
+		$data['TEMP_DBPROCESS_FILE'] = $this->xcloner_settings->get_xcloner_tmp_path().DS.".database";
+		$data['TEMP_DUMP_FILE'] = $this->xcloner_settings->get_xcloner_tmp_path().DS."database-sql.sql";
 
 		try {
 			$this->xcloner_database->init($data);
 
-		} catch (Exception $e) {
+		}catch (Exception $e) {
 
 			$this->send_response($e->getMessage());
 			$this->logger->error($e->getMessage());
@@ -223,8 +223,8 @@ class Xcloner_Api
 		} else {
 
 			$schedule['status'] = 1;
-			$schedule['start_at'] = strtotime($this->form_params['backup_params']['schedule_start_date'] .
-				" " . $this->form_params['backup_params']['schedule_start_time']);
+			$schedule['start_at'] = strtotime($this->form_params['backup_params']['schedule_start_date'].
+				" ".$this->form_params['backup_params']['schedule_start_time']);
 
 			if ($schedule['start_at'] <= time()) {
 				$schedule['start_at'] = "";
@@ -249,7 +249,7 @@ class Xcloner_Api
 
 		if (!isset($_POST['id'])) {
 			$wpdb->insert(
-				$wpdb->prefix . 'xcloner_scheduler',
+				$wpdb->prefix.'xcloner_scheduler',
 				$schedule,
 				array(
 					'%s',
@@ -258,7 +258,7 @@ class Xcloner_Api
 			);
 		} else {
 			$wpdb->update(
-				$wpdb->prefix . 'xcloner_scheduler',
+				$wpdb->prefix.'xcloner_scheduler',
 				$schedule,
 				array('id' => $_POST['id']),
 				array(
@@ -291,8 +291,8 @@ class Xcloner_Api
      */
 	public function backup_files()
 	{
-        $return = array();
-        $additional = array();
+		$return = array();
+		$additional = array();
 
 		$this->check_access();
 
@@ -312,7 +312,7 @@ class Xcloner_Api
 		try {
 			$return = $this->archive_system->start_incremental_backup($this->form_params['backup_params'],
 				$this->form_params['extra'], $init);
-		} catch (Exception $e) {
+		}catch (Exception $e) {
 			$return = array();
 			$return['error'] = true;
 			$return['status'] = 500;
@@ -339,7 +339,7 @@ class Xcloner_Api
 					$additional['lines_total'] = $return['extra']['lines_total'];
 					$this->archive_system->send_notification($to, $from, $subject, $return['extra']['backup_parent'],
 						$this->form_params, "", $additional);
-				} catch (Exception $e) {
+				}catch (Exception $e) {
 					$this->logger->error($e->getMessage());
 				}
 			}
@@ -356,7 +356,7 @@ class Xcloner_Api
      */
 	public function backup_database()
 	{
-        $data = array();
+		$data = array();
 
 		$this->check_access();
 
@@ -392,7 +392,7 @@ class Xcloner_Api
      */
 	public function scan_filesystem()
 	{
-        $data = array();
+		$data = array();
 
 		$this->check_access();
 
@@ -400,7 +400,7 @@ class Xcloner_Api
 		$init = (int)$_POST['init'];
 
 		if ($params === null) {
-            $this->send_response('{"status":false,"msg":"The post_data parameter must be valid JSON"}');
+			$this->send_response('{"status":false,"msg":"The post_data parameter must be valid JSON"}');
 		}
 
 		$this->process_params($params);
@@ -437,7 +437,7 @@ class Xcloner_Api
 		if (isset($params->backup_params)) {
 			foreach ($params->backup_params as $param) {
 				$this->form_params['backup_params'][$param->name] = $this->xcloner_sanitization->sanitize_input_as_string($param->value);
-				$this->logger->debug("Adding form parameter " . $param->name . "." . $param->value . "\n", array(
+				$this->logger->debug("Adding form parameter ".$param->name.".".$param->value."\n", array(
 					'POST',
 					'fields filter'
 				));
@@ -449,7 +449,7 @@ class Xcloner_Api
 		if (isset($params->table_params)) {
 			foreach ($params->table_params as $param) {
 				$this->form_params['database'][$param->parent][] = $this->xcloner_sanitization->sanitize_input_as_raw($param->id);
-				$this->logger->debug("Adding database filter " . $param->parent . "." . $param->id . "\n", array(
+				$this->logger->debug("Adding database filter ".$param->parent.".".$param->id."\n", array(
 					'POST',
 					'database filter'
 				));
@@ -468,7 +468,7 @@ class Xcloner_Api
 				if (!in_array($param->parent, $this->form_params['excluded_files'])) {
 					//$this->form_params['excluded_files'][] = $this->xcloner_sanitization->sanitize_input_as_relative_path($param->id);
 					$unique_exclude_files[] = $param->id;
-					$this->logger->debug("Adding file filter " . $param->id . "\n", array(
+					$this->logger->debug("Adding file filter ".$param->id."\n", array(
 						'POST',
 						'exclude files filter'
 					));
@@ -516,13 +516,13 @@ class Xcloner_Api
 				'text' => $this->xcloner_settings->get_xcloner_start_path(),
 				//'children' => true,
 				'state' => array('selected' => false, 'opened' => true),
-				'icon' => plugin_dir_url(dirname(__FILE__)) . "/admin/assets/file-icon-root.png"
+				'icon' => plugin_dir_url(dirname(__FILE__))."/admin/assets/file-icon-root.png"
 			);
 		}
 
 		try {
 			$files = $this->xcloner_file_system->list_directory($folder);
-		} catch (Exception $e) {
+		}catch (Exception $e) {
 
 			print $e->getMessage();
 			$this->logger->error($e->getMessage());
@@ -543,7 +543,7 @@ class Xcloner_Api
 			if ($file['type'] == "dir") {
 				$children = true;
 			} else {
-				$text .= " (" . $this->xcloner_requirements->file_format_size($file['size']) . ")";
+				$text .= " (".$this->xcloner_requirements->file_format_size($file['size']).")";
 			}
 
 			if ($this->xcloner_file_system->is_excluded($file)) {
@@ -559,8 +559,8 @@ class Xcloner_Api
 				//'title' => "test",
 				'children' => $children,
 				'state' => array('selected' => $selected, 'opened' => false, "checkbox_disabled" => $selected),
-				'icon' => plugin_dir_url(dirname(__FILE__)) . "/admin/assets/file-icon-" . strtolower(substr($file['type'],
-						0, 1)) . ".png"
+				'icon' => plugin_dir_url(dirname(__FILE__))."/admin/assets/file-icon-".strtolower(substr($file['type'],
+						0, 1)).".png"
 			);
 		}
 
@@ -586,7 +586,7 @@ class Xcloner_Api
 		if ($database == "#") {
 			try {
 				$return = $this->xcloner_database->get_all_databases();
-			} catch (Exception $e) {
+			}catch (Exception $e) {
 				$this->logger->error($e->getMessage());
 			}
 
@@ -607,10 +607,10 @@ class Xcloner_Api
 				$data[] = array(
 					'id' => $database['name'],
 					'parent' => '#',
-					'text' => $database['name'] . " (" . (int)$database['num_tables'] . ")",
+					'text' => $database['name']." (".(int)$database['num_tables'].")",
 					'children' => true,
 					'state' => $state,
-					'icon' => plugin_dir_url(dirname(__FILE__)) . "/admin/assets/database-icon.png"
+					'icon' => plugin_dir_url(dirname(__FILE__))."/admin/assets/database-icon.png"
 				);
 			}
 
@@ -618,7 +618,7 @@ class Xcloner_Api
 
 			try {
 				$return = $this->xcloner_database->list_tables($database, "", 1);
-			} catch (Exception $e) {
+			}catch (Exception $e) {
 				$this->logger->error($e->getMessage());
 			}
 
@@ -635,12 +635,12 @@ class Xcloner_Api
 				}
 
 				$data[] = array(
-					'id' => $database . "." . $table['name'],
+					'id' => $database.".".$table['name'],
 					'parent' => $database,
-					'text' => $table['name'] . " (" . (int)$table['records'] . ")",
+					'text' => $table['name']." (".(int)$table['records'].")",
 					'children' => false,
 					'state' => $state,
-					'icon' => plugin_dir_url(dirname(__FILE__)) . "/admin/assets/table-icon.png"
+					'icon' => plugin_dir_url(dirname(__FILE__))."/admin/assets/table-icon.png"
 				);
 			}
 		}
@@ -677,7 +677,7 @@ class Xcloner_Api
      */
 	public function get_scheduler_list()
 	{
-        $return = array();
+		$return = array();
 
 		$this->check_access();
 
@@ -686,17 +686,17 @@ class Xcloner_Api
 		$return['data'] = array();
 
 		foreach ($data as $res) {
-			$action = "<a href=\"#" . $res->id . "\" class=\"edit\" title='Edit'> <i class=\"material-icons \">edit</i></a>
-					<a href=\"#" . $res->id . "\" class=\"delete\" title='Delete'><i class=\"material-icons  \">delete</i></a>";
+			$action = "<a href=\"#".$res->id."\" class=\"edit\" title='Edit'> <i class=\"material-icons \">edit</i></a>
+					<a href=\"#" . $res->id."\" class=\"delete\" title='Delete'><i class=\"material-icons  \">delete</i></a>";
 			if ($res->status) {
 				$status = '<i class="material-icons active status">timer</i>';
 			} else {
 				$status = '<i class="material-icons status inactive">timer_off</i>';
 			}
 
-			$next_run_time = wp_next_scheduled('xcloner_scheduler_' . $res->id, array($res->id));
+			$next_run_time = wp_next_scheduled('xcloner_scheduler_'.$res->id, array($res->id));
 
-			$next_run = date(get_option('date_format') . " " . get_option('time_format'), $next_run_time);
+			$next_run = date(get_option('date_format')." ".get_option('time_format'), $next_run_time);
 
 			$remote_storage = $res->remote_storage;
 
@@ -705,16 +705,16 @@ class Xcloner_Api
 			}
 
 			if (trim($next_run)) {
-				$date_text = date(get_option('date_format') . " " . get_option('time_format'),
+				$date_text = date(get_option('date_format')." ".get_option('time_format'),
 					$next_run_time + (get_option('gmt_offset') * HOUR_IN_SECONDS));
 
 				if ($next_run_time >= time()) {
-					$next_run = "in " . human_time_diff($next_run_time, time());
+					$next_run = "in ".human_time_diff($next_run_time, time());
 				} else {
 					$next_run = __("executed", 'xcloner-backup-and-restore');
 				}
 
-				$next_run = "<a href='#' title='" . $date_text . "'>" . $next_run . "</a>";
+				$next_run = "<a href='#' title='".$date_text."'>".$next_run."</a>";
 				//$next_run .=" ($date_text)";
 			}
 
@@ -726,11 +726,11 @@ class Xcloner_Api
 				if ($this->xcloner_file_system->get_storage_filesystem()->has($res->last_backup)) {
 					$metadata = $this->xcloner_file_system->get_storage_filesystem()->getMetadata($res->last_backup);
 					$backup_size = size_format($this->xcloner_file_system->get_backup_size($res->last_backup));
-					$backup_time = date(get_option('date_format') . " " . get_option('time_format'),
+					$backup_time = date(get_option('date_format')." ".get_option('time_format'),
 						$metadata['timestamp'] + (get_option('gmt_offset') * HOUR_IN_SECONDS));
 				}
 
-				$backup_text = "<span title='" . $backup_time . "' class='shorten_string'>" . $res->last_backup . " (" . $backup_size . ")</span>";
+				$backup_text = "<span title='".$backup_time."' class='shorten_string'>".$res->last_backup." (".$backup_size.")</span>";
 			}
 
 			$schedules = wp_get_schedules();
@@ -742,7 +742,7 @@ class Xcloner_Api
 			$return['data'][] = array(
 				$res->id,
 				$res->name,
-				$res->recurrence,/*$res->start_at,*/
+				$res->recurrence, /*$res->start_at,*/
 				$next_run,
 				$remote_storage,
 				$backup_text,
@@ -761,7 +761,7 @@ class Xcloner_Api
      */
 	public function delete_schedule_by_id()
 	{
-        $data = array();
+		$data = array();
 
 		$this->check_access();
 
@@ -779,7 +779,7 @@ class Xcloner_Api
      */
 	public function delete_backup_by_name()
 	{
-        $data = array();
+		$data = array();
 
 		$this->check_access();
 
@@ -808,25 +808,25 @@ class Xcloner_Api
 			$this->process_params($params);
 			$source_backup_file = $this->xcloner_sanitization->sanitize_input_as_string($this->form_params['extra']['backup_parent']);
 
-			if(isset($this->form_params['extra']['start'])) {
+			if (isset($this->form_params['extra']['start'])) {
 				$start = $this->xcloner_sanitization->sanitize_input_as_int($this->form_params['extra']['start']);
-			}else{
+			} else {
 				$start = 0;
 			}
 
-			if(isset($this->form_params['extra']['iv'])) {
+			if (isset($this->form_params['extra']['iv'])) {
 				$iv = $this->xcloner_sanitization->sanitize_input_as_raw($this->form_params['extra']['iv']);
-			}else{
+			} else {
 				$iv = "";
 			}
 
-			if(isset($this->form_params['extra']['part'])) {
+			if (isset($this->form_params['extra']['part'])) {
 				$return['part'] = (int)$this->xcloner_sanitization->sanitize_input_as_int($this->form_params['extra']['part']);
-			}else{
+			} else {
 				$return['part'] = 0;
 			}
 
-		}else{
+		} else {
 			$source_backup_file = $this->xcloner_sanitization->sanitize_input_as_string($_POST['file']);
 			$start = $this->xcloner_sanitization->sanitize_input_as_int($_POST['start']);
 			$iv = $this->xcloner_sanitization->sanitize_input_as_raw($_POST['iv']);
@@ -841,14 +841,14 @@ class Xcloner_Api
 		}
 
 		$return['processing_file'] = $backup_file;
-		$return['total_size'] = filesize($this->xcloner_settings->get_xcloner_store_path() . DS . $backup_file);
+		$return['total_size'] = filesize($this->xcloner_settings->get_xcloner_store_path().DS.$backup_file);
 
 		try {
 			$this->logger->info(json_encode($_POST));
 			$this->logger->info($iv);
 			$return = array_merge($return,
 				$this->xcloner_encryption->encrypt_file($backup_file, "", "", $start, base64_decode($iv)));
-		}catch(\Exception $e){
+		}catch (\Exception $e) {
 			$return['error'] = true;
 			$return['message'] = $e->getMessage();
 			$return['error_message'] = $e->getMessage();
@@ -856,7 +856,7 @@ class Xcloner_Api
 
 		//echo strlen($return['iv']);exit;
 
-		if($return['finished']) {
+		if ($return['finished']) {
 			if ($this->xcloner_file_system->is_multipart($source_backup_file)) {
 				$return['start'] = 0;
 
@@ -870,7 +870,7 @@ class Xcloner_Api
 		}
 
 		if (isset($_POST['data'])) {
-			$return['extra'] = array_merge($this->form_params['extra'],  $return);
+			$return['extra'] = array_merge($this->form_params['extra'], $return);
 		}
 
 		$this->send_response($return, 0);
@@ -889,7 +889,7 @@ class Xcloner_Api
 		$source_backup_file = $this->xcloner_sanitization->sanitize_input_as_string($_POST['file']);
 		$start = $this->xcloner_sanitization->sanitize_input_as_int($_POST['start']);
 		$iv = $this->xcloner_sanitization->sanitize_input_as_raw($_POST['iv']);
-		$decryption_key = $this->xcloner_sanitization->sanitize_input_as_raw($_POST['decryption_key']);;
+		$decryption_key = $this->xcloner_sanitization->sanitize_input_as_raw($_POST['decryption_key']); ;
 		$return['part'] = $this->xcloner_sanitization->sanitize_input_as_int($_POST['part']);
 
 		$backup_file = $source_backup_file;
@@ -900,17 +900,17 @@ class Xcloner_Api
 		}
 
 		$return['processing_file'] = $backup_file;
-		$return['total_size'] = filesize($this->xcloner_settings->get_xcloner_store_path() . DS . $backup_file);
+		$return['total_size'] = filesize($this->xcloner_settings->get_xcloner_store_path().DS.$backup_file);
 
 		try {
 			$return = array_merge($return,
 				$this->xcloner_encryption->decrypt_file($backup_file, "", $decryption_key, $start, base64_decode($iv)));
-		}catch(\Exception $e){
+		}catch (\Exception $e) {
 			$return['error'] = true;
 			$return['message'] = $e->getMessage();
 		}
 
-		if($return['finished']) {
+		if ($return['finished']) {
 			if ($this->xcloner_file_system->is_multipart($source_backup_file)) {
 				$return['start'] = 0;
 
@@ -928,9 +928,9 @@ class Xcloner_Api
 
 	public function get_manage_backups_list() {
 
-        $this->check_access();
+		$this->check_access();
 
-        $return = array();
+		$return = array();
 		$storage_selection = "";
 
 		if (isset($_GET['storage_selection']) and $_GET['storage_selection']) {
@@ -944,7 +944,7 @@ class Xcloner_Api
 		foreach ($backup_list as $file_info):?>
             <?php
 			if ($storage_selection == "gdrive") {
-				$file_info['path'] = $file_info['filename'] . "." . $file_info['extension'];
+				$file_info['path'] = $file_info['filename'].".".$file_info['extension'];
 			}
 			$file_exists_on_local_storage = true;
 
@@ -1065,10 +1065,10 @@ class Xcloner_Api
                             <?php endif ?>
                             <?php
 							$basename = $file_info['basename'];
-							if(isset($file_info['childs']) and sizeof($file_info['childs']))
+							if (isset($file_info['childs']) and sizeof($file_info['childs']))
 								$basename = $file_info['childs'][0][0];
 							?>
-                            <?php if($this->xcloner_encryption->is_encrypted_file($basename)) :?>
+                            <?php if ($this->xcloner_encryption->is_encrypted_file($basename)) :?>
                                 <a href="#<?php echo $file_info['basename'] ?>" class="backup-decryption"
                                    title="<?php echo __('Backup Decryption', 'xcloner-backup-and-restore') ?>">
                                     <i class="material-icons">enhanced_encryption</i>
@@ -1113,7 +1113,7 @@ class Xcloner_Api
 		$this->check_access();
 
 		$backup_parts = array();
-        $return = array();
+		$return = array();
 
 		$source_backup_file = $this->xcloner_sanitization->sanitize_input_as_string($_POST['file']);
 		$start = $this->xcloner_sanitization->sanitize_input_as_int($_POST['start']);
@@ -1126,7 +1126,7 @@ class Xcloner_Api
 			$backup_file = $backup_parts[$return['part']];
 		}
 
-		if($this->xcloner_encryption->is_encrypted_file($backup_file)) {
+		if ($this->xcloner_encryption->is_encrypted_file($backup_file)) {
 			$return['error'] = true;
 			$return['message'] = __("Backup archive is encrypted, please decrypt it first before you can list it's content.", "xcloner-backup-and-restore");
 			$this->send_response($return, 0);
@@ -1134,10 +1134,10 @@ class Xcloner_Api
 
 		try {
 			$tar = new Tar();
-			$tar->open($this->xcloner_settings->get_xcloner_store_path() . DS . $backup_file, $start);
+			$tar->open($this->xcloner_settings->get_xcloner_store_path().DS.$backup_file, $start);
 
 			$data = $tar->contents(get_option('xcloner_files_to_process_per_request'));
-		} catch (Exception $e) {
+		}catch (Exception $e) {
 			$return['error'] = true;
 			$return['message'] = $e->getMessage();
 			$this->send_response($return, 0);
@@ -1145,14 +1145,14 @@ class Xcloner_Api
 
 		$return['files'] = array();
 		$return['finished'] = 1;
-		$return['total_size'] = filesize($this->xcloner_settings->get_xcloner_store_path() . DS . $backup_file);
+		$return['total_size'] = filesize($this->xcloner_settings->get_xcloner_store_path().DS.$backup_file);
 		$i = 0;
 
 		if (isset($data['extracted_files']) and is_array($data['extracted_files'])) {
 			foreach ($data['extracted_files'] as $file) {
 				$return['files'][$i]['path'] = $file->getPath();
 				$return['files'][$i]['size'] = $file->getSize();
-				$return['files'][$i]['mtime'] = date(get_option('date_format') . " " . get_option('time_format'),
+				$return['files'][$i]['mtime'] = date(get_option('date_format')." ".get_option('time_format'),
 					$file->getMtime());
 
 				$i++;
@@ -1200,7 +1200,7 @@ class Xcloner_Api
 					"copy_backup_remote_to_local"
 				), array($backup_file, $storage_type));
 			}
-		} catch (Exception $e) {
+		}catch (Exception $e) {
 
 			$return['error'] = 1;
 			$return['message'] = $e->getMessage();
@@ -1225,7 +1225,7 @@ class Xcloner_Api
 	{
 		$this->check_access();
 
-        $return = array();
+		$return = array();
 
 		$backup_file = $this->xcloner_sanitization->sanitize_input_as_string($_POST['file']);
 		$storage_type = $this->xcloner_sanitization->sanitize_input_as_string($_POST['storage_type']);
@@ -1239,7 +1239,7 @@ class Xcloner_Api
 					"upload_backup_to_storage"
 				), array($backup_file, $storage_type));
 			}
-		} catch (Exception $e) {
+		}catch (Exception $e) {
 
 			$return['error'] = 1;
 			$return['message'] = $e->getMessage();
@@ -1264,7 +1264,7 @@ class Xcloner_Api
 	{
 		$this->check_access();
 
-        $return = array();
+		$return = array();
 
 		$xcloner_remote_storage = $this->get_xcloner_container()->get_xcloner_remote_storage();
 
@@ -1301,21 +1301,21 @@ class Xcloner_Api
         $phar2->setStub($phar2->createDefaultStub('vendor/autoload.php', 'vendor/autoload.php'));
          * */
 
-		$tmp_file = $this->xcloner_settings->get_xcloner_tmp_path() . DS . "xcloner-restore.tgz";
+		$tmp_file = $this->xcloner_settings->get_xcloner_tmp_path().DS."xcloner-restore.tgz";
 
 		$tar = new Tar();
 		$tar->create($tmp_file);
 
-		$tar->addFile(dirname(__DIR__) . "/restore/vendor.build.txt", "vendor.phar");
+		$tar->addFile(dirname(__DIR__)."/restore/vendor.build.txt", "vendor.phar");
 		//$tar->addFile(dirname(__DIR__)."/restore/vendor.tgz", "vendor.tgz");
 
 		$files = $xcloner_plugin_filesystem->listContents("vendor/", true);
 		foreach ($files as $file) {
-			$tar->addFile(dirname(__DIR__) . DS . $file['path'], $file['path']);
+			$tar->addFile(dirname(__DIR__).DS.$file['path'], $file['path']);
 		}
 
-		$content = file_get_contents(dirname(__DIR__) . "/restore/xcloner_restore.php");
-		$content = str_replace("define('AUTH_KEY', '');", "define('AUTH_KEY', '" . md5(AUTH_KEY) . "');", $content);
+		$content = file_get_contents(dirname(__DIR__)."/restore/xcloner_restore.php");
+		$content = str_replace("define('AUTH_KEY', '');", "define('AUTH_KEY', '".md5(AUTH_KEY)."');", $content);
 
 		$tar->addData("xcloner_restore.php", $content);
 
@@ -1334,10 +1334,10 @@ class Xcloner_Api
 		}
 
 		try {
-            unlink($tmp_file);
-        }catch(Exception $e) {
-		    //We are not interested in the error here
-        }
+			unlink($tmp_file);
+		}catch(Exception $e) {
+			//We are not interested in the error here
+		}
 
 		die();
 	}
@@ -1365,9 +1365,9 @@ class Xcloner_Api
 		header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 		header('Cache-Control: private', false);
 		header('Content-Transfer-Encoding: binary');
-		header('Content-Disposition: attachment; filename="' . $metadata['path'] . '";');
+		header('Content-Disposition: attachment; filename="'.$metadata['path'].'";');
 		header('Content-Type: application/octet-stream');
-		header('Content-Length: ' . $metadata['size']);
+		header('Content-Length: '.$metadata['size']);
 
 		ob_end_clean();
 
@@ -1378,7 +1378,7 @@ class Xcloner_Api
 		}
 		fclose($read_stream);
 
-        wp_die();
+		wp_die();
 
 	}
 
@@ -1389,7 +1389,7 @@ class Xcloner_Api
 	{
 		$this->check_access();
 
-        $return = array();
+		$return = array();
 
 		$return['part'] = 0;
 		$return['total_parts'] = 0;
@@ -1430,12 +1430,12 @@ class Xcloner_Api
 			$xcloner_file_transfer->set_target($target_url);
 			$return['start'] = $xcloner_file_transfer->transfer_file($file, $start, $hash);
 
-		} catch (Exception $e) {
+		}catch (Exception $e) {
 
 			$return = array();
 			$return['error'] = true;
 			$return['status'] = 500;
-			$return['message'] = "CURL communication error with the restore host. " . $e->getMessage();
+			$return['message'] = "CURL communication error with the restore host. ".$e->getMessage();
 			$this->send_response($return, 0);
 
 		}
@@ -1459,7 +1459,7 @@ class Xcloner_Api
 		$this->check_access();
 
 		define("XCLONER_PLUGIN_ACCESS", 1);
-		include_once(dirname(__DIR__) . DS . "restore" . DS . "xcloner_restore.php");
+		include_once(dirname(__DIR__).DS."restore".DS."xcloner_restore.php");
 
 		return;
 	}

@@ -40,28 +40,28 @@ class Xcloner_Admin {
 	 */
 	private $version;
 
-    /**
-     * @var Xcloner
-     */
-    private $xcloner_container;
+	/**
+	 * @var Xcloner
+	 */
+	private $xcloner_container;
 
-    /**
-     * Initialize the class and set its properties.
-     *
-     * Xcloner_Admin constructor.
-     * @param Xcloner $xcloner_container
-     */
-    public function __construct(Xcloner $xcloner_container) {
+	/**
+	 * Initialize the class and set its properties.
+	 *
+	 * Xcloner_Admin constructor.
+	 * @param Xcloner $xcloner_container
+	 */
+	public function __construct(Xcloner $xcloner_container) {
 
 		$this->plugin_name       = $xcloner_container->get_plugin_name();
 		$this->version           = $xcloner_container->get_version();
 		$this->xcloner_container = $xcloner_container;
 	}
 
-    /**
-     * @return Xcloner
-     */
-    public function get_xcloner_container() {
+	/**
+	 * @return Xcloner
+	 */
+	public function get_xcloner_container() {
 		return $this->xcloner_container;
 	}
 
@@ -144,10 +144,10 @@ class Xcloner_Admin {
 
 	}
 
-    /**
-     * Returns the XCloner Storage Page
-     */
-    public function xcloner_remote_storage_page() {
+	/**
+	 * Returns the XCloner Storage Page
+	 */
+	public function xcloner_remote_storage_page() {
 		$xcloner_sanitization = $this->get_xcloner_container()->get_xcloner_sanitization();
 		$remote_storage       = $this->get_xcloner_container()->get_xcloner_remote_storage();
 

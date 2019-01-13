@@ -19,11 +19,11 @@ class Xcloner_Encryption
 	private $xcloner_container;
 	private $verification = false;
 
-    /**
-     * Xcloner_Encryption constructor.
-     * @param Xcloner $xcloner_container
-     */
-    public function __construct(Xcloner $xcloner_container)
+	/**
+	 * Xcloner_Encryption constructor.
+	 * @param Xcloner $xcloner_container
+	 */
+	public function __construct(Xcloner $xcloner_container)
 	{
 		$this->xcloner_container = $xcloner_container;
 		if (method_exists($xcloner_container, 'get_xcloner_settings')) {
@@ -63,12 +63,12 @@ class Xcloner_Encryption
 	public function is_encrypted_file($filename) {
 		$fp = fopen($this->get_xcloner_path().$filename, 'r');
 		if($fp) {
-            $encryption_length = fread($fp, 16);
-            fclose($fp);
-            if (is_numeric($encryption_length)) {
-                return true;
-            }
-        }
+			$encryption_length = fread($fp, 16);
+			fclose($fp);
+			if (is_numeric($encryption_length)) {
+				return true;
+			}
+		}
 
 		return false;
 
@@ -372,10 +372,10 @@ try {
 	if (isset($argv[1])) {
 
 		class Xcloner {
-            /**
-             * Xcloner constructor.
-             */
-            public function __construct()
+			/**
+			 * Xcloner constructor.
+			 */
+			public function __construct()
 			{
 			}
 		}

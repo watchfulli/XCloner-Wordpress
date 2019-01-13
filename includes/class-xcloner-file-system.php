@@ -923,163 +923,163 @@ class Xcloner_File_System
     * exclude the backup folders
     * PATTERN: (^|^\/)(wp-content\/backups|administrator\/backups)(.*)$";
     */
-    private function is_excluded_regex($file)
-    {
-        //$this->logger->debug(sprintf(("Checking if %s is excluded"), $file['path']));
+	private function is_excluded_regex($file)
+	{
+		//$this->logger->debug(sprintf(("Checking if %s is excluded"), $file['path']));
 
-        $regex_patterns = explode(PHP_EOL, $this->xcloner_settings->get_xcloner_option('xcloner_regex_exclude'));
+		$regex_patterns = explode(PHP_EOL, $this->xcloner_settings->get_xcloner_option('xcloner_regex_exclude'));
 
-        if (is_array($this->additional_regex_patterns)) {
-            $regex_patterns = array_merge($regex_patterns, $this->additional_regex_patterns);
-        }
+		if (is_array($this->additional_regex_patterns)) {
+			$regex_patterns = array_merge($regex_patterns, $this->additional_regex_patterns);
+		}
 
-        //print_r($regex_patterns);exit;
+		//print_r($regex_patterns);exit;
 
-        if (is_array($regex_patterns)) {
-            //$this->excluded_files = array();
-            //$this->excluded_files[] ="(.*)\.(git)(.*)$";
-            //$this->excluded_files[] ="wp-content\/backups(.*)$";
+		if (is_array($regex_patterns)) {
+			//$this->excluded_files = array();
+			//$this->excluded_files[] ="(.*)\.(git)(.*)$";
+			//$this->excluded_files[] ="wp-content\/backups(.*)$";
 
-            foreach ($regex_patterns as $excluded_file_pattern) {
+			foreach ($regex_patterns as $excluded_file_pattern) {
 
-                if (substr($excluded_file_pattern, strlen($excluded_file_pattern) - 1,
-                        strlen($excluded_file_pattern)) == "\r") {
-                    $excluded_file_pattern = substr($excluded_file_pattern, 0, strlen($excluded_file_pattern) - 1);
-                }
+				if (substr($excluded_file_pattern, strlen($excluded_file_pattern) - 1,
+						strlen($excluded_file_pattern)) == "\r") {
+					$excluded_file_pattern = substr($excluded_file_pattern, 0, strlen($excluded_file_pattern) - 1);
+				}
 
-                if ($file['path'] == "/") {
-                    $needle = "/";
-                } else {
-                    $needle = "/".$file['path'];
-                }
-                //echo $needle."---".$excluded_file_pattern."---\n";
+				if ($file['path'] == "/") {
+					$needle = "/";
+				} else {
+					$needle = "/".$file['path'];
+				}
+				//echo $needle."---".$excluded_file_pattern."---\n";
 
-                if (@preg_match("/(^|^\/)".$excluded_file_pattern."/i", $needle)) {
-                    return $excluded_file_pattern;
-                }
-            }
-        }
+				if (@preg_match("/(^|^\/)".$excluded_file_pattern."/i", $needle)) {
+					return $excluded_file_pattern;
+				}
+			}
+		}
 
-        return false;
-    }
+		return false;
+	}
 
-    public function store_file($file, $storage = 'start_filesystem')
-    {
-        $this->logger->debug(sprintf("Storing %s in the backup list", $file['path']));
+	public function store_file($file, $storage = 'start_filesystem')
+	{
+		$this->logger->debug(sprintf("Storing %s in the backup list", $file['path']));
 
-        if (!isset($file['size'])) {
-            $file['size'] = 0;
-        }
-        if (!isset($file['visibility'])) {
-            $file['visibility'] = "private";
-        }
+		if (!isset($file['size'])) {
+			$file['size'] = 0;
+		}
+		if (!isset($file['visibility'])) {
+			$file['visibility'] = "private";
+		}
 
-        $csv_filename = str_replace('"', '""', $file['path']);
+		$csv_filename = str_replace('"', '""', $file['path']);
 
-        $line = '"'.($csv_filename).'","'.$file['timestamp'].'","'.$file['size'].'","'.$file['visibility'].'","'.$storage.'"'.PHP_EOL;
+		$line = '"'.($csv_filename).'","'.$file['timestamp'].'","'.$file['size'].'","'.$file['visibility'].'","'.$storage.'"'.PHP_EOL;
 
-        $this->last_logged_file = $file['path'];
+		$this->last_logged_file = $file['path'];
 
-        if ($file['type'] == "dir") {
-            try {
-                $this->tmp_filesystem_append->write($this->get_temp_dir_handler(), $file['path']."\n");
-            }catch (Exception $e) {
-                $this->logger->error($e->getMessage());
-            }
-        }
+		if ($file['type'] == "dir") {
+			try {
+				$this->tmp_filesystem_append->write($this->get_temp_dir_handler(), $file['path']."\n");
+			}catch (Exception $e) {
+				$this->logger->error($e->getMessage());
+			}
+		}
 
-        if ($this->get_diff_timestamp_start()) {
-            if ($file['type'] != "file" && $response = $this->check_file_diff_time($file)) {
-                $this->logger->info(sprintf("Directory %s archiving skipped on differential backup %s", $file['path'],
-                    $response), array(
-                    "FILESYSTEM SCAN",
-                    "DIR DIFF"
-                ));
+		if ($this->get_diff_timestamp_start()) {
+			if ($file['type'] != "file" && $response = $this->check_file_diff_time($file)) {
+				$this->logger->info(sprintf("Directory %s archiving skipped on differential backup %s", $file['path'],
+					$response), array(
+					"FILESYSTEM SCAN",
+					"DIR DIFF"
+				));
 
-                return false;
-            }
-        }
+				return false;
+			}
+		}
 
-        try {
-            if (!$this->tmp_filesystem_append->has($this->get_included_files_handler())) {
-                //adding fix for UTF-8 CSV preview
-                $start_line = "\xEF\xBB\xBF".'"Filename","Timestamp","Size","Visibility","Storage"'.PHP_EOL;
-                $this->tmp_filesystem_append->write($this->get_included_files_handler(), $start_line);
-            }
+		try {
+			if (!$this->tmp_filesystem_append->has($this->get_included_files_handler())) {
+				//adding fix for UTF-8 CSV preview
+				$start_line = "\xEF\xBB\xBF".'"Filename","Timestamp","Size","Visibility","Storage"'.PHP_EOL;
+				$this->tmp_filesystem_append->write($this->get_included_files_handler(), $start_line);
+			}
 
-            $this->tmp_filesystem_append->write($this->get_included_files_handler(), $line);
+			$this->tmp_filesystem_append->write($this->get_included_files_handler(), $line);
 
-        }catch (Exception $e) {
+		}catch (Exception $e) {
 
-            $this->logger->error($e->getMessage());
-        }
+			$this->logger->error($e->getMessage());
+		}
 
-        return true;
-    }
+		return true;
+	}
 
-    public function get_fileystem_handler()
-    {
-        return $this;
-    }
+	public function get_fileystem_handler()
+	{
+		return $this;
+	}
 
-    public function get_filesystem($system = "")
-    {
-        if ($system == "storage_filesystem_append") {
-            return $this->storage_filesystem_append;
-        } elseif ($system == "tmp_filesystem_append") {
-            return $this->tmp_filesystem_append;
-        } elseif ($system == "tmp_filesystem") {
-            return $this->tmp_filesystem;
-        } elseif ($system == "storage_filesystem") {
-            return $this->storage_filesystem;
-        } else {
-            return $this->start_filesystem;
-        }
-    }
+	public function get_filesystem($system = "")
+	{
+		if ($system == "storage_filesystem_append") {
+			return $this->storage_filesystem_append;
+		} elseif ($system == "tmp_filesystem_append") {
+			return $this->tmp_filesystem_append;
+		} elseif ($system == "tmp_filesystem") {
+			return $this->tmp_filesystem;
+		} elseif ($system == "storage_filesystem") {
+			return $this->storage_filesystem;
+		} else {
+			return $this->start_filesystem;
+		}
+	}
 
-    public function get_adapter($system)
-    {
-        if ($system == "tmp_filesystem") {
-            return $this->tmp_adapter;
-        } elseif ($system == "storage_filesystem") {
-            return $this->storage_adapter;
-        } else {
-            return $this->start_adapter;
-        }
-    }
+	public function get_adapter($system)
+	{
+		if ($system == "tmp_filesystem") {
+			return $this->tmp_adapter;
+		} elseif ($system == "storage_filesystem") {
+			return $this->storage_adapter;
+		} else {
+			return $this->start_adapter;
+		}
+	}
 
-    /**
-     * File scan finished
-     * Method called when file scan is finished
-     *
-     * @return bool
-     */
-    private function scan_finished()
-    {
-        if ($this->tmp_filesystem_append->has($this->get_temp_dir_handler()) &&
-            $this->tmp_filesystem_append->getSize($this->get_temp_dir_handler())) {
-            return false;
-        }
+	/**
+	 * File scan finished
+	 * Method called when file scan is finished
+	 *
+	 * @return bool
+	 */
+	private function scan_finished()
+	{
+		if ($this->tmp_filesystem_append->has($this->get_temp_dir_handler()) &&
+			$this->tmp_filesystem_append->getSize($this->get_temp_dir_handler())) {
+			return false;
+		}
 
-        if ($this->tmp_filesystem->has($this->get_temp_dir_handler())) {
-            $this->tmp_filesystem->delete($this->get_temp_dir_handler());
-        }
+		if ($this->tmp_filesystem->has($this->get_temp_dir_handler())) {
+			$this->tmp_filesystem->delete($this->get_temp_dir_handler());
+		}
 
-        $this->logger->debug(sprintf(("File scan finished")));
+		$this->logger->debug(sprintf(("File scan finished")));
 
-        return true;
-    }
+		return true;
+	}
 
-    /**
-     * Calculate bytes from MB value
-     *
-     * @param int $mb_size
-     *
-     * @return float|int
-     */
-    private function calc_to_bytes($mb_size)
-    {
-        return $mb_size * (1024 * 1024);
-    }
+	/**
+	 * Calculate bytes from MB value
+	 *
+	 * @param int $mb_size
+	 *
+	 * @return float|int
+	 */
+	private function calc_to_bytes($mb_size)
+	{
+		return $mb_size * (1024 * 1024);
+	}
 
 }
