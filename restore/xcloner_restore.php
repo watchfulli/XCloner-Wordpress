@@ -169,12 +169,12 @@ class Xcloner_Restore
 	 * @return mixed|string
 	 */
 	private function friendly_error_type($type) {
-		static $levels=null;
-		if ($levels===null) {
-			$levels=[];
+		static $levels = null;
+		if ($levels === null) {
+			$levels = [];
 			foreach (get_defined_constants() as $key=>$value) {
-				if (strpos($key,'E_')!==0) {continue;}
-					$levels[$value]= $key; //substr($key,2);
+				if (strpos($key, 'E_') !== 0) {continue; }
+					$levels[$value] = $key; //substr($key,2);
 			}
 		}
 		return (isset($levels[$type]) ? $levels[$type] : "Error #{$type}");
@@ -224,43 +224,43 @@ class Xcloner_Restore
 	 */
 	public function write_file_action()
 	{
-		if(isset($_POST['file']))
+		if (isset($_POST['file']))
 		{
 			$target_file = filter_input(INPUT_POST, 'file', FILTER_SANITIZE_STRING);
 			
-			if(!$_POST['start'])
+			if (!$_POST['start'])
 				$fp = fopen($target_file, "wb+");
 			else
 				$fp = fopen($target_file, "ab+");	
 			
-			if(!$fp)
+			if (!$fp)
 				throw new Exception("Unable to open $target_file file for writing");
 			
 			fseek($fp, $_POST['start']);
 			
-			if(isset($_FILES['blob']))
+			if (isset($_FILES['blob']))
 			{
 				$this->logger->debug(sprintf('Writing %s bytes to file %s starting position %s using FILES blob', filesize($_FILES['blob']['tmp_name']), $target_file, $_POST['start']));
 				
 				$blob = file_get_contents($_FILES['blob']['tmp_name']);
 				
-				if(!$bytes_written = fwrite($fp, $blob))
+				if (!$bytes_written = fwrite($fp, $blob))
 					throw new Exception("Unable to write data to file $target_file");
 
 				try {
 					unlink($_FILES['blob']['tmp_name']);
-				}catch(Exception $e){
+				}catch (Exception $e) {
 
 				}
 
-			}elseif(isset($_POST['blob'])){
+			}elseif (isset($_POST['blob'])) {
 				$this->logger->debug(sprintf('Writing %s bytes to file %s starting position %s using POST blob', strlen($_POST['blob']), $target_file, $_POST['start']));
 				
 				$blob = $_POST['blob'];
 
-				if(!$bytes_written = fwrite($fp, $blob))
+				if (!$bytes_written = fwrite($fp, $blob))
 					throw new Exception("Unable to write data to file $target_file");
-			}else{
+			} else {
 				throw new Exception("Upload failed, did not receive any binary data");
 			}
 			
@@ -281,20 +281,20 @@ class Xcloner_Restore
 	 * @return mysqli
 	 * @throws Exception
 	 */
-	public function mysql_connect($remote_mysql_host, $remote_mysql_user, $remote_mysql_pass, $remote_mysql_db )
+	public function mysql_connect($remote_mysql_host, $remote_mysql_user, $remote_mysql_pass, $remote_mysql_db)
 	{
 		$this->logger->info(sprintf('Connecting to mysql database %s with %s@%s', $remote_mysql_db, $remote_mysql_user, $remote_mysql_host));
 
 		$mysqli = new mysqli($remote_mysql_host, $remote_mysql_user, $remote_mysql_pass, $remote_mysql_db);
 
 		if ($mysqli->connect_error) {
-			throw new Exception('Connect Error (' . $mysqli->connect_errno . ') '
+			throw new Exception('Connect Error ('.$mysqli->connect_errno.') '
 				. $mysqli->connect_error);
 		}
 		
 		$mysqli->query("SET sql_mode='';");
 		$mysqli->query("SET foreign_key_checks = 0;");
-		if(isset($_REQUEST['charset_of_file']) and $_REQUEST['charset_of_file'])
+		if (isset($_REQUEST['charset_of_file']) and $_REQUEST['charset_of_file'])
 			$mysqli->query("SET NAMES ".$_REQUEST['charset_of_file']."");
 		else
 			$mysqli->query("SET NAMES utf8;");
@@ -656,7 +656,7 @@ class Xcloner_Restore
 	 * Update Wordpress url in wp-config.php method
 	 * @param $wp_path
 	 * @param $url
-	 * @param $mysqli
+	 * @param mysqli $mysqli
 	 * @return bool
 	 * @throws Exception
 	 */
@@ -786,7 +786,7 @@ class Xcloner_Restore
 	 * Get backup hash method
 	 *
 	 * @param $backup_file
-	 * @return bool
+	 * @return false|string
 	 */
 	private function get_hash_from_backup($backup_file)
 	{
@@ -1009,14 +1009,14 @@ class Xcloner_Restore
 	/**
 	 * Return bytes from human readable value
 	 *
-	 * @param $val
+	 * @param string $val
 	 * @return int
 	 *
 	 */
 	private function return_bytes($val) {
 		$numeric_val = (int)trim($val);
-		$last = strtolower($val[strlen($val)-1]);
-		switch($last) {
+		$last = strtolower($val[strlen($val) - 1]);
+		switch ($last) {
 			// The 'G' modifier is available since PHP 5.1.0
 			case 'g':
 				$numeric_val *= 1024;
@@ -1093,15 +1093,19 @@ class Xcloner_Restore
 	 * Sort_by method
 	 *
 	 * @param $array
-	 * @param $field
+	 * @param string $field
 	 * @param string $direction
 	 * @return bool
 	 */
-	private function sort_by( &$array, $field, $direction = 'asc')
+	private function sort_by(&$array, $field, $direction = 'asc')
 	{
 		$direction = strtolower($direction);
 
 		usort($array,
+
+			/**
+			 * @param string $b
+			 */
 			function($a, $b) use($field, $direction){
 
 				$a = $a[$field];
@@ -1112,18 +1116,18 @@ class Xcloner_Restore
 					return 0;
 				}
 
-				if($direction == 'desc') {
-					if($a > $b) {
+				if ($direction == 'desc') {
+					if ($a > $b) {
 						return -1;
 					}
-					else{
+					else {
 						return 1;
 					}
-				}else {
-					if($a < $b) {
+				} else {
+					if ($a < $b) {
 						return -1;
 					}
-					else{
+					else {
 						return 1;
 					}
 				}
@@ -1167,7 +1171,7 @@ class Xcloner_Restore
 	 * Serialize fix methods below for mysql query lines
 	 *
 	 * @param $query
-	 * @return string|string[]|null
+	 * @return string
 	 */
 	 
 	function do_serialized_fix($query)
@@ -1217,14 +1221,14 @@ class Xcloner_Restore
 	 */
 	private function has_serialized($s)
 	{
-		if(
-			stristr($s, '{' ) !== false &&
-			stristr($s, '}' ) !== false &&
-			stristr($s, ';' ) !== false &&
-			stristr($s, ':' ) !== false
-			){
+		if (
+			stristr($s, '{') !== false &&
+			stristr($s, '}') !== false &&
+			stristr($s, ';') !== false &&
+			stristr($s, ':') !== false
+			) {
 			return true;
-		}else{
+		} else {
 			return false;
 		}
 
