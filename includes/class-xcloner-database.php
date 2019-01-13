@@ -243,7 +243,7 @@ class Xcloner_Database extends wpdb{
 	 *
 	 * name: list_tables
 	 * @param string $database
-	 * @param array $include
+	 * @param array $included
 	 * @param int $get_num_records
 	 * @return array $tablesList
 	 */
