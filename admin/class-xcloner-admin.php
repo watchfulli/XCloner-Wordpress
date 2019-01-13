@@ -42,13 +42,13 @@ class Xcloner_Admin {
 
 	private $xcloner_container;
 
-	/**
-	 * Initialize the class and set its properties.
-	 *
-	 * @since    1.0.0
-	 *
-	 */
-	public function __construct(Xcloner $xcloner_container) {
+    /**
+     * Initialize the class and set its properties.
+     *
+     * Xcloner_Admin constructor.
+     * @param Xcloner $xcloner_container
+     */
+    public function __construct(Xcloner $xcloner_container) {
 
 		$this->plugin_name       = $xcloner_container->get_plugin_name();
 		$this->version           = $xcloner_container->get_version();
