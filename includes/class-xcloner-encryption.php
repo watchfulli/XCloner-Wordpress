@@ -382,7 +382,7 @@ try {
 		$xcloner_encryption = new Xcloner_Encryption(new Xcloner());
 
 		if ($argv[1] == "-e") {
-			$xcloner_encryption->encrypt_file($argv[2], $argv[2].".enc", $argv[4], 0, 0, '', true);
+			$xcloner_encryption->encrypt_file($argv[2], $argv[2].".enc", $argv[4], 0, 0, false, true);
 		} elseif ($argv[1] == "-d") {
 			$xcloner_encryption->decrypt_file($argv[2], $argv[2].".dec", $argv[4], 0, 0, true);
 		}
