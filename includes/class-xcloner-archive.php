@@ -36,171 +36,171 @@ use splitbrain\PHPArchive\FileInfo;
  */
 class Xcloner_Archive extends Tar
 {
-    /**
-     * Process file size per API request
-     * @var float|int
-     */
-    private $file_size_per_request_limit = 52428800; //50MB = 52428800; 1MB = 1048576
-    /**
-     * Files count to process per API request
-     * @var int
-     */
-    private $files_to_process_per_request = 250; //block of 512 bytes
-    /**
-     * Compression level, 0-uncompressed, 9-maximum compression
-     * @var int
-     */
-    private $compression_level = 0; //0-9 , 0 uncompressed
-    /**
-     * Split backup size limit
-     * Create a new backup archive file once the set size is reached
-     * @var float|int
-     */
-    private $xcloner_split_backup_limit = 2048; //2048MB
-    /**
-     * Number of processed bytes
-     * @var int
-     */
-    private $processed_size_bytes = 0;
+	/**
+	 * Process file size per API request
+	 * @var float|int
+	 */
+	private $file_size_per_request_limit = 52428800; //50MB = 52428800; 1MB = 1048576
+	/**
+	 * Files count to process per API request
+	 * @var int
+	 */
+	private $files_to_process_per_request = 250; //block of 512 bytes
+	/**
+	 * Compression level, 0-uncompressed, 9-maximum compression
+	 * @var int
+	 */
+	private $compression_level = 0; //0-9 , 0 uncompressed
+	/**
+	 * Split backup size limit
+	 * Create a new backup archive file once the set size is reached
+	 * @var float|int
+	 */
+	private $xcloner_split_backup_limit = 2048; //2048MB
+	/**
+	 * Number of processed bytes
+	 * @var int
+	 */
+	private $processed_size_bytes = 0;
 
-    /**
-     * Archive name
-     * @var string
-     */
-    private $archive_name;
-    /**
-     * @var Tar
-     */
-    private $backup_archive;
-    /**
-     * @var Xcloner_File_System
-     */
-    private $filesystem;
-    /**
-     * @var Xcloner_Logger
-     */
-    private $logger;
-    /**
-     * @var Xcloner_Settings
-     */
-    private $xcloner_settings;
+	/**
+	 * Archive name
+	 * @var string
+	 */
+	private $archive_name;
+	/**
+	 * @var Tar
+	 */
+	private $backup_archive;
+	/**
+	 * @var Xcloner_File_System
+	 */
+	private $filesystem;
+	/**
+	 * @var Xcloner_Logger
+	 */
+	private $logger;
+	/**
+	 * @var Xcloner_Settings
+	 */
+	private $xcloner_settings;
 
-    /**
-     * [__construct description]
-     * @param Xcloner $xcloner_container XCloner Container
-     * @param string $archive_name Achive Name
-     */
-    public function __construct(Xcloner $xcloner_container, $archive_name = "")
-    {
-        $this->filesystem = $xcloner_container->get_xcloner_filesystem();
-        $this->logger = $xcloner_container->get_xcloner_logger()->withName("xcloner_archive");
-        $this->xcloner_settings = $xcloner_container->get_xcloner_settings();
+	/**
+	 * [__construct description]
+	 * @param Xcloner $xcloner_container XCloner Container
+	 * @param string $archive_name Achive Name
+	 */
+	public function __construct(Xcloner $xcloner_container, $archive_name = "")
+	{
+		$this->filesystem = $xcloner_container->get_xcloner_filesystem();
+		$this->logger = $xcloner_container->get_xcloner_logger()->withName("xcloner_archive");
+		$this->xcloner_settings = $xcloner_container->get_xcloner_settings();
 
-        if ($value = $this->xcloner_settings->get_xcloner_option('xcloner_size_limit_per_request')) {
-            $this->file_size_per_request_limit = $value * 1024 * 1024;
-        } //MB
+		if ($value = $this->xcloner_settings->get_xcloner_option('xcloner_size_limit_per_request')) {
+			$this->file_size_per_request_limit = $value * 1024 * 1024;
+		} //MB
 
-        if ($value = $this->xcloner_settings->get_xcloner_option('xcloner_files_to_process_per_request')) {
-            $this->files_to_process_per_request = $value;
-        }
+		if ($value = $this->xcloner_settings->get_xcloner_option('xcloner_files_to_process_per_request')) {
+			$this->files_to_process_per_request = $value;
+		}
 
-        if ($value = get_option('xcloner_backup_compression_level')) {
-            $this->compression_level = $value;
-        }
+		if ($value = get_option('xcloner_backup_compression_level')) {
+			$this->compression_level = $value;
+		}
 
-        if ($value = get_option('xcloner_split_backup_limit')) {
-            $this->xcloner_split_backup_limit = $value;
-        }
+		if ($value = get_option('xcloner_split_backup_limit')) {
+			$this->xcloner_split_backup_limit = $value;
+		}
 
-        $this->xcloner_split_backup_limit = $this->xcloner_split_backup_limit * 1024 * 1024; //transform to bytes
+		$this->xcloner_split_backup_limit = $this->xcloner_split_backup_limit * 1024 * 1024; //transform to bytes
 
-        if (isset($archive_name) && $archive_name) {
-            $this->set_archive_name($archive_name);
-        }
-    }
+		if (isset($archive_name) && $archive_name) {
+			$this->set_archive_name($archive_name);
+		}
+	}
 
-    /*
+	/*
      * Rename backup archive
      *
      * @param string $old_name
      * @param string $new_name
      *
      */
-    public function rename_archive($old_name, $new_name)
-    {
-        $this->logger->info(sprintf("Renaming backup archive %s to %s", $old_name, $new_name));
-        $storage_filesystem = $this->filesystem->get_storage_filesystem();
-        $storage_filesystem->rename($old_name, $new_name);
-    }
+	public function rename_archive($old_name, $new_name)
+	{
+		$this->logger->info(sprintf("Renaming backup archive %s to %s", $old_name, $new_name));
+		$storage_filesystem = $this->filesystem->get_storage_filesystem();
+		$storage_filesystem->rename($old_name, $new_name);
+	}
 
-    /*
+	/*
      *
      * Set the backup archive name
      *
      */
-    public function set_archive_name($name = "", $part = 0)
-    {
+	public function set_archive_name($name = "", $part = 0)
+	{
 
-        $this->archive_name = $this->filesystem->process_backup_name($name);
+		$this->archive_name = $this->filesystem->process_backup_name($name);
 
-        if ($diff_timestamp_start = $this->filesystem->get_diff_timestamp_start()) {
-            //$this->archive_name = $this->archive_name."-diff-".date("Y-m-d_H-i",$diff_timestamp_start);
-            $new_name = $this->archive_name;
+		if ($diff_timestamp_start = $this->filesystem->get_diff_timestamp_start()) {
+			//$this->archive_name = $this->archive_name."-diff-".date("Y-m-d_H-i",$diff_timestamp_start);
+			$new_name = $this->archive_name;
 
-            if (!stristr($new_name, "-diff")) {
-                $new_name = $this->archive_name . "-diff" . date("Y-m-d_H-i", $diff_timestamp_start);
-            }
+			if (!stristr($new_name, "-diff")) {
+				$new_name = $this->archive_name . "-diff" . date("Y-m-d_H-i", $diff_timestamp_start);
+			}
 
-            $this->archive_name = $new_name;
+			$this->archive_name = $new_name;
 
-        }
+		}
 
-        if (isset($part) and $part) {
-            $new_name = preg_replace('/-part(\d*)/', "-part" . $part, $this->archive_name);
-            if (!stristr($new_name, "-part")) {
-                $new_name = $this->archive_name . "-part" . $part;
-            }
+		if (isset($part) and $part) {
+			$new_name = preg_replace('/-part(\d*)/', "-part" . $part, $this->archive_name);
+			if (!stristr($new_name, "-part")) {
+				$new_name = $this->archive_name . "-part" . $part;
+			}
 
-            $this->archive_name = $new_name;
-        }
+			$this->archive_name = $new_name;
+		}
 
-        return $this;
-    }
+		return $this;
+	}
 
-    /*
+	/*
      *
      * Returns the backup archive name
      *
      * @return string archive name
      */
-    public function get_archive_name()
-    {
-        return $this->archive_name;
-    }
+	public function get_archive_name()
+	{
+		return $this->archive_name;
+	}
 
-    /*
+	/*
      *
      * Returns the multipart naming for the backup archive
      *
      * @return string multi-part backup name
      */
-    public function get_archive_name_multipart()
-    {
-        $new_name = preg_replace('/-part(\d*)/', "", $this->archive_name);
-        return $new_name . "-multipart" . $this->xcloner_settings->get_backup_extension_name(".csv");
-    }
+	public function get_archive_name_multipart()
+	{
+		$new_name = preg_replace('/-part(\d*)/', "", $this->archive_name);
+		return $new_name . "-multipart" . $this->xcloner_settings->get_backup_extension_name(".csv");
+	}
 
-    /*
+	/*
      *
      * Returns the full backup name including extension
      *
      */
-    public function get_archive_name_with_extension()
-    {
-        return $this->archive_name . $this->xcloner_settings->get_backup_extension_name();
-    }
+	public function get_archive_name_with_extension()
+	{
+		return $this->archive_name . $this->xcloner_settings->get_backup_extension_name();
+	}
 
-    /*
+	/*
      *
      * Send notification error by E-Mail
      *
@@ -213,31 +213,35 @@ class Xcloner_Archive extends Tar
      *
      * @return bool
      */
-    public function send_notification_error($to, $from, $subject, $backup_name, $params, $error_message)
-    {
 
-        $body = "";
-        $body .= sprintf(__("Backup Site Url: %s"), get_site_url());
-        $body .= "<br /><>";
+    /**
+     * @param string $error_message
+     */
+	public function send_notification_error($to, $from, $subject, $backup_name, $params, $error_message)
+	{
 
-        $body .= sprintf(__("Error Message: %s"), $error_message);
+		$body = "";
+		$body .= sprintf(__("Backup Site Url: %s"), get_site_url());
+		$body .= "<br /><>";
 
-        $this->logger->info(sprintf("Sending backup error notification to %s", $to));
+		$body .= sprintf(__("Error Message: %s"), $error_message);
 
-        $admin_email = get_option("admin_email");
+		$this->logger->info(sprintf("Sending backup error notification to %s", $to));
 
-        $headers = array('Content-Type: text/html; charset=UTF-8');
+		$admin_email = get_option("admin_email");
 
-        if ($admin_email and $from) {
-            $headers[] = 'From: ' . $from . ' <' . $admin_email . '>';
-        }
+		$headers = array('Content-Type: text/html; charset=UTF-8');
 
-        $return = wp_mail($to, $subject, $body, $headers);
+		if ($admin_email and $from) {
+			$headers[] = 'From: ' . $from . ' <' . $admin_email . '>';
+		}
 
-        return $return;
-    }
+		$return = wp_mail($to, $subject, $body, $headers);
 
-    /*
+		return $return;
+	}
+
+	/*
      *
      * Send backup archive notfication by E-Mail
      *
@@ -302,18 +306,18 @@ class Xcloner_Archive extends Tar
         $body .= "<br />";
 
         if (isset($params['backup_params']->backup_comments)) {
-            $body .= __("Backup Comments: ") . $params['backup_params']->backup_comments;
+            $body .= __("Backup Comments: ").$params['backup_params']->backup_comments;
             $body .= "<br /><br />";
         }
 
         if ($this->xcloner_settings->get_xcloner_option('xcloner_enable_log')) {
-            $body .= __("Latest 50 Log Lines: ") . "<br />" . implode("<br />\n",
+            $body .= __("Latest 50 Log Lines: ")."<br />".implode("<br />\n",
                                                                         $this->logger->getLastDebugLines(50));
         }
 
         $attachments = $this->filesystem->get_backup_attachments();
 
-        $attachments_archive = $this->xcloner_settings->get_xcloner_tmp_path() . DS . "info.tgz";
+        $attachments_archive = $this->xcloner_settings->get_xcloner_tmp_path().DS."info.tgz";
 
         $tar = new Tar();
         $tar->create($attachments_archive);
@@ -327,7 +331,7 @@ class Xcloner_Archive extends Tar
 
         $admin_email = get_option("admin_email");
 
-        $headers = array('Content-Type: text/html; charset=UTF-8', 'From: ' . $from . ' <' . $admin_email . '>');
+        $headers = array('Content-Type: text/html; charset=UTF-8', 'From: '.$from.' <'.$admin_email.'>');
 
         $return = wp_mail($to, $subject, $body, $headers, array($attachments_archive));
 
@@ -367,14 +371,14 @@ class Xcloner_Archive extends Tar
         if ($init) {
             $this->logger->info(sprintf(__("Initializing the backup archive %s"), $this->get_archive_name()));
 
-            $this->backup_archive->create($archive_info->getPath() . DS . $archive_info->getFilename());
+            $this->backup_archive->create($archive_info->getPath().DS.$archive_info->getFilename());
 
             $return['extra']['backup_init'] = 1;
 
         } else {
             $this->logger->info(sprintf(__("Opening for append the backup archive %s"), $this->get_archive_name()));
 
-            $this->backup_archive->openForAppend($archive_info->getPath() . DS . $archive_info->getFilename());
+            $this->backup_archive->openForAppend($archive_info->getPath().DS.$archive_info->getFilename());
 
             $return['extra']['backup_init'] = 0;
 
@@ -578,13 +582,13 @@ class Xcloner_Archive extends Tar
      */
     private function write_multipart_file($path = "")
     {
-        if(!$path) {
+        if (!$path) {
             $path = $this->get_archive_name_with_extension();
         }
 
         $file = $this->filesystem->get_filesystem("storage_filesystem_append")->getMetadata($path);
         //print_r($file_info);
-        $line = '"' . $file['path'] . '","' . $file['timestamp'] . '","' . $file['size'] . '"' . PHP_EOL;
+        $line = '"'.$file['path'].'","'.$file['timestamp'].'","'.$file['size'].'"'.PHP_EOL;
 
 
         $this->filesystem->get_filesystem("storage_filesystem_append")
@@ -627,7 +631,7 @@ class Xcloner_Archive extends Tar
         $this->backup_archive = new Tar();
         $this->backup_archive->setCompression($this->compression_level);
         $archive_info = $this->filesystem->get_storage_path_file_info($this->get_archive_name_with_extension());
-        $this->backup_archive->create($archive_info->getPath() . DS . $archive_info->getFilename());
+        $this->backup_archive->create($archive_info->getPath().DS.$archive_info->getFilename());
 
         return array($archive_info, $part);
 
@@ -637,6 +641,10 @@ class Xcloner_Archive extends Tar
      *
      * Add file to archive
      *
+     */
+
+    /**
+     * @param integer $append
      */
     public function add_file_to_archive($file_info, $start_at_byte, $byte_limit = 0, $append, $filesystem)
     {
@@ -649,7 +657,7 @@ class Xcloner_Archive extends Tar
         }
 
         if (isset($file_info['archive_prefix_path'])) {
-            $file_info['target_path'] = $file_info['archive_prefix_path'] . "/" . $file_info['path'];
+            $file_info['target_path'] = $file_info['archive_prefix_path']."/".$file_info['path'];
         } else {
             $file_info['target_path'] = $file_info['path'];
         }
@@ -756,17 +764,17 @@ class Xcloner_Archive extends Tar
     }
     */
 
-    /**
-     * Append data to a file to the current TAR archive using an existing file in the filesystem
-     *
-     * @param string $file path to the original file
-     * @param int $start starting reading position in file
-     * @param int $end end position in reading multiple with 512
-     * @param string|FileInfo $fileinfo either the name to us in archive (string) or a FileInfo oject with
-     * all meta data, empty to take from original
-     * @throws ArchiveIOException
-     */
-    /*
+	/**
+	 * Append data to a file to the current TAR archive using an existing file in the filesystem
+	 *
+	 * @param string $file path to the original file
+	 * @param int $start starting reading position in file
+	 * @param int $end end position in reading multiple with 512
+	 * @param string|FileInfo $fileinfo either the name to us in archive (string) or a FileInfo oject with
+	 * all meta data, empty to take from original
+	 * @throws ArchiveIOException
+	 */
+	/*
      * public function appendFileData($file, $fileinfo = '', $start = 0, $limit = 0)
     {
 		$end = $start+($limit*512);
@@ -822,15 +830,15 @@ class Xcloner_Archive extends Tar
         return $last_position;
     }*/
 
-    /**
-     * Adds a file to a TAR archive by appending it's data
-     *
-     * @param string $archive name of the archive file
-     * @param string $file name of the file to read data from
-     * @param string $start start position from where to start reading data
-     * @throws ArchiveIOException
-     */
-    /*public function addFileToArchive($archive, $file, $start = 0)
+	/**
+	 * Adds a file to a TAR archive by appending it's data
+	 *
+	 * @param string $archive name of the archive file
+	 * @param string $file name of the file to read data from
+	 * @param string $start start position from where to start reading data
+	 * @throws ArchiveIOException
+	 */
+	/*public function addFileToArchive($archive, $file, $start = 0)
     {
         $this->openForAppend($archive);
         return $start = $this->appendFileData($file, $start, $this->file_size_per_request_limit);
