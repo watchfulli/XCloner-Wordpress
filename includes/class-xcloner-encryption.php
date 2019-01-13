@@ -18,7 +18,11 @@ class Xcloner_Encryption
 	private $logger;
 	private $verification = false;
 
-	public function __construct(Xcloner $xcloner_container)
+    /**
+     * Xcloner_Encryption constructor.
+     * @param Xcloner $xcloner_container
+     */
+    public function __construct(Xcloner $xcloner_container)
 	{
 		$this->xcloner_container = $xcloner_container;
 		if (method_exists($xcloner_container, 'get_xcloner_settings')) {
@@ -37,7 +41,7 @@ class Xcloner_Encryption
 	/**
 	 * Returns the backup encryption key
 	 *
-	 * @return SECURE_AUTH_SALT|null
+	 * @return string|null
 	 */
 	public function get_backup_encryption_key()
 	{
@@ -45,7 +49,7 @@ class Xcloner_Encryption
 			return $this->xcloner_settings->get_xcloner_encryption_key();
 		}
 
-		return "";
+		return null;
 
 	}
 
@@ -365,7 +369,10 @@ try {
 	if (isset($argv[1])) {
 
 		class Xcloner {
-			public function __construct()
+            /**
+             * Xcloner constructor.
+             */
+            public function __construct()
 			{
 			}
 		}

@@ -33,6 +33,7 @@ class Xcloner_Database extends wpdb {
 	private  $link;
 	private  $db_selected;
 	private  $logger;
+	private  $xcloner_settings;
 	private  $fs;
 
 	private   $TEMP_DBPROCESS_FILE = ".database";

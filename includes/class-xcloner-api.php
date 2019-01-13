@@ -1280,7 +1280,7 @@ class Xcloner_Api
 
 		ob_end_clean();
 
-		$adapter = new Local(dirname(__DIR__), LOCK_EX, SKIP_LINKS);
+		$adapter = new Local(dirname(__DIR__), LOCK_EX, '0001');
 		$xcloner_plugin_filesystem = new Filesystem($adapter, new Config([
 			'disable_asserts' => true,
 		]));
