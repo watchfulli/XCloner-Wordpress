@@ -40,7 +40,10 @@ class Xcloner_Admin {
 	 */
 	private $version;
 
-	private $xcloner_container;
+    /**
+     * @var Xcloner
+     */
+    private $xcloner_container;
 
     /**
      * Initialize the class and set its properties.
@@ -55,7 +58,10 @@ class Xcloner_Admin {
 		$this->xcloner_container = $xcloner_container;
 	}
 
-	public function get_xcloner_container() {
+    /**
+     * @return Xcloner
+     */
+    public function get_xcloner_container() {
 		return $this->xcloner_container;
 	}
 
