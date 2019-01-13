@@ -168,15 +168,15 @@ class Xcloner {
 		return $this->xcloner_encryption;
 	}
 
-	public function check_dependencies(){
+	public function check_dependencies() {
 
 		$backup_storage_path = realpath(__DIR__.DS."..".DS."..".DS."..").DS."backups".DS;
 
 		define("XCLONER_STORAGE_PATH", realpath($backup_storage_path));
 
-		if(!is_dir($backup_storage_path))
+		if (!is_dir($backup_storage_path))
 		{
-			if(!@mkdir($backup_storage_path))
+			if (!@mkdir($backup_storage_path))
 			{
 				$status = "error";
 				$message = sprintf(__("Unable to create the Backup Storage Location Folder %s . Please fix this before starting the backup process."), $backup_storage_path);
@@ -184,7 +184,7 @@ class Xcloner {
 				return;
 			}
 		}
-		if(!is_writable($backup_storage_path))
+		if (!is_writable($backup_storage_path))
 		{
 			$status = "error";
 			$message = sprintf(__("Unable to write to the Backup Storage Location Folder %s . Please fix this before starting the backup process."), $backup_storage_path);
@@ -198,15 +198,15 @@ class Xcloner {
 	public function trigger_message($message, $status = "error", $message_param1 = "", $message_param2 = "", $message_param3 = "")
 	{
 			$message = sprintf(__($message), $message_param1, $message_param2, $message_param3);
-			add_action( 'xcloner_admin_notices', array($this,"trigger_message_notice"), 10, 2);
-			do_action( 'xcloner_admin_notices', $message, $status);
+			add_action('xcloner_admin_notices', array($this, "trigger_message_notice"), 10, 2);
+			do_action('xcloner_admin_notices', $message, $status);
 	}
 
 	public function trigger_message_notice($message, $status = "success")
 	{
 		?>
 		<div class="notice notice-<?php echo $status?> is-dismissible">
-	        <p><?php _e( $message, 'xcloner-backup-and-restore' ); ?></p>
+	        <p><?php _e($message, 'xcloner-backup-and-restore'); ?></p>
 	    </div>
 		<?php
 	}
@@ -301,10 +301,10 @@ class Xcloner {
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-xcloner-scheduler.php';
 
-        /**
-         * The class responsible for the XCloner Encryption methods.
-         */
-        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-xcloner-encryption.php';
+		/**
+		 * The class responsible for the XCloner Encryption methods.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-xcloner-encryption.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the public-facing
@@ -329,10 +329,10 @@ class Xcloner {
 
 		$plugin_i18n = new Xcloner_i18n();
 
-		$this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
+		$this->loader->add_action('plugins_loaded', $plugin_i18n, 'load_plugin_textdomain');
 
 		//wp_localize_script( 'ajax-script', 'my_ajax_object',
-        //   array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
+		//   array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
 
 	}
 
@@ -345,13 +345,13 @@ class Xcloner {
 	 */
 	private function define_admin_hooks() {
 
-		$plugin_admin = new Xcloner_Admin( $this );
+		$plugin_admin = new Xcloner_Admin($this);
 		$this->plugin_admin = $plugin_admin;
 
-		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
-		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
+		$this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_styles');
+		$this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts');
 
-		add_action( 'backup_archive_finished', array($this, 'do_action_after_backup_finished'), 10, 2);
+		add_action('backup_archive_finished', array($this, 'do_action_after_backup_finished'), 10, 2);
 	}
 
 	/**
@@ -368,8 +368,8 @@ class Xcloner {
 
 	private function define_plugin_settings(){
 		/**
-		* register wporg_settings_init to the admin_init action hook
-		*/
+		 * register wporg_settings_init to the admin_init action hook
+		 */
 
 		$this->xcloner_settings = new XCloner_Settings($this);
 
@@ -377,7 +377,7 @@ class Xcloner {
 
 			if(defined('DOING_CRON') || $_POST['hash'] == "generate_hash"){
 				$this->xcloner_settings->generate_new_hash();
-			}else{
+			} else{
 				$this->xcloner_settings->set_hash($_POST['hash']);
 			}
 		}
@@ -407,7 +407,7 @@ class Xcloner {
 	 */
 	public function pre_auto_update($type, $item, $context)
 	{
-		if(!$type)
+		if (!$type)
 		{
 			return false;
 		}
@@ -416,10 +416,10 @@ class Xcloner {
 
 		$content_dir = str_replace(ABSPATH, "", WP_CONTENT_DIR);
 		$plugins_dir 	= str_replace(ABSPATH, "", WP_PLUGIN_DIR);
-		$langs_dir 		= $content_dir . DS . "languages";
-		$themes_dir 		= $content_dir . DS . "themes";
+		$langs_dir 		= $content_dir.DS."languages";
+		$themes_dir 		= $content_dir.DS."themes";
 
-		switch ( $type ) {
+		switch ($type) {
 			case 'core':
 				$exclude_files = array(
 									"^(?!(wp-admin|wp-includes|(?!.*\/.*.php)))(.*)$",
@@ -429,7 +429,7 @@ class Xcloner {
 
 				$dir_array = explode(DS, $plugins_dir);
 
-				foreach($dir_array as $dir)
+				foreach ($dir_array as $dir)
 				{
 					$data .= "\/".$dir;
 					$regex .= $data."$|";
@@ -445,7 +445,7 @@ class Xcloner {
 
 				$dir_array = explode(DS, $themes_dir);
 
-				foreach($dir_array as $dir)
+				foreach ($dir_array as $dir)
 				{
 					$data .= "\/".$dir;
 					$regex .= $data."$|";
@@ -461,7 +461,7 @@ class Xcloner {
 
 				$dir_array = explode(DS, $langs_dir);
 
-				foreach($dir_array as $dir)
+				foreach ($dir_array as $dir)
 				{
 					$data .= "\/".$dir;
 					$regex .= $data."$|";
@@ -489,7 +489,7 @@ class Xcloner {
 
 		try{
 			$this->xcloner_scheduler->xcloner_scheduler_callback(0, $schedule);
-		}catch(Exception $e){
+		} catch(Exception $e){
 			$this->get_xcloner_logger()->error($e->getMessage());
 		}
 
@@ -504,10 +504,10 @@ class Xcloner {
 	 */
 	private function define_public_hooks() {
 
-		$plugin_public = new Xcloner_Public( $this );
+		$plugin_public = new Xcloner_Public($this);
 
-		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
-		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
+		$this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_styles');
+		$this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');
 
 	}
 
@@ -524,15 +524,15 @@ class Xcloner {
 	}
 
 	function friendly_error_type($type) {
-	    static $levels=null;
-	    if ($levels===null) {
-	        $levels=[];
-	        foreach (get_defined_constants() as $key=>$value) {
-	            if (strpos($key,'E_')!==0) {continue;}
+		static $levels=null;
+		if ($levels===null) {
+			$levels=[];
+			foreach (get_defined_constants() as $key=>$value) {
+				if (strpos($key,'E_')!==0) {continue;}
 					$levels[$value]= $key; //substr($key,2);
-	        }
-	    }
-	    return (isset($levels[$type]) ? $levels[$type] : "Error #{$type}");
+			}
+		}
+		return (isset($levels[$type]) ? $levels[$type] : "Error #{$type}");
 	}
 
 	private function define_ajax_hooks()
@@ -578,33 +578,33 @@ class Xcloner {
 			add_action( 'wp_ajax_get_manage_backups_list', 		array($xcloner_api,'get_manage_backups_list')  );
 			add_action( 'admin_notices', 						array($this, 'xcloner_error_admin_notices' ));
 
-        }
+		}
 
-        //Do a pre-update backup of targeted files
-        if($this->get_xcloner_settings()->get_xcloner_option('xcloner_enable_pre_update_backup'))
-        {
+		//Do a pre-update backup of targeted files
+		if($this->get_xcloner_settings()->get_xcloner_option('xcloner_enable_pre_update_backup'))
+		{
 			add_action("pre_auto_update", array($this, "pre_auto_update"), 1, 3);
 		}
 	}
 
 	function add_plugin_action_links($links, $file) {
-        if ($file == plugin_basename(dirname(dirname(__FILE__)) . '/xcloner.php'))
+		if ($file == plugin_basename(dirname(dirname(__FILE__)) . '/xcloner.php'))
 		{
 			$links[] = '<a href="admin.php?page=xcloner_settings_page">'.__('Settings', 'xcloner-backup-and-restore').'</a>';
 			$links[] = '<a href="admin.php?page=xcloner_generate_backups_page">'.__('Generate Backup', 'xcloner-backup-and-restore').'</a>';
 		}
 
-        return $links;
-    }
+		return $links;
+	}
 
 	public function xcloner_error_admin_notices() {
-			settings_errors( 'xcloner_error_message' );
+			settings_errors('xcloner_error_message');
 		}
 
 	public function define_cron_hooks()
 	{
 		//registering new schedule intervals
-		add_filter( 'cron_schedules', array($this, 'add_new_intervals'));
+		add_filter('cron_schedules', array($this, 'add_new_intervals'));
 
 
 		$xcloner_scheduler = $this->get_xcloner_scheduler();
@@ -679,13 +679,13 @@ class Xcloner {
 	function xcloner_display()
 	{
 		// check user capabilities
-	    if (!current_user_can('manage_options')) {
-	        return;
-	    }
+		if (!current_user_can('manage_options')) {
+			return;
+		}
 
 		$page = sanitize_key($_GET['page']);
 
-		if($page)
+		if ($page)
 		{
 			$this->display($page);
 		}
