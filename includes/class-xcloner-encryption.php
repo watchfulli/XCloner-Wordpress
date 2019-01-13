@@ -347,7 +347,6 @@ class Xcloner_Encryption
 				//}
 				throw new \Exception("Unable to read source file for decryption");
 			}
-		}
 
 		//we replace the original backup with the encrypted one
 		if (!$keep_local && !$this->verification && copy($this->get_xcloner_path().$dest,
