@@ -166,26 +166,26 @@ class Xcloner_Remote_Storage {
 	 * Xcloner_Remote_Storage constructor.
 	 * @param Xcloner $xcloner_container
 	 */
-	public function __construct( Xcloner $xcloner_container ) {
+	public function __construct(Xcloner $xcloner_container) {
 		$this->xcloner_sanitization = $xcloner_container->get_xcloner_sanitization();
 		$this->xcloner_file_system  = $xcloner_container->get_xcloner_filesystem();
-		$this->logger               = $xcloner_container->get_xcloner_logger()->withName( "xcloner_remote_storage" );
+		$this->logger               = $xcloner_container->get_xcloner_logger()->withName("xcloner_remote_storage");
 		$this->xcloner              = $xcloner_container;
 
-		foreach($this->storage_fields as $main_key=>$array){
+		foreach ($this->storage_fields as $main_key=>$array) {
 
-			if(is_array($array)) {
+			if (is_array($array)) {
 				foreach ($array as $key => $type) {
 
-					if( $type == "raw") {
-						add_filter("pre_update_option_" . $this->storage_fields['option_prefix'] . $key,
-							function ($value) {
+					if ($type == "raw") {
+						add_filter("pre_update_option_".$this->storage_fields['option_prefix'].$key,
+							function($value) {
 
 								return $this->simple_crypt($value, 'e');
 
 							}, 10, 1);
 
-						add_filter("option_" . $this->storage_fields['option_prefix'] . $key, function ($value) {
+						add_filter("option_".$this->storage_fields['option_prefix'].$key, function($value) {
 
 							return $this->simple_crypt($value, 'd');
 

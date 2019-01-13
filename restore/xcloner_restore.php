@@ -1023,13 +1023,13 @@ class Xcloner_Restore
 		switch ($last) {
 			// The 'G' modifier is available since PHP 5.1.0
 			case 'g':
-			    //gigabytes
+				//gigabytes
 				$numeric_val *= 1024;
 			case 'm':
-			    //megabytes
+				//megabytes
 				$numeric_val *= 1024;
 			case 'k':
-			    //kilobytes
+				//kilobytes
 				$numeric_val *= 1024;
 		}
 
@@ -1170,7 +1170,7 @@ class Xcloner_Restore
 			$return['message'] = $response;
 		}
 		
-		die (json_encode($return) );
+		die (json_encode($return));
 
 	}
 

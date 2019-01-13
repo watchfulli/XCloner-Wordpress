@@ -508,9 +508,9 @@ class Xcloner_File_System
             }
         }
 
-        try{
+        try {
             rmdir($this->xcloner_settings->get_xcloner_tmp_path());
-        }catch(Exception $e){
+        }catch (Exception $e) {
             //silent continue
         }
 

@@ -1324,18 +1324,18 @@ class Xcloner_Api
 		if (file_exists($tmp_file)) {
 			header('Content-Description: File Transfer');
 			header('Content-Type: application/octet-stream');
-			header('Content-Disposition: attachment; filename="' . basename($tmp_file) . '"');
+			header('Content-Disposition: attachment; filename="'.basename($tmp_file).'"');
 			header('Expires: 0');
 			header('Cache-Control: must-revalidate');
 			header('Pragma: public');
-			header('Content-Length: ' . filesize($tmp_file));
+			header('Content-Length: '.filesize($tmp_file));
 			readfile($tmp_file);
 
 		}
 
 		try {
 			unlink($tmp_file);
-		}catch(Exception $e) {
+		}catch (Exception $e) {
 			//We are not interested in the error here
 		}
 

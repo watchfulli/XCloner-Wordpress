@@ -93,12 +93,12 @@ class Xcloner_Settings {
 
 			$path = sys_get_temp_dir();
 			if (!is_dir($path)) {
-			    try {
-                    mkdir($path);
-                    chmod($path, 0777);
-                }catch(Exception $e){
-			        //silent catch
-                }
+				try {
+					mkdir($path);
+					chmod($path, 0777);
+				}catch(Exception $e){
+					//silent catch
+				}
 			}
 
 			if (!is_dir($path) or !is_writeable($path)) {
