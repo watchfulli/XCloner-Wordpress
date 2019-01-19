@@ -1,5 +1,26 @@
 # Changelog
 
+## 1.0.18 - 2019-01-07
+
+* Throw an Exception if can't connect to check Host Fingerprint
+
+## 1.0.17 - 2018-10-14
+
+* Don't return visibility when not in scope
+
+## 1.0.16 - 2018-07-08
+
+### Altered
+
+* Stat cache is always disabled.
+
+## 1.0.15 - 2017-11-16
+
+### Fixed
+
+* Added missing `path` to read and readStream response.
+* Upgraded phpunit and lost support for php <=5.5
+
 ## 1.0.14 - 2017-07-11
 
 ### Fixed

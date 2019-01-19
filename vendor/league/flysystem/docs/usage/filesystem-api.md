@@ -23,6 +23,20 @@ param         | description              | type
 
 ---
 
+## Write Files using a stream
+
+```php
+$response = $filesystem->writeStream($path, $resource);
+```
+
+param         | description              | type
+------------- | ------------------------ | -----------
+`$path`       | location of a file       | `string`
+`$resource`   | file stream              | `resource`
+`$response`   | success boolean          | `bool`
+
+---
+
 ## Update Files
 
 ```php
@@ -33,6 +47,20 @@ param         | description              | type
 ------------- | ------------------------ | -----------
 `$path`       | location of a file       | `string`
 `$contents`   | file contents            | `string`
+`$response`   | success boolean          | `bool`
+
+---
+
+## Update Files using a stream
+
+```php
+$response = $filesystem->updateStream($path, $contents);
+```
+
+param         | description              | type
+------------- | ------------------------ | -----------
+`$path`       | location of a file       | `string`
+`$resource`   | file stream              | `resource`
 `$response`   | success boolean          | `bool`
 
 ---
@@ -51,6 +79,20 @@ param         | description              | type
 
 ---
 
+## Write or Update Files using a stream
+
+```php
+$response = $filesystem->putStream($path, $resource);
+```
+
+param         | description              | type
+------------- | ------------------------ | -----------
+`$path`       | location of a file       | `string`
+`$resource`   | file stream              | `resource`
+`$response`   | success boolean          | `bool`
+
+---
+
 ## Read Files
 
 ```php
@@ -64,16 +106,29 @@ param         | description              | type
 
 ---
 
+## Read Files as a stream
+
+```php
+$contents = $filesystem->readStream($path);
+```
+
+param         | description              | type
+------------- | ------------------------ | -----------
+`$path`       | location of a file       | `string`
+`$resource`   | file stream              | `string`
+
+---
+
 ## Check if a file exists
 
 ```php
 $exists = $filesystem->has($path);
 ```
 
-param         | description              | type
-------------- | ------------------------ | -----------
-`$path`       | location of a file       | `string`
-`$exists`     | wether the file exists   | `bool`
+param         | description               | type
+------------- | ------------------------- | -----------
+`$path`       | location of a file        | `string`
+`$exists`     | whether the file exists   | `bool`
 
 > This only has consistent behaviour for files, not directories. Directories
 > are less important in Flysystem, they're created implicitly and often ignored because
@@ -150,7 +205,7 @@ param         | description              | type
 
 ## Get Timestamps
 
-This function the last updated timestamp.
+This function returns the last updated timestamp.
 
 ```php
 $response = $filesystem->getTimestamp($path);

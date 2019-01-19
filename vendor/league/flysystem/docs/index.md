@@ -30,11 +30,24 @@ of your code.
     <a target="_blank" href="https://laravel.com" class="flex-no-grow w-1/3 bg-white rounded shadow-md mr-4 overflow-hidden">
         <img src="/img/laravel.svg" class="w-full" alt="Laravel.com"/>
     </a>
-    <!--
-    <a target="_blank" href="https://azure.microsoft.com/" class="flex-no-grow w-1/3 bg-white rounded shadow-md mr-4 overflow-hidden">
+    <a target="_blank" href="https://azure.microsoft.com/free/?utm_source=flysystem&utm_medium=banner&utm_campaign=flysystem_sponsorship" class="flex-no-grow w-1/3 bg-white rounded shadow-md mr-4 overflow-hidden">
         <img src="/img/azure.svg" class="max-w-full m-6" alt="Microsoft Azure"/>
     </a>
-    -->
 </div>
 
 View all the <a href="/docs/sponsors/">sponsors</a>.
+
+## Getting Started
+
+* **[Architecture](/docs/architecture/)**: Flysystem's internal architecture
+* **[Setup/Bootstrap](/docs/usage/setup/)**: Load Flysystem and set up your first adapter
+* **[Flysystem API](/docs/usage/filesystem-api/)**: How to interact with your Flysystem instance
+
+### Commonly-Used Adapters
+
+* **[AWS S3](/docs/adapter/aws-s3/)**
+* **[Azure](/docs/adapter/azure/)**
+* **[Digital Ocean Spaces](/docs/adapter/digitalocean-spaces/)**
+* **[Local](/docs/adapter/local/)**
+* **[Memory](/docs/adapter/memory/)**
+* **[Creating An Adapter](/docs/advanced/creating-an-adapter/)**
