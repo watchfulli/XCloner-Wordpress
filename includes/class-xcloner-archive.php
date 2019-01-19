@@ -63,6 +63,12 @@ class Xcloner_Archive extends Tar
 	 */
 	private $processed_size_bytes = 0;
 
+    /**
+     * The backup name encryption suffix
+     * @var string
+     */
+	private $encrypt_suffix = "-enc";
+
 	/**
 	 * Archive name
 	 * @var string
@@ -138,10 +144,14 @@ class Xcloner_Archive extends Tar
      * Set the backup archive name
      *
      */
-	public function set_archive_name($name = "", $part = 0)
+	public function set_archive_name($name = "", $part = 0, $encrypt_prefix = false)
 	{
 
 		$this->archive_name = $this->filesystem->process_backup_name($name);
+
+		if($encrypt_prefix) {
+		    $this->archive_name .= $this->encrypt_suffix;
+        }
 
 		if ($diff_timestamp_start = $this->filesystem->get_diff_timestamp_start()) {
 			//$this->archive_name = $this->archive_name."-diff-".date("Y-m-d_H-i",$diff_timestamp_start);
@@ -356,7 +366,11 @@ class Xcloner_Archive extends Tar
 		if (isset($extra_params['backup_archive_name'])) {
 			$this->set_archive_name($extra_params['backup_archive_name'], $return['extra']['backup_part']);
 		} else {
-			$this->set_archive_name($backup_params['backup_name']);
+		    $encrypt = false;
+            if(isset($backup_params['backup_encrypt']) && $backup_params['backup_encrypt']) {
+                $encrypt = true;
+            }
+			$this->set_archive_name($backup_params['backup_name'], 0, $encrypt);
 		}
 
 		if (!$this->get_archive_name()) {
