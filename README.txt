@@ -3,7 +3,7 @@ Contributors: xcloner
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=AAPE8PLAE554S
 Tags: backup plugin, restore plugin, database backup, duplicate, full site backup, website cloner, wordpress backup, database restore, webdav, azure, ftp, sftp, amazon s3, dropbox, google drive, differential backup
 Requires at least: 3.0.1
-Tested up to: 4.9
+Tested up to: 5.0
 Stable tag: 4.0.9
 
 Backup your site, restore to any web location, send your backups to Dropbox, Amazon S3, Azure, FTP, SFTP, WebDAV, Google Drive with XCloner plugin.
