@@ -9,8 +9,8 @@ use League\Flysystem\AdapterInterface;
 use League\Flysystem\Config;
 use League\Flysystem\Util;
 use LogicException;
-use phpseclib\Net\SFTP;
 use phpseclib\Crypt\RSA;
+use phpseclib\Net\SFTP;
 use phpseclib\System\SSH\Agent;
 use RuntimeException;
 
@@ -174,6 +174,7 @@ class SftpAdapter extends AbstractFtpAdapter
     public function connect()
     {
         $this->connection = $this->connection ?: new SFTP($this->host, $this->port, $this->timeout);
+        $this->connection->disableStatCache();
         $this->login();
         $this->setConnectionRoot();
     }
@@ -186,7 +187,13 @@ class SftpAdapter extends AbstractFtpAdapter
     protected function login()
     {
         if ($this->hostFingerprint) {
-            $actualFingerprint = $this->getHexFingerprintFromSshPublicKey($this->connection->getServerPublicHostKey());
+            $publicKey = $this->connection->getServerPublicHostKey();
+
+            if ($publicKey === false) {
+                throw new LogicException('Could not connect to server to verify public key.');
+            }
+
+            $actualFingerprint = $this->getHexFingerprintFromSshPublicKey($publicKey);
 
             if (0 !== strcasecmp($this->hostFingerprint, $actualFingerprint)) {
                 throw new LogicException('The authenticity of host '.$this->host.' can\'t be established.');
@@ -362,7 +369,7 @@ class SftpAdapter extends AbstractFtpAdapter
             return false;
         }
 
-        return compact('contents', 'visibility', 'path');
+        return compact('contents', 'path');
     }
 
     /**
@@ -374,7 +381,7 @@ class SftpAdapter extends AbstractFtpAdapter
             return false;
         }
 
-        return compact('visibility', 'path');
+        return compact('path');
     }
 
     /**
@@ -413,7 +420,7 @@ class SftpAdapter extends AbstractFtpAdapter
             return false;
         }
 
-        return compact('contents');
+        return compact('contents', 'path');
     }
 
     /**
@@ -431,7 +438,7 @@ class SftpAdapter extends AbstractFtpAdapter
 
         rewind($stream);
 
-        return compact('stream');
+        return compact('stream', 'path');
     }
 
     /**

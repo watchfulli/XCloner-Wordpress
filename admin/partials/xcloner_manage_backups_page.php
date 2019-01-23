@@ -7,14 +7,18 @@ $xcloner_encryption = $this->get_xcloner_container()->get_xcloner_encryption();
 $storage_selection = "";
 
 if (isset($_GET['storage_selection']) and $_GET['storage_selection']) {
-    $storage_selection = $xcloner_sanitization->sanitize_input_as_string($_GET['storage_selection']);
+	$storage_selection = $xcloner_sanitization->sanitize_input_as_string($_GET['storage_selection']);
 }
 
-$backup_list = $xcloner_file_system->get_backup_archives_list($storage_selection);
+//$backup_list = $xcloner_file_system->get_backup_archives_list($storage_selection);
 
 $available_storages = $xcloner_remote_storage->get_available_storages();
 
 ?>
+
+<script>
+    var storage_selection = '<?=$storage_selection?>';
+</script>
 
 <div class="row">
     <div class="col s12 m6 l9">
@@ -34,13 +38,13 @@ $available_storages = $xcloner_remote_storage->get_available_storages();
 
             <?php foreach ($available_storages as $storage => $text): ?>
                 <option value="<?php echo $storage ?>"<?php if ($storage == $storage_selection)
-                    echo "selected" ?>><?php echo $text ?></option>
+					echo "selected" ?>><?php echo $text ?></option>
             <?php endforeach ?>
         </select>
         <?php endif ?>
     </div>
 
-    <table id="manage_backups">
+    <table id="manage_backups" style="width:100%">
         <thead>
         <tr class="grey lighten-2">
             <th class="no-sort">
@@ -61,7 +65,7 @@ $available_storages = $xcloner_remote_storage->get_available_storages();
 
 
         <?php
-        $i = 0;
+		/*$i = 0;
         foreach ($backup_list as $file_info):?>
             <?php
             if ($storage_selection == "gdrive") {
@@ -196,7 +200,7 @@ $available_storages = $xcloner_remote_storage->get_available_storages();
                 </tr>
 
             <?php endif ?>
-        <?php endforeach ?>
+        <?php endforeach */?>
 
         </tbody>
     </table>
@@ -250,7 +254,14 @@ $available_storages = $xcloner_remote_storage->get_available_storages();
             </div>
             <div class="notice">
                 <p>
-                    <?php echo __("This option will decrypt your backup archive with your current XCloner Encryption Key, requires PHP openssl library installed.", 'xcloner-backup-and-restore') ?>
+                    <?php echo __("This option will decrypt your backup archive with your current XCloner Encryption Key or the key provided below, requires PHP openssl library installed.", 'xcloner-backup-and-restore') ?>
+                </p>
+                <p>
+                    <?=__('Provide Alternative Decryption Key:')?>
+                    <input type="text"
+                           name="decryption_key"
+                           id="decryption_key"
+                           placeholder="<?=__('Decryption Key', 'xcloner-backup-and-restore')?>" />
                 </p>
                 <p class="center-align">
                     <a class="waves-effect waves-light btn"><?php echo __("START DECRYPTION", 'xcloner-backup-and-restore') ?></a>
@@ -291,7 +302,7 @@ $available_storages = $xcloner_remote_storage->get_available_storages();
                 <div class="row">
                     <div class="col s12 label">
                         <label><?php echo sprintf(__('Send %s to remote storage', 'xcloner-backup-and-restore'),
-                                "<span class='backup_name'></span>") ?></label>
+								"<span class='backup_name'></span>") ?></label>
                     </div>
                     <div class="input-field col s8 m10">
                         <select name="transfer_storage" id="transfer_storage" class="validate" required>

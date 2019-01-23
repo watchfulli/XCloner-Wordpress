@@ -11,5 +11,7 @@
         "league/flysystem-webdav": "^1.0",
         "srmklive/flysystem-dropbox-v2": "^1.0"
     },
-    "prefer-stable": true
+    "prefer-stable": true,
+    "require-dev": {
+    }
 }

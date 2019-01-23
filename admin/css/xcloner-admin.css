@@ -369,6 +369,10 @@ ul.files-list li {
     white-space: pre;
 }
 
+ul.files-list.error{
+    color: red;
+}
+
 #manage_backups_wrapper #manage_backups_filter {
     min-width: 250px;
 }
@@ -388,6 +392,18 @@ i.backup_warning {
 
 .remote-storage #authentification_code {
     display: none;
+}
+
+.dataTables_wrapper .dataTables_filter input {
+    margin-left: 0px;
+}
+
+#backup_options .row{
+    min-height: 30px;
+}
+
+.input-field .switch label {
+    color: #000;
 }
 
 @media only screen and (min-width: 993px) {

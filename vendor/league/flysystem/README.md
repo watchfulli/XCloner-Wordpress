@@ -62,7 +62,7 @@ Want to get started quickly? Check out some of these integrations:
 ### Officially Supported
 * Amazon Web Services - S3 V2: https://github.com/thephpleague/flysystem-aws-s3-v2
 * Amazon Web Services - S3 V3: https://github.com/thephpleague/flysystem-aws-s3-v3
-* Azure Blob Storage: https://github.com/thephpleague/flysystem-azure
+* Azure Blob Storage: https://github.com/thephpleague/flysystem-azure-blob-storage
 * Memory: https://github.com/thephpleague/flysystem-memory
 * PHPCR: https://github.com/thephpleague/flysystem-phpcr
 * Rackspace Cloud Files: https://github.com/thephpleague/flysystem-rackspace
@@ -73,6 +73,7 @@ Want to get started quickly? Check out some of these integrations:
 ### Community Supported
 * AliYun OSS Storage: https://github.com/xxtime/flysystem-aliyun-oss
 * Amazon Cloud Drive - https://github.com/nikkiii/flysystem-acd
+* Azure File Storage: https://github.com/academe/flysystem-azure-file-storage
 * Backblaze: https://github.com/mhetreramesh/flysystem-backblaze
 * ClamAV Scanner Adapter: https://github.com/mgriego/flysystem-clamav
 * Citrix ShareFile: https://github.com/kapersoft/flysystem-sharefile
@@ -83,11 +84,13 @@ Want to get started quickly? Check out some of these integrations:
 * Gaufrette: https://github.com/jenkoian/flysystem-gaufrette
 * Google Cloud Storage: https://github.com/Superbalist/flysystem-google-storage
 * Google Drive: https://github.com/nao-pon/flysystem-google-drive
+* Google Drive V2 (using regular paths): https://github.com/masbug/flysystem-google-drive-ext
 * OneDrive: https://github.com/jacekbarecki/flysystem-onedrive
 * OpenStack Swift: https://github.com/nimbusoftltd/flysystem-openstack-swift
 * Redis (through Predis): https://github.com/danhunsaker/flysystem-redis
 * Selectel Cloud Storage: https://github.com/ArgentCrusade/flysystem-selectel
 * SinaAppEngine Storage: https://github.com/litp/flysystem-sae-storage
+* PDO Database: https://github.com/IntegralSoftware/flysystem-pdo-adapter
 
 ## Caching (https://github.com/thephpleague/flysystem-cached-adapter)
 

@@ -21,41 +21,42 @@
  */
 
 
-class Xcloner_Database extends wpdb{
+class Xcloner_Database extends wpdb {
 
 
-	public  $debug 						= 0;
-	public  $recordsPerSession			= 10000;
-	public  $dbCompatibility			= "";
+	public  $debug = 0;
+	public  $recordsPerSession = 10000;
+	public  $dbCompatibility = "";
 	public  $dbDropSyntax				= 1;
 	public  $countRecords				= 0;
 
 	private  $link;
 	private  $db_selected;
 	private  $logger;
+	private  $xcloner_settings;
 	private  $fs;
 
 	private   $TEMP_DBPROCESS_FILE = ".database";
 	private   $TEMP_DUMP_FILE = "database-backup.sql";
 	
-	public function __construct(Xcloner $xcloner_container, $wp_user="", $wp_pass="", $wp_db="", $wp_host="")
+	public function __construct(Xcloner $xcloner_container, $wp_user = "", $wp_pass = "", $wp_db = "", $wp_host = "")
 	{
-		$this->logger 					= $xcloner_container->get_xcloner_logger()->withName("xcloner_database");
-		$this->xcloner_settings 		= $xcloner_container->get_xcloner_settings();
-		$this->fs 						= $xcloner_container->get_xcloner_filesystem();
+		$this->logger = $xcloner_container->get_xcloner_logger()->withName("xcloner_database");
+		$this->xcloner_settings = $xcloner_container->get_xcloner_settings();
+		$this->fs = $xcloner_container->get_xcloner_filesystem();
 		
-		if($this->xcloner_settings->get_xcloner_option('xcloner_database_records_per_request'))
-			$this->recordsPerSession		= $this->xcloner_settings->get_xcloner_option('xcloner_database_records_per_request');
+		if ($this->xcloner_settings->get_xcloner_option('xcloner_database_records_per_request'))
+			$this->recordsPerSession = $this->xcloner_settings->get_xcloner_option('xcloner_database_records_per_request');
 		
-		if(!$this->recordsPerSession)
+		if (!$this->recordsPerSession)
 			$this->recordsPerSession = 100;
 		
-		if(!$wp_user && !$wp_pass && !$wp_host && !$wp_db )
+		if (!$wp_user && !$wp_pass && !$wp_host && !$wp_db)
 		{
 			$wp_host 	= $this->xcloner_settings->get_db_hostname();
 			$wp_user 	= $this->xcloner_settings->get_db_username();
 			$wp_pass 	= $this->xcloner_settings->get_db_password();
-			$wp_db 		= $this->xcloner_settings->get_db_database();
+			$wp_db = $this->xcloner_settings->get_db_database();
 		}
 		
 		parent::__construct($wp_user, $wp_pass, $wp_db, $wp_host);
@@ -71,7 +72,7 @@ class Xcloner_Database extends wpdb{
 	 */
 	public function init($data, $start = 0)
 	{
-		if($start and $this->fs->get_tmp_filesystem()->has($this->TEMP_DBPROCESS_FILE)){
+		if ($start and $this->fs->get_tmp_filesystem()->has($this->TEMP_DBPROCESS_FILE)) {
 				$this->fs->get_tmp_filesystem()->delete($this->TEMP_DBPROCESS_FILE);
 		}
 		
@@ -90,7 +91,7 @@ class Xcloner_Database extends wpdb{
 				"database_count"=>0,
 		);
 		
-		if(!$this->xcloner_settings->get_enable_mysql_backup())
+		if (!$this->xcloner_settings->get_enable_mysql_backup())
 		{
 			$return['finished'] = 1;
 			return $return;
@@ -100,44 +101,44 @@ class Xcloner_Database extends wpdb{
 		
 		$this->init($params, $init);
 		
-		if($init)
+		if ($init)
 		{
 			$db_count = 0;
 			
-			if(isset($params['#']))
+			if (isset($params['#']))
 			{
-				foreach($params['#'] as $database)
+				foreach ($params['#'] as $database)
 				{
-					if(!isset($params[$database]) or !is_array($params[$database]))
+					if (!isset($params[$database]) or !is_array($params[$database]))
 						$params[$database] = array();
 				}
 				$db_count = -1;
 			}
 			
-			if(isset($params) and is_array($params))
-				foreach($params as $database=>$tables)
+			if (isset($params) and is_array($params))
+				foreach ($params as $database=>$tables)
 				{	
-					if($database != "#")
+					if ($database != "#")
 					{
 						$stats = $this->write_backup_process_list($database, $tables);	
-						$return['stats']['tables_count'] 	+= $stats['tables_count'];
-						$return['stats']['total_records'] 	+= $stats['total_records'];
+						$return['stats']['tables_count'] += $stats['tables_count'];
+						$return['stats']['total_records'] += $stats['total_records'];
 					}
 				}
 
-			if(sizeof($params))
-				$return['stats']['database_count'] = sizeof($params)+$db_count;
+			if (sizeof($params))
+				$return['stats']['database_count'] = sizeof($params) + $db_count;
 			else	
 				$return['stats']['database_count'] = 0;
 				
 			return $return;
 		}
 		
-		if(!isset($extra_params['startAtLine']))
+		if (!isset($extra_params['startAtLine']))
 			$extra_params['startAtLine'] = 0;
-		if(!isset($extra_params['startAtRecord']))
+		if (!isset($extra_params['startAtRecord']))
 			$extra_params['startAtRecord'] = 0;
-		if(!isset($extra_params['dumpfile']))
+		if (!isset($extra_params['dumpfile']))
 			$extra_params['dumpfile'] = "";
 		
 		$return = $this->process_incremental($extra_params['startAtLine'], $extra_params['startAtRecord'], $extra_params['dumpfile']);
@@ -148,13 +149,13 @@ class Xcloner_Database extends wpdb{
 	public function log($message = "")
 	{
 		
-		if($message){
-			$this->logger->info( $message, array(""));
-		}else{	
-			if($this->last_query)
-				$this->logger->debug( $this->last_query, array(""));
-			if($this->last_error)
-				$this->logger->error( $this->last_error, array(""));
+		if ($message) {
+			$this->logger->info($message, array(""));
+		} else {	
+			if ($this->last_query)
+				$this->logger->debug($this->last_query, array(""));
+			if ($this->last_error)
+				$this->logger->error($this->last_error, array(""));
 		}
 		
 		return;
@@ -169,7 +170,7 @@ class Xcloner_Database extends wpdb{
 	*/
 	public function error($message)
 	{
-		$this->logger->error( $message, array(""));
+		$this->logger->error($message, array(""));
 		
 		return;
 	}
@@ -179,7 +180,6 @@ class Xcloner_Database extends wpdb{
 	 *
 	 * name: headers
 	 * @param
-	 * @return
 	 */
 	private function headers()
 	{
@@ -202,7 +202,7 @@ class Xcloner_Database extends wpdb{
 		
 		$query = "show tables in `".$database."`";
 		
-		$res =  $this->get_results($query);
+		$res = $this->get_results($query);
 		$this->log();
 			
 		return count($res);
@@ -225,9 +225,9 @@ class Xcloner_Database extends wpdb{
 		$databases_list[$i]['num_tables'] = $this->get_database_num_tables($this->dbname);
 		$i++;
 		
-		if(is_array($databases))
-		foreach( $databases as $db){
-			if($db->Database != $this->dbname)
+		if (is_array($databases))
+		foreach ($databases as $db) {
+			if ($db->Database != $this->dbname)
 			{
 				$databases_list[$i]['name'] = $db->Database;
 				$databases_list[$i]['num_tables'] = $this->get_database_num_tables($db->Database);
@@ -243,7 +243,7 @@ class Xcloner_Database extends wpdb{
 	 *
 	 * name: list_tables
 	 * @param string $database
-	 * @param array $include
+	 * @param array $included
 	 * @param int $get_num_records
 	 * @return array $tablesList
 	 */
@@ -252,7 +252,7 @@ class Xcloner_Database extends wpdb{
 		$tablesList[0] = array( );
 		$inc = 0;
 
-		if(!$database)
+		if (!$database)
 			$database = $this->dbname;
 		
 		$this->logger->debug(sprintf(("Listing tables in %s database"), $database));
@@ -260,14 +260,14 @@ class Xcloner_Database extends wpdb{
 		$tables = $this->get_results("SHOW TABLES in `".$database."`");
 		$this->log();
 
-		foreach ($tables as $table){
+		foreach ($tables as $table) {
 			
 			$table = array_values((array)$table)[0];
 			
 			$tablesList[$inc]['name'] = $table;
 			$tablesList[$inc]['database'] = $database;
 
-			if($get_num_records)
+			if ($get_num_records)
 			{
 				$records_num_result = $this->get_var("SELECT count(*) FROM `".$database."`.`".$table."`");
 				$this->log();
@@ -277,14 +277,14 @@ class Xcloner_Database extends wpdb{
 			
 			$tablesList[$inc]['excluded'] = 0;
 						
-			if(sizeof($included) and is_array($included))
-				if(!in_array($table, $included) )
+			if (sizeof($included) and is_array($included))
+				if (!in_array($table, $included))
 				{
 					$tablesList[$inc]['excluded'] = 1;
 					$this->log(sprintf(__("Excluding table %s.%s from backup"), $table, $database));
 				}
 			$inc++;
-        }
+		}
 
 		return $tablesList;
 
@@ -299,7 +299,7 @@ class Xcloner_Database extends wpdb{
 		
 		$tables = $this->list_tables($dbname, $incl_tables, 1);
 		
-		if($this->dbname != $dbname)
+		if ($this->dbname != $dbname)
 			$dumpfile = $dbname."-backup.sql";
 		else
 			$dumpfile = $this->TEMP_DUMP_FILE;
@@ -308,8 +308,8 @@ class Xcloner_Database extends wpdb{
 		$this->fs->get_tmp_filesystem_append()->write($this->TEMP_DBPROCESS_FILE, $line);
 			
 		// write this to the class and write to $TEMP_DBPROCESS_FILE file as database.table records
-		foreach($tables as $key=>$table) 
-		if($table!= "" and !$tables[$key]['excluded']){
+		foreach ($tables as $key=>$table) 
+		if ($table != "" and !$tables[$key]['excluded']) {
 
 			$line = sprintf("`%s`.`%s`\t%s\t%s\n", $dbname, $tables[$key]['name'], $tables[$key]['records'], $tables[$key]['excluded']);
 			$this->fs->get_tmp_filesystem_append()->write($this->TEMP_DBPROCESS_FILE, $line);
@@ -353,25 +353,25 @@ class Xcloner_Database extends wpdb{
 	 * 		int $dbDropSyntax	- check if the DROP TABLE syntax should be added
 	 * @return array $return
 	 */
-	public function process_incremental($startAtLine= 0, $startAtRecord = 0, $dumpfile = "", $dbCompatibility= ""){
+	public function process_incremental($startAtLine = 0, $startAtRecord = 0, $dumpfile = "", $dbCompatibility = "") {
 
 		$count = 0;
 		$return['finished'] = 0;
 		$lines = array();
 		
-		if($this->fs->get_tmp_filesystem()->has($this->TEMP_DBPROCESS_FILE))
-			$lines = array_filter(explode("\n",$this->fs->get_tmp_filesystem()->read($this->TEMP_DBPROCESS_FILE)));
+		if ($this->fs->get_tmp_filesystem()->has($this->TEMP_DBPROCESS_FILE))
+			$lines = array_filter(explode("\n", $this->fs->get_tmp_filesystem()->read($this->TEMP_DBPROCESS_FILE)));
 	
-		foreach ($lines as $buffer){
+		foreach ($lines as $buffer) {
 			
-			if($count == $startAtLine)
+			if ($count == $startAtLine)
 			{
 	
-				$tableInfo =explode("\t", $buffer);
+				$tableInfo = explode("\t", $buffer);
 				
-				if($tableInfo[0] == "###newdump###"){
+				if ($tableInfo[0] == "###newdump###") {
 						// we create a new mysql dump file
-						if($dumpfile != ""){
+						if ($dumpfile != "") {
 								// we finished a previous one and write the footers
 								$return['dumpsize'] = $this->data_footers($dumpfile);
 						}
@@ -385,13 +385,13 @@ class Xcloner_Database extends wpdb{
 						$startAtLine++;
 						$return['new_dump'] = 1;
 						//break;
-				}else{
+				} else {
 						//we export the table
-						if($tableInfo[0] == "###enddump###")
+						if ($tableInfo[0] == "###enddump###")
 							$return['endDump'] = 1;
 	
 						//table is excluded
-						if($tableInfo[2])
+						if ($tableInfo[2])
 							continue;
 							
 						$next = $startAtRecord + $this->recordsPerSession;
@@ -403,28 +403,28 @@ class Xcloner_Database extends wpdb{
 
 						//return something to the browser
 						$return['databaseName'] 	= $databaseName;
-						$return['tableName'] 		= $tableName;
+						$return['tableName'] = $tableName;
 						$return['totalRecords'] 	= $tableInfo[1];
 
 						$processed_records = 0;
 						
-						if(trim($tableName) !=""  and !$tableInfo[2])
+						if (trim($tableName) != "" and !$tableInfo[2])
 							$processed_records = $this->export_table($databaseName, $tableName, $startAtRecord, $this->recordsPerSession, $dumpfile);
 						
-						$return['processedRecords'] = $startAtRecord+$processed_records;
+						$return['processedRecords'] = $startAtRecord + $processed_records;
 						
-						if($next >= $tableInfo[1]) //we finished loading the records for next sessions, will go to the new record
+						if ($next >= $tableInfo[1]) //we finished loading the records for next sessions, will go to the new record
 						{
-								$startAtLine ++;
+								$startAtLine++;
 								$startAtRecord = 0;
-						}else{
+						} else {
 								$startAtRecord = $startAtRecord + $this->recordsPerSession;
 							}
 
 						//$return['dbCompatibility'] 	= self::$dbCompatibility;
 						
-						$return['startAtLine']		= $startAtLine;
-						$return['startAtRecord']	= $startAtRecord;
+						$return['startAtLine'] = $startAtLine;
+						$return['startAtRecord'] = $startAtRecord;
 						$return['dumpfile']			= $dumpfile;
 						$return['dumpsize']			= $this->fs->get_tmp_filesystem_append()->getSize($dumpfile);
 
@@ -442,15 +442,15 @@ class Xcloner_Database extends wpdb{
 		}
 	
 		//while is finished, lets go home...
-		if($dumpfile != ""){
+		if ($dumpfile != "") {
 			// we finished a previous one and write the footers
 			$return['dumpsize'] = $this->data_footers($dumpfile);
 			$return['dumpfile'] = ($dumpfile);
 		}
 		$return['finished'] = 1;
-		$return['startAtLine']	= $startAtLine;
+		$return['startAtLine'] = $startAtLine;
 		
-		if($this->fs->get_tmp_filesystem()->has($this->TEMP_DBPROCESS_FILE))
+		if ($this->fs->get_tmp_filesystem()->has($this->TEMP_DBPROCESS_FILE))
 			$this->fs->get_tmp_filesystem()->delete($this->TEMP_DBPROCESS_FILE);
 		
 		$this->logger->debug(sprintf(("Database backup finished!")));
@@ -473,13 +473,18 @@ class Xcloner_Database extends wpdb{
 	 * 		handler $fd - file handler where to write the records
 	 * @return
 	 */
+
+	/**
+	 * @param integer $start
+	 * @param integer $limit
+	 */
 	public function export_table($databaseName, $tableName, $start, $limit, $dumpfile)
 	{
 		$this->logger->debug(sprintf(("Exporting table  %s.%s data"), $databaseName, $tableName));
 		
 		$records = 0;
 		
-		if($start == 0)
+		if ($start == 0)
 			$this->dump_structure($databaseName, $tableName, $dumpfile);
 
 		$start = intval($start);
@@ -487,36 +492,36 @@ class Xcloner_Database extends wpdb{
 		//exporting the table content now
 
 		$query = "SELECT * from `$databaseName`.`$tableName` Limit $start, $limit ;";
-		if($this->use_mysqli)
+		if ($this->use_mysqli)
 		{
 			$result = mysqli_query($this->dbh, $query);
 			$mysql_fetch_function = "mysqli_fetch_array";
 		
-		}else{
+		} else {
 			$result = mysql_query($query, $this->dbh);
 			$mysql_fetch_function = "mysqli_fetch_array";
 		}
 		//$result = $this->get_results($query, ARRAY_N);
 		//print_r($result); exit;
 		
-		if($result){
-			while($row = $mysql_fetch_function($result, MYSQLI_ASSOC)){
+		if ($result) {
+			while ($row = $mysql_fetch_function($result, MYSQLI_ASSOC)) {
 					
 					$this->fs->get_tmp_filesystem_append()->write($dumpfile, "INSERT INTO `$tableName` VALUES (");
 					$arr = $row;
 					$buffer = "";
 					$this->countRecords++;
 
-	                foreach ($arr as $key => $value) {
+					foreach ($arr as $key => $value) {
 						$value = $this->_real_escape($value);
 						
-						if(method_exists($this, 'remove_placeholder_escape')){
+						if (method_exists($this, 'remove_placeholder_escape')) {
 							$value = $this->remove_placeholder_escape($value);
 						}
 						
 						$buffer .= "'".$value."', ";
 					}
-					$buffer = rtrim($buffer, ', ') . ");\n";
+					$buffer = rtrim($buffer, ', ').");\n";
 					$this->fs->get_tmp_filesystem_append()->write($dumpfile, $buffer);
 					unset($buffer);
 					
@@ -531,29 +536,29 @@ class Xcloner_Database extends wpdb{
 
 	}
 
-	public function dump_structure($databaseName, $tableName ,$dumpfile)
+	public function dump_structure($databaseName, $tableName, $dumpfile)
 	{
 		$this->log(sprintf(__("Dumping the structure for %s.%s table"), $databaseName, $tableName));
 		
 		$line = ("\n#\n# Table structure for table `$tableName`\n#\n\n");
 		$this->fs->get_tmp_filesystem_append()->write($dumpfile, $line);
 
-        if ($this->dbDropSyntax)
-        {
+		if ($this->dbDropSyntax)
+		{
 			$line = ("\nDROP table IF EXISTS `$tableName`;\n");
 			$this->fs->get_tmp_filesystem_append()->write($dumpfile, $line);
 		}
 
 		//$result = mysqli_query($this->dbh,"SHOW CREATE table `$databaseName`.`$tableName`;");
 		$result = $this->get_row("SHOW CREATE table `$databaseName`.`$tableName`;", ARRAY_N);
-		if($result){
+		if ($result) {
 			//$row = mysqli_fetch_row( $result);
 			$line = ($result[1].";\n");
 			$this->fs->get_tmp_filesystem_append()->write($dumpfile, $line);
 		}
 
-		$line = ( "\n#\n# End Structure for table `$tableName`\n#\n\n");
-		$line .=("#\n# Dumping data for table `$tableName`\n#\n\n");
+		$line = ("\n#\n# End Structure for table `$tableName`\n#\n\n");
+		$line .= ("#\n# Dumping data for table `$tableName`\n#\n\n");
 		$this->fs->get_tmp_filesystem_append()->write($dumpfile, $line);
 		
 		return;
@@ -576,7 +581,7 @@ class Xcloner_Database extends wpdb{
 
 	}
 
-	public function resetcountRecords(){
+	public function resetcountRecords() {
 		
 		$this->countRecords = 0;
 
@@ -584,7 +589,7 @@ class Xcloner_Database extends wpdb{
 	
 	}
 
-	public function getcountRecords(){
+	public function getcountRecords() {
 		
 		return $this->countRecords;
 		
@@ -601,14 +606,14 @@ class Xcloner_Database extends wpdb{
 		$return .= "# Powered by XCloner Site Backup\n";
 		$return .= "# http://www.xcloner.com\n";
 		$return .= "#\n";
-		$return .= "# Host: " . get_site_url() . "\n";
-		$return .= "# Generation Time: " . date("M j, Y \a\\t H:i") . "\n";
-		$return .= "# PHP Version: " . phpversion() . "\n";
-		$return .= "# Database Charset: ". $this->charset . "\n";
+		$return .= "# Host: ".get_site_url()."\n";
+		$return .= "# Generation Time: ".date("M j, Y \a\\t H:i")."\n";
+		$return .= "# PHP Version: ".phpversion()."\n";
+		$return .= "# Database Charset: ".$this->charset."\n";
 		
 		$results = $this->get_results("SHOW VARIABLES LIKE \"%version%\";", ARRAY_N);
-		if(isset($results)){
-			foreach($results as $result){
+		if (isset($results)) {
+			foreach ($results as $result) {
 
 					$return .= "# MYSQL ".$result[0].": ".$result[1]."\n";
 
@@ -618,13 +623,13 @@ class Xcloner_Database extends wpdb{
 		$results = $this->get_results("SELECT DEFAULT_CHARACTER_SET_NAME, DEFAULT_COLLATION_NAME
 					FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '".$database."';");
 		
-		if(isset($results[0])){
+		if (isset($results[0])) {
 
 			$return .= "# MYSQL DEFAULT_CHARACTER_SET_NAME: ".$results[0]->DEFAULT_CHARACTER_SET_NAME."\n";
 			$return .= "# MYSQL SCHEMA_NAME: ".$results[0]->DEFAULT_COLLATION_NAME."\n";
 		}
 
-		$return .= "#\n# Database : `" . $database . "`\n# --------------------------------------------------------\n\n";
+		$return .= "#\n# Database : `".$database."`\n# --------------------------------------------------------\n\n";
 		
 		$this->log(sprintf(__("Writing %s database dump headers"), $database));
 		

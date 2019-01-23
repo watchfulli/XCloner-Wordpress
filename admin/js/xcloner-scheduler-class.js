@@ -45,7 +45,9 @@ jQuery(document).ready(function(){
 				  data: { action : 'delete_schedule_by_id', id: id},
 				  success: function(response){
 					  //window.location = "";
+                      //console.log('schedule deleted');
 					  //alert("Schedule deleted");
+                      jQuery(elem).parents('tr').remove();
 					  dataTable
 				        .row( jQuery(elem).parents('tr') )
 				        .remove()
@@ -80,6 +82,11 @@ jQuery(document).ready(function(){
 			this.edit_modal.find('#schedule_storage>option[value="' + response.remote_storage + '"]').prop('selected', true);
 			//var date = new Date(response.start_at);
 			this.edit_modal.find("#schedule_start_date").val(response.start_at)
+
+
+            if(response.backup_params.backup_encrypt !== undefined && response.backup_params.backup_encrypt == 1) {
+                this.edit_modal.find('#backup_encrypt').attr('checked', 'checked')
+            }
 			
 			var tables  = jQuery.parseJSON(response.table_params)
 			

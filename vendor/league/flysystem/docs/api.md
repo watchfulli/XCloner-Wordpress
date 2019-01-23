@@ -182,7 +182,7 @@ foreach ($listing as $object) {
 }
 ~~~
 
-__Get file into with explicit metadata__
+__Get file info with explicit metadata__
 
 ~~~ php
 $info = $filesystem->getWithMetadata('path/to/file.txt', ['timestamp', 'mimetype']);
@@ -200,10 +200,10 @@ Some SDK's close streams after consuming them, therefore, before calling fclose 
 
 ~~~ php
 $stream = fopen('/path/to/database.backup', 'r+');
-$filesystem->writeStream('backups/'.strftime('%G-%m-%d').'.backup', $stream);
+$filesystem->writeStream('backups/'.strftime('%Y-%m-%d').'.backup', $stream);
 
 // Using write you can also directly set the visibility
-$filesystem->writeStream('backups/'.strftime('%G-%m-%d').'.backup', $stream, [
+$filesystem->writeStream('backups/'.strftime('%Y-%m-%d').'.backup', $stream, [
     'visibility' => AdapterInterface::VISIBILITY_PRIVATE
 ]);
 
@@ -212,7 +212,7 @@ if (is_resource($stream)) {
 }
 
 // Or update a file with stream contents
-$filesystem->updateStream('backups/'.strftime('%G-%m-%d').'.backup', $stream);
+$filesystem->updateStream('backups/'.strftime('%Y-%m-%d').'.backup', $stream);
 
 // Retrieve a read-stream
 $stream = $filesystem->readStream('something/is/here.ext');

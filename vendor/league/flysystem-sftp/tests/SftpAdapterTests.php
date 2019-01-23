@@ -5,12 +5,17 @@ use League\Flysystem\FilesystemInterface;
 use League\Flysystem\Sftp\SftpAdapter as Sftp;
 use League\Flysystem\Sftp\SftpAdapter;
 use phpseclib\System\SSH\Agent;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \League\Flysystem\Sftp\SftpAdapter<extended>
  */
-class SftpTests extends PHPUnit_Framework_TestCase
+class SftpTests extends TestCase
 {
+    const SSH_RSA = 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQD05PZTxeH6GPDyxLNv7UV05jcK+Y9P8kQnpEZRHOurJVSOB4k6JBXLQtgbffuy8bFYh6mZVx40f5Za0I9mCfPel/xnCu4F1cndZBY3Ww/12rmjYOHie7k9B3h1trJ1mDhXHuiRO6vfy81jMJ9dzJyCwOK9aFGEueQ8WuPMRt9/1g3awi1O0+YZ8gTLtjKbUXLT50/GksiWDFA6DwxjLR7jFEcuPUm/WpBIKMcsbxpjKmTNaCeuoKs9TcpTwg5E311nQfk0oficgyHP/x8m6mNH5q/zOMwaRjyC6LYyBXVJgSKsh7YFf+pRyHFGpWTWKnRKXWG13NLiEKb47SydLe77';
+
+    const SSH_RSA_FINGERPRINT = '88:76:75:96:c1:26:7c:dd:9f:87:50:db:ac:c4:a8:7c';
+
     protected function setup()
     {
         if (! defined('NET_SFTP_TYPE_DIRECTORY')) {
@@ -139,6 +144,12 @@ class SftpTests extends PHPUnit_Framework_TestCase
      */
     public function testSetVisibility($filesystem, $adapter, $mock)
     {
+        $mock->shouldReceive('stat')->andReturn([
+            'type'        => 1, // file
+            'mtime'       => time(),
+            'size'        => 20,
+            'permissions' => 0777,
+        ]);
         $mock->shouldReceive('chmod')->twice()->andReturn(true, false);
         $this->assertTrue($filesystem->setVisibility('something', 'public'));
         $this->assertFalse($filesystem->setVisibility('something', 'public'));
@@ -150,6 +161,12 @@ class SftpTests extends PHPUnit_Framework_TestCase
      */
     public function testSetVisibilityInvalid($filesystem, $adapter, $mock)
     {
+        $mock->shouldReceive('stat')->andReturn([
+            'type'        => 1, // file
+            'mtime'       => time(),
+            'size'        => 20,
+            'permissions' => 0777,
+        ]);
         $mock->shouldReceive('stat')->once()->andReturn(true);
         $filesystem->setVisibility('something', 'invalid');
     }
@@ -395,6 +412,7 @@ class SftpTests extends PHPUnit_Framework_TestCase
     {
         $adapter->setNetSftpConnection($mock);
         $mock->shouldReceive('login')->with('test', 'test')->andReturn(true);
+        $mock->shouldReceive('disableStatCache');
         $adapter->connect();
     }
 
@@ -543,18 +561,16 @@ class SftpTests extends PHPUnit_Framework_TestCase
             'host' => 'example.org',
             'username' => 'user',
             'password' => '123456',
-            'hostFingerprint' => '88:76:75:96:c1:26:7c:dd:9f:87:50:db:ac:c4:a8:7c',
+            'hostFingerprint' => self::SSH_RSA_FINGERPRINT,
         ]);
 
         $connection = Mockery::mock('phpseclib\Net\SFTP');
-
         $connection->shouldReceive('getServerPublicHostKey')
-            ->andReturn('ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQD05PZTxeH6GPDyxLNv7UV05jcK+Y9P8kQnpEZRHOurJVSOB4k6JBXLQtgbffuy8bFYh6mZVx40f5Za0I9mCfPel/xnCu4F1cndZBY3Ww/12rmjYOHie7k9B3h1trJ1mDhXHuiRO6vfy81jMJ9dzJyCwOK9aFGEueQ8WuPMRt9/1g3awi1O0+YZ8gTLtjKbUXLT50/GksiWDFA6DwxjLR7jFEcuPUm/WpBIKMcsbxpjKmTNaCeuoKs9TcpTwg5E311nQfk0oficgyHP/x8m6mNH5q/zOMwaRjyC6LYyBXVJgSKsh7YFf+pRyHFGpWTWKnRKXWG13NLiEKb47SydLe77');
-
+            ->andReturn(self::SSH_RSA);
         $connection->shouldReceive('login')
             ->with('user', '123456')
             ->andReturn(TRUE);
-
+        $connection->shouldReceive('disableStatCache');
         $connection->shouldReceive('disconnect');
 
         $adapter->setNetSftpConnection($connection);
@@ -574,13 +590,11 @@ class SftpTests extends PHPUnit_Framework_TestCase
 
         $connection->shouldReceive('getServerPublicHostKey')
             ->never();
-
         $connection->shouldReceive('login')
             ->with('user', '123456')
             ->andReturn(TRUE);
-
+        $connection->shouldReceive('disableStatCache');
         $connection->shouldReceive('disconnect');
-
         $adapter->setNetSftpConnection($connection);
 
         $adapter->connect();
@@ -602,11 +616,41 @@ class SftpTests extends PHPUnit_Framework_TestCase
         $connection = Mockery::mock('phpseclib\Net\SFTP');
 
         $connection->shouldReceive('getServerPublicHostKey')
-            ->andReturn('ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQD05PZTxeH6GPDyxLNv7UV05jcK+Y9P8kQnpEZRHOurJVSOB4k6JBXLQtgbffuy8bFYh6mZVx40f5Za0I9mCfPel/xnCu4F1cndZBY3Ww/12rmjYOHie7k9B3h1trJ1mDhXHuiRO6vfy81jMJ9dzJyCwOK9aFGEueQ8WuPMRt9/1g3awi1O0+YZ8gTLtjKbUXLT50/GksiWDFA6DwxjLR7jFEcuPUm/WpBIKMcsbxpjKmTNaCeuoKs9TcpTwg5E311nQfk0oficgyHP/x8m6mNH5q/zOMwaRjyC6LYyBXVJgSKsh7YFf+pRyHFGpWTWKnRKXWG13NLiEKb47SydLe77');
+            ->andReturn(self::SSH_RSA);
 
         $connection->shouldReceive('login')
             ->never();
 
+        $connection->shouldReceive('disableStatCache');
+        $connection->shouldReceive('disconnect');
+
+        $adapter->setNetSftpConnection($connection);
+
+        $adapter->connect();
+    }
+
+    /**
+     * @expectedException LogicException
+     * @expectedExceptionMessage Could not connect to server to verify public key.
+     */
+    public function testCantConnectToCheckHostFingerprintAbortsLogin()
+    {
+        $adapter = new SftpAdapter([
+            'host' => 'example.org',
+            'username' => 'user',
+            'password' => '123456',
+            'hostFingerprint' => '00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00',
+        ]);
+
+        $connection = Mockery::mock('phpseclib\Net\SFTP');
+
+        $connection->shouldReceive('getServerPublicHostKey')
+            ->andReturn(false); // getServerPublicHostKey returns false if it cant connect.
+
+        $connection->shouldReceive('login')
+            ->never();
+
+        $connection->shouldReceive('disableStatCache');
         $connection->shouldReceive('disconnect');
 
         $adapter->setNetSftpConnection($connection);

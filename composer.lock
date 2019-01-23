@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "34877d7a256d21b0272185812cd42e48",
+    "content-hash": "e32ba7a3036306157c1f3563665aec57",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -365,28 +365,28 @@
         },
         {
             "name": "league/flysystem",
-            "version": "1.0.45",
+            "version": "1.0.49",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem.git",
-                "reference": "a99f94e63b512d75f851b181afcdf0ee9ebef7e6"
+                "reference": "a63cc83d8a931b271be45148fa39ba7156782ffd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/a99f94e63b512d75f851b181afcdf0ee9ebef7e6",
-                "reference": "a99f94e63b512d75f851b181afcdf0ee9ebef7e6",
+                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/a63cc83d8a931b271be45148fa39ba7156782ffd",
+                "reference": "a63cc83d8a931b271be45148fa39ba7156782ffd",
                 "shasum": ""
             },
             "require": {
+                "ext-fileinfo": "*",
                 "php": ">=5.5.9"
             },
             "conflict": {
                 "league/flysystem-sftp": "<1.0.6"
             },
             "require-dev": {
-                "ext-fileinfo": "*",
                 "phpspec/phpspec": "^3.4",
-                "phpunit/phpunit": "^5.7"
+                "phpunit/phpunit": "^5.7.10"
             },
             "suggest": {
                 "ext-fileinfo": "Required for MimeType",
@@ -445,7 +445,7 @@
                 "sftp",
                 "storage"
             ],
-            "time": "2018-05-07T08:44:23+00:00"
+            "time": "2018-11-23T23:41:29+00:00"
         },
         {
             "name": "league/flysystem-aws-s3-v3",
@@ -544,33 +544,28 @@
         },
         {
             "name": "league/flysystem-sftp",
-            "version": "1.0.14",
+            "version": "1.0.18",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem-sftp.git",
-                "reference": "f28d742a3e81258417293fd9a179a350154ab8f7"
+                "reference": "61bc5a6ade892b5ac81e62b8c21be2c1798acc2a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem-sftp/zipball/f28d742a3e81258417293fd9a179a350154ab8f7",
-                "reference": "f28d742a3e81258417293fd9a179a350154ab8f7",
+                "url": "https://api.github.com/repos/thephpleague/flysystem-sftp/zipball/61bc5a6ade892b5ac81e62b8c21be2c1798acc2a",
+                "reference": "61bc5a6ade892b5ac81e62b8c21be2c1798acc2a",
                 "shasum": ""
             },
             "require": {
                 "league/flysystem": "~1.0",
-                "php": ">=5.4.0",
+                "php": ">=5.6.0",
                 "phpseclib/phpseclib": "~2.0"
             },
             "require-dev": {
                 "mockery/mockery": "0.9.*",
-                "phpunit/phpunit": "~4.0"
+                "phpunit/phpunit": "^5.7.25"
             },
             "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0-dev"
-                }
-            },
             "autoload": {
                 "psr-4": {
                     "League\\Flysystem\\Sftp\\": "src/"
@@ -587,7 +582,7 @@
                 }
             ],
             "description": "Flysystem adapter for SFTP",
-            "time": "2017-07-11T12:29:45+00:00"
+            "time": "2019-01-07T11:56:21+00:00"
         },
         {
             "name": "league/flysystem-webdav",
@@ -1630,16 +1625,16 @@
         },
         {
             "name": "vakata/jstree",
-            "version": "3.3.5",
+            "version": "3.3.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vakata/jstree.git",
-                "reference": "0097fab41981daf36c234b73b683166daabd5f28"
+                "reference": "bc5187e5826244dee5ebdc0e9db2e2652fefe928"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vakata/jstree/zipball/0097fab41981daf36c234b73b683166daabd5f28",
-                "reference": "0097fab41981daf36c234b73b683166daabd5f28",
+                "url": "https://api.github.com/repos/vakata/jstree/zipball/bc5187e5826244dee5ebdc0e9db2e2652fefe928",
+                "reference": "bc5187e5826244dee5ebdc0e9db2e2652fefe928",
                 "shasum": ""
             },
             "require": {
@@ -1683,7 +1678,7 @@
             ],
             "description": "jsTree is jquery plugin, that provides interactive trees.",
             "homepage": "http://jstree.com",
-            "time": "2018-01-02T08:13:23+00:00"
+            "time": "2018-11-06T21:15:47+00:00"
         }
     ],
     "packages-dev": [],
