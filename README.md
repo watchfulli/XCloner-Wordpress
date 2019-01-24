@@ -18,6 +18,7 @@ XCloner Backup tool uses Open Source standards like TAR, Mysql and CSV formats s
 
    * Backup and Restore your Wordpress site easily
    * Create compressed and uncompressed backups using TAR open source format
+   * Create encrypted backups archives with AES-128-CBC algorithm 
    * Create automated backups from your Scheduled Backups Section
    * Received email notifications of created backups
    * Generate automatic backups based on cronjobs, it can run daily, weekly, monthly or even hourly

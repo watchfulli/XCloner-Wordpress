@@ -28,6 +28,7 @@ PHP 5.6+ with mod CURL installed
 
    * Backup and Restore your Wordpress site easily
    * Create compressed and uncompressed backups using TAR open source format
+   * Create encrypted backups archives with AES-128-CBC algorithm
    * Create automated backups from your Scheduled Backups Section
    * Received email notifications of created backups
    * Generate automatic backups based on cronjobs, it can run daily, weekly, monthly or even hourly
@@ -38,6 +39,7 @@ PHP 5.6+ with mod CURL installed
    * Ability to split backups into multiple smaller parts if a certain size limit is reached
    * Generate Differential Backups so your backup will include only files modified after a certain date, giving you the option to decrease the total backup space disk usage
    * Generate automatic backups before a Wordpress automatic update
+   * GDPR compliant by added encryption data
 
 == Installation ==
 
