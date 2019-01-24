@@ -903,7 +903,14 @@ class Xcloner_Restore
 				
 			$backup_parts = $this->get_multipart_files($backup_file);
 			$backup_file = $backup_parts[$return['part']];	
-		}	
+		}
+
+		if( $this->is_encrypted_file($backup_file) ) {
+		    $message = sprintf('Backup file %s seems encrypted, please Decrypt it first from your Manage Backups panel.', $backup_file);
+            $this->logger->error($message);
+            $this->send_response(500, $message);
+            return;
+        }
 		
 		$this->logger->info(sprintf('Opening backup archive %s at position %s', $backup_file, $start));
 		$backup_archive->open($this->backup_storage_dir.DS.$backup_file, $start);
@@ -947,6 +954,26 @@ class Xcloner_Restore
 		
 		$this->send_response(200, $return);
 	}
+
+    /**
+     * Check if provided filename has encrypted suffix
+     *
+     * @param $filename
+     * @return bool
+     */
+    public function is_encrypted_file($filename) {
+        $fp = $this->filesystem->readStream( $filename );
+        if (is_resource($fp)) {
+            $encryption_length = fread($fp, 16);
+            fclose($fp);
+            if (is_numeric($encryption_length)) {
+                return true;
+            }
+        }
+
+        return false;
+
+    }
 
 	/**
 	 * Get current directory method
