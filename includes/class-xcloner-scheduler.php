@@ -313,7 +313,7 @@ class Xcloner_Scheduler {
 		$part = 0;
 		$backup_parts = array();
 
-		if ($schedule['backup_params']->backup_encrypt) {
+		if (isset($schedule['backup_params']->backup_encrypt) && $schedule['backup_params']->backup_encrypt) {
 			$this->logger->info(sprintf("Encrypting backup archive %s.", $return['extra']['backup_parent']), array("CRON"));
 
 			$backup_file = $return['extra']['backup_parent'];

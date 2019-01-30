@@ -164,6 +164,9 @@ class Xcloner_Encryption
 
 					fclose($fpOut);
 
+                    unset($ciphertext);
+                    unset($plaintext);
+
 					if (!feof($fpIn)) {
 						fclose($fpIn);
 						//echo "\n NEW:".$key.md5($iv);
