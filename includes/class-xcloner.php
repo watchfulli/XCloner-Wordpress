@@ -542,10 +542,13 @@ class Xcloner {
 		$logger = new XCloner_Logger($this, "php_system");
 		$error = error_get_last();
 
-		if ($error['type'] and $logger)
+		if ($error['type'] and $error['type'] === E_ERROR and $logger)
 		{
-			$logger->info($this->friendly_error_type($error['type']).": ".var_export($error, true));
-		}
+			$logger->error($this->friendly_error_type($error['type']).": ".var_export($error, true));
+		}elseif ($error['type'] and $logger)
+        {
+            $logger->debug($this->friendly_error_type($error['type']).": ".var_export($error, true));
+        }
 
 	}
 
