@@ -519,6 +519,8 @@ class Xcloner_File_System
 
     public function cleanup_tmp_directories()
     {
+        $this->logger->info(sprintf(("Cleaning up the temporary directories")));
+
         $adapter = new Local($this->xcloner_settings->get_xcloner_tmp_path(false), LOCK_EX | FILE_APPEND, '0001');
         $tmp_filesystem = new Filesystem($adapter, new Config([
             'disable_asserts' => true,
