@@ -78,27 +78,27 @@ class Xcloner_File_System
 
         try {
 
-            $this->start_adapter = new Local($this->xcloner_settings->get_xcloner_start_path(), LOCK_EX, 'SKIP_LINKS');
+            $this->start_adapter = new Local($this->xcloner_settings->get_xcloner_start_path(), LOCK_EX, '0001');
             $this->start_filesystem = new Filesystem($this->start_adapter, new Config([
                 'disable_asserts' => true,
             ]));
 
-            $this->tmp_adapter = new Local($this->xcloner_settings->get_xcloner_tmp_path(), LOCK_EX, 'SKIP_LINKS');
+            $this->tmp_adapter = new Local($this->xcloner_settings->get_xcloner_tmp_path(), LOCK_EX, '0001');
             $this->tmp_filesystem = new Filesystem($this->tmp_adapter, new Config([
                 'disable_asserts' => true,
             ]));
-            $adapter = new Local($this->xcloner_settings->get_xcloner_tmp_path(), LOCK_EX | FILE_APPEND, 'SKIP_LINKS');
+            $adapter = new Local($this->xcloner_settings->get_xcloner_tmp_path(), LOCK_EX | FILE_APPEND, '0001');
             $this->tmp_filesystem_append = new Filesystem($adapter, new Config([
                 'disable_asserts' => true,
             ]));
 
-            $adapter = new Local($this->xcloner_settings->get_xcloner_store_path(), LOCK_EX, 'SKIP_LINKS');
+            $adapter = new Local($this->xcloner_settings->get_xcloner_store_path(), LOCK_EX, '0001');
             $this->storage_filesystem = new Filesystem($adapter, new Config([
                 'disable_asserts' => true,
             ]));
 
             $this->storage_adapter = new Local($this->xcloner_settings->get_xcloner_store_path(), FILE_APPEND,
-                'SKIP_LINKS');
+                '0001');
             $this->storage_filesystem_append = new Filesystem($this->storage_adapter, new Config([
                 'disable_asserts' => true,
             ]));
@@ -519,7 +519,7 @@ class Xcloner_File_System
 
     public function cleanup_tmp_directories()
     {
-        $adapter = new Local($this->xcloner_settings->get_xcloner_tmp_path(false), LOCK_EX | FILE_APPEND, 'SKIP_LINKS');
+        $adapter = new Local($this->xcloner_settings->get_xcloner_tmp_path(false), LOCK_EX | FILE_APPEND, '0001');
         $tmp_filesystem = new Filesystem($adapter, new Config([
             'disable_asserts' => true,
         ]));
