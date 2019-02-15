@@ -71,7 +71,7 @@ class Xcloner_Settings {
 	 * @param $length the length of the string to create
 	 * @return string
 	 */
-	private function randomString($length = 6) {
+	public function randomString($length = 6) {
 		$str = "";
 		$characters = array_merge(range('A', 'Z'), range('a', 'z'), range('0', '9'));
 		$max = count($characters) - 1;
@@ -225,7 +225,7 @@ class Xcloner_Settings {
 	}
 
 	public function get_server_unique_hash($strlen = 0) {
-		$hash = md5(get_home_url().__DIR__);
+		$hash = md5(get_home_url().__DIR__.$this->get_xcloner_encryption_key());
 
 		if ($strlen) {
 			$hash = substr($hash, 0, $strlen);
