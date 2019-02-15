@@ -62,7 +62,7 @@ class Xcloner_File_System
     private $last_logged_file;
     private $folders_to_process_per_session = 25;
     private $backup_archive_extensions = array("tar", "tgz", "tar.gz", "gz", "csv", "encrypted", "decrypted");
-    private $backup_name_tags = array('[time]', '[hostname]', '[domain]');
+    private $backup_name_tags = array('[time]', '[hostname]', '[domain]', '[hash]');
 
     /**
      * Xcloner_File_System constructor.
@@ -780,6 +780,8 @@ class Xcloner_File_System
                 $name = str_replace($tag, date("Y-m-d_H-i"), $name);
             } elseif ($tag == '[hostname]') {
                 $name = str_replace($tag, gethostname(), $name);
+            }elseif ($tag == '[hash]') {
+                $name = str_replace($tag, $this->xcloner_settings->randomString(5), $name);
             } elseif ($tag == '[domain]') {
                 $domain = parse_url(admin_url(), PHP_URL_HOST);
                 $name = str_replace($tag, $domain, $name);
