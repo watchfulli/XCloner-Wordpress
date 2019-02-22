@@ -262,6 +262,7 @@ class Xcloner_Restore{
 	{
 		this.ajaxurl = this.restore_script_url;
 		this.set_cancel(false);
+        this.resume.callback = "";
 		
 		
 		if(this.resume.callback == "get_remote_mysqldump_files_callback")
@@ -365,8 +366,14 @@ class Xcloner_Restore{
 			this.do_ajax(this.resume.callback, this.resume.action, this.resume.params);
 			this.resume = new Object();
 			return;
-		}
-		document.dispatchEvent(new CustomEvent("xcloner_restore_update_progress", {detail: {percent: 0, class: 'indeterminate' }}));
+		}else {
+            document.dispatchEvent(new CustomEvent("xcloner_restore_update_progress", {
+                detail: {
+                    percent: 0,
+                    class: 'indeterminate'
+                }
+            }));
+        }
 		document.dispatchEvent(new CustomEvent("remote_restore_update_files_list", {detail: {files: ""}}));
 		
 		this.do_ajax('remote_restore_backup_file_callback', 'restore_backup_to_path', params)
@@ -374,14 +381,23 @@ class Xcloner_Restore{
 	
 	remote_restore_mysql_backup_file_callback(response, status, params = new Object())
 	{
+	    if(!response){
+
+	        this.set_cancel(true);
+
+            document.dispatchEvent(new CustomEvent("remote_restore_mysql_backup_finish"));
+            return;
+        }
 		if(!status)
 		{
-			this.start = response.statusText.start;
+		    this.start = response.statusText.start;
+
 			document.dispatchEvent(new CustomEvent("xcloner_restore_display_query_box", {detail: { query: response.statusText.query }}));
 			
 			document.dispatchEvent(new CustomEvent("xcloner_restore_display_status_text", {detail: {status: 'error', message: response.status+" "+response.statusText.message }}));
 			//document.dispatchEvent(new CustomEvent("xcloner_restore_update_progress", {detail: {percent: 100 }}));
 			document.dispatchEvent(new CustomEvent("remote_restore_mysql_backup_finish"));
+            //this.set_cancel(true);
 			return;
 		}
 		
@@ -394,7 +410,8 @@ class Xcloner_Restore{
 		{
 			params.start = response.statusText.start
 			params.processed = response.statusText.processed
-			
+            this.start = params.start;
+
 			var percent = 0;
 			
 			if(response.statusText.backup_size)
@@ -441,7 +458,7 @@ class Xcloner_Restore{
 		params.mysqldump_file 		= mysqldump_file
 		params.query 				= ""
 		params.start 			= 0
-		
+
 		if(jQuery(".xcloner-restore .query-box .query-list").val())
 		{
 			params.query = jQuery(".xcloner-restore .query-box .query-list").val();
@@ -747,6 +764,8 @@ class Xcloner_Restore{
 			
 			return;
 		}
+
+		var $this = this;
 		
 		if(!this.restore_script_url)
 		{
@@ -764,16 +783,24 @@ class Xcloner_Restore{
 			crossDomain: true,
 			data: params,
 			error: function(xhr, status, error) {
+                    $this.resume.callback = callback
+                    $this.resume.action = action
+                    $this.resume.params = params
+
 					document.dispatchEvent(new CustomEvent("xcloner_restore_display_status_text", {detail: {status: 'error', message: xhr.status+" "+xhr.statusText}}));
 					$this[callback](xhr, false);
 				}
 			}).done(function(json) {
 				if(!json)
 				{
-					document.dispatchEvent(new CustomEvent("xcloner_restore_display_status_text", {detail: {status: 'error', message: "Lost connection with the API, please try and authentificate again"}}));
+                    $this.resume.callback = callback
+                    $this.resume.action = action
+                    $this.resume.params = params
+
+                    document.dispatchEvent(new CustomEvent("xcloner_restore_display_status_text", {detail: {status: 'error', message: "Lost connection with the API, please try and authentificate again"}}));
 				}
 				
-				if(json.status != 200){
+				if(json && json.status != 200){
 						if(json.error)
 						{
 							document.dispatchEvent(new CustomEvent("xcloner_restore_display_status_text", {detail: {status: 'error', message: json.message}}));
