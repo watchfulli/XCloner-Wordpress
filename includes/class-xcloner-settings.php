@@ -46,8 +46,7 @@ class Xcloner_Settings {
 
 	public function get_xcloner_store_path() {
 		if (!get_option('xcloner_store_path') or !is_dir(/** @scrutinizer ignore-type */get_option('xcloner_store_path'))) {
-			$path = realpath(XCLONER_STORAGE_PATH);
-            update_option('xcloner_store_path', $path);
+            $this->xcloner_container->check_dependencies();
 		} else {
 			$path = get_option('xcloner_store_path');
 		}

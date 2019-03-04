@@ -148,28 +148,34 @@ class Xcloner {
 
 	public function check_dependencies() {
 
-        $backup_storage_path = realpath(__DIR__.DS."..".DS."..".DS."..").DS."backups-".$this->randomString('5').DS;
+        $backup_storage_path =  ( get_option('xcloner_store_path') );
 
-		if (!is_dir($backup_storage_path))
-		{
-			if (!@mkdir($backup_storage_path))
-			{
-				$status = "error";
-				$message = sprintf(__("Unable to create the Backup Storage Location Folder %s . Please fix this before starting the backup process."), $backup_storage_path);
-				$this->trigger_message($message, $status, $backup_storage_path);
-				return;
-			}
-		}
-		if (!is_writable($backup_storage_path))
-		{
-			$status = "error";
-			$message = sprintf(__("Unable to write to the Backup Storage Location Folder %s . Please fix this before starting the backup process."), $backup_storage_path);
-			$this->trigger_message($message, $status, $backup_storage_path);
+        if(!$backup_storage_path) {
 
-			return;
-		}
+            $backup_storage_path = realpath(__DIR__ . DS . ".." . DS . ".." . DS . "..") . DS . "backups-" . $this->randomString('5') . DS;
 
-        define("XCLONER_STORAGE_PATH", realpath($backup_storage_path));
+            if (!is_dir($backup_storage_path)) {
+                if (!@mkdir($backup_storage_path)) {
+                    $status = "error";
+                    $message = sprintf(__("Unable to create the Backup Storage Location Folder %s . Please fix this before starting the backup process."),
+                        $backup_storage_path);
+                    $this->trigger_message($message, $status, $backup_storage_path);
+                    return;
+                }
+            }
+            if (!is_writable($backup_storage_path)) {
+                $status = "error";
+                $message = sprintf(__("Unable to write to the Backup Storage Location Folder %s . Please fix this before starting the backup process."),
+                    $backup_storage_path);
+                $this->trigger_message($message, $status, $backup_storage_path);
+
+                return;
+            }
+
+            update_option("xcloner_store_path", $backup_storage_path);
+        }
+
+
 
 	}
 
