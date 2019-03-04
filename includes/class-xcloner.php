@@ -135,7 +135,7 @@ class Xcloner {
      * @param int $length
      * @return string
      */
-    public static function randomString($length = 6) {
+    public function randomString($length = 6) {
         $str = "";
         $characters = array_merge(range('A', 'Z'), range('a', 'z'), range('0', '9'));
         $max = count($characters) - 1;
@@ -148,7 +148,7 @@ class Xcloner {
 
 	public function check_dependencies() {
 
-        $backup_storage_path = realpath(__DIR__.DS."..".DS."..".DS."..").DS."backups-".self::randomString('5').DS;
+        $backup_storage_path = realpath(__DIR__.DS."..".DS."..".DS."..").DS."backups-".$this->randomString('5').DS;
 
 		if (!is_dir($backup_storage_path))
 		{

@@ -59,7 +59,7 @@ class Xcloner_Settings {
 
 		if (!get_option('xcloner_encryption_key'))
 		{
-			$key = $this->xcloner_container::randomString(35);
+			$key = $this->xcloner_container->randomString(35);
 			update_option('xcloner_encryption_key', $key);
 		}
 
