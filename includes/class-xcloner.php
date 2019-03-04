@@ -115,70 +115,11 @@ class Xcloner {
 	}
 
     /**
-     * Retrieve the version number of the plugin.
-     *
-     * @since     1.0.0
-     * @return    string    The version number of the plugin.
+     * Dynamic get of class methods get_
+     * @param $property
+     * @param $args
+     * @return mixed
      */
-    /*public function get_version() {
-        return $this->version;
-    }
-
-    public function get_xcloner_settings()
-	{
-		return $this->xcloner_settings;
-	}
-
-	public function get_xcloner_filesystem()
-	{
-		return $this->xcloner_filesystem;
-	}
-
-	public function get_xcloner_logger()
-	{
-		return $this->xcloner_logger;
-	}
-
-	public function get_xcloner_sanitization()
-	{
-		return $this->xcloner_sanitization;
-	}
-
-	public function get_xcloner_requirements()
-	{
-		return $this->xcloner_requirements;
-	}
-
-	public function get_archive_system()
-	{
-		return $this->archive_system;
-	}
-
-	public function get_xcloner_database()
-	{
-		return $this->xcloner_database;
-	}
-
-	public function get_xcloner_scheduler()
-	{
-		return $this->xcloner_scheduler;
-	}
-
-	public function get_xcloner_remote_storage()
-	{
-		return $this->xcloner_remote_storage;
-	}
-
-	public function get_xcloner_file_transfer()
-	{
-		return $this->xcloner_file_transfer;
-	}
-
-	public function get_xcloner_encryption()
-	{
-		return $this->xcloner_encryption;
-	}*/
-
     public function __call($property, $args) {
 
         $property = str_replace("get_", "", $property);
@@ -188,11 +129,26 @@ class Xcloner {
         }
     }
 
+    /**
+     * Generate a random string of indicated length $length
+     *
+     * @param int $length
+     * @return string
+     */
+    public static function randomString($length = 6) {
+        $str = "";
+        $characters = array_merge(range('A', 'Z'), range('a', 'z'), range('0', '9'));
+        $max = count($characters) - 1;
+        for ($i = 0; $i < $length; $i++) {
+            $rand = mt_rand(0, $max);
+            $str .= $characters[$rand];
+        }
+        return $str;
+    }
+
 	public function check_dependencies() {
 
-		$backup_storage_path = realpath(__DIR__.DS."..".DS."..".DS."..").DS."backups".DS;
-
-		define("XCLONER_STORAGE_PATH", realpath($backup_storage_path));
+        $backup_storage_path = realpath(__DIR__.DS."..".DS."..".DS."..").DS."backups-".self::randomString('5').DS;
 
 		if (!is_dir($backup_storage_path))
 		{
@@ -212,6 +168,8 @@ class Xcloner {
 
 			return;
 		}
+
+        define("XCLONER_STORAGE_PATH", realpath($backup_storage_path));
 
 	}
 

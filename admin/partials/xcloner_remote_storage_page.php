@@ -68,8 +68,9 @@ $gdrive_construct = $remote_storage->gdrive_construct();
                             </div>
                             <div class=" col s12 m6">
                                 <input placeholder="<?php echo __("Ftp Password", 'xcloner-backup-and-restore') ?>"
-                                       id="ftp_password" type="password" name="xcloner_ftp_password" class="validate"
-                                       value="<?php echo get_option("xcloner_ftp_password") ?>" autocomplete="off">
+                                       id="ftp_password" type="text" name="xcloner_ftp_password" class="validate"
+                                       value="<?php echo str_repeat('*', strlen( get_option("xcloner_ftp_password"))) ?>"
+                                       autocomplete="off">
                             </div>
                         </div>
 
@@ -208,8 +209,9 @@ $gdrive_construct = $remote_storage->gdrive_construct();
                             </div>
                             <div class=" col s12 m6">
                                 <input placeholder="<?php echo __("SFTP or Private Key Password", 'xcloner-backup-and-restore') ?>"
-                                       id="ftp_spassword" type="password" name="xcloner_sftp_password" class="validate"
-                                       value="<?php echo get_option("xcloner_sftp_password") ?>" autocomplete="off">
+                                       id="ftp_spassword" type="text" name="xcloner_sftp_password" class="validate"
+                                       value="<?php echo str_repeat('*', strlen( get_option("xcloner_sftp_password"))) ?>"
+                                       autocomplete="off">
                             </div>
                         </div>
 
@@ -324,7 +326,8 @@ $gdrive_construct = $remote_storage->gdrive_construct();
                             <div class=" col s12 m6">
                                 <input placeholder="<?php echo __("S3 Secret", 'xcloner-backup-and-restore') ?>"
                                        id="aws_secret" type="text" name="xcloner_aws_secret" class="validate"
-                                       value="<?php echo get_option("xcloner_aws_secret") ?>" autocomplete="off">
+                                       value="<?php echo str_repeat('*', strlen( get_option("xcloner_aws_secret"))) ?>"
+                                       autocomplete="off">
                             </div>
                         </div>
 
@@ -464,7 +467,8 @@ $gdrive_construct = $remote_storage->gdrive_construct();
                             <div class=" col s12 m6">
                                 <input placeholder="<?php echo __("Dropbox App Secret", 'xcloner-backup-and-restore') ?>"
                                        id="dropbox_app_secret" type="text" name="xcloner_dropbox_app_secret"
-                                       class="validate" value="<?php echo get_option("xcloner_dropbox_app_secret") ?>"
+                                       class="validate"
+                                       value="<?php echo str_repeat('*', strlen( get_option("xcloner_dropbox_app_secret"))) ?>"
                                        autocomplete="off">
                             </div>
                         </div>
@@ -559,7 +563,8 @@ $gdrive_construct = $remote_storage->gdrive_construct();
                             <div class=" col s12 m6">
                                 <input placeholder="<?php echo __("Azure Api Key", 'xcloner-backup-and-restore') ?>"
                                        id="azure_api_key" type="text" name="xcloner_azure_api_key" class="validate"
-                                       value="<?php echo get_option("xcloner_azure_api_key") ?>" autocomplete="off">
+                                       value="<?php echo str_repeat('*', strlen(get_option("xcloner_azure_api_key"))) ?>"
+                                       autocomplete="off">
                             </div>
                         </div>
 
@@ -655,7 +660,7 @@ $gdrive_construct = $remote_storage->gdrive_construct();
                                 <input placeholder="<?php echo __("Backblaze Application Key", 'xcloner-backup-and-restore') ?>"
                                        id="backblaze_application_key" type="text"
                                        name="xcloner_backblaze_application_key" class="validate"
-                                       value="<?php echo get_option("xcloner_backblaze_application_key") ?>"
+                                       value="<?php echo str_repeat('*', strlen(get_option("xcloner_backblaze_application_key"))) ?>"
                                        autocomplete="off">
                             </div>
                         </div>
@@ -760,8 +765,9 @@ $gdrive_construct = $remote_storage->gdrive_construct();
                             </div>
                             <div class=" col s12 m6">
                                 <input placeholder="<?php echo __("WebDAV Password", 'xcloner-backup-and-restore') ?>"
-                                       id="webdav_password" type="password" name="xcloner_webdav_password"
-                                       class="validate" value="<?php echo get_option("xcloner_webdav_password") ?>"
+                                       id="webdav_password" type="text" name="xcloner_webdav_password"
+                                       class="validate"
+                                       value="<?php echo str_repeat('*', strlen(get_option("xcloner_webdav_password"))) ?>"
                                        autocomplete="off">
                             </div>
                         </div>
@@ -868,7 +874,7 @@ $gdrive_construct = $remote_storage->gdrive_construct();
                                     <input placeholder="<?php echo __("Google Client Secret", 'xcloner-backup-and-restore') ?>"
                                            id="gdrive_client_secret" type="text" name="xcloner_gdrive_client_secret"
                                            class="validate"
-                                           value="<?php echo get_option("xcloner_gdrive_client_secret") ?>">
+                                           value="<?php echo str_repeat('*', strlen(get_option("xcloner_gdrive_client_secret"))) ?>">
                                 </div>
                             </div>
 

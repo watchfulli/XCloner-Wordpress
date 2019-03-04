@@ -106,7 +106,7 @@ class Xcloner_Remote_Storage
             "text" => "Azure BLOB",
             "azure_enable" => "int",
             "azure_account_name" => "string",
-            "azure_api_key" => "string",
+            "azure_api_key" => "raw",
             "azure_container" => "string",
             "azure_cleanup_days" => "float",
         ),
@@ -114,7 +114,7 @@ class Xcloner_Remote_Storage
             "text" => "Backblaze",
             "backblaze_enable" => "int",
             "backblaze_account_id" => "string",
-            "backblaze_application_key" => "string",
+            "backblaze_application_key" => "raw",
             "backblaze_bucket_name" => "string",
             "backblaze_cleanup_days" => "float",
         ),
@@ -267,8 +267,15 @@ class Xcloner_Remote_Storage
 
         if (is_array($this->storage_fields[$storage])) {
             foreach ($this->storage_fields[$storage] as $field => $validation) {
+
                 $check_field = $this->storage_fields["option_prefix"] . $field;
                 $sanitize_method = "sanitize_input_as_" . $validation;
+
+
+                //we do not save empty encrypted credentials
+                if($validation == "raw" && str_repeat('*', strlen($_POST[$check_field])) == $_POST[$check_field] ){
+                    continue;
+                }
 
                 if (!isset($_POST[$check_field])) {
                     $_POST[$check_field] = 0;
