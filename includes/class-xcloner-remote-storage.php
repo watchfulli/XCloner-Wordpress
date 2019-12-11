@@ -619,7 +619,6 @@ class Xcloner_Remote_Storage
             //'proxy' => 'locahost:8888',
         );
 
-
         $client = new SabreClient($settings);
         $adapter = new WebDAVAdapter($client, get_option("xcloner_webdav_target_folder"));
         $filesystem = new Filesystem($adapter, new Config([
