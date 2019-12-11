@@ -183,47 +183,49 @@
     },
     {
         "name": "guzzlehttp/guzzle",
-        "version": "6.3.3",
-        "version_normalized": "6.3.3.0",
+        "version": "6.5.0",
+        "version_normalized": "6.5.0.0",
         "source": {
             "type": "git",
             "url": "https://github.com/guzzle/guzzle.git",
-            "reference": "407b0cb880ace85c9b63c5f9551db498cb2d50ba"
+            "reference": "dbc2bc3a293ed6b1ae08a3651e2bfd213d19b6a5"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/guzzle/guzzle/zipball/407b0cb880ace85c9b63c5f9551db498cb2d50ba",
-            "reference": "407b0cb880ace85c9b63c5f9551db498cb2d50ba",
+            "url": "https://api.github.com/repos/guzzle/guzzle/zipball/dbc2bc3a293ed6b1ae08a3651e2bfd213d19b6a5",
+            "reference": "dbc2bc3a293ed6b1ae08a3651e2bfd213d19b6a5",
             "shasum": ""
         },
         "require": {
+            "ext-json": "*",
             "guzzlehttp/promises": "^1.0",
-            "guzzlehttp/psr7": "^1.4",
+            "guzzlehttp/psr7": "^1.6.1",
             "php": ">=5.5"
         },
         "require-dev": {
             "ext-curl": "*",
             "phpunit/phpunit": "^4.8.35 || ^5.7 || ^6.4 || ^7.0",
-            "psr/log": "^1.0"
+            "psr/log": "^1.1"
         },
         "suggest": {
+            "ext-intl": "Required for Internationalized Domain Name (IDN) support",
             "psr/log": "Required for using the Log middleware"
         },
-        "time": "2018-04-22T15:46:56+00:00",
+        "time": "2019-12-07T18:20:45+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
-                "dev-master": "6.3-dev"
+                "dev-master": "6.5-dev"
             }
         },
         "installation-source": "source",
         "autoload": {
-            "files": [
-                "src/functions_include.php"
-            ],
             "psr-4": {
                 "GuzzleHttp\\": "src/"
-            }
+            },
+            "files": [
+                "src/functions_include.php"
+            ]
         },
         "notification-url": "https://packagist.org/downloads/",
         "license": [
@@ -303,34 +305,39 @@
     },
     {
         "name": "guzzlehttp/psr7",
-        "version": "1.4.2",
-        "version_normalized": "1.4.2.0",
+        "version": "1.6.1",
+        "version_normalized": "1.6.1.0",
         "source": {
             "type": "git",
             "url": "https://github.com/guzzle/psr7.git",
-            "reference": "f5b8a8512e2b58b0071a7280e39f14f72e05d87c"
+            "reference": "239400de7a173fe9901b9ac7c06497751f00727a"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/guzzle/psr7/zipball/f5b8a8512e2b58b0071a7280e39f14f72e05d87c",
-            "reference": "f5b8a8512e2b58b0071a7280e39f14f72e05d87c",
+            "url": "https://api.github.com/repos/guzzle/psr7/zipball/239400de7a173fe9901b9ac7c06497751f00727a",
+            "reference": "239400de7a173fe9901b9ac7c06497751f00727a",
             "shasum": ""
         },
         "require": {
             "php": ">=5.4.0",
-            "psr/http-message": "~1.0"
+            "psr/http-message": "~1.0",
+            "ralouphie/getallheaders": "^2.0.5 || ^3.0.0"
         },
         "provide": {
             "psr/http-message-implementation": "1.0"
         },
         "require-dev": {
-            "phpunit/phpunit": "~4.0"
+            "ext-zlib": "*",
+            "phpunit/phpunit": "~4.8.36 || ^5.7.27 || ^6.5.8"
         },
-        "time": "2017-03-20T17:10:46+00:00",
+        "suggest": {
+            "zendframework/zend-httphandlerrunner": "Emit PSR-7 responses"
+        },
+        "time": "2019-07-01T23:21:34+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
-                "dev-master": "1.4-dev"
+                "dev-master": "1.6-dev"
             }
         },
         "installation-source": "source",
@@ -361,6 +368,7 @@
         "keywords": [
             "http",
             "message",
+            "psr-7",
             "request",
             "response",
             "stream",
@@ -504,40 +512,35 @@
         "description": "Flysystem adapter for the AWS S3 SDK v3.x"
     },
     {
-        "name": "league/flysystem-azure",
-        "version": "1.0.4",
-        "version_normalized": "1.0.4.0",
+        "name": "league/flysystem-azure-blob-storage",
+        "version": "0.1.6",
+        "version_normalized": "0.1.6.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/thephpleague/flysystem-azure.git",
-            "reference": "0b9838c4f75ee41bc390357b0350e9a62e3b3a1f"
+            "url": "https://github.com/thephpleague/flysystem-azure-blob-storage.git",
+            "reference": "97215345f3c42679299ba556a4d16d4847ee7f6d"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/thephpleague/flysystem-azure/zipball/0b9838c4f75ee41bc390357b0350e9a62e3b3a1f",
-            "reference": "0b9838c4f75ee41bc390357b0350e9a62e3b3a1f",
+            "url": "https://api.github.com/repos/thephpleague/flysystem-azure-blob-storage/zipball/97215345f3c42679299ba556a4d16d4847ee7f6d",
+            "reference": "97215345f3c42679299ba556a4d16d4847ee7f6d",
             "shasum": ""
         },
         "require": {
-            "league/flysystem": "~1.0",
-            "microsoft/azure-storage": "~0.10.1",
-            "php": ">=5.5.0"
+            "guzzlehttp/psr7": "^1.5",
+            "league/flysystem": "^1.0",
+            "microsoft/azure-storage-blob": "^1.1",
+            "php": ">=5.6"
         },
         "require-dev": {
-            "mockery/mockery": "~0.9",
-            "phpunit/phpunit": "~4.0"
+            "phpunit/phpunit": "^5.7"
         },
-        "time": "2016-07-10T19:08:39+00:00",
+        "time": "2019-06-07T20:42:16+00:00",
         "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "1.0-dev"
-            }
-        },
         "installation-source": "dist",
         "autoload": {
             "psr-4": {
-                "League\\Flysystem\\Azure\\": "src/"
+                "League\\Flysystem\\AzureBlobStorage\\": "src/"
             }
         },
         "notification-url": "https://packagist.org/downloads/",
@@ -549,9 +552,7 @@
                 "name": "Frank de Jonge",
                 "email": "info@frenky.net"
             }
-        ],
-        "description": "Flysystem adapter for Windows Azure",
-        "abandoned": "league/flysystem-azure-blob-storage"
+        ]
     },
     {
         "name": "league/flysystem-sftp",
@@ -704,45 +705,30 @@
         ]
     },
     {
-        "name": "microsoft/azure-storage",
-        "version": "v0.10.2",
-        "version_normalized": "0.10.2.0",
+        "name": "microsoft/azure-storage-blob",
+        "version": "1.4.0",
+        "version_normalized": "1.4.0.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/Azure/azure-storage-php.git",
-            "reference": "27de05b00c1858d6e1c6adbc489efa90e0342f82"
+            "url": "https://github.com/Azure/azure-storage-blob-php.git",
+            "reference": "8310c2ecab488fa325db3dcf2f8723bbcfe58941"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/Azure/azure-storage-php/zipball/27de05b00c1858d6e1c6adbc489efa90e0342f82",
-            "reference": "27de05b00c1858d6e1c6adbc489efa90e0342f82",
+            "url": "https://api.github.com/repos/Azure/azure-storage-blob-php/zipball/8310c2ecab488fa325db3dcf2f8723bbcfe58941",
+            "reference": "8310c2ecab488fa325db3dcf2f8723bbcfe58941",
             "shasum": ""
         },
         "require": {
-            "guzzlehttp/guzzle": "~6.0",
-            "php": ">=5.5.0"
+            "microsoft/azure-storage-common": "~1.4",
+            "php": ">=5.6.0"
         },
-        "require-dev": {
-            "mikey179/vfsstream": "~1.6",
-            "pdepend/pdepend": "~2.2",
-            "phploc/phploc": "~2.1",
-            "phpmd/phpmd": "@stable",
-            "phpunit/phpunit": "~4.0",
-            "sebastian/phpcpd": "~2.0",
-            "squizlabs/php_codesniffer": "2.*",
-            "theseer/phpdox": "~0.8"
-        },
-        "time": "2016-08-19T08:32:57+00:00",
+        "time": "2019-04-26T15:06:52+00:00",
         "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "0.10.x-dev"
-            }
-        },
         "installation-source": "dist",
         "autoload": {
             "psr-4": {
-                "MicrosoftAzure\\Storage\\": "src/"
+                "MicrosoftAzure\\Storage\\Blob\\": "src/Blob"
             }
         },
         "notification-url": "https://packagist.org/downloads/",
@@ -751,18 +737,64 @@
         ],
         "authors": [
             {
-                "name": "Azure Storage PHP SDK",
+                "name": "Azure Storage PHP Client Library",
                 "email": "dmsh@microsoft.com"
             }
         ],
-        "description": "This project provides a set of PHP client libraries that make it easy to access Microsoft Azure storage APIs.",
+        "description": "This project provides a set of PHP client libraries that make it easy to access Microsoft Azure Storage Blob APIs.",
         "keywords": [
             "azure",
+            "blob",
             "php",
             "sdk",
             "storage"
+        ]
+    },
+    {
+        "name": "microsoft/azure-storage-common",
+        "version": "1.4.0",
+        "version_normalized": "1.4.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/Azure/azure-storage-common-php.git",
+            "reference": "435adf4d09f0b34375f899b5627d2926bfe317e6"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/Azure/azure-storage-common-php/zipball/435adf4d09f0b34375f899b5627d2926bfe317e6",
+            "reference": "435adf4d09f0b34375f899b5627d2926bfe317e6",
+            "shasum": ""
+        },
+        "require": {
+            "guzzlehttp/guzzle": "~6.0",
+            "php": ">=5.6.0"
+        },
+        "time": "2019-04-26T15:02:17+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "MicrosoftAzure\\Storage\\Common\\": "src/Common"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
         ],
-        "abandoned": "microsoft/azure-storage-blob, microsoft/azure-storage-table, microsoft/azure-storage-queue, microsoft/azure-storage-file"
+        "authors": [
+            {
+                "name": "Azure Storage PHP Client Library",
+                "email": "dmsh@microsoft.com"
+            }
+        ],
+        "description": "This project provides a set of common code shared by Azure Storage Blob, Table, Queue and File PHP client libraries.",
+        "keywords": [
+            "azure",
+            "common",
+            "php",
+            "sdk",
+            "storage"
+        ]
     },
     {
         "name": "mikey179/vfsStream",
@@ -770,12 +802,12 @@
         "version_normalized": "1.6.5.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/mikey179/vfsStream.git",
+            "url": "https://github.com/bovigo/vfsStream.git",
             "reference": "d5fec95f541d4d71c4823bb5e30cf9b9e5b96145"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/mikey179/vfsStream/zipball/d5fec95f541d4d71c4823bb5e30cf9b9e5b96145",
+            "url": "https://api.github.com/repos/bovigo/vfsStream/zipball/d5fec95f541d4d71c4823bb5e30cf9b9e5b96145",
             "reference": "d5fec95f541d4d71c4823bb5e30cf9b9e5b96145",
             "shasum": ""
         },
@@ -1145,18 +1177,60 @@
         ]
     },
     {
-        "name": "sabre/dav",
-        "version": "3.2.2",
-        "version_normalized": "3.2.2.0",
+        "name": "ralouphie/getallheaders",
+        "version": "3.0.3",
+        "version_normalized": "3.0.3.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/sabre-io/dav.git",
-            "reference": "e987775e619728f12205606c9cc3ee565ffb1516"
+            "url": "https://github.com/ralouphie/getallheaders.git",
+            "reference": "120b605dfeb996808c31b6477290a714d356e822"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/sabre-io/dav/zipball/e987775e619728f12205606c9cc3ee565ffb1516",
-            "reference": "e987775e619728f12205606c9cc3ee565ffb1516",
+            "url": "https://api.github.com/repos/ralouphie/getallheaders/zipball/120b605dfeb996808c31b6477290a714d356e822",
+            "reference": "120b605dfeb996808c31b6477290a714d356e822",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.6"
+        },
+        "require-dev": {
+            "php-coveralls/php-coveralls": "^2.1",
+            "phpunit/phpunit": "^5 || ^6.5"
+        },
+        "time": "2019-03-08T08:55:37+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "files": [
+                "src/getallheaders.php"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Ralph Khattar",
+                "email": "ralph.khattar@gmail.com"
+            }
+        ],
+        "description": "A polyfill for getallheaders."
+    },
+    {
+        "name": "sabre/dav",
+        "version": "3.2.3",
+        "version_normalized": "3.2.3.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/sabre-io/dav.git",
+            "reference": "a9780ce4f35560ecbd0af524ad32d9d2c8954b80"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/sabre-io/dav/zipball/a9780ce4f35560ecbd0af524ad32d9d2c8954b80",
+            "reference": "a9780ce4f35560ecbd0af524ad32d9d2c8954b80",
             "shasum": ""
         },
         "require": {
@@ -1187,7 +1261,7 @@
             "ext-curl": "*",
             "ext-pdo": "*"
         },
-        "time": "2017-02-15T03:06:08+00:00",
+        "time": "2018-10-19T09:58:27+00:00",
         "bin": [
             "bin/sabredav",
             "bin/naturalselection"
@@ -1401,17 +1475,17 @@
     },
     {
         "name": "sabre/vobject",
-        "version": "4.1.6",
-        "version_normalized": "4.1.6.0",
+        "version": "4.2.0",
+        "version_normalized": "4.2.0.0",
         "source": {
             "type": "git",
             "url": "https://github.com/sabre-io/vobject.git",
-            "reference": "122cacbdea2c6133ac04db86ec05854beef75adf"
+            "reference": "bd500019764e434ff65872d426f523e7882a0739"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/sabre-io/vobject/zipball/122cacbdea2c6133ac04db86ec05854beef75adf",
-            "reference": "122cacbdea2c6133ac04db86ec05854beef75adf",
+            "url": "https://api.github.com/repos/sabre-io/vobject/zipball/bd500019764e434ff65872d426f523e7882a0739",
+            "reference": "bd500019764e434ff65872d426f523e7882a0739",
             "shasum": ""
         },
         "require": {
@@ -1420,13 +1494,12 @@
             "sabre/xml": ">=1.5 <3.0"
         },
         "require-dev": {
-            "phpunit/phpunit": "> 4.8.35, <6.0.0",
-            "sabre/cs": "^1.0.0"
+            "phpunit/phpunit": "> 4.8.35, <6.0.0"
         },
         "suggest": {
             "hoa/bench": "If you would like to run the benchmark scripts"
         },
-        "time": "2018-04-20T07:22:50+00:00",
+        "time": "2019-02-19T13:05:37+00:00",
         "bin": [
             "bin/vobject",
             "bin/generate_vcards"

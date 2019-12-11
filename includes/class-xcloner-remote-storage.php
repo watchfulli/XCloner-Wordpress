@@ -36,8 +36,8 @@ use League\Flysystem\Sftp\SftpAdapter;
 use Srmklive\Dropbox\Client\DropboxClient;
 use Srmklive\Dropbox\Adapter\DropboxAdapter;
 
-use MicrosoftAzure\Storage\Common\ServicesBuilder;
-use League\Flysystem\Azure\AzureAdapter;
+use League\Flysystem\AzureBlobStorage\AzureBlobStorageAdapter;
+use MicrosoftAzure\Storage\Blob\BlobRestProxy;
 
 use Aws\S3\S3Client;
 use League\Flysystem\AwsS3v3\AwsS3Adapter;
@@ -514,9 +514,9 @@ class Xcloner_Remote_Storage
             get_option("xcloner_azure_api_key")
         );
 
-        $blobRestProxy = ServicesBuilder::getInstance()->createBlobService($endpoint);
+        $blobRestProxy = BlobRestProxy::createBlobService($endpoint);
 
-        $adapter = new AzureAdapter($blobRestProxy, get_option("xcloner_azure_container"));
+        $adapter = new AzureBlobStorageAdapter($blobRestProxy, get_option("xcloner_azure_container"));
 
         $filesystem = new Filesystem($adapter, new Config([
             'disable_asserts' => true,
