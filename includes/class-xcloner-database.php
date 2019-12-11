@@ -513,13 +513,16 @@ class Xcloner_Database extends wpdb {
 					$this->countRecords++;
 
 					foreach ($arr as $key => $value) {
-						$value = $this->_real_escape($value);
-						
-						if (method_exists($this, 'remove_placeholder_escape')) {
-							$value = $this->remove_placeholder_escape($value);
+						if (!is_null($value)) {
+							$value = $this->_real_escape($value);
+
+							if (method_exists($this, 'remove_placeholder_escape')) {
+								$value = $this->remove_placeholder_escape($value);
+							}
+							$buffer .= "'" . $value . "', ";
+						} else {
+							$buffer .= "null, ";
 						}
-						
-						$buffer .= "'".$value."', ";
 					}
 					$buffer = rtrim($buffer, ', ').");\n";
 					$this->fs->get_tmp_filesystem_append()->write($dumpfile, $buffer);
