@@ -781,7 +781,7 @@ class Xcloner_File_System
             } elseif ($tag == '[hostname]') {
                 $name = str_replace($tag, gethostname(), $name);
             }elseif ($tag == '[hash]') {
-                $name = str_replace($tag, $this->xcloner_settings->randomString(5), $name);
+                $name = str_replace($tag, $this->xcloner_container->randomString(5), $name);
             } elseif ($tag == '[domain]') {
                 $domain = parse_url(admin_url(), PHP_URL_HOST);
                 $name = str_replace($tag, $domain, $name);

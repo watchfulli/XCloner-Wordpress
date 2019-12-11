@@ -7,10 +7,11 @@ namespace Composer\Autoload;
 class ComposerStaticInit571f9d19802717f7be61d57b40d60b28
 {
     public static $files = array (
-        'c964ee0ededf28c96ebd9db5099ef910' => __DIR__ . '/..' . '/guzzlehttp/promises/src/functions_include.php',
+        '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
         'a0edc8309cc5e1d60e3047b5df6b7052' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/functions_include.php',
-        '383eaff206634a77a1be54e64e6459c7' => __DIR__ . '/..' . '/sabre/uri/lib/functions.php',
+        'c964ee0ededf28c96ebd9db5099ef910' => __DIR__ . '/..' . '/guzzlehttp/promises/src/functions_include.php',
         '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
+        '383eaff206634a77a1be54e64e6459c7' => __DIR__ . '/..' . '/sabre/uri/lib/functions.php',
         'b067bc7112e384b61c701452d53a14a8' => __DIR__ . '/..' . '/mtdowling/jmespath.php/src/JmesPath.php',
         '2b9d0f43f9552984cfa82fee95491826' => __DIR__ . '/..' . '/sabre/event/lib/coroutine.php',
         'd81bab31d3feb45bfe2f283ea3c8fdf7' => __DIR__ . '/..' . '/sabre/event/lib/Loop/functions.php',
@@ -52,14 +53,15 @@ class ComposerStaticInit571f9d19802717f7be61d57b40d60b28
         'M' => 
         array (
             'Monolog\\' => 8,
-            'MicrosoftAzure\\Storage\\' => 23,
+            'MicrosoftAzure\\Storage\\Common\\' => 30,
+            'MicrosoftAzure\\Storage\\Blob\\' => 28,
             'Mhetreramesh\\Flysystem\\' => 23,
         ),
         'L' => 
         array (
             'League\\Flysystem\\WebDAV\\' => 24,
             'League\\Flysystem\\Sftp\\' => 22,
-            'League\\Flysystem\\Azure\\' => 23,
+            'League\\Flysystem\\AzureBlobStorage\\' => 34,
             'League\\Flysystem\\AwsS3v3\\' => 25,
             'League\\Flysystem\\' => 17,
         ),
@@ -144,9 +146,13 @@ class ComposerStaticInit571f9d19802717f7be61d57b40d60b28
         array (
             0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
         ),
-        'MicrosoftAzure\\Storage\\' => 
+        'MicrosoftAzure\\Storage\\Common\\' => 
         array (
-            0 => __DIR__ . '/..' . '/microsoft/azure-storage/src',
+            0 => __DIR__ . '/..' . '/microsoft/azure-storage-common/src/Common',
+        ),
+        'MicrosoftAzure\\Storage\\Blob\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/microsoft/azure-storage-blob/src/Blob',
         ),
         'Mhetreramesh\\Flysystem\\' => 
         array (
@@ -160,9 +166,9 @@ class ComposerStaticInit571f9d19802717f7be61d57b40d60b28
         array (
             0 => __DIR__ . '/..' . '/league/flysystem-sftp/src',
         ),
-        'League\\Flysystem\\Azure\\' => 
+        'League\\Flysystem\\AzureBlobStorage\\' => 
         array (
-            0 => __DIR__ . '/..' . '/league/flysystem-azure/src',
+            0 => __DIR__ . '/..' . '/league/flysystem-azure-blob-storage/src',
         ),
         'League\\Flysystem\\AwsS3v3\\' => 
         array (

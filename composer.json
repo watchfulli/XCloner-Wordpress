@@ -5,11 +5,11 @@
         "league/flysystem": "^1.0",
         "monolog/monolog": "^1.22",
         "league/flysystem-sftp": "^1.0",
-        "league/flysystem-azure": "^1.0",
         "league/flysystem-aws-s3-v3": "^1.0",
         "mhetreramesh/flysystem-backblaze": "^1.0",
         "league/flysystem-webdav": "^1.0",
-        "srmklive/flysystem-dropbox-v2": "^1.0"
+        "srmklive/flysystem-dropbox-v2": "^1.0",
+        "league/flysystem-azure-blob-storage": "^0.1.6"
     },
     "prefer-stable": true,
     "require-dev": {

@@ -3,8 +3,8 @@ Contributors: xcloner
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=AAPE8PLAE554S
 Tags: backup plugin, restore plugin, database backup, backup encryption, site backup, website cloner, wordpress backup, database restore, webdav, azure, ftp, sftp, amazon s3, dropbox, google drive, differential backup
 Requires at least: 3.0.1
-Tested up to: 5.1
-Stable tag: 4.1.1
+Tested up to: 5.3
+Stable tag: 4.1.2
 
 Backup your site, restore to any web location, encrypt and send your backups to Dropbox, Amazon S3, Azure, FTP, SFTP, WebDAV, Google Drive with XCloner plugin.
 
@@ -113,6 +113,14 @@ Of course, schedules can be adjusted accordingly to how often you update your si
 Immigration Attorney Montana <a href="https://www.immigrationlawofmt.com" target='_blank'>https://www.immigrationlawofmt.com</a>
 
 == Changelog ==
+
+= 4.1.2 = 
+* improved default backup storage path security
+* improved remote storage security
+
+= 4.1.2 = 
+* vendor lib updates
+* flysystem azure storage Upgrade
 
 = 4.1.1 = 
 * log tmp directories fix, tracking only ERROR reports from php

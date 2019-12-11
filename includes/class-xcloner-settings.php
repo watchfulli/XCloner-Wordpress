@@ -46,7 +46,7 @@ class Xcloner_Settings {
 
 	public function get_xcloner_store_path() {
 		if (!get_option('xcloner_store_path') or !is_dir(/** @scrutinizer ignore-type */get_option('xcloner_store_path'))) {
-			$path = realpath(XCLONER_STORAGE_PATH);
+            $this->xcloner_container->check_dependencies();
 		} else {
 			$path = get_option('xcloner_store_path');
 		}
@@ -58,7 +58,7 @@ class Xcloner_Settings {
 
 		if (!get_option('xcloner_encryption_key'))
 		{
-			$key = $this->randomString(35);
+			$key = $this->xcloner_container->randomString(35);
 			update_option('xcloner_encryption_key', $key);
 		}
 
@@ -71,7 +71,7 @@ class Xcloner_Settings {
 	 * @param $length the length of the string to create
 	 * @return string
 	 */
-	public function randomString($length = 6) {
+	/*public function randomString($length = 6) {
 		$str = "";
 		$characters = array_merge(range('A', 'Z'), range('a', 'z'), range('0', '9'));
 		$max = count($characters) - 1;
@@ -80,7 +80,7 @@ class Xcloner_Settings {
 			$str .= $characters[$rand];
 		}
 		return $str;
-	}
+	}*/
 
 	public function get_xcloner_tmp_path_suffix() {
 		return "xcloner".$this->get_hash();
