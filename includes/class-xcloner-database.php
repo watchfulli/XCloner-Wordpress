@@ -277,13 +277,14 @@ class Xcloner_Database extends wpdb {
 			
 			$tablesList[$inc]['excluded'] = 0;
 						
-			if (sizeof($included) and is_array($included))
-				$dbTable = $database.".".$table;
-				if (!in_array($table, $included) and !in_array($dbTable, $included))
-				{
-					$tablesList[$inc]['excluded'] = 1;
-					$this->log(sprintf(__("Excluding table %s.%s from backup"), $table, $database));
-				}
+            if (sizeof($included) and is_array($included)) {
+                $dbTable = $database.".".$table;
+                if (!in_array($table, $included) and !in_array($dbTable, $included)) {
+                    $tablesList[$inc]['excluded'] = 1;
+                    $this->log(sprintf(__("Excluding table %s.%s from backup"), $table, $database));
+                }
+			}
+			
 			$inc++;
 		}
 
