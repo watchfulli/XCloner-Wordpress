@@ -1133,7 +1133,7 @@ class Xcloner_Api
 		}
 
 		try {
-			$tar = new Tar();
+			$tar = $this->archive_system;
 			$tar->open($this->xcloner_settings->get_xcloner_store_path().DS.$backup_file, $start);
 
 			$data = $tar->contents(get_option('xcloner_files_to_process_per_request'));
@@ -1303,7 +1303,7 @@ class Xcloner_Api
 
 		$tmp_file = $this->xcloner_settings->get_xcloner_tmp_path().DS."xcloner-restore.tgz";
 
-		$tar = new Tar();
+		$tar = $this->archive_system;
 		$tar->create($tmp_file);
 
 		$tar->addFile(dirname(__DIR__)."/restore/vendor.build.txt", "vendor.phar");

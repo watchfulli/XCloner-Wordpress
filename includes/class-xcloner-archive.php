@@ -329,7 +329,7 @@ class Xcloner_Archive extends Tar
 
 		$attachments_archive = $this->xcloner_settings->get_xcloner_tmp_path().DS."info.tgz";
 
-		$tar = new Tar();
+		$tar = $this;
 		$tar->create($attachments_archive);
 
 		foreach ($attachments as $key => $file) {
@@ -377,7 +377,7 @@ class Xcloner_Archive extends Tar
 			$this->set_archive_name();
 		}
 
-		$this->backup_archive = new Tar();
+		$this->backup_archive = $this;
 		$this->backup_archive->setCompression($this->compression_level);
 
 		$archive_info = $this->filesystem->get_storage_path_file_info($this->get_archive_name_with_extension());
@@ -642,7 +642,7 @@ class Xcloner_Archive extends Tar
 
 		$this->logger->info(sprintf("Creating new backup archive part %s", $this->get_archive_name_with_extension()));
 
-		$this->backup_archive = new Tar();
+		$this->backup_archive = $this;
 		$this->backup_archive->setCompression($this->compression_level);
 		$archive_info = $this->filesystem->get_storage_path_file_info($this->get_archive_name_with_extension());
 		$this->backup_archive->create($archive_info->getPath().DS.$archive_info->getFilename());
@@ -741,6 +741,79 @@ class Xcloner_Archive extends Tar
 	}
 
 	/**
+	 * Append data to a file to the current TAR archive using an existing file in the filesystem
+	 *
+	 * @param string $file path to the original file
+	 * @param int $start starting reading position in file
+	 * @param int $end end position in reading multiple with 512
+	 * @param string|FileInfo $fileinfo either the name to us in archive (string) or a FileInfo oject with
+	 * all meta data, empty to take from original
+	 * @throws ArchiveIOException
+	 */
+	public function appendFileData($file, $fileinfo = '', $start = 0, $limit = 0)
+    {
+		$end = $start+($limit*512);
+
+		//check to see if we are at the begining of writing the file
+		if(!$start)
+		{
+	        if (is_string($fileinfo)) {
+				$fileinfo = FileInfo::fromPath($file, $fileinfo);
+	        }
+		}
+
+        if ($this->closed) {
+            throw new ArchiveIOException('Archive has been closed, files can no longer be added');
+        }
+
+        if(is_dir($file))
+		{
+			$this->writeFileHeader($fileinfo);
+			return;
+		}
+
+        $fp = fopen($file, 'rb');
+
+        fseek($fp, $start);
+
+        if (!$fp) {
+            throw new ArchiveIOException('Could not open file for reading: '.$file);
+        }
+
+        // create file header
+		if(!$start)
+		{
+			$this->writeFileHeader($fileinfo);
+		}
+
+		$bytes = 0;
+        // write data
+        while ($end >=ftell($fp) and !feof($fp) ) {
+            $data = fread($fp, 512);
+            if ($data === false) {
+                break;
+            }
+            if ($data === '') {
+                break;
+            }
+            $packed = pack("a512", $data);
+            $bytes += $this->writebytes($packed);
+        }
+
+
+
+        //if we are not at the end of file, we return the current position for incremental writing
+        if(!feof($fp))
+			$last_position = ftell($fp);
+		else
+			$last_position = -1;
+
+        fclose($fp);
+
+        return $last_position;
+    }
+
+	/**
 	 * Open a TAR archive and put the file cursor at the end for data appending
 	 *
 	 * If $file is empty, the tar file will be created in memory
@@ -748,9 +821,9 @@ class Xcloner_Archive extends Tar
 	 * @param string $file
 	 * @throws ArchiveIOException
 	 */
-	/*
-    public function openForAppend($file = '')
+	public function openForAppend($file = '')
     {
+
         $this->file   = $file;
         $this->memory = '';
         $this->fh     = 0;
@@ -773,76 +846,10 @@ class Xcloner_Archive extends Tar
                 throw new ArchiveIOException('Could not open file for writing: '.$this->file);
             }
         }
-        $this->backup_archive->writeaccess = true;
-        $this->backup_archive->closed      = false;
+        $this->writeaccess = true;
+        $this->closed      = false;
+
     }
-    */
-
-	/**
-	 * Append data to a file to the current TAR archive using an existing file in the filesystem
-	 *
-	 * @param string $file path to the original file
-	 * @param int $start starting reading position in file
-	 * @param int $end end position in reading multiple with 512
-	 * @param string|FileInfo $fileinfo either the name to us in archive (string) or a FileInfo oject with
-	 * all meta data, empty to take from original
-	 * @throws ArchiveIOException
-	 */
-	/*
-     * public function appendFileData($file, $fileinfo = '', $start = 0, $limit = 0)
-    {
-		$end = $start+($limit*512);
-
-		//check to see if we are at the begining of writing the file
-		if(!$start)
-		{
-	        if (is_string($fileinfo)) {
-				$fileinfo = FileInfo::fromPath($file, $fileinfo);
-	        }
-		}
-
-        if ($this->closed) {
-            throw new ArchiveIOException('Archive has been closed, files can no longer be added');
-        }
-
-        $fp = fopen($file, 'rb');
-
-        fseek($fp, $start);
-
-        if (!$fp) {
-            throw new ArchiveIOException('Could not open file for reading: '.$file);
-        }
-
-        // create file header
-		if(!$start)
-			$this->backup_archive->writeFileHeader($fileinfo);
-
-		$bytes = 0;
-        // write data
-        while ($end >=ftell($fp) and !feof($fp) ) {
-            $data = fread($fp, 512);
-            if ($data === false) {
-                break;
-            }
-            if ($data === '') {
-                break;
-            }
-            $packed = pack("a512", $data);
-            $bytes += $this->backup_archive->writebytes($packed);
-        }
-
-
-
-        //if we are not at the end of file, we return the current position for incremental writing
-        if(!feof($fp))
-			$last_position = ftell($fp);
-		else
-			$last_position = -1;
-
-        fclose($fp);
-
-        return $last_position;
-    }*/
 
 	/**
 	 * Adds a file to a TAR archive by appending it's data

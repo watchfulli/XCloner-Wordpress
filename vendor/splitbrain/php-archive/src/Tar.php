@@ -496,6 +496,7 @@ class Tar extends Archive
         return $written;
     }
 
+    /*
 	public function appendFileData($file, $fileinfo = '', $start = 0, $limit = 0)
     {
 		$end = $start+($limit*512);
@@ -588,6 +589,7 @@ class Tar extends Archive
         $this->closed      = false;
 
     }
+    */
 
     /**
      * Skip forward in the open file pointer
