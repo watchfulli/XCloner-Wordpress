@@ -9,12 +9,12 @@ class Xcloner_Settings
     private $xcloner_container;
     private $xcloner_database;
 
-	/**
-	 * XCloner General Settings Class
-	 *
-	 * @param Xcloner $xcloner_container
-	 * @param string $hash
-	 */
+    /**
+     * XCloner General Settings Class
+     *
+     * @param Xcloner $xcloner_container
+     * @param string $hash
+     */
     public function __construct(Xcloner $xcloner_container, $hash = "")
     {
         $this->xcloner_container = $xcloner_container;
@@ -26,22 +26,22 @@ class Xcloner_Settings
         }
     }
 
-	/**
-	 * Get XCloner Main Container
-	 *
-	 * @return void
-	 */
+    /**
+     * Get XCloner Main Container
+     *
+     * @return void
+     */
     private function get_xcloner_container()
     {
         return $this->xcloner_container;
     }
 
-	/**
-	 * Get Logger Filename Setting
-	 *
-	 * @param integer $include_hash
-	 * @return void
-	 */
+    /**
+     * Get Logger Filename Setting
+     *
+     * @param integer $include_hash
+     * @return void
+     */
     public function get_logger_filename($include_hash = 0)
     {
         if ($include_hash) {
@@ -53,28 +53,28 @@ class Xcloner_Settings
         return $filename;
     }
 
-	/**
-	 * Get XCloner Backup Start Path Setting
-	 *
-	 * @return void
-	 */
+    /**
+     * Get XCloner Backup Start Path Setting
+     *
+     * @return void
+     */
     public function get_xcloner_start_path()
     {
-        if (!get_option('xcloner_start_path') or !is_dir(/** @scrutinizer ignore-type */get_option('xcloner_start_path'))) {
+        if (!$this->get_xcloner_option('xcloner_start_path') or !is_dir(/** @scrutinizer ignore-type */$this->get_xcloner_option('xcloner_start_path'))) {
             $path = realpath(ABSPATH);
         } else {
-            $path = get_option('xcloner_start_path');
+            $path = $this->get_xcloner_option('xcloner_start_path');
         }
 
         return $path;
     }
 
-	/**
-	 * Get XCloner Start Path Setting , function is in legacy mode
-	 *
-	 * @param [type] $dir
-	 * @return void
-	 */
+    /**
+     * Get XCloner Start Path Setting , function is in legacy mode
+     *
+     * @param [type] $dir
+     * @return void
+     */
     public function get_xcloner_dir_path($dir)
     {
         $path = $this->get_xcloner_start_path().DS.$dir;
@@ -82,35 +82,35 @@ class Xcloner_Settings
         return $path;
     }
 
-	/**
-	 * Get XCloner Backup Store Path Setting
-	 *
-	 * @return void
-	 */
+    /**
+     * Get XCloner Backup Store Path Setting
+     *
+     * @return void
+     */
     public function get_xcloner_store_path()
     {
-        if (!get_option('xcloner_store_path') or !is_dir(/** @scrutinizer ignore-type */get_option('xcloner_store_path'))) {
+        if (!$this->get_xcloner_option('xcloner_store_path') or !is_dir(/** @scrutinizer ignore-type */$this->get_xcloner_option('xcloner_store_path'))) {
             $this->xcloner_container->check_dependencies();
         } else {
-            $path = get_option('xcloner_store_path');
+            $path = $this->get_xcloner_option('xcloner_store_path');
         }
 
         return $path;
     }
 
-	/**
-	 * Get XCloner Encryption Key 
-	 *
-	 * @return void
-	 */
+    /**
+     * Get XCloner Encryption Key
+     *
+     * @return void
+     */
     public function get_xcloner_encryption_key()
     {
-        if (!get_option('xcloner_encryption_key')) {
+        if (!$key = $this->get_xcloner_option('xcloner_encryption_key')) {
             $key = $this->xcloner_container->randomString(35);
             update_option('xcloner_encryption_key', $key);
         }
 
-        return get_option('xcloner_encryption_key');
+        return $key;
     }
 
     /**
@@ -135,15 +135,15 @@ class Xcloner_Settings
         return "xcloner".$this->get_hash();
     }
 
-	/**
-	 * Get XCloner Temporary Path
-	 *
-	 * @param boolean $suffix
-	 * @return void
-	 */
+    /**
+     * Get XCloner Temporary Path
+     *
+     * @param boolean $suffix
+     * @return void
+     */
     public function get_xcloner_tmp_path($suffix = true)
     {
-        if (get_option('xcloner_force_tmp_path_site_root')) {
+        if ($this->get_xcloner_option('xcloner_force_tmp_path_site_root')) {
             $path = $this->get_xcloner_store_path();
         } else {
             $path = sys_get_temp_dir();
@@ -168,30 +168,30 @@ class Xcloner_Settings
         return $path;
     }
 
-	/**
-	 * Get Enable Mysql Backup Option
-	 *
-	 * @return void
-	 */
+    /**
+     * Get Enable Mysql Backup Option
+     *
+     * @return void
+     */
     public function get_enable_mysql_backup()
     {
-        if (get_option('xcloner_enable_mysql_backup')) {
+        if ($this->get_xcloner_option('xcloner_enable_mysql_backup')) {
             return true;
         }
 
         return false;
     }
 
-	/**
-	 * Get Backup Extension Name
-	 *
-	 * @param string $ext
-	 * @return string ( hash.(tar|tgz) )
-	 */
+    /**
+     * Get Backup Extension Name
+     *
+     * @param string $ext
+     * @return string ( hash.(tar|tgz) )
+     */
     public function get_backup_extension_name($ext = "")
     {
         if (!$ext) {
-            if (get_option('xcloner_backup_compression_level')) {
+            if ($this->get_xcloner_option('xcloner_backup_compression_level')) {
                 $ext = ".tgz";
             } else {
                 $ext = ".tar";
@@ -201,11 +201,11 @@ class Xcloner_Settings
         return ($this->get_hash()).$ext;
     }
 
-	/**
-	 * Get Backup Hash
-	 *
-	 * @return void
-	 */
+    /**
+     * Get Backup Hash
+     *
+     * @return void
+     */
     public function get_hash()
     {
         if (!$this->hash) {
@@ -216,11 +216,11 @@ class Xcloner_Settings
         return $this->hash;
     }
 
-	/**
-	 * Generate New Hash
-	 *
-	 * @return void
-	 */
+    /**
+     * Generate New Hash
+     *
+     * @return void
+     */
     public function generate_new_hash()
     {
         $hash = "-".md5(rand());
@@ -230,12 +230,12 @@ class Xcloner_Settings
         return $hash;
     }
 
-	/**
-	 * Set New Hash
-	 *
-	 * @param string $hash
-	 * @return void
-	 */
+    /**
+     * Set New Hash
+     *
+     * @param string $hash
+     * @return void
+     */
     public function set_hash($hash = "")
     {
         if (substr($hash, 0, 1) != "-" and strlen($hash)) {
@@ -247,11 +247,11 @@ class Xcloner_Settings
         return $this;
     }
 
-	/**
-	 * Get Default Backup Name
-	 *
-	 * @return void
-	 */
+    /**
+     * Get Default Backup Name
+     *
+     * @return void
+     */
     public function get_default_backup_name()
     {
         $data = parse_url(get_site_url());
@@ -261,70 +261,70 @@ class Xcloner_Settings
         return $backup_name;
     }
 
-	/**
-	 * Get Database Hostname
-	 *
-	 * @return void
-	 */
+    /**
+     * Get Database Hostname
+     *
+     * @return void
+     */
     public function get_db_hostname()
     {
-        if (!$data = get_option('xcloner_mysql_hostname')) {
-           // $data = $this->xcloner_database->getDbHost();
+        if (!$data = $this->get_xcloner_option('xcloner_mysql_hostname')) {
+            // $data = $this->xcloner_database->getDbHost();
         }
 
         return $data;
     }
-	
-	/**
-	 * Get Database Username
-	 *
-	 * @return void
-	 */
+    
+    /**
+     * Get Database Username
+     *
+     * @return void
+     */
     public function get_db_username()
     {
-        if (!$data = get_option('xcloner_mysql_username')) {
+        if (!$data = $this->get_xcloner_option('xcloner_mysql_username')) {
             //$data = $this->xcloner_database->getDbUser();
         }
 
         return $data;
     }
 
-	/**
-	 * Get Database Password
-	 *
-	 * @return void
-	 */
+    /**
+     * Get Database Password
+     *
+     * @return void
+     */
     public function get_db_password()
     {
-        if (!$data = get_option('xcloner_mysql_password')) {
+        if (!$data = $this->get_xcloner_option('xcloner_mysql_password')) {
             //$data = $this->xcloner_database->getDbPassword();
         }
 
         return $data;
     }
 
-	/**
-	 * Get Database Name
-	 *
-	 * @return void
-	 */
+    /**
+     * Get Database Name
+     *
+     * @return void
+     */
     public function get_db_database()
     {
-        if (!$data = get_option('xcloner_mysql_database')) {
+        if (!$data = $this->get_xcloner_option('xcloner_mysql_database')) {
             //$data = $this->xcloner_database->getDbName();
         }
 
         return $data;
     }
 
-	/**
-	 * Get Database Tables Prefix
-	 *
-	 * @return void
-	 */
+    /**
+     * Get Database Tables Prefix
+     *
+     * @return void
+     */
     public function get_table_prefix()
     {
-        return get_option('xcloner_mysql_prefix');
+        return $this->get_xcloner_option('xcloner_mysql_prefix');
     }
 
     /**
@@ -337,12 +337,12 @@ class Xcloner_Settings
         return $data;
     }
 
-	/**
-	 * Get Server Unique Hash used to generate the unique backup name
-	 *
-	 * @param integer $strlen
-	 * @return void
-	 */
+    /**
+     * Get Server Unique Hash used to generate the unique backup name
+     *
+     * @param integer $strlen
+     * @return void
+     */
     public function get_server_unique_hash($strlen = 0)
     {
         $hash = md5(get_home_url().__DIR__.$this->get_xcloner_encryption_key());
@@ -359,19 +359,19 @@ class Xcloner_Settings
         $this->xcloner_sanitization = $this->get_xcloner_container()->get_xcloner_sanitization();
 
         //ADDING MISSING OPTIONS
-        if (false == get_option('xcloner_mysql_settings_page')) {
+        if (false == $this->get_xcloner_option('xcloner_mysql_settings_page')) {
             update_option('xcloner_mysql_settings_page', '');
         } // end if
 
-        if (false == get_option('xcloner_cron_settings_page')) {
+        if (false == $this->get_xcloner_option('xcloner_cron_settings_page')) {
             update_option('xcloner_cron_settings_page', '');
         } // end if
 
-        if (false == get_option('xcloner_system_settings_page')) {
+        if (false == $this->get_xcloner_option('xcloner_system_settings_page')) {
             update_option('xcloner_system_settings_page', '');
         } // end if
 
-        if (false == get_option('xcloner_cleanup_settings_page')) {
+        if (false == $this->get_xcloner_option('xcloner_cleanup_settings_page')) {
             update_option('xcloner_cleanup_settings_page', '');
         } // end if
 
@@ -605,9 +605,9 @@ class Xcloner_Settings
                 $this->get_db_username(),
                 //'disabled'
             )
-		);
-		
-		register_setting('xcloner_mysql_settings_group', 'xcloner_mysql_password', array(
+        );
+        
+        register_setting('xcloner_mysql_settings_group', 'xcloner_mysql_password', array(
             $this->xcloner_sanitization,
             "sanitize_input_as_raw"
         ));
@@ -641,9 +641,9 @@ class Xcloner_Settings
                 $this->get_db_database(),
                 //'disabled'
             )
-		);
-		
-		register_setting('xcloner_mysql_settings_group', 'xcloner_mysql_prefix', array(
+        );
+        
+        register_setting('xcloner_mysql_settings_group', 'xcloner_mysql_prefix', array(
             $this->xcloner_sanitization,
             "sanitize_input_as_raw"
         ));
@@ -910,9 +910,9 @@ class Xcloner_Settings
         list($fieldname, $label, $value, $disabled) = $params;
 
         if (!$value) {
-            $value = get_option($fieldname);
+            $value = $this->get_xcloner_option($fieldname);
         }
-        // output the field ?>
+        // output the field?>
         <div class="row">
             <div class="input-field col s10 m10 l8">
                 <input class="validate" <?php echo ($disabled) ? "disabled" : "" ?> name="<?php echo $fieldname ?>"
@@ -927,14 +927,14 @@ class Xcloner_Settings
 
 
 		<?php
-	}
-	
-	/**
-	 * Password field UI
-	 *
-	 * @param [type] $params
-	 * @return void
-	 */
+    }
+    
+    /**
+     * Password field UI
+     *
+     * @param [type] $params
+     * @return void
+     */
     public function do_form_password_field($params)
     {
         if (!isset($params['3'])) {
@@ -947,9 +947,9 @@ class Xcloner_Settings
         list($fieldname, $label, $value, $disabled) = $params;
 
         if (!$value) {
-            $value = get_option($fieldname);
+            $value = $this->get_xcloner_option($fieldname);
         }
-        // output the field ?>
+        // output the field?>
         <div class="row">
             <div class="input-field col s10 m10 l8">
                 <input class="validate" <?php echo ($disabled) ? "disabled" : "" ?> name="<?php echo $fieldname ?>"
@@ -979,9 +979,9 @@ class Xcloner_Settings
         list($fieldname, $label, $value, $disabled) = $params;
 
         if (!$value) {
-            $value = get_option($fieldname);
+            $value = $this->get_xcloner_option($fieldname);
         }
-        // output the field ?>
+        // output the field?>
         <div class="row">
             <div class="input-field col s10 m10 l8">
                 <textarea class="validate" <?php echo ($disabled) ? "disabled" : "" ?> name="<?php echo $fieldname ?>"
@@ -1049,9 +1049,9 @@ class Xcloner_Settings
         list($fieldname, $label, $value, $disabled) = $params;
 
         if (!$value) {
-            $value = get_option($fieldname);
+            $value = $this->get_xcloner_option($fieldname);
         }
-        // output the field ?>
+        // output the field?>
         <div class="row">
             <div class="input-field col s10 m5 l3">
                 <input class="validate" <?php echo ($disabled) ? "disabled" : "" ?> name="<?php echo $fieldname ?>"
@@ -1075,7 +1075,7 @@ class Xcloner_Settings
         }
 
         list($fieldname, $label, $range_start, $range_end, $disabled) = $params;
-        $value = get_option($fieldname); ?>
+        $value = $this->get_xcloner_option($fieldname); ?>
         <div class="row">
             <div class="input-field col s10 m10 l8">
                 <p class="range-field">
@@ -1101,7 +1101,7 @@ class Xcloner_Settings
             $params[2] = 0;
         }
         list($fieldname, $label, $disabled) = $params;
-        $value = get_option($fieldname); ?>
+        $value = $this->get_xcloner_option($fieldname); ?>
         <div class="row">
             <div class="input-field col s10 m5 l3">
                 <div class="switch">

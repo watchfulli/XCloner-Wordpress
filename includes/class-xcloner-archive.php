@@ -110,11 +110,11 @@ class Xcloner_Archive extends Tar
 			$this->files_to_process_per_request = $value;
 		}
 
-		if ($value = get_option('xcloner_backup_compression_level')) {
+		if ($value = $this->xcloner_settings->get_xcloner_option('xcloner_backup_compression_level')) {
 			$this->compression_level = $value;
 		}
 
-		if ($value = get_option('xcloner_split_backup_limit')) {
+		if ($value = $this->xcloner_settings->get_xcloner_option('xcloner_split_backup_limit')) {
 			$this->xcloner_split_backup_limit = $value;
 		}
 
@@ -238,7 +238,7 @@ class Xcloner_Archive extends Tar
 
 		$this->logger->info(sprintf("Sending backup error notification to %s", $to));
 
-		$admin_email = get_option("admin_email");
+		$admin_email = $this->xcloner_settings->get_xcloner_option("admin_email");
 
 		$headers = array('Content-Type: text/html; charset=UTF-8');
 
@@ -339,7 +339,7 @@ class Xcloner_Archive extends Tar
 
 		$this->logger->info(sprintf("Sending backup notification to %s", $to));
 
-		$admin_email = get_option("admin_email");
+		$admin_email = $this->xcloner_settings->get_xcloner_option("admin_email");
 
 		$headers = array('Content-Type: text/html; charset=UTF-8', 'From: '.$from.' <'.$admin_email.'>');
 

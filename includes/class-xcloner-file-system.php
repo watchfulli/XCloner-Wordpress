@@ -108,7 +108,7 @@ class Xcloner_File_System
         }
 
 
-        if ($value = get_option('xcloner_directories_to_scan_per_request')) {
+        if ($value = $this->xcloner_settings->get_xcloner_option('xcloner_directories_to_scan_per_request')) {
             $this->folders_to_process_per_session = $value;
         }
     }

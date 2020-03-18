@@ -243,6 +243,7 @@ if (!function_exists('add_menu_page')) {
 // function wp_get_schedules() {}
 // function wp_send_json() {}
 // function get_site_url() {}
+// function get_home_url() {}
 // function wp_mail() {}
 // function __(){}
 // function admin_url(){}

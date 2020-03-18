@@ -53,7 +53,6 @@ use League\Flysystem\WebDAV\WebDAVAdapter;
  */
 class Xcloner_Remote_Storage
 {
-
     private $gdrive_app_name = "XCloner Backup and Restore";
 
     private $storage_fields = array(
@@ -160,6 +159,7 @@ class Xcloner_Remote_Storage
 
     private $xcloner_sanitization;
     private $xcloner_file_system;
+    private $xcloner_settings;
     private $logger;
     private $xcloner;
 
@@ -171,33 +171,30 @@ class Xcloner_Remote_Storage
     {
         $this->xcloner_sanitization = $xcloner_container->get_xcloner_sanitization();
         $this->xcloner_file_system = $xcloner_container->get_xcloner_filesystem();
+        $this->xcloner_settings = $xcloner_container->get_xcloner_settings();
         $this->logger = $xcloner_container->get_xcloner_logger()->withName("xcloner_remote_storage");
         $this->xcloner = $xcloner_container;
 
         foreach ($this->storage_fields as $main_key => $array) {
-
             if (is_array($array)) {
                 foreach ($array as $key => $type) {
-
                     if ($type == "raw") {
-                        add_filter("pre_update_option_" . $this->storage_fields['option_prefix'] . $key,
+                        add_filter(
+                            "pre_update_option_" . $this->storage_fields['option_prefix'] . $key,
                             function ($value) {
-
                                 return $this->simple_crypt($value, 'e');
-
-                            }, 10, 1);
+                            },
+                            10,
+                            1
+                        );
 
                         add_filter("option_" . $this->storage_fields['option_prefix'] . $key, function ($value) {
-
                             return $this->simple_crypt($value, 'd');
-
                         }, 10, 1);
                     }
-
                 }
             }
         }
-
     }
 
     /**
@@ -248,7 +245,7 @@ class Xcloner_Remote_Storage
         $return = array();
         foreach ($this->storage_fields as $storage => $data) {
             $check_field = $this->storage_fields["option_prefix"] . $storage . "_enable";
-            if (get_option($check_field)) {
+            if ($this->xcloner_settings->get_xcloner_option($check_field)) {
                 $return[$storage] = $data['text'];
             }
         }
@@ -267,13 +264,12 @@ class Xcloner_Remote_Storage
 
         if (is_array($this->storage_fields[$storage])) {
             foreach ($this->storage_fields[$storage] as $field => $validation) {
-
                 $check_field = $this->storage_fields["option_prefix"] . $field;
                 $sanitize_method = "sanitize_input_as_" . $validation;
 
 
                 //we do not save empty encrypted credentials
-                if($validation == "raw" && str_repeat('*', strlen($_POST[$check_field])) == $_POST[$check_field] ){
+                if ($validation == "raw" && str_repeat('*', strlen($_POST[$check_field])) == $_POST[$check_field]) {
                     continue;
                 }
 
@@ -289,22 +285,30 @@ class Xcloner_Remote_Storage
                 update_option($check_field, $sanitized_value);
             }
 
-            $this->xcloner->trigger_message(__("%s storage settings saved.", 'xcloner-backup-and-restore'), "success",
-                $this->storage_fields[$action]['text']);
+            $this->xcloner->trigger_message(
+                __("%s storage settings saved.", 'xcloner-backup-and-restore'),
+                "success",
+                $this->storage_fields[$action]['text']
+            );
         }
-
     }
 
     public function check($action = "ftp")
     {
         try {
             $this->verify_filesystem($action);
-            $this->xcloner->trigger_message(__("%s connection is valid.", 'xcloner-backup-and-restore'), "success",
-                $this->storage_fields[$action]['text']);
+            $this->xcloner->trigger_message(
+                __("%s connection is valid.", 'xcloner-backup-and-restore'),
+                "success",
+                $this->storage_fields[$action]['text']
+            );
             $this->logger->debug(sprintf("Connection to remote storage %s is valid", strtoupper($action)));
         } catch (Exception $e) {
-            $this->xcloner->trigger_message("%s connection error: " . $e->getMessage(), "error",
-                $this->storage_fields[$action]['text']);
+            $this->xcloner->trigger_message(
+                "%s connection error: " . $e->getMessage(),
+                "error",
+                $this->storage_fields[$action]['text']
+            );
         }
     }
 
@@ -315,8 +319,10 @@ class Xcloner_Remote_Storage
     {
         $method = "get_" . $storage_type . "_filesystem";
 
-        $this->logger->info(sprintf("Checking validity of the remote storage %s filesystem",
-            strtoupper($storage_type)));
+        $this->logger->info(sprintf(
+            "Checking validity of the remote storage %s filesystem",
+            strtoupper($storage_type)
+        ));
 
         if (!method_exists($this, $method)) {
             return false;
@@ -375,8 +381,10 @@ class Xcloner_Remote_Storage
         //doing remote storage cleaning here
         $this->clean_remote_storage($storage, $remote_storage_filesystem);
 
-        $this->logger->info(sprintf("Transferring backup %s to remote storage %s", $file, strtoupper($storage)),
-            array(""));
+        $this->logger->info(
+            sprintf("Transferring backup %s to remote storage %s", $file, strtoupper($storage)),
+            array("")
+        );
 
         /*if(!$this->xcloner_file_system->get_storage_filesystem()->has($file))
         {
@@ -396,8 +404,11 @@ class Xcloner_Remote_Storage
             $parts = $this->xcloner_file_system->get_multipart_files($file);
             if (is_array($parts)) {
                 foreach ($parts as $part_file) {
-                    $this->logger->info(sprintf("Transferring backup %s to remote storage %s", $part_file,
-                        strtoupper($storage)), array(""));
+                    $this->logger->info(sprintf(
+                        "Transferring backup %s to remote storage %s",
+                        $part_file,
+                        strtoupper($storage)
+                    ), array(""));
 
                     $backup_file_stream = $this->xcloner_file_system->get_storage_filesystem()->readStream($part_file);
                     if (!$remote_storage_filesystem->writeStream($part_file, $backup_file_stream)) {
@@ -410,7 +421,6 @@ class Xcloner_Remote_Storage
         $this->logger->info(sprintf("Upload done, disconnecting from remote storage %s", strtoupper($storage)));
 
         return true;
-
     }
 
     public function copy_backup_remote_to_local($file, $storage)
@@ -436,8 +446,11 @@ class Xcloner_Remote_Storage
             $target_filename = $metadata['filename'] . "." . $metadata['extension'];
         }
 
-        $this->logger->info(sprintf("Transferring backup %s to local storage from %s storage", $file,
-            strtoupper($storage)), array(""));
+        $this->logger->info(sprintf(
+            "Transferring backup %s to local storage from %s storage",
+            $file,
+            strtoupper($storage)
+        ), array(""));
 
         $backup_file_stream = $remote_storage_filesystem->readStream($file);
 
@@ -451,12 +464,17 @@ class Xcloner_Remote_Storage
             $parts = $this->xcloner_file_system->get_multipart_files($file, $storage);
             if (is_array($parts)) {
                 foreach ($parts as $part_file) {
-                    $this->logger->info(sprintf("Transferring backup %s to local storage from %s storage", $part_file,
-                        strtoupper($storage)), array(""));
+                    $this->logger->info(sprintf(
+                        "Transferring backup %s to local storage from %s storage",
+                        $part_file,
+                        strtoupper($storage)
+                    ), array(""));
 
                     $backup_file_stream = $remote_storage_filesystem->readStream($part_file);
-                    if (!$this->xcloner_file_system->get_storage_filesystem()->writeStream($part_file,
-                        $backup_file_stream)) {
+                    if (!$this->xcloner_file_system->get_storage_filesystem()->writeStream(
+                        $part_file,
+                        $backup_file_stream
+                    )) {
                         return false;
                     }
                 }
@@ -466,15 +484,17 @@ class Xcloner_Remote_Storage
         $this->logger->info(sprintf("Upload done, disconnecting from remote storage %s", strtoupper($storage)));
 
         return true;
-
     }
 
     public function clean_remote_storage($storage, $remote_storage_filesystem)
     {
         $check_field = $this->storage_fields["option_prefix"] . $storage . "_cleanup_days";
-        if ($expire_days = get_option($check_field)) {
-            $this->logger->info(sprintf("Doing %s remote storage cleanup for %s days limit", strtoupper($storage),
-                $expire_days));
+        if ($expire_days = $this->xcloner_settings->get_xcloner_option($check_field)) {
+            $this->logger->info(sprintf(
+                "Doing %s remote storage cleanup for %s days limit",
+                strtoupper($storage),
+                $expire_days
+            ));
             $files = $remote_storage_filesystem->listContents();
 
             $current_timestamp = strtotime("-" . $expire_days . " days");
@@ -490,7 +510,6 @@ class Xcloner_Remote_Storage
                             $file['timestamp'] . " =< " . $expire_days
                         ));
                     }
-
                 }
             }
         }
@@ -510,13 +529,13 @@ class Xcloner_Remote_Storage
 
         $endpoint = sprintf(
             'DefaultEndpointsProtocol=https;AccountName=%s;AccountKey=%s',
-            get_option("xcloner_azure_account_name"),
-            get_option("xcloner_azure_api_key")
+            $this->xcloner_settings->get_xcloner_option("xcloner_azure_account_name"),
+            $this->xcloner_settings->get_xcloner_option("xcloner_azure_api_key")
         );
 
         $blobRestProxy = BlobRestProxy::createBlobService($endpoint);
 
-        $adapter = new AzureBlobStorageAdapter($blobRestProxy, get_option("xcloner_azure_container"));
+        $adapter = new AzureBlobStorageAdapter($blobRestProxy, $this->xcloner_settings->get_xcloner_option("xcloner_azure_container"));
 
         $filesystem = new Filesystem($adapter, new Config([
             'disable_asserts' => true,
@@ -533,8 +552,8 @@ class Xcloner_Remote_Storage
             throw new Exception("DROPBOX requires PHP 5.6 to be installed!");
         }
 
-        $client = new DropboxClient(get_option("xcloner_dropbox_access_token"));
-        $adapter = new DropboxAdapter($client, get_option("xcloner_dropbox_prefix"));
+        $client = new DropboxClient($this->xcloner_settings->get_xcloner_option("xcloner_dropbox_access_token"));
+        $adapter = new DropboxAdapter($client, $this->xcloner_settings->get_xcloner_option("xcloner_dropbox_prefix"));
 
         $filesystem = new Filesystem($adapter, new Config([
             'disable_asserts' => true,
@@ -558,25 +577,22 @@ class Xcloner_Remote_Storage
 
         $credentials = array(
             'credentials' => array(
-                'key' => get_option("xcloner_aws_key"),
-                'secret' => get_option("xcloner_aws_secret")
+                'key' => $this->xcloner_settings->get_xcloner_option("xcloner_aws_key"),
+                'secret' => $this->xcloner_settings->get_xcloner_option("xcloner_aws_secret")
             ),
-            'region' => get_option("xcloner_aws_region"),
+            'region' => $this->xcloner_settings->get_xcloner_option("xcloner_aws_region"),
             'version' => 'latest',
         );
 
-        if (get_option('xcloner_aws_endpoint') != "" && !get_option("xcloner_aws_region")) {
-
-            $credentials['endpoint'] = get_option('xcloner_aws_endpoint');
+        if ($this->xcloner_settings->get_xcloner_option('xcloner_aws_endpoint') != "" && !$this->xcloner_settings->get_xcloner_option("xcloner_aws_region")) {
+            $credentials['endpoint'] = $this->xcloner_settings->get_xcloner_option('xcloner_aws_endpoint');
             #$credentials['use_path_style_endpoint'] = true;
             #$credentials['bucket_endpoint'] = false;
-
-
         }
 
         $client = new S3Client($credentials);
 
-        $adapter = new AwsS3Adapter($client, get_option("xcloner_aws_bucket_name"), get_option("xcloner_aws_prefix"));
+        $adapter = new AwsS3Adapter($client, $this->xcloner_settings->get_xcloner_option("xcloner_aws_bucket_name"), $this->xcloner_settings->get_xcloner_option("xcloner_aws_prefix"));
         $filesystem = new Filesystem($adapter, new Config([
             'disable_asserts' => true,
         ]));
@@ -593,9 +609,11 @@ class Xcloner_Remote_Storage
         }
 
 
-        $client = new B2Client(get_option("xcloner_backblaze_account_id"),
-            get_option("xcloner_backblaze_application_key"));
-        $adapter = new BackblazeAdapter($client, get_option("xcloner_backblaze_bucket_name"));
+        $client = new B2Client(
+            $this->xcloner_settings->get_xcloner_option("xcloner_backblaze_account_id"),
+            $this->xcloner_settings->get_xcloner_option("xcloner_backblaze_application_key")
+        );
+        $adapter = new BackblazeAdapter($client, $this->xcloner_settings->get_xcloner_option("xcloner_backblaze_bucket_name"));
 
         $filesystem = new Filesystem($adapter, new Config([
             'disable_asserts' => true,
@@ -613,14 +631,14 @@ class Xcloner_Remote_Storage
         }
 
         $settings = array(
-            'baseUri' => get_option("xcloner_webdav_url"),
-            'userName' => get_option("xcloner_webdav_username"),
-            'password' => get_option("xcloner_webdav_password"),
+            'baseUri' => $this->xcloner_settings->get_xcloner_option("xcloner_webdav_url"),
+            'userName' => $this->xcloner_settings->get_xcloner_option("xcloner_webdav_username"),
+            'password' => $this->xcloner_settings->get_xcloner_option("xcloner_webdav_password"),
             //'proxy' => 'locahost:8888',
         );
 
         $client = new SabreClient($settings);
-        $adapter = new WebDAVAdapter($client, get_option("xcloner_webdav_target_folder"));
+        $adapter = new WebDAVAdapter($client, $this->xcloner_settings->get_xcloner_option("xcloner_webdav_target_folder"));
         $filesystem = new Filesystem($adapter, new Config([
             'disable_asserts' => true,
         ]));
@@ -641,8 +659,8 @@ class Xcloner_Remote_Storage
 
         $client = new \Google_Client();
         $client->setApplicationName($this->gdrive_app_name);
-        $client->setClientId(get_option("xcloner_gdrive_client_id"));
-        $client->setClientSecret(get_option("xcloner_gdrive_client_secret"));
+        $client->setClientId($this->xcloner_settings->get_xcloner_option("xcloner_gdrive_client_id"));
+        $client->setClientSecret($this->xcloner_settings->get_xcloner_option("xcloner_gdrive_client_secret"));
 
         //$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF']."?page=xcloner_remote_storage_page&action=set_gdrive_code";
         $redirect_uri = "urn:ietf:wg:oauth:2.0:oob";
@@ -682,14 +700,11 @@ class Xcloner_Remote_Storage
         update_option("xcloner_gdrive_access_token", $token['access_token']);
         update_option("xcloner_gdrive_refresh_token", $token['refresh_token']);
 
-        $redirect_url = ('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . "?page=xcloner_remote_storage_page#gdrive");
-
-        ?>
+        $redirect_url = ('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . "?page=xcloner_remote_storage_page#gdrive"); ?>
         <script>
             window.location = '<?php echo $redirect_url?>';
         </script>
         <?php
-
     }
 
     /*
@@ -698,7 +713,6 @@ class Xcloner_Remote_Storage
      */
     public function get_gdrive_filesystem()
     {
-
         if (version_compare(phpversion(), '5.6.0', '<')) {
             throw new Exception("Google Drive API requires PHP 5.6 to be installed!");
         }
@@ -713,19 +727,19 @@ class Xcloner_Remote_Storage
             throw new Exception($error_msg);
         }
 
-        $client->refreshToken(get_option("xcloner_gdrive_refresh_token"));
+        $client->refreshToken($this->xcloner_settings->get_xcloner_option("xcloner_gdrive_refresh_token"));
 
         $service = new \Google_Service_Drive($client);
 
-        if (get_option("xcloner_gdrive_empty_trash", 0)) {
+        if ($this->xcloner_settings->get_xcloner_option("xcloner_gdrive_empty_trash", 0)) {
             $this->logger->info(sprintf("Doing a Google Drive emptyTrash call"), array(""));
             $service->files->emptyTrash();
         }
 
         $parent = 'root';
-        $dir = basename(get_option("xcloner_gdrive_target_folder"));
+        $dir = basename($this->xcloner_settings->get_xcloner_option("xcloner_gdrive_target_folder"));
 
-        $folderID = get_option("xcloner_gdrive_target_folder");
+        $folderID = $this->xcloner_settings->get_xcloner_option("xcloner_gdrive_target_folder");
 
         $tmp = parse_url($folderID);
 
@@ -734,8 +748,11 @@ class Xcloner_Remote_Storage
         }
 
         if (stristr($folderID, "/")) {
-            $query = sprintf('mimeType = \'application/vnd.google-apps.folder\' and \'%s\' in parents and name contains \'%s\'',
-                $parent, $dir);
+            $query = sprintf(
+                'mimeType = \'application/vnd.google-apps.folder\' and \'%s\' in parents and name contains \'%s\'',
+                $parent,
+                $dir
+            );
             $response = $service->files->listFiles([
                 'pageSize' => 1,
                 'q' => $query
@@ -746,8 +763,10 @@ class Xcloner_Remote_Storage
                     $folderID = $obj->getId();
                 }
             } else {
-                $this->xcloner->trigger_message(sprintf(__("Could not find folder ID by name %s",
-                    'xcloner-backup-and-restore'), $folderID), "error");
+                $this->xcloner->trigger_message(sprintf(__(
+                    "Could not find folder ID by name %s",
+                    'xcloner-backup-and-restore'
+                ), $folderID), "error");
             }
         }
 
@@ -772,16 +791,16 @@ class Xcloner_Remote_Storage
         $this->logger->info(sprintf("Creating the FTP remote storage connection"), array(""));
 
         $adapter = new Adapter([
-            'host' => get_option("xcloner_ftp_hostname"),
-            'username' => get_option("xcloner_ftp_username"),
-            'password' => get_option("xcloner_ftp_password"),
+            'host' => $this->xcloner_settings->get_xcloner_option("xcloner_ftp_hostname"),
+            'username' => $this->xcloner_settings->get_xcloner_option("xcloner_ftp_username"),
+            'password' => $this->xcloner_settings->get_xcloner_option("xcloner_ftp_password"),
 
             /** optional config settings */
-            'port' => get_option("xcloner_ftp_port", 21),
-            'root' => get_option("xcloner_ftp_path"),
-            'passive' => get_option("xcloner_ftp_transfer_mode"),
-            'ssl' => get_option("xcloner_ftp_ssl_mode"),
-            'timeout' => get_option("xcloner_ftp_timeout", 30),
+            'port' => $this->xcloner_settings->get_xcloner_option("xcloner_ftp_port", 21),
+            'root' => $this->xcloner_settings->get_xcloner_option("xcloner_ftp_path"),
+            'passive' => $this->xcloner_settings->get_xcloner_option("xcloner_ftp_transfer_mode"),
+            'ssl' => $this->xcloner_settings->get_xcloner_option("xcloner_ftp_ssl_mode"),
+            'timeout' => $this->xcloner_settings->get_xcloner_option("xcloner_ftp_timeout", 30),
         ]);
 
         $adapter->connect();
@@ -798,15 +817,15 @@ class Xcloner_Remote_Storage
         $this->logger->info(sprintf("Creating the SFTP remote storage connection"), array(""));
 
         $adapter = new SftpAdapter([
-            'host' => get_option("xcloner_sftp_hostname"),
-            'username' => get_option("xcloner_sftp_username"),
-            'password' => get_option("xcloner_sftp_password"),
+            'host' => $this->xcloner_settings->get_xcloner_option("xcloner_sftp_hostname"),
+            'username' => $this->xcloner_settings->get_xcloner_option("xcloner_sftp_username"),
+            'password' => $this->xcloner_settings->get_xcloner_option("xcloner_sftp_password"),
 
             /** optional config settings */
-            'port' => get_option("xcloner_sftp_port", 22),
-            'root' => (get_option("xcloner_sftp_path")?get_option("xcloner_sftp_path"):'./'),
-            'privateKey' => get_option("xcloner_sftp_private_key"),
-            'timeout' => get_option("xcloner_ftp_timeout", 30),
+            'port' => $this->xcloner_settings->get_xcloner_option("xcloner_sftp_port", 22),
+            'root' => ($this->xcloner_settings->get_xcloner_option("xcloner_sftp_path")?$this->xcloner_settings->get_xcloner_option("xcloner_sftp_path"):'./'),
+            'privateKey' => $this->xcloner_settings->get_xcloner_option("xcloner_sftp_private_key"),
+            'timeout' => $this->xcloner_settings->get_xcloner_option("xcloner_ftp_timeout", 30),
         ]);
 
         $adapter->connect();
@@ -830,5 +849,4 @@ class Xcloner_Remote_Storage
     {
         return $this->aws_regions;
     }
-
 }

@@ -209,7 +209,7 @@ class Xcloner_Api
         } else {
             $schedule['start_at'] = date(
                 'Y-m-d H:i:s',
-                $schedule['start_at'] - (get_option('gmt_offset') * HOUR_IN_SECONDS)
+                $schedule['start_at'] - ($this->xcloner_settings->get_xcloner_option('gmt_offset') * HOUR_IN_SECONDS)
             );
         }
 
@@ -652,7 +652,7 @@ class Xcloner_Api
 
         $data['start_at'] = date(
             "Y-m-d H:i",
-            strtotime($data['start_at']) + (get_option('gmt_offset') * HOUR_IN_SECONDS)
+            strtotime($data['start_at']) + ($this->xcloner_settings->get_xcloner_option('gmt_offset') * HOUR_IN_SECONDS)
         );
         if (isset($data['backup_params']->diff_start_date) && $data['backup_params']->diff_start_date != "") {
             $data['backup_params']->diff_start_date = date("Y-m-d", ($data['backup_params']->diff_start_date));
@@ -687,7 +687,7 @@ class Xcloner_Api
 
             $next_run_time = wp_next_scheduled('xcloner_scheduler_'.$res->id, array($res->id));
 
-            $next_run = date(get_option('date_format')." ".get_option('time_format'), $next_run_time);
+            $next_run = date($this->xcloner_settings->get_xcloner_option('date_format')." ".$this->xcloner_settings->get_xcloner_option('time_format'), $next_run_time);
 
             $remote_storage = $res->remote_storage;
 
@@ -697,8 +697,8 @@ class Xcloner_Api
 
             if (trim($next_run)) {
                 $date_text = date(
-                    get_option('date_format')." ".get_option('time_format'),
-                    $next_run_time + (get_option('gmt_offset') * HOUR_IN_SECONDS)
+                    $this->xcloner_settings->get_xcloner_option('date_format')." ".$this->xcloner_settings->get_xcloner_option('time_format'),
+                    $next_run_time + ($this->xcloner_settings->get_xcloner_option('gmt_offset') * HOUR_IN_SECONDS)
                 );
 
                 if ($next_run_time >= time()) {
@@ -720,8 +720,8 @@ class Xcloner_Api
                     $metadata = $this->xcloner_file_system->get_storage_filesystem()->getMetadata($res->last_backup);
                     $backup_size = size_format($this->xcloner_file_system->get_backup_size($res->last_backup));
                     $backup_time = date(
-                        get_option('date_format')." ".get_option('time_format'),
-                        $metadata['timestamp'] + (get_option('gmt_offset') * HOUR_IN_SECONDS)
+                        $this->xcloner_settings->get_xcloner_option('date_format')." ".$this->xcloner_settings->get_xcloner_option('time_format'),
+                        $metadata['timestamp'] + ($this->xcloner_settings->get_xcloner_option('gmt_offset') * HOUR_IN_SECONDS)
                     );
                 }
 
@@ -1136,7 +1136,7 @@ class Xcloner_Api
             $tar = $this->archive_system;
             $tar->open($this->xcloner_settings->get_xcloner_store_path().DS.$backup_file, $start);
 
-            $data = $tar->contents(get_option('xcloner_files_to_process_per_request'));
+            $data = $tar->contents($this->xcloner_settings->get_xcloner_option('xcloner_files_to_process_per_request'));
         } catch (Exception $e) {
             $return['error'] = true;
             $return['message'] = $e->getMessage();
@@ -1153,7 +1153,7 @@ class Xcloner_Api
                 $return['files'][$i]['path'] = $file->getPath();
                 $return['files'][$i]['size'] = $file->getSize();
                 $return['files'][$i]['mtime'] = date(
-                    get_option('date_format')." ".get_option('time_format'),
+                    $this->xcloner_settings->get_xcloner_option('date_format')." ".$this->xcloner_settings->get_xcloner_option('time_format'),
                     $file->getMtime()
                 );
 
