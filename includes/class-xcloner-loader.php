@@ -87,45 +87,6 @@ class Xcloner_Loader
 	}
 
 	/**
-	 * Add XCloner to Admin Menu
-	 */
-	public function xcloner_backup_add_admin_menu()
-	{
-		if (function_exists('add_menu_page')) {
-			add_menu_page(__('Site Backup', 'xcloner-backup-and-restore'),
-				__('Site Backup', 'xcloner-backup-and-restore'), 'manage_options', 'xcloner_init_page',
-				array($this->xcloner_container, 'xcloner_display'), 'dashicons-backup');
-		}
-
-		if (function_exists('add_submenu_page')) {
-
-			add_submenu_page('xcloner_init_page', __('XCloner Dashboard', 'xcloner-backup-and-restore'),
-				__('Dashboard', 'xcloner-backup-and-restore'), 'manage_options', 'xcloner_init_page',
-				array($this->xcloner_container, 'xcloner_display'));
-			add_submenu_page('xcloner_init_page', __('XCloner Backup Settings', 'xcloner-backup-and-restore'),
-				__('Settings', 'xcloner-backup-and-restore'), 'manage_options', 'xcloner_settings_page',
-				array($this->xcloner_container, 'xcloner_display'));
-			add_submenu_page('xcloner_init_page', __('Remote Storage Settings', 'xcloner-backup-and-restore'),
-				__('Remote Storage', 'xcloner-backup-and-restore'), 'manage_options', 'xcloner_remote_storage_page',
-				array($this->xcloner_container, 'xcloner_display'));
-			add_submenu_page('xcloner_init_page', __('Manage Backups', 'xcloner-backup-and-restore'),
-				__('Manage Backups', 'xcloner-backup-and-restore'), 'manage_options', 'xcloner_manage_backups_page',
-				array($this->xcloner_container, 'xcloner_display'));
-			add_submenu_page('xcloner_init_page', __('Scheduled Backups', 'xcloner-backup-and-restore'),
-				__('Scheduled Backups', 'xcloner-backup-and-restore'), 'manage_options',
-				'xcloner_scheduled_backups_page', array($this->xcloner_container, 'xcloner_display'));
-			add_submenu_page('xcloner_init_page', __('Generate Backups', 'xcloner-backup-and-restore'),
-				__('Generate Backups', 'xcloner-backup-and-restore'), 'manage_options', 'xcloner_generate_backups_page',
-				array($this->xcloner_container, 'xcloner_display'));
-			add_submenu_page('xcloner_init_page', __('Restore Backups', 'xcloner-backup-and-restore'),
-				__('Restore Backups', 'xcloner-backup-and-restore'), 'manage_options', 'xcloner_restore_page',
-				array($this->xcloner_container, 'xcloner_display'));
-		}
-
-	}
-
-
-	/**
 	 * Add a new action to the collection to be registered with WordPress.
 	 *
 	 * @since    1.0.0

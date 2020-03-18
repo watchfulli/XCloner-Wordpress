@@ -21,15 +21,16 @@ class Xcloner_Scheduler {
 	}*/
 
 	public function __construct(Xcloner $xcloner_container) {
-		global $wpdb;
-
-		$this->db          = $wpdb;
-		$wpdb->show_errors = false;
+		//global $wpdb;
 
 		$this->xcloner_container = $xcloner_container;
+		$this->xcloner_database  = $this->get_xcloner_container()->get_xcloner_database();
 		$this->xcloner_settings  = $this->xcloner_container->get_xcloner_settings();
 
-		$this->scheduler_table = $this->db->prefix.$this->scheduler_table;
+		$this->db          = $this->xcloner_database;
+		$this->db->show_errors = false;
+
+		$this->scheduler_table = $this->xcloner_settings->get_table_prefix().$this->scheduler_table;
 	}
 
 	private function get_xcloner_container() {
@@ -116,7 +117,7 @@ class Xcloner_Scheduler {
 			$hook = 'xcloner_scheduler_'.$schedule->id;
 
 			//adding the xcloner_scheduler hook with xcloner_scheduler_callback callback
-			add_action($hook, array($this, 'xcloner_scheduler_callback'), 10, 1);
+			$this->xcloner_container->get_loader()->add_action($hook, $this, 'xcloner_scheduler_callback', 10, 1);
 
 			if (!wp_next_scheduled($hook, array($schedule->id)) and $schedule->status) {
 
@@ -236,6 +237,10 @@ class Xcloner_Scheduler {
 		$this->archive_system         = $this->get_xcloner_container()->get_archive_system();
 		$this->logger                 = $this->get_xcloner_container()->get_xcloner_logger()->withName("xcloner_scheduler");
 		$this->xcloner_remote_storage = $this->get_xcloner_container()->get_xcloner_remote_storage();
+
+
+		$this->db          		= $this->xcloner_database;
+		$this->db->show_errors 	= false;
 
 		$this->logger->info(sprintf("New schedule hash is %s", $this->xcloner_settings->get_hash()));
 

@@ -360,19 +360,19 @@ class Xcloner_Settings
 
         //ADDING MISSING OPTIONS
         if (false == get_option('xcloner_mysql_settings_page')) {
-            update_option('xcloner_mysql_settings_page');
+            update_option('xcloner_mysql_settings_page', '');
         } // end if
 
         if (false == get_option('xcloner_cron_settings_page')) {
-            update_option('xcloner_cron_settings_page');
+            update_option('xcloner_cron_settings_page', '');
         } // end if
 
         if (false == get_option('xcloner_system_settings_page')) {
-            update_option('xcloner_system_settings_page');
+            update_option('xcloner_system_settings_page', '');
         } // end if
 
         if (false == get_option('xcloner_cleanup_settings_page')) {
-            update_option('xcloner_cleanup_settings_page');
+            update_option('xcloner_cleanup_settings_page', '');
         } // end if
 
 
