@@ -183,7 +183,7 @@ class Xcloner
     public function trigger_message($message, $status = "error", $message_param1 = "", $message_param2 = "", $message_param3 = "")
     {
         $message = sprintf(__($message), $message_param1, $message_param2, $message_param3);
-        $this->loader->add_action('xcloner_admin_notices', $this, "trigger_message_notice", 10, 2);
+        add_action('xcloner_admin_notices', array($this, "trigger_message_notice"), 10, 2);
         do_action('xcloner_admin_notices', $message, $status);
     }
 
