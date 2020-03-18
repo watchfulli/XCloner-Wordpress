@@ -63,7 +63,7 @@ class Xcloner_Api
 	 */
 	public function __construct(Xcloner $xcloner_container)
 	{
-		global $wpdb;
+		//global $wpdb;
 
 		if (WP_DEBUG) {
 			error_reporting(0);
@@ -73,8 +73,6 @@ class Xcloner_Api
 			ob_end_clean();
 		}
 		ob_start();
-
-		$wpdb->show_errors = false;
 
 		$this->xcloner_container = $xcloner_container;
 
@@ -88,6 +86,8 @@ class Xcloner_Api
 		$this->xcloner_scheduler        = $xcloner_container->get_xcloner_scheduler();
 		$this->xcloner_encryption       = $xcloner_container->get_xcloner_encryption();
 		$this->xcloner_remote_storage   = $xcloner_container->get_xcloner_remote_storage();
+
+		$this->xcloner_database->show_errors = false;
 
 		if (isset($_POST['API_ID'])) {
 			$this->logger->info("Processing ajax request ID ".substr($this->xcloner_sanitization->sanitize_input_as_string($_POST['API_ID']),
@@ -154,7 +154,7 @@ class Xcloner_Api
      */
 	public function save_schedule()
 	{
-		global $wpdb;
+		//global $wpdb;
 
 		$this->check_access();
 
@@ -248,8 +248,8 @@ class Xcloner_Api
 		$schedule['params'] = json_encode($this->form_params);
 
 		if (!isset($_POST['id'])) {
-			$wpdb->insert(
-				$wpdb->prefix.'xcloner_scheduler',
+			$this->xcloner_database->insert(
+				$this->xcloner_settings->get_table_prefix().'xcloner_scheduler',
 				$schedule,
 				array(
 					'%s',
@@ -257,8 +257,8 @@ class Xcloner_Api
 				)
 			);
 		} else {
-			$wpdb->update(
-				$wpdb->prefix.'xcloner_scheduler',
+			$this->xcloner_database->update(
+				$this->xcloner_settings->get_table_prefix().'xcloner_scheduler',
 				$schedule,
 				array('id' => $_POST['id']),
 				array(
@@ -271,9 +271,9 @@ class Xcloner_Api
 			$scheduler->update_cron_hook($_POST['id']);
 		}
 
-		if ($wpdb->last_error) {
+		if ($this->xcloner_database->last_error) {
 			$response['error'] = 1;
-			$response['error_message'] = $wpdb->last_error/*."--".$wpdb->last_query*/
+			$response['error_message'] = $this->xcloner_database->last_error/*."--".$this->xcloner_database->last_query*/
 			;
 
 		}
