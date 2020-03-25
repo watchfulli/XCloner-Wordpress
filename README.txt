@@ -1,10 +1,10 @@
 === XCloner - Backup and Restore===
-Contributors: xcloner
-Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=AAPE8PLAE554S
-Tags: backup plugin, restore plugin, database backup, backup encryption, site backup, website cloner, wordpress backup, database restore, webdav, azure, ftp, sftp, amazon s3, dropbox, google drive, differential backup
+Contributors: watchful,ovidiul
+Donate link: http://www.xcloner.com
+Tags: backup, wordpress backup, cloud backup, database backup, restore
 Requires at least: 3.0.1
 Tested up to: 5.3
-Stable tag: 4.1.2
+Stable tag: 4.1.3
 
 Backup your site, restore to any web location, encrypt and send your backups to Dropbox, Amazon S3, Azure, FTP, SFTP, WebDAV, Google Drive with XCloner plugin.
 
@@ -12,7 +12,7 @@ Backup your site, restore to any web location, encrypt and send your backups to 
 
 XCloner is a Backup and Restore plugin that is perfectly integrated with Wordpress. It is able to create complete and differentials backups of your site, manually or automatically through the built-in scheduler.
 
-[youtube http://www.youtube.com/watch?v=V9iWpPyG1EE]
+[youtube https://youtu.be/rLThJkgvZ6Y]
 
 XCloner design was specifically created to Generate custom backups of any Wordpress website through custom admin inputs, and to be able to Restore the backup on any other location with the help of the automatic Restore script we provide!
 
@@ -113,6 +113,9 @@ Of course, schedules can be adjusted accordingly to how often you update your si
 Immigration Attorney Montana <a href="https://www.immigrationlawofmt.com" target='_blank'>https://www.immigrationlawofmt.com</a>
 
 == Changelog ==
+
+= 4.1.3 =
+* database include tables fix
 
 = 4.1.2 = 
 * improved default backup storage path security
