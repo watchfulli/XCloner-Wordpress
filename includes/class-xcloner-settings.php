@@ -15,8 +15,14 @@ class Xcloner_Settings
      * @param Xcloner $xcloner_container
      * @param string $hash
      */
-    public function __construct(Xcloner $xcloner_container, $hash = "")
+    public function __construct(Xcloner $xcloner_container, $hash = "", $json_config = "")
     {
+        if($json_config) {
+            foreach($json_config as $item) {
+                add_option($item->option_name, $item->option_value);
+            }
+        }
+
         $this->xcloner_container = $xcloner_container;
 
         $this->xcloner_database  = $xcloner_container->get_xcloner_database();
@@ -90,7 +96,7 @@ class Xcloner_Settings
     public function get_xcloner_store_path()
     {
         if (!$this->get_xcloner_option('xcloner_store_path') or !is_dir(/** @scrutinizer ignore-type */$this->get_xcloner_option('xcloner_store_path'))) {
-            $this->xcloner_container->check_dependencies();
+            return $this->xcloner_container->check_dependencies();
         } else {
             $path = $this->get_xcloner_option('xcloner_store_path');
         }
@@ -330,7 +336,7 @@ class Xcloner_Settings
     /**
      * @param string $option
      */
-    public function get_xcloner_option($option)
+    public function get_xcloner_option($option = "")
     {
         $data = get_option($option);
 

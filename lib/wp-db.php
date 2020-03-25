@@ -1613,7 +1613,7 @@ class wpdb {
 			} else {
 				@mysqli_real_connect( $this->dbh, $host, $this->dbuser, $this->dbpassword, null, $port, $socket, $client_flags );
 			}
-
+			
 			if ( $this->dbh->connect_errno ) {
 				$this->dbh = null;
 

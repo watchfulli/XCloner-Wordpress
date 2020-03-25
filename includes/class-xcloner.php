@@ -97,7 +97,7 @@ class Xcloner
      */
     public function init()
     {
-        register_shutdown_function(array($this, 'exception_handler'));
+        $this->log_php_errors();
 
         $this->plugin_name = 'xcloner';
         $this->version = '4.0.4';
@@ -112,6 +112,10 @@ class Xcloner
 
         $this->define_ajax_hooks();
         $this->define_cron_hooks();
+    }
+
+    public function log_php_errors(){
+        register_shutdown_function(array($this, 'exception_handler'));
     }
 
     /**
@@ -153,38 +157,43 @@ class Xcloner
 
         if (!$backup_storage_path) {
             $backup_storage_path = realpath(__DIR__ . DS . ".." . DS . ".." . DS . "..") . DS . "backups-" . $this->randomString('5') . DS;
+        }
 
-            if (!is_dir($backup_storage_path)) {
-                if (!@mkdir($backup_storage_path)) {
-                    $status = "error";
-                    $message = sprintf(
+        if (!is_dir($backup_storage_path)) {
+            if (!@mkdir($backup_storage_path)) {
+                $status = "error";
+                $message = sprintf(
                         __("Unable to create the Backup Storage Location Folder %s . Please fix this before starting the backup process."),
                         $backup_storage_path
                     );
-                    $this->trigger_message($message, $status, $backup_storage_path);
-                    return;
-                }
+                $this->trigger_message($message, $status, $backup_storage_path);
+                return;
             }
-            if (!is_writable($backup_storage_path)) {
-                $status = "error";
-                $message = sprintf(
+        }
+            
+        if (!is_writable($backup_storage_path)) {
+            $status = "error";
+            $message = sprintf(
                     __("Unable to write to the Backup Storage Location Folder %s . Please fix this before starting the backup process."),
                     $backup_storage_path
                 );
-                $this->trigger_message($message, $status, $backup_storage_path);
+            $this->trigger_message($message, $status, $backup_storage_path);
 
-                return;
-            }
-
-            update_option("xcloner_store_path", $backup_storage_path);
+            return;
         }
+
+        update_option("xcloner_store_path", $backup_storage_path);
     }
 
     public function trigger_message($message, $status = "error", $message_param1 = "", $message_param2 = "", $message_param3 = "")
-    {
+    {        
         $message = sprintf(__($message), $message_param1, $message_param2, $message_param3);
         add_action('xcloner_admin_notices', array($this, "trigger_message_notice"), 10, 2);
         do_action('xcloner_admin_notices', $message, $status);
+
+        if (XCLONER_STANDALONE_MODE) {
+            throw new Error($message);
+        }
     }
 
     public function trigger_message_notice($message, $status = "success")
@@ -212,7 +221,7 @@ class Xcloner
      * @since    1.0.0
      * @access   private
      */
-    private function load_dependencies()
+    public function load_dependencies()
     {
 
         /**

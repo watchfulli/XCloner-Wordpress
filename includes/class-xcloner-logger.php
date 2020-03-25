@@ -57,7 +57,6 @@ class Xcloner_Logger extends Logger
             $debug_level = Logger::DEBUG;
         }
 
-
         if ($logger_path) {
             if (!$xcloner_settings->get_xcloner_option('xcloner_enable_log')) {
                 $stream = new StreamHandler($logger_path, $debug_level);

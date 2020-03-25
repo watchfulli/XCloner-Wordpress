@@ -1,10 +1,25 @@
 <?php
 $wp_settings_errors = "";
 
-
 //NONCE_KEY
 //NONCE_SALT
 //ABSPATH
+
+if (!defined('WP_DEBUG')) {
+    define('WP_DEBUG', false);
+}
+
+if (!defined('WP_DEBUG_DISPLAY')) {
+    define('WP_DEBUG_DISPLAY', false);
+}
+
+if (!defined('WP_CONTENT_DIR')) {
+    define('WP_CONTENT_DIR', __DIR__);
+}
+
+if (!defined('DS')) {
+    define('DS', DIRECTORY_SEPARATOR);
+}
 
 if (!defined('MINUTE_IN_SECONDS')) {
     define('MINUTE_IN_SECONDS', 60);
@@ -34,6 +49,44 @@ if (!defined('MINUTE_IN_SECONDS')) {
     define('WPINC', true);
 }
 
+if(!class_exists('WP_Error')) {
+    require_once(__DIR__ . '/class-wp-error.php');
+}
+
+if (!function_exists('is_wp_error')) {
+    function is_wp_error($thing)
+    {
+        return ($thing instanceof WP_Error);
+    }
+}
+
+if (!function_exists('get_site_url')) {
+    function get_site_url()
+    {
+        return __DIR__;
+    }
+}
+
+if (!function_exists('admin_url')) {
+    function admin_url()
+    {
+        return __DIR__;
+    }
+}
+
+/**
+ * Sanitize plugin dir path
+ *
+ * @param [type] $path
+ * @return void
+ */
+if (!function_exists('plugin_dir_path')) {
+    function plugin_dir_path($path)
+    {
+        return dirname($path).DS;
+    }
+}
+
 /**
  * Undocumented function
  *
@@ -56,6 +109,48 @@ if (!function_exists('add_settings_error')) {
                 );
     }
 }
+
+if (!function_exists('has_filter')) {
+    function has_filter($tag, $function_to_check = false)
+    {
+        return false;
+    }
+}
+
+if (!function_exists('mbstring_binary_safe_encoding')) {
+    function mbstring_binary_safe_encoding($reset = false)
+    {
+        static $encodings  = array();
+        static $overloaded = null;
+ 
+        if (is_null($overloaded)) {
+            $overloaded = function_exists('mb_internal_encoding') && (ini_get('mbstring.func_overload') & 2);
+        }
+ 
+        if (false === $overloaded) {
+            return;
+        }
+ 
+        if (! $reset) {
+            $encoding = mb_internal_encoding();
+            array_push($encodings, $encoding);
+            mb_internal_encoding('ISO-8859-1');
+        }
+ 
+        if ($reset && $encodings) {
+            $encoding = array_pop($encodings);
+            mb_internal_encoding($encoding);
+        }
+    }
+}
+
+if (!function_exists('reset_mbstring_encoding')) {
+    function reset_mbstring_encoding()
+    {
+        mbstring_binary_safe_encoding(true);
+    }
+}
+
 /**
  * Get option
  *
@@ -63,8 +158,17 @@ if (!function_exists('add_settings_error')) {
  * @return void
  */
 if (!function_exists('get_option')) {
-    function get_option($option_name)
+    function get_option($option_name = "")
     {
+        if (!$option_name) {
+            return $GLOBALS['xcloner_settings'];
+        }
+
+        if(!isset($GLOBALS['xcloner_settings'][$option_name])){
+            return null;
+        }
+
+        return $GLOBALS['xcloner_settings'][$option_name];
     }
 }
 
@@ -78,6 +182,7 @@ if (!function_exists('get_option')) {
 if (!function_exists('add_option')) {
     function add_option($option_name, $value="")
     {
+        return $GLOBALS['xcloner_settings'][$option_name] = $value;
     }
 }
 
@@ -91,6 +196,7 @@ if (!function_exists('add_option')) {
 if (!function_exists('update_option')) {
     function update_option($option_name, $value="")
     {
+        return add_option($option_name, $value);
     }
 }
 
@@ -181,7 +287,7 @@ if (!function_exists('do_action')) {
  *
  */
 if (!function_exists('add_filter')) {
-    function add_action($path)
+    function add_filter($path)
     {
     }
 }
@@ -189,8 +295,18 @@ if (!function_exists('add_filter')) {
 /**
  *
  */
+if (!function_exists('apply_filters')) {
+    function apply_filters($tag, $value)
+    {
+        return $value;
+    }
+}
+
+/**
+ *
+ */
 if (!function_exists('do_filter')) {
-    function do_filter($hook)
+    function do_filter2($hook)
     {
     }
 }
@@ -231,7 +347,37 @@ if (!function_exists('settings_error')) {
 if (!function_exists('add_menu_page')) {
     function add_menu_page()
     {
+    }
+}
 
+/**
+ * Get Home Url
+ *
+ * @return path
+ */
+if (!function_exists('get_home_url')) {
+    function get_home_url()
+    {
+        return __DIR__;
+    }
+}
+
+if (!function_exists('wp_load_translations_early')) {
+    function wp_load_translations_early()
+    {
+        return null;
+    }
+}
+
+/**
+ * Translate string if available
+ *
+ * @return string
+ */
+if (!function_exists('__')) {
+    function __($string)
+    {
+        return $string;
     }
 }
 

@@ -225,13 +225,14 @@ class Xcloner_Scheduler
         return $update;
     }
 
-    private function _xcloner_scheduler_callback($id, $schedule)
+    private function _xcloner_scheduler_callback($id, $schedule, $xcloner = "")
     {
         set_time_limit(0);
 
-
-        $xcloner = new XCloner();
-        $xcloner->init();
+        if (!$xcloner) {
+            $xcloner = new XCloner();
+            $xcloner->init();
+        }
         $this->set_xcloner_container($xcloner);
         $return_encrypted = array();
         $return = array();
@@ -241,12 +242,12 @@ class Xcloner_Scheduler
         #$this->get_xcloner_container()->get_xcloner_settings()->set_hash($hash);
 
         //$this->xcloner_settings 		= $this->get_xcloner_container()->get_xcloner_settings();
-        $this->xcloner_file_system    = $this->get_xcloner_container()->get_xcloner_filesystem();
-        $this->xcloner_encryption = $this->get_xcloner_container()->get_xcloner_encryption();
-        $this->xcloner_database       = $this->get_xcloner_container()->get_xcloner_database();
-        $this->archive_system         = $this->get_xcloner_container()->get_archive_system();
-        $this->logger                 = $this->get_xcloner_container()->get_xcloner_logger()->withName("xcloner_scheduler");
-        $this->xcloner_remote_storage = $this->get_xcloner_container()->get_xcloner_remote_storage();
+        $this->xcloner_file_system      = $this->get_xcloner_container()->get_xcloner_filesystem();
+        $this->xcloner_encryption       = $this->get_xcloner_container()->get_xcloner_encryption();
+        $this->xcloner_database         = $this->get_xcloner_container()->get_xcloner_database();
+        $this->archive_system           = $this->get_xcloner_container()->get_archive_system();
+        $this->logger                   = $this->get_xcloner_container()->get_xcloner_logger()->withName("xcloner_scheduler");
+        $this->xcloner_remote_storage   = $this->get_xcloner_container()->get_xcloner_remote_storage();
 
 
         $this->db          		= $this->xcloner_database;
@@ -257,6 +258,7 @@ class Xcloner_Scheduler
         if (isset($schedule['backup_params']->diff_start_date) && $schedule['backup_params']->diff_start_date) {
             $this->xcloner_file_system->set_diff_timestamp_start($schedule['backup_params']->diff_start_date);
         }
+        
 
         if ($schedule['recurrence'] == "single") {
             $this->disable_single_cron($schedule['id']);
@@ -269,8 +271,10 @@ class Xcloner_Scheduler
         }
 
         //echo $this->get_xcloner_container()->get_xcloner_settings()->get_hash(); exit;
-
-        $this->update_hash($schedule['id'], $this->xcloner_settings->get_hash());
+        if (!$xcloner) {
+            //we update this only in WP mode
+            $this->update_hash($schedule['id'], $this->xcloner_settings->get_hash());
+        }
 
         $this->logger->info(sprintf("Starting cron schedule '%s'", $schedule['name']), array("CRON"));
 
@@ -403,7 +407,7 @@ class Xcloner_Scheduler
         $this->xcloner_file_system->cleanup_tmp_directories();
     }
 
-    public function xcloner_scheduler_callback($id, $schedule = "")
+    public function xcloner_scheduler_callback($id, $schedule = "", $xcloner = "")
     {
         if ($id) {
             $schedule = $this->get_schedule_by_id($id);
@@ -414,7 +418,8 @@ class Xcloner_Scheduler
                 //we disable email notifications
                 $schedule['backup_params']->email_notification = "";
             }
-            $this->_xcloner_scheduler_callback($id, $schedule);
+
+            $this->_xcloner_scheduler_callback($id, $schedule, $xcloner);
         } catch (Exception $e) {
 
             //send email to site admin if email notification is not set in the scheduler
