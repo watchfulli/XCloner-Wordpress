@@ -397,14 +397,14 @@ class Xcloner_Scheduler
             $this->xcloner_file_system->delete_backup_by_name($return['extra']['backup_parent']);
         }
 
-        //Removing the tmp filesystem used for backup
-        $this->xcloner_file_system->remove_tmp_filesystem();
-
         //Backup Storage Cleanup
         $this->xcloner_file_system->backup_storage_cleanup();
 
         //Filesystem Cleanup
         $this->xcloner_file_system->cleanup_tmp_directories();
+
+        //Removing the tmp filesystem used for backup
+        $this->xcloner_file_system->remove_tmp_filesystem();
     }
 
     public function xcloner_scheduler_callback($id, $schedule = "", $xcloner = "")
