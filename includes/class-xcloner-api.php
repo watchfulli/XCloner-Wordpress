@@ -1009,9 +1009,9 @@ class Xcloner_Api
                                             <?php else: ?>
                                                 <a href="#<?php echo $child[0] ?>" class="list-backup-content"
                                                    title="<?php echo __(
-                                            'List Backup Content',
-                                            'xcloner-backup-and-restore'
-                                        ) ?>"><i
+            'List Backup Content',
+            'xcloner-backup-and-restore'
+        ) ?>"><i
                                                             class="material-icons">folder_open</i></a>
 
                                                 <a href="#<?php echo $child[0] ?>" class="backup-encryption"
@@ -1023,9 +1023,9 @@ class Xcloner_Api
                                         <?php elseif ($storage_selection != "gdrive" && !$this->xcloner_file_system->get_storage_filesystem()->has($child[0])): ?>
                                             <a href="#<?php echo $child[0] ?>" class="copy-remote-to-local"
                                                title="<?php echo __(
-                                                       'Push Backup To Local Storage',
-                                                       'xcloner-backup-and-restore'
-                                                   ) ?>"><i
+                                            'Push Backup To Local Storage',
+                                            'xcloner-backup-and-restore'
+                                        ) ?>"><i
                                                         class="material-icons">file_upload</i></a>
                                         <?php endif ?>
                                     </li>
