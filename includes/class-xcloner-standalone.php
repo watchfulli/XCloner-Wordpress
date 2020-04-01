@@ -41,6 +41,16 @@ class Xcloner_Standalone extends Xcloner
         $this->xcloner_file_transfer 	= new Xcloner_File_Transfer($this);
         $this->xcloner_encryption    	= new Xcloner_Encryption($this);
         
+        //$this->start();
+    }
+
+    /**
+     * Start backup process trigger method
+     *
+     * @return void
+     */
+    public function start()
+    {
         $schedule_config = ($this->xcloner_settings->get_xcloner_option('schedule'));
 
         $data['params']                 = "";
@@ -48,9 +58,16 @@ class Xcloner_Standalone extends Xcloner
         $data['table_params']           = json_encode($schedule_config->database);
         $data['excluded_files']         = json_encode($schedule_config->excluded_files);
 
-        $this->xcloner_scheduler->xcloner_scheduler_callback(null, $data, $this);
+        return $this->xcloner_scheduler->xcloner_scheduler_callback(null, $data, $this);
     }
 
+    /**
+     * Overwrite parent __call method
+     *
+     * @param [type] $property
+     * @param [type] $args
+     * @return void
+     */
     public function __call($property, $args)
     {
         $property = str_replace("get_", "", $property);
@@ -68,24 +85,5 @@ class Xcloner_Standalone extends Xcloner
     private function get_xcloner_container()
     {
         return $this;
-    }
-
-    /**
-     * Trigger the backup process
-     *
-     * @return void
-     */
-    public function start_backup_process()
-    {
-        $init     = true;
-        $continue = true;
-
-        while ($continue) {
-            $continue = $this->xcloner_filesystem->start_file_recursion($init);
-
-            $init = false;
-        }
-
-        return $continue;
     }
 }
