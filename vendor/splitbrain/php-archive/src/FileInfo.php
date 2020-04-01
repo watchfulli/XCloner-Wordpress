@@ -55,18 +55,13 @@ class FileInfo
 
         $stat = stat($path);
         $file = new FileInfo();
-        
-        if(is_dir($path))
-			$size = 0;
-		else
-			$size = filesize($path);
 
         $file->setPath($path);
         $file->setIsdir(is_dir($path));
         $file->setMode(fileperms($path));
         $file->setOwner(fileowner($path));
         $file->setGroup(filegroup($path));
-        $file->setSize($size);
+        $file->setSize(filesize($path));
         $file->setUid($stat['uid']);
         $file->setGid($stat['gid']);
         $file->setMtime($stat['mtime']);
@@ -79,13 +74,11 @@ class FileInfo
     }
 
     /**
-     * @return int
+     * @return int the filesize. always 0 for directories
      */
     public function getSize()
     {
-		if($this->isdir) 
-			return 0;
-			
+        if($this->isdir) return 0;
         return $this->size;
     }
 
@@ -295,7 +288,6 @@ class FileInfo
      * the prefix will be stripped. It is recommended to give prefixes with a trailing slash.
      *
      * @param  int|string $strip
-     * @return FileInfo
      */
     public function strip($strip)
     {
@@ -334,22 +326,15 @@ class FileInfo
      */
     public function match($include = '', $exclude = '')
     {
-		//echo $include; 
-		
-		//echo $this->getPath()."--".preg_match($include, $this->getPath())."\n";
         $extract = true;
         if ($include && !preg_match($include, $this->getPath())) {
             $extract = false;
-           
         }
         if ($exclude && preg_match($exclude, $this->getPath())) {
             $extract = false;
         }
-        
+
         return $extract;
     }
 }
 
-class FileInfoException extends \Exception
-{
-}

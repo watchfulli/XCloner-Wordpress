@@ -1,18 +1,21 @@
-<?php
+<?php /** @noinspection PhpUnhandledExceptionInspection */
 
 namespace splitbrain\PHPArchive;
 
-use splitbrain\PHPArchive\Tar;
-use PHPUnit\Framework\TestCase;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\TestCase;
 
 class TarTestCase extends TestCase
 {
+    /** @var int callback counter */
+    protected $counter = 0;
+
     /**
      * file extensions that several tests use
      */
     protected $extensions = array('tar');
 
+    /** @inheritdoc */
     protected function setUp()
     {
         parent::setUp();
@@ -27,10 +30,20 @@ class TarTestCase extends TestCase
         vfsStream::setup('home_root_path');
     }
 
+    /** @inheritdoc */
     protected function tearDown()
     {
         parent::tearDown();
         $this->extensions[] = null;
+    }
+
+    /**
+     * Callback check function
+     * @param FileInfo $fileinfo
+     */
+    public function increaseCounter($fileinfo) {
+        $this->assertInstanceOf('\\splitbrain\\PHPArchive\\FileInfo', $fileinfo);
+        $this->counter++;
     }
 
     /*
@@ -50,7 +63,7 @@ class TarTestCase extends TestCase
     }
 
     /**
-     * @expectedException splitbrain\PHPArchive\ArchiveIOException
+     * @expectedException \splitbrain\PHPArchive\ArchiveIOException
      */
     public function testTarFileIsNotExisted()
     {
@@ -149,6 +162,7 @@ class TarTestCase extends TestCase
             $file = "$dir/test.$ext";
 
             $tar->open($file);
+            /** @var FileInfo[] $content */
             $content = $tar->contents();
 
             $this->assertCount(4, $content, "Contents of $file");
@@ -170,7 +184,9 @@ class TarTestCase extends TestCase
             $archive = sys_get_temp_dir() . '/dwtartest' . md5(time()) . '.' . $ext;
             $extract = sys_get_temp_dir() . '/dwtartest' . md5(time() + 1);
 
+            $this->counter = 0;
             $tar = new Tar();
+            $tar->setCallback(array($this, 'increaseCounter'));
             $tar->create($archive);
             foreach ($input as $path) {
                 $file = basename($path);
@@ -178,14 +194,19 @@ class TarTestCase extends TestCase
             }
             $tar->close();
             $this->assertFileExists($archive);
+            $this->assertEquals(count($input), $this->counter);
 
+            $this->counter = 0;
             $tar = new Tar();
+            $tar->setCallback(array($this, 'increaseCounter'));
             $tar->open($archive);
             $tar->extract($extract, '', '/FileInfo\\.php/', '/.*\\.php/');
 
             $this->assertFileExists("$extract/Tar.php");
             $this->assertFileExists("$extract/Zip.php");
             $this->assertFileNotExists("$extract/FileInfo.php");
+
+            $this->assertEquals(count($input) - 1, $this->counter);
 
             $this->nativeCheck($archive, $ext);
 
@@ -575,7 +596,8 @@ class TarTestCase extends TestCase
             try {
                 $phar = new \PharData($archive);
                 $phar->extractTo($extract);
-            } catch (\Exception $e) {};
+            } catch(\Exception $e) {
+            };
 
             $this->assertFileExists("$extract/Tar.php");
             $this->assertFileExists("$extract/Zip.php");
@@ -588,7 +610,7 @@ class TarTestCase extends TestCase
     }
 
     /**
-     * @expectedException splitbrain\PHPArchive\ArchiveIOException
+     * @expectedException \splitbrain\PHPArchive\ArchiveIOException
      */
     public function testContentsWithInvalidArchiveStream()
     {
@@ -597,7 +619,7 @@ class TarTestCase extends TestCase
     }
 
     /**
-     * @expectedException splitbrain\PHPArchive\ArchiveIOException
+     * @expectedException \splitbrain\PHPArchive\ArchiveIOException
      */
     public function testExtractWithInvalidOutDir()
     {
@@ -611,7 +633,7 @@ class TarTestCase extends TestCase
     }
 
     /**
-     * @expectedException splitbrain\PHPArchive\ArchiveIOException
+     * @expectedException \splitbrain\PHPArchive\ArchiveIOException
      */
     public function testExtractWithArchiveStreamIsClosed()
     {
@@ -626,7 +648,7 @@ class TarTestCase extends TestCase
     }
 
     /**
-     * @expectedException splitbrain\PHPArchive\ArchiveIOException
+     * @expectedException \splitbrain\PHPArchive\ArchiveIOException
      */
     public function testCreateWithInvalidFile()
     {
@@ -638,7 +660,7 @@ class TarTestCase extends TestCase
     }
 
     /**
-     * @expectedException splitbrain\PHPArchive\ArchiveIOException
+     * @expectedException \splitbrain\PHPArchive\ArchiveIOException
      */
     public function testAddFileWithArchiveStreamIsClosed()
     {
@@ -651,7 +673,7 @@ class TarTestCase extends TestCase
     }
 
     /**
-     * @expectedException splitbrain\PHPArchive\ArchiveIOException
+     * @expectedException \splitbrain\PHPArchive\ArchiveIOException
      */
     public function testAddFileWithInvalidFile()
     {
@@ -663,7 +685,7 @@ class TarTestCase extends TestCase
     }
 
     /**
-     * @expectedException splitbrain\PHPArchive\ArchiveIOException
+     * @expectedException \splitbrain\PHPArchive\ArchiveIOException
      */
     public function testAddDataWithArchiveStreamIsClosed()
     {
@@ -683,7 +705,8 @@ class TarTestCase extends TestCase
         $tar->create($archive);
         $tar->close();
 
-        $this->assertNull($tar->close());
+        $tar->close();
+        $this->assertTrue(true); // succeed if no exception, yet
     }
 
     /**
@@ -709,11 +732,12 @@ class TarTestCase extends TestCase
         $tar->create();
         $tar->addFile("$dir/zero.txt", 'zero.txt');
 
-        $this->assertNull($tar->save(vfsStream::url('home_root_path/archive_file')));
+        $tar->save(vfsStream::url('home_root_path/archive_file'));
+        $this->assertTrue(true); // succeed if no exception, yet
     }
 
-   /**
-     * @expectedException splitbrain\PHPArchive\ArchiveIOException
+    /**
+     * @expectedException \splitbrain\PHPArchive\ArchiveIOException
      */
     public function testSaveWithInvalidDestinationFile()
     {
@@ -723,7 +747,8 @@ class TarTestCase extends TestCase
         $tar->create();
         $tar->addFile("$dir/zero.txt", 'zero.txt');
 
-        $this->assertNull($tar->save(vfsStream::url('archive_file')));
+        $tar->save(vfsStream::url('archive_file'));
+        $this->assertTrue(true); // succeed if no exception, yet
     }
 
     /**

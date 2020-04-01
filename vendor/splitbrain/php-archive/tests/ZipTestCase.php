@@ -1,16 +1,28 @@
-<?php
+<?php /** @noinspection PhpUnhandledExceptionInspection */
 
 namespace splitbrain\PHPArchive;
 
-use splitbrain\PHPArchive\Zip;
-use PHPUnit\Framework\TestCase;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\TestCase;
 
 class ZipTestCase extends TestCase
 {
+    /** @var int callback counter */
+    protected $counter = 0;
+
+    /** @inheritdoc */
     protected function setUp()
     {
         vfsStream::setup('home_root_path');
+    }
+
+    /**
+     * Callback check function
+     * @param FileInfo $fileinfo
+     */
+    public function increaseCounter($fileinfo) {
+        $this->assertInstanceOf('\\splitbrain\\PHPArchive\\FileInfo', $fileinfo);
+        $this->counter++;
     }
 
     /*
@@ -22,7 +34,7 @@ class ZipTestCase extends TestCase
     }
 
     /**
-     * @expectedException splitbrain\PHPArchive\ArchiveIOException
+     * @expectedException \splitbrain\PHPArchive\ArchiveIOException
      */
     public function testMissing()
     {
@@ -41,7 +53,7 @@ class ZipTestCase extends TestCase
     {
         $zip = new Zip();
 
-        $dir  = dirname(__FILE__).'/zip';
+        $dir = dirname(__FILE__) . '/zip';
         $tdir = ltrim($dir, '/');
 
         $zip->create();
@@ -81,9 +93,9 @@ class ZipTestCase extends TestCase
     {
         $zip = new Zip();
 
-        $dir  = dirname(__FILE__).'/zip';
+        $dir = dirname(__FILE__) . '/zip';
         $tdir = ltrim($dir, '/');
-        $tmp  = vfsStream::url('home_root_path/test.zip');
+        $tmp = vfsStream::url('home_root_path/test.zip');
 
         $zip->create($tmp);
         $zip->setCompression(0);
@@ -114,27 +126,25 @@ class ZipTestCase extends TestCase
     }
 
     /**
-     * @expectedException splitbrain\PHPArchive\ArchiveIOException
+     * @expectedException \splitbrain\PHPArchive\ArchiveIOException
      */
     public function testCreateWithInvalidFilePath()
     {
         $zip = new Zip();
 
-        $dir  = dirname(__FILE__).'/zip';
-        $tmp  = vfsStream::url('invalid_root_path/test.zip');
+        $tmp = vfsStream::url('invalid_root_path/test.zip');
 
         $zip->create($tmp);
     }
 
     /**
-     * @expectedException splitbrain\PHPArchive\ArchiveIOException
+     * @expectedException \splitbrain\PHPArchive\ArchiveIOException
      */
     public function testAddFileWithArchiveStreamIsClosed()
     {
         $zip = new Zip();
 
-        $dir  = dirname(__FILE__).'/zip';
-        $tmp  = vfsStream::url('home_root_path/test.zip');
+        $dir = dirname(__FILE__) . '/zip';
 
         $zip->setCompression(0);
         $zip->close();
@@ -142,13 +152,13 @@ class ZipTestCase extends TestCase
     }
 
     /**
-     * @expectedException splitbrain\PHPArchive\ArchiveIOException
+     * @expectedException \splitbrain\PHPArchive\ArchiveIOException
      */
     public function testAddFileWithInvalidFile()
     {
         $zip = new Zip();
 
-        $tmp  = vfsStream::url('home_root_path/test.zip');
+        $tmp = vfsStream::url('home_root_path/test.zip');
 
         $zip->create($tmp);
         $zip->setCompression(0);
@@ -162,9 +172,9 @@ class ZipTestCase extends TestCase
      */
     public function testZipContent()
     {
-        $dir = dirname(__FILE__).'/zip';
+        $dir = dirname(__FILE__) . '/zip';
 
-        $zip  = new Zip();
+        $zip = new Zip();
         $file = "$dir/test.zip";
 
         $zip->open($file);
@@ -179,18 +189,18 @@ class ZipTestCase extends TestCase
     }
 
     /**
-     * @expectedException splitbrain\PHPArchive\ArchiveIOException
+     * @expectedException \splitbrain\PHPArchive\ArchiveIOException
      */
     public function testZipContentWithArchiveStreamIsClosed()
     {
-        $dir = dirname(__FILE__).'/zip';
+        $dir = dirname(__FILE__) . '/zip';
 
-        $zip  = new Zip();
+        $zip = new Zip();
         $file = "$dir/test.zip";
 
         $zip->open($file);
         $zip->close();
-        $content = $zip->contents();
+        $zip->contents();
     }
 
     /**
@@ -203,22 +213,29 @@ class ZipTestCase extends TestCase
         $archive = sys_get_temp_dir() . '/dwziptest' . md5(time()) . '.zip';
         $extract = sys_get_temp_dir() . '/dwziptest' . md5(time() + 1);
 
+        $this->counter = 0;
         $zip = new Zip();
+        $zip->setCallback(array($this, 'increaseCounter'));
         $zip->create($archive);
-        foreach($input as $path) {
+        foreach ($input as $path) {
             $file = basename($path);
             $zip->addFile($path, $file);
         }
         $zip->close();
         $this->assertFileExists($archive);
+        $this->assertEquals(count($input), $this->counter);
 
+        $this->counter = 0;
         $zip = new Zip();
+        $zip->setCallback(array($this, 'increaseCounter'));
         $zip->open($archive);
         $zip->extract($extract, '', '/FileInfo\\.php/', '/.*\\.php/');
 
         $this->assertFileExists("$extract/Tar.php");
         $this->assertFileExists("$extract/Zip.php");
         $this->assertFileNotExists("$extract/FileInfo.php");
+
+        $this->assertEquals(count($input) - 1, $this->counter);
 
         $this->nativeCheck($archive);
         $this->native7ZipCheck($archive);
@@ -246,8 +263,8 @@ class ZipTestCase extends TestCase
         $zip->open($archive);
         $zip->extract($extract);
 
-        $this->assertFileExists($extract.'/tüst.txt');
-        $this->assertFileExists($extract.'/snowy☃.txt');
+        $this->assertFileExists($extract . '/tüst.txt');
+        $this->assertFileExists($extract . '/snowy☃.txt');
 
         $this->nativeCheck($archive);
         $this->native7ZipCheck($archive);
@@ -257,7 +274,7 @@ class ZipTestCase extends TestCase
     }
 
     /**
-     * @expectedException splitbrain\PHPArchive\ArchiveIOException
+     * @expectedException \splitbrain\PHPArchive\ArchiveIOException
      */
     public function testAddDataWithArchiveStreamIsClosed()
     {
@@ -277,7 +294,8 @@ class ZipTestCase extends TestCase
         $zip->create($archive);
         $zip->close();
 
-        $this->assertNull($zip->close());
+        $zip->close();
+        $this->assertTrue(true); // succeed if no exception, yet
     }
 
     public function testSaveArchiveFile()
@@ -288,11 +306,12 @@ class ZipTestCase extends TestCase
         $zip->create();
         $zip->addFile("$dir/zero.txt", 'zero.txt');
 
-        $this->assertNull($zip->save(vfsStream::url('home_root_path/archive_file')));
+        $zip->save(vfsStream::url('home_root_path/archive_file'));
+        $this->assertTrue(true); // succeed if no exception, yet
     }
 
     /**
-     * @expectedException splitbrain\PHPArchive\ArchiveIOException
+     * @expectedException \splitbrain\PHPArchive\ArchiveIOException
      */
     public function testSaveWithInvalidFilePath()
     {
@@ -353,10 +372,10 @@ class ZipTestCase extends TestCase
      */
     public function testZipExtract()
     {
-        $dir = dirname(__FILE__).'/zip';
-        $out = sys_get_temp_dir().'/dwziptest'.md5(time());
+        $dir = dirname(__FILE__) . '/zip';
+        $out = sys_get_temp_dir() . '/dwziptest' . md5(time());
 
-        $zip  = new Zip();
+        $zip = new Zip();
         $file = "$dir/test.zip";
 
         $zip->open($file);
@@ -364,28 +383,28 @@ class ZipTestCase extends TestCase
 
         clearstatcache();
 
-        $this->assertFileExists($out.'/zip/testdata1.txt', "Extracted $file");
-        $this->assertEquals(13, filesize($out.'/zip/testdata1.txt'), "Extracted $file");
+        $this->assertFileExists($out . '/zip/testdata1.txt', "Extracted $file");
+        $this->assertEquals(13, filesize($out . '/zip/testdata1.txt'), "Extracted $file");
 
-        $this->assertFileExists($out.'/zip/foobar/testdata2.txt', "Extracted $file");
-        $this->assertEquals(13, filesize($out.'/zip/foobar/testdata2.txt'), "Extracted $file");
+        $this->assertFileExists($out . '/zip/foobar/testdata2.txt', "Extracted $file");
+        $this->assertEquals(13, filesize($out . '/zip/foobar/testdata2.txt'), "Extracted $file");
 
-        $this->assertFileExists($out.'/zip/compressable.txt', "Extracted $file");
-        $this->assertEquals(1836, filesize($out.'/zip/compressable.txt'), "Extracted $file");
-        $this->assertFileNotExists($out.'/zip/compressable.txt.gz', "Extracted $file");
+        $this->assertFileExists($out . '/zip/compressable.txt', "Extracted $file");
+        $this->assertEquals(1836, filesize($out . '/zip/compressable.txt'), "Extracted $file");
+        $this->assertFileNotExists($out . '/zip/compressable.txt.gz', "Extracted $file");
 
         self::RDelete($out);
     }
 
     /**
-     * @expectedException splitbrain\PHPArchive\ArchiveIOException
+     * @expectedException \splitbrain\PHPArchive\ArchiveIOException
      */
     public function testZipExtractWithArchiveStreamIsClosed()
     {
-        $dir = dirname(__FILE__).'/zip';
-        $out = sys_get_temp_dir().'/dwziptest'.md5(time());
+        $dir = dirname(__FILE__) . '/zip';
+        $out = sys_get_temp_dir() . '/dwziptest' . md5(time());
 
-        $zip  = new Zip();
+        $zip = new Zip();
         $file = "$dir/test.zip";
 
         $zip->open($file);
@@ -399,10 +418,10 @@ class ZipTestCase extends TestCase
      */
     public function testCompStripExtract()
     {
-        $dir = dirname(__FILE__).'/zip';
-        $out = sys_get_temp_dir().'/dwziptest'.md5(time());
+        $dir = dirname(__FILE__) . '/zip';
+        $out = sys_get_temp_dir() . '/dwziptest' . md5(time());
 
-        $zip  = new Zip();
+        $zip = new Zip();
         $file = "$dir/test.zip";
 
         $zip->open($file);
@@ -410,11 +429,11 @@ class ZipTestCase extends TestCase
 
         clearstatcache();
 
-        $this->assertFileExists($out.'/testdata1.txt', "Extracted $file");
-        $this->assertEquals(13, filesize($out.'/testdata1.txt'), "Extracted $file");
+        $this->assertFileExists($out . '/testdata1.txt', "Extracted $file");
+        $this->assertEquals(13, filesize($out . '/testdata1.txt'), "Extracted $file");
 
-        $this->assertFileExists($out.'/foobar/testdata2.txt', "Extracted $file");
-        $this->assertEquals(13, filesize($out.'/foobar/testdata2.txt'), "Extracted $file");
+        $this->assertFileExists($out . '/foobar/testdata2.txt', "Extracted $file");
+        $this->assertEquals(13, filesize($out . '/foobar/testdata2.txt'), "Extracted $file");
 
         self::RDelete($out);
     }
@@ -425,10 +444,10 @@ class ZipTestCase extends TestCase
      */
     public function testPrefixStripExtract()
     {
-        $dir = dirname(__FILE__).'/zip';
-        $out = sys_get_temp_dir().'/dwziptest'.md5(time());
+        $dir = dirname(__FILE__) . '/zip';
+        $out = sys_get_temp_dir() . '/dwziptest' . md5(time());
 
-        $zip  = new Zip();
+        $zip = new Zip();
         $file = "$dir/test.zip";
 
         $zip->open($file);
@@ -436,11 +455,11 @@ class ZipTestCase extends TestCase
 
         clearstatcache();
 
-        $this->assertFileExists($out.'/zip/testdata1.txt', "Extracted $file");
-        $this->assertEquals(13, filesize($out.'/zip/testdata1.txt'), "Extracted $file");
+        $this->assertFileExists($out . '/zip/testdata1.txt', "Extracted $file");
+        $this->assertEquals(13, filesize($out . '/zip/testdata1.txt'), "Extracted $file");
 
-        $this->assertFileExists($out.'/testdata2.txt', "Extracted $file");
-        $this->assertEquals(13, filesize($out.'/testdata2.txt'), "Extracted $file");
+        $this->assertFileExists($out . '/testdata2.txt', "Extracted $file");
+        $this->assertEquals(13, filesize($out . '/testdata2.txt'), "Extracted $file");
 
         self::RDelete($out);
     }
@@ -451,10 +470,10 @@ class ZipTestCase extends TestCase
      */
     public function testIncludeExtract()
     {
-        $dir = dirname(__FILE__).'/zip';
-        $out = sys_get_temp_dir().'/dwziptest'.md5(time());
+        $dir = dirname(__FILE__) . '/zip';
+        $out = sys_get_temp_dir() . '/dwziptest' . md5(time());
 
-        $zip  = new Zip();
+        $zip = new Zip();
         $file = "$dir/test.zip";
 
         $zip->open($file);
@@ -462,10 +481,10 @@ class ZipTestCase extends TestCase
 
         clearstatcache();
 
-        $this->assertFileNotExists($out.'/zip/testdata1.txt', "Extracted $file");
+        $this->assertFileNotExists($out . '/zip/testdata1.txt', "Extracted $file");
 
-        $this->assertFileExists($out.'/zip/foobar/testdata2.txt', "Extracted $file");
-        $this->assertEquals(13, filesize($out.'/zip/foobar/testdata2.txt'), "Extracted $file");
+        $this->assertFileExists($out . '/zip/foobar/testdata2.txt', "Extracted $file");
+        $this->assertEquals(13, filesize($out . '/zip/foobar/testdata2.txt'), "Extracted $file");
 
         self::RDelete($out);
     }
@@ -476,10 +495,10 @@ class ZipTestCase extends TestCase
      */
     public function testExcludeExtract()
     {
-        $dir = dirname(__FILE__).'/zip';
-        $out = sys_get_temp_dir().'/dwziptest'.md5(time());
+        $dir = dirname(__FILE__) . '/zip';
+        $out = sys_get_temp_dir() . '/dwziptest' . md5(time());
 
-        $zip  = new Zip();
+        $zip = new Zip();
         $file = "$dir/test.zip";
 
         $zip->open($file);
@@ -487,10 +506,10 @@ class ZipTestCase extends TestCase
 
         clearstatcache();
 
-        $this->assertFileExists($out.'/zip/testdata1.txt', "Extracted $file");
-        $this->assertEquals(13, filesize($out.'/zip/testdata1.txt'), "Extracted $file");
+        $this->assertFileExists($out . '/zip/testdata1.txt', "Extracted $file");
+        $this->assertEquals(13, filesize($out . '/zip/testdata1.txt'), "Extracted $file");
 
-        $this->assertFileNotExists($out.'/zip/foobar/testdata2.txt', "Extracted $file");
+        $this->assertFileNotExists($out . '/zip/foobar/testdata2.txt', "Extracted $file");
 
         self::RDelete($out);
     }
@@ -520,7 +539,6 @@ class ZipTestCase extends TestCase
         $zip->extract($out);
         $this->assertFileExists("$out/täst.txt");
     }
-
 
     /**
      * recursive rmdir()/unlink()

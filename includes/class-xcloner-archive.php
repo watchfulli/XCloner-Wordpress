@@ -859,6 +859,15 @@ class Xcloner_Archive extends Tar
         return $last_position;
     }
 
+    public function open($file, $start_byte = 0)
+    {
+       parent::open($file);
+
+        if ($start_byte) {
+            fseek($this->fh, $start_byte);
+        }
+    }
+
     /**
      * Open a TAR archive and put the file cursor at the end for data appending
      *
@@ -894,6 +903,56 @@ class Xcloner_Archive extends Tar
         $this->writeaccess = true;
         $this->closed      = false;
     }
+
+    /**
+     * Read the contents of a TAR archive
+     *
+     * This function lists the files stored in the archive
+     *
+     * The archive is closed afer reading the contents, because rewinding is not possible in bzip2 streams.
+     * Reopen the file with open() again if you want to do additional operations
+     *
+     * @throws ArchiveIOException
+     * @returns FileInfo[]
+     */
+    public function contents($files_limit = 0)
+    {
+        if ($this->closed || !$this->file) {
+            throw new ArchiveIOException('Can not read from a closed archive');
+        }
+
+		$files_counter = 0;
+        $result = array();
+
+        while ($read = $this->readbytes(512)) {
+            $header = $this->parseHeader($read);
+            if (!is_array($header)) {
+                continue;
+            }
+
+            if($files_limit)
+            {
+				if(++$files_counter > $files_limit)
+				{
+					$return['extracted_files'] = $result;
+					$return['start'] = ftell($this->fh)-512;
+					return $return;
+				}
+			}
+
+			if($header['typeflag'] == 5)
+				$header['size'] = 0;
+
+            $this->skipbytes(ceil($header['size'] / 512) * 512);
+            $result[] = $this->header2fileinfo($header);
+        }
+
+		$return['extracted_files'] = $result;
+
+        $this->close();
+        return $return;
+    }
+
 
 
     /**
