@@ -3,7 +3,7 @@
 {"option_name":"xcloner_cleanup_retention_limit_days","option_value":"60"},
 {"option_name":"xcloner_cleanup_settings_page","option_value":""},
 {"option_name":"xcloner_cron_settings_page","option_value":""},
-{"option_name":"xcloner_database_records_per_request","option_value":"10000"},
+{"option_name":"xcloner_database_records_per_request","option_value":"1000"},
 {"option_name":"xcloner_db_version","option_value":"1.1.7"},
 {"option_name":"xcloner_directories_to_scan_per_request","option_value":"157"},
 {"option_name":"xcloner_disable_email_notification","option_value":"1"},
@@ -33,14 +33,15 @@
     "email_notification": "info@thinkovi.com",
     "diff_start_date": "",
     "schedule_name": "test2",
-    "backup_encrypt": "0",
+    "backup_encrypt": false,
     "start_at": false,
     "schedule_frequency": "daily",
     "schedule_storage": ""
   },
   "database": {
     "#": [
-      "wordpress"
+      "wordpress",
+      "onkoeins"
     ]
   },
   "excluded_files": [

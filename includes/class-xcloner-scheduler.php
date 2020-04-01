@@ -405,6 +405,8 @@ class Xcloner_Scheduler
 
         //Removing the tmp filesystem used for backup
         $this->xcloner_file_system->remove_tmp_filesystem();
+
+        return $return;
     }
 
     public function xcloner_scheduler_callback($id, $schedule = "", $xcloner = "")
@@ -419,7 +421,7 @@ class Xcloner_Scheduler
                 $schedule['backup_params']->email_notification = "";
             }
 
-            $this->_xcloner_scheduler_callback($id, $schedule, $xcloner);
+            return $this->_xcloner_scheduler_callback($id, $schedule, $xcloner);
         } catch (Exception $e) {
 
             //send email to site admin if email notification is not set in the scheduler
