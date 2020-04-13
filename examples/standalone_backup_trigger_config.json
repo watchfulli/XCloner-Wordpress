@@ -23,11 +23,11 @@
 {"option_name":"xcloner_mysql_username","option_value":"root"},
 {"option_name":"xcloner_size_limit_per_request","option_value":"50"},
 {"option_name":"xcloner_split_backup_limit","option_value":"2048"},
-{"option_name":"xcloner_start_path","option_value":"\/Applications\/MAMP\/htdocs\/wordpress/wp-includes"},
+{"option_name":"xcloner_start_path","option_value":"\/Applications\/MAMP\/htdocs\/wordpress/"},
 {"option_name":"xcloner_store_path","option_value":"\/Applications\/MAMP\/htdocs\/wordpress\/wp-content\/backups\/"},
 {"option_name":"xcloner_system_settings_page","option_value":"100"},
 {"option_name":"xcloner_text","option_value":"0"},
-{"option_name":"schedule", "option_value":{
+{"option_name":"profile", "option_value":{
   "extra": [],
   "backup_params": {
     "backup_name": "backup_[domain]_8888-[time]-sql",

@@ -8,15 +8,30 @@ if(!is_admin()){
     die('Access denied');
 }
 
+if($post = json_decode($_POST[0])) {
+    $_POST = $post;
+}
+
 //loading the default xcloner settings in format [{'option_name':'value', {'option_value': 'value'}}]
 $json_config = json_decode(file_get_contents(__DIR__ . '/standalone_backup_trigger_config.json'));
+
+$config = [];
+
+foreach($json_config as $item){
+    $config[$item->option_name] = $item->option_value;
+}
+
+if(!isset($_POST['data'])){
+    $config['profile']->processed = true;
+    $_POST['data'] = json_encode($config['profile']); 
+}
 
 if (!$json_config) {
     die('Could not parse default JSON config, i will shutdown for now...');
 }
 
 if(!is_localhost()) {
-    if( !isset($_REQUEST['standalone_api_key']) || $json_config['xcloner_standalone_api_key'] != $_REQUEST['standalone_api_key']) {
+    if( !isset($_REQUEST['standalone_api_key']) || $config['xcloner_standalone_api_key'] != $_REQUEST['standalone_api_key']) {
         die('Access denied, please check your standalone_api_key value');
     }
 }

@@ -384,10 +384,11 @@ class Xcloner_Api
         $this->check_access();
 
         $params = json_decode(stripslashes($_POST['data']));
+
         $init = (int)$_POST['init'];
 
         if ($params === null) {
-            //$this->send_response('{"status":false,"msg":"The post_data parameter must be valid JSON"}');
+            $this->send_response('{"status":false,"msg":"The post_data profile parameter must be valid JSON"}');
         }
 
         $this->process_params($params);
@@ -414,6 +415,10 @@ class Xcloner_Api
      */
     private function process_params($params)
     {
+        if($params->processed) {
+            $this->form_params = json_decode(json_encode((array)$params), true);
+            return;
+        }
         if (isset($params->hash)) {
             $this->xcloner_settings->set_hash($params->hash);
         }

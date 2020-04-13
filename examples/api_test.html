@@ -1,0 +1,73 @@
+<html>
+  <head>
+    <title>Incremental Backup Generator XCloner API</title>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+      var api_base_url =
+        "http://localhost:8888/wordpress/wp-content/plugins/XCloner-Wordpress/examples/expose_api.php";
+
+      var scan_filesystem_url = api_base_url + "?action=scan_filesystem";
+      var backup_database_url = api_base_url + "?action=backup_database";
+      var backup_files_url = api_base_url + "?action=backup_files";
+
+      var global_backup_hash;
+
+      async function make_call(call, init, params) {
+        var data = new FormData();
+        data.append("init", init);
+        data.append("hash", global_backup_hash || "");
+        data.append("extra", JSON.stringify(params) || "");
+        return axios
+          .post(window[`${call}_url`], data, {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          })
+          .then(function (response) {
+            // handle success
+            let data = response.data;
+            jQuery("#output").append(
+              `<b>${call}</b>: ${JSON.stringify(data)} <br />`
+            );
+            if (!Boolean(data.finished)) {
+              global_backup_hash = data.hash.substr(1, data.hash.length);
+              return make_call(call, 0, data.extra);
+            }
+          });
+      }
+
+      function start_backup() {
+        jQuery("#output").html("");
+        make_call("scan_filesystem", 1)
+          .then(function () {
+            return make_call("backup_database", 1);
+          })
+          .then(function () {
+            return make_call("backup_files", 1);
+          })
+          .then(function () {
+            jQuery("#loading").hide();
+            jQuery("#output").append(`<b>Backup Finished.</b>`);
+          });
+      }
+
+      jQuery(document).ready(function () {
+        jQuery("#button").on("click", function () {
+          jQuery("#loading").show();
+          start_backup();
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <button id="button">Start Backup</button>
+    <div id="output"></div>
+    <img
+      src="https://i.gifer.com/4V0b.gif"
+      id="loading"
+      style="display: none;"
+    />
+  </body>
+</html>

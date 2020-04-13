@@ -62,12 +62,12 @@ class Xcloner_Standalone extends Xcloner
      */
     public function start()
     {
-        $schedule_config = ($this->xcloner_settings->get_xcloner_option('schedule'));
+        $profile_config = ($this->xcloner_settings->get_xcloner_option('profile'));
 
         $data['params']                 = "";
-        $data['backup_params']          = $schedule_config->backup_params;
-        $data['table_params']           = json_encode($schedule_config->database);
-        $data['excluded_files']         = json_encode($schedule_config->excluded_files);
+        $data['backup_params']          = $profile_config->backup_params;
+        $data['table_params']           = json_encode($profile_config->database);
+        $data['excluded_files']         = json_encode($profile_config->excluded_files);
 
         return $this->xcloner_scheduler->xcloner_scheduler_callback(null, $data, $this);
     }
