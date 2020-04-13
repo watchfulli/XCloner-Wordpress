@@ -30,11 +30,11 @@ if(isset($_POST['extra'])) {
 //pass json config to Xcloner_Standalone lib
 $xcloner_backup = new Xcloner_Standalone($json_config);
 ob_end_clean();
+
 $xcloner_backup->define_ajax_hooks();
 $xcloner_backup->run();
 
-exit;
-
+/*
 $xcloner_api = new Xcloner_Api($xcloner_backup);
 ob_end_clean();
 
@@ -57,3 +57,4 @@ while( !$_POST['finished'] ){
 
 
 echo $xcloner_backup->xcloner_settings->get_hash();
+*/
