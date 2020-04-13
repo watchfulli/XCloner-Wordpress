@@ -22,13 +22,16 @@
 					"formdata": [
 						{
 							"key": "hash",
-							"value": "a7bf0",
+							"value": "12345",
+							"description": "optional hash to set the backup UID",
 							"type": "text"
 						},
 						{
 							"key": "init",
 							"value": "1",
-							"type": "text"
+							"description": "set to 1 on first request",
+							"type": "text",
+							"disabled": true
 						}
 					]
 				},
@@ -49,10 +52,6 @@
 					],
 					"query": [
 						{
-							"key": "action",
-							"value": "scan_filesystem"
-						},
-						{
 							"key": "init",
 							"value": "1",
 							"disabled": true
@@ -66,6 +65,10 @@
 							"key": "data",
 							"value": "{\"value\":\"te\"}",
 							"disabled": true
+						},
+						{
+							"key": "action",
+							"value": "scan_filesystem"
 						}
 					]
 				},
@@ -84,11 +87,13 @@
 						{
 							"key": "file",
 							"value": "backup__8888-2020-04-01_13-59-sql-e506e.tar",
+							"description": "file name",
 							"type": "text"
 						},
 						{
 							"key": "start",
 							"value": "0",
+							"description": "position to start reading from",
 							"type": "text"
 						}
 					]
@@ -164,17 +169,26 @@
 						{
 							"key": "data",
 							"value": "{\"table_params\":[{\"id\":\"wordpress\",\"parent\":\"#\"}],\"files_params\":[{\"id\":\"/\",\"parent\":\"#\"},{\"id\":\"wp-admin\",\"parent\":\"/\"},{\"id\":\"wp-content\",\"parent\":\"/\"},{\"id\":\"wp-includes\",\"parent\":\"/\"},{\"id\":\".htaccess\",\"parent\":\"/\"},{\"id\":\"index.php\",\"parent\":\"/\"},{\"id\":\"info.php\",\"parent\":\"/\"},{\"id\":\"license.txt\",\"parent\":\"/\"},{\"id\":\"readme.html\",\"parent\":\"/\"},{\"id\":\"test.log\",\"parent\":\"/\"},{\"id\":\"test_exec.php\",\"parent\":\"/\"},{\"id\":\"wp-activate.php\",\"parent\":\"/\"},{\"id\":\"wp-blog-header.php\",\"parent\":\"/\"},{\"id\":\"wp-comments-post.php\",\"parent\":\"/\"},{\"id\":\"wp-config-sample.php\",\"parent\":\"/\"},{\"id\":\"wp-config.php\",\"parent\":\"/\"},{\"id\":\"wp-config.php-e\",\"parent\":\"/\"},{\"id\":\"wp-config.php.old\",\"parent\":\"/\"},{\"id\":\"wp-cron.php\",\"parent\":\"/\"},{\"id\":\"wp-links-opml.php\",\"parent\":\"/\"},{\"id\":\"wp-load.php\",\"parent\":\"/\"},{\"id\":\"wp-login.php\",\"parent\":\"/\"},{\"id\":\"wp-mail.php\",\"parent\":\"/\"},{\"id\":\"wp-settings.php\",\"parent\":\"/\"},{\"id\":\"wp-signup.php\",\"parent\":\"/\"},{\"id\":\"wp-trackback.php\",\"parent\":\"/\"},{\"id\":\"xcloner_main_8ad98-2019-03-04.log\",\"parent\":\"/\"},{\"id\":\"xmlrpc.php\",\"parent\":\"/\"}],\"backup_params\":[{\"name\":\"backup_name\",\"value\":\"backup_[domain]_8888-[time]-sql\"},{\"name\":\"email_notification\",\"value\":\"info@thinkovi.com\"},{\"name\":\"diff_start_date\",\"value\":\"\"},{\"name\":\"backup_comments\",\"value\":\"\"},{\"name\":\"schedule_name\",\"value\":\"\"},{\"name\":\"schedule_start_date\",\"value\":\"\"},{\"name\":\"schedule_start_time\",\"value\":\"\"},{\"name\":\"schedule_storage\",\"value\":\"\"}]}",
+							"description": "initial config data to send for backup",
 							"type": "text"
 						},
 						{
 							"key": "init",
 							"value": "1",
+							"description": "send 1 on first request",
 							"type": "text",
 							"disabled": true
 						},
 						{
 							"key": "hash",
 							"value": "12345",
+							"description": "unique backup hash UID",
+							"type": "text"
+						},
+						{
+							"key": "extra",
+							"value": "",
+							"description": "last action call response extra parameter",
 							"type": "text"
 						}
 					]
@@ -215,22 +229,31 @@
 						{
 							"key": "data",
 							"value": "{\"table_params\":[{\"id\":\"wordpress\",\"parent\":\"#\"}],\"files_params\":[{\"id\":\"/\",\"parent\":\"#\"},{\"id\":\"wp-admin\",\"parent\":\"/\"},{\"id\":\"wp-content\",\"parent\":\"/\"},{\"id\":\"wp-includes\",\"parent\":\"/\"},{\"id\":\".htaccess\",\"parent\":\"/\"},{\"id\":\"index.php\",\"parent\":\"/\"},{\"id\":\"info.php\",\"parent\":\"/\"},{\"id\":\"license.txt\",\"parent\":\"/\"},{\"id\":\"readme.html\",\"parent\":\"/\"},{\"id\":\"test.log\",\"parent\":\"/\"},{\"id\":\"test_exec.php\",\"parent\":\"/\"},{\"id\":\"wp-activate.php\",\"parent\":\"/\"},{\"id\":\"wp-blog-header.php\",\"parent\":\"/\"},{\"id\":\"wp-comments-post.php\",\"parent\":\"/\"},{\"id\":\"wp-config-sample.php\",\"parent\":\"/\"},{\"id\":\"wp-config.php\",\"parent\":\"/\"},{\"id\":\"wp-config.php-e\",\"parent\":\"/\"},{\"id\":\"wp-config.php.old\",\"parent\":\"/\"},{\"id\":\"wp-cron.php\",\"parent\":\"/\"},{\"id\":\"wp-links-opml.php\",\"parent\":\"/\"},{\"id\":\"wp-load.php\",\"parent\":\"/\"},{\"id\":\"wp-login.php\",\"parent\":\"/\"},{\"id\":\"wp-mail.php\",\"parent\":\"/\"},{\"id\":\"wp-settings.php\",\"parent\":\"/\"},{\"id\":\"wp-signup.php\",\"parent\":\"/\"},{\"id\":\"wp-trackback.php\",\"parent\":\"/\"},{\"id\":\"xcloner_main_8ad98-2019-03-04.log\",\"parent\":\"/\"},{\"id\":\"xmlrpc.php\",\"parent\":\"/\"}],\"backup_params\":[{\"name\":\"backup_name\",\"value\":\"backup_[domain]_8888-[time]-sql\"},{\"name\":\"email_notification\",\"value\":\"info@thinkovi.com\"},{\"name\":\"diff_start_date\",\"value\":\"\"},{\"name\":\"backup_comments\",\"value\":\"\"},{\"name\":\"schedule_name\",\"value\":\"\"},{\"name\":\"schedule_start_date\",\"value\":\"\"},{\"name\":\"schedule_start_time\",\"value\":\"\"},{\"name\":\"schedule_storage\",\"value\":\"\"}]}\n",
+							"description": "config data to send to the backup",
 							"type": "text"
 						},
 						{
 							"key": "init",
 							"value": "1",
+							"description": "send 1 on first action call",
 							"type": "text",
 							"disabled": true
 						},
 						{
 							"key": "hash",
 							"value": "12345",
+							"description": "unique backup hash",
 							"type": "text"
 						},
 						{
 							"key": "extra",
 							"value": "{\"backup_part\":\"0\",\"backup_init\":0,\"backup_archive_name\":\"backup__8888-2020-04-13_14-53-sql\",\"backup_archive_name_full\":\"backup__8888-2020-04-13_14-53-sql-12345.tar\",\"lines_total\":1194,\"backup_size\":21102080,\"processed_file\":\"Requests\\/Exception\\/HTTP\\/401.php\",\"processed_file_size\":390,\"start_at_line\":987,\"start_at_byte\":0}",
+							"description": "last action call response extra parameter",
+							"type": "text"
+						},
+						{
+							"key": "",
+							"value": "",
 							"type": "text"
 						}
 					]
