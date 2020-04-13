@@ -1,0 +1,265 @@
+{
+	"info": {
+		"_postman_id": "6cec0b62-e427-4d8c-a656-4ab81c389cd5",
+		"name": "XCloner",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Scan Filesystem Incremental",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "da",
+						"value": "dada",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "hash",
+							"value": "a7bf0",
+							"type": "text"
+						},
+						{
+							"key": "init",
+							"value": "1",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8888/wordpress/wp-content/plugins/XCloner-Wordpress/examples/expose_api.php?action=scan_filesystem",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8888",
+					"path": [
+						"wordpress",
+						"wp-content",
+						"plugins",
+						"XCloner-Wordpress",
+						"examples",
+						"expose_api.php"
+					],
+					"query": [
+						{
+							"key": "action",
+							"value": "scan_filesystem"
+						},
+						{
+							"key": "init",
+							"value": "1",
+							"disabled": true
+						},
+						{
+							"key": "hash",
+							"value": "12345",
+							"disabled": true
+						},
+						{
+							"key": "data",
+							"value": "{\"value\":\"te\"}",
+							"disabled": true
+						}
+					]
+				},
+				"description": "hash - optional parameter made of 5 chars to set the backup default hash\ninit = 1 - will trigger a backup initialization process"
+			},
+			"response": []
+		},
+		{
+			"name": "List Backup Files",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"value": "backup__8888-2020-04-01_13-59-sql-e506e.tar",
+							"type": "text"
+						},
+						{
+							"key": "start",
+							"value": "0",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8888/wordpress/wp-content/plugins/XCloner-Wordpress/examples/expose_api.php?action=list_backup_files",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8888",
+					"path": [
+						"wordpress",
+						"wp-content",
+						"plugins",
+						"XCloner-Wordpress",
+						"examples",
+						"expose_api.php"
+					],
+					"query": [
+						{
+							"key": "action",
+							"value": "list_backup_files"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Backup File List",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8888/wordpress/wp-content/plugins/XCloner-Wordpress/examples/expose_api.php?action=get_manage_backups_list",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8888",
+					"path": [
+						"wordpress",
+						"wp-content",
+						"plugins",
+						"XCloner-Wordpress",
+						"examples",
+						"expose_api.php"
+					],
+					"query": [
+						{
+							"key": "action",
+							"value": "get_manage_backups_list"
+						},
+						{
+							"key": "storage_selection",
+							"value": "",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Backup Database",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "data",
+							"value": "{\"table_params\":[{\"id\":\"wordpress\",\"parent\":\"#\"}],\"files_params\":[{\"id\":\"/\",\"parent\":\"#\"},{\"id\":\"wp-admin\",\"parent\":\"/\"},{\"id\":\"wp-content\",\"parent\":\"/\"},{\"id\":\"wp-includes\",\"parent\":\"/\"},{\"id\":\".htaccess\",\"parent\":\"/\"},{\"id\":\"index.php\",\"parent\":\"/\"},{\"id\":\"info.php\",\"parent\":\"/\"},{\"id\":\"license.txt\",\"parent\":\"/\"},{\"id\":\"readme.html\",\"parent\":\"/\"},{\"id\":\"test.log\",\"parent\":\"/\"},{\"id\":\"test_exec.php\",\"parent\":\"/\"},{\"id\":\"wp-activate.php\",\"parent\":\"/\"},{\"id\":\"wp-blog-header.php\",\"parent\":\"/\"},{\"id\":\"wp-comments-post.php\",\"parent\":\"/\"},{\"id\":\"wp-config-sample.php\",\"parent\":\"/\"},{\"id\":\"wp-config.php\",\"parent\":\"/\"},{\"id\":\"wp-config.php-e\",\"parent\":\"/\"},{\"id\":\"wp-config.php.old\",\"parent\":\"/\"},{\"id\":\"wp-cron.php\",\"parent\":\"/\"},{\"id\":\"wp-links-opml.php\",\"parent\":\"/\"},{\"id\":\"wp-load.php\",\"parent\":\"/\"},{\"id\":\"wp-login.php\",\"parent\":\"/\"},{\"id\":\"wp-mail.php\",\"parent\":\"/\"},{\"id\":\"wp-settings.php\",\"parent\":\"/\"},{\"id\":\"wp-signup.php\",\"parent\":\"/\"},{\"id\":\"wp-trackback.php\",\"parent\":\"/\"},{\"id\":\"xcloner_main_8ad98-2019-03-04.log\",\"parent\":\"/\"},{\"id\":\"xmlrpc.php\",\"parent\":\"/\"}],\"backup_params\":[{\"name\":\"backup_name\",\"value\":\"backup_[domain]_8888-[time]-sql\"},{\"name\":\"email_notification\",\"value\":\"info@thinkovi.com\"},{\"name\":\"diff_start_date\",\"value\":\"\"},{\"name\":\"backup_comments\",\"value\":\"\"},{\"name\":\"schedule_name\",\"value\":\"\"},{\"name\":\"schedule_start_date\",\"value\":\"\"},{\"name\":\"schedule_start_time\",\"value\":\"\"},{\"name\":\"schedule_storage\",\"value\":\"\"}]}",
+							"type": "text"
+						},
+						{
+							"key": "init",
+							"value": "1",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "hash",
+							"value": "12345",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8888/wordpress/wp-content/plugins/XCloner-Wordpress/examples/expose_api.php?action=backup_database",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8888",
+					"path": [
+						"wordpress",
+						"wp-content",
+						"plugins",
+						"XCloner-Wordpress",
+						"examples",
+						"expose_api.php"
+					],
+					"query": [
+						{
+							"key": "action",
+							"value": "backup_database"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Backup Files",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "data",
+							"value": "{\"table_params\":[{\"id\":\"wordpress\",\"parent\":\"#\"}],\"files_params\":[{\"id\":\"/\",\"parent\":\"#\"},{\"id\":\"wp-admin\",\"parent\":\"/\"},{\"id\":\"wp-content\",\"parent\":\"/\"},{\"id\":\"wp-includes\",\"parent\":\"/\"},{\"id\":\".htaccess\",\"parent\":\"/\"},{\"id\":\"index.php\",\"parent\":\"/\"},{\"id\":\"info.php\",\"parent\":\"/\"},{\"id\":\"license.txt\",\"parent\":\"/\"},{\"id\":\"readme.html\",\"parent\":\"/\"},{\"id\":\"test.log\",\"parent\":\"/\"},{\"id\":\"test_exec.php\",\"parent\":\"/\"},{\"id\":\"wp-activate.php\",\"parent\":\"/\"},{\"id\":\"wp-blog-header.php\",\"parent\":\"/\"},{\"id\":\"wp-comments-post.php\",\"parent\":\"/\"},{\"id\":\"wp-config-sample.php\",\"parent\":\"/\"},{\"id\":\"wp-config.php\",\"parent\":\"/\"},{\"id\":\"wp-config.php-e\",\"parent\":\"/\"},{\"id\":\"wp-config.php.old\",\"parent\":\"/\"},{\"id\":\"wp-cron.php\",\"parent\":\"/\"},{\"id\":\"wp-links-opml.php\",\"parent\":\"/\"},{\"id\":\"wp-load.php\",\"parent\":\"/\"},{\"id\":\"wp-login.php\",\"parent\":\"/\"},{\"id\":\"wp-mail.php\",\"parent\":\"/\"},{\"id\":\"wp-settings.php\",\"parent\":\"/\"},{\"id\":\"wp-signup.php\",\"parent\":\"/\"},{\"id\":\"wp-trackback.php\",\"parent\":\"/\"},{\"id\":\"xcloner_main_8ad98-2019-03-04.log\",\"parent\":\"/\"},{\"id\":\"xmlrpc.php\",\"parent\":\"/\"}],\"backup_params\":[{\"name\":\"backup_name\",\"value\":\"backup_[domain]_8888-[time]-sql\"},{\"name\":\"email_notification\",\"value\":\"info@thinkovi.com\"},{\"name\":\"diff_start_date\",\"value\":\"\"},{\"name\":\"backup_comments\",\"value\":\"\"},{\"name\":\"schedule_name\",\"value\":\"\"},{\"name\":\"schedule_start_date\",\"value\":\"\"},{\"name\":\"schedule_start_time\",\"value\":\"\"},{\"name\":\"schedule_storage\",\"value\":\"\"}]}\n",
+							"type": "text"
+						},
+						{
+							"key": "init",
+							"value": "1",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "hash",
+							"value": "12345",
+							"type": "text"
+						},
+						{
+							"key": "extra",
+							"value": "{\"backup_part\":\"0\",\"backup_init\":0,\"backup_archive_name\":\"backup__8888-2020-04-13_14-53-sql\",\"backup_archive_name_full\":\"backup__8888-2020-04-13_14-53-sql-12345.tar\",\"lines_total\":1194,\"backup_size\":21102080,\"processed_file\":\"Requests\\/Exception\\/HTTP\\/401.php\",\"processed_file_size\":390,\"start_at_line\":987,\"start_at_byte\":0}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8888/wordpress/wp-content/plugins/XCloner-Wordpress/examples/expose_api.php?action=backup_files",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8888",
+					"path": [
+						"wordpress",
+						"wp-content",
+						"plugins",
+						"XCloner-Wordpress",
+						"examples",
+						"expose_api.php"
+					],
+					"query": [
+						{
+							"key": "action",
+							"value": "backup_files"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
