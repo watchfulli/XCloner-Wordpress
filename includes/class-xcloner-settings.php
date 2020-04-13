@@ -212,9 +212,9 @@ class Xcloner_Settings
      *
      * @return void
      */
-    public function get_hash()
-    {
-        if (!$this->hash) {
+    public function get_hash($readonly = false )
+    { 
+        if (!$this->hash && !$readonly) {
             $this->set_hash("-".$this->get_server_unique_hash(5));
         }
 
@@ -231,7 +231,9 @@ class Xcloner_Settings
     {
         $hash = "-".md5(rand());
 
-        $this->set_hash(substr($hash, 0, 6));
+        $hash = substr($hash, 0, 6);
+
+        $this->set_hash($hash);
 
         return $hash;
     }

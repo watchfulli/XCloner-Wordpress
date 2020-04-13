@@ -9,6 +9,14 @@ if (!defined('WP_DEBUG')) {
     define('WP_DEBUG', false);
 }
 
+if (!defined('WPINC')) {
+    define('WPINC', false);
+}
+
+if (!defined('DOING_CRON')) {
+    define('DOING_CRON', false);
+}
+
 if (!defined('WP_DEBUG_DISPLAY')) {
     define('WP_DEBUG_DISPLAY', false);
 }
@@ -220,11 +228,12 @@ if (!function_exists('dbDelta')) {
 }
 
 /**
- *
+ * Custom Watchfull backend check
  */
 if (!function_exists('is_admin')) {
     function is_admin()
     {
+        return true;
     }
 }
 
@@ -269,8 +278,16 @@ if (!function_exists('wp_deregister_script')) {
  *
  */
 if (!function_exists('add_action')) {
-    function add_action($path)
-    {
+    function add_action($hook, $callback)
+    {   
+        if(substr($hook, 0, 8) == "wp_ajax_") {
+            $request = "wp_ajax_".$_REQUEST['action'];
+            if($request === $hook){  
+                //print_r($callback[1]);
+                //exit;
+                return call_user_func($callback);
+            }
+        }
     }
 }
 
@@ -280,6 +297,7 @@ if (!function_exists('add_action')) {
 if (!function_exists('do_action')) {
     function do_action($hook)
     {
+        
     }
 }
 
@@ -287,8 +305,9 @@ if (!function_exists('do_action')) {
  *
  */
 if (!function_exists('add_filter')) {
-    function add_filter($path)
+    function add_filter($hook)
     {
+        //echo $hook;
     }
 }
 
@@ -378,6 +397,36 @@ if (!function_exists('__')) {
     function __($string)
     {
         return $string;
+    }
+}
+
+if (!function_exists('wp_send_json')) {
+    function wp_send_json( $response, $status_code = null ) {
+        //return $response;
+        die(json_encode($response));
+    }
+}
+
+if (!function_exists('is_localhost')) {
+    function is_localhost($whitelist = ['127.0.0.1', '::1']) {
+        return in_array($_SERVER['REMOTE_ADDR'], $whitelist);
+    }
+}
+
+if (!function_exists('esc_html')) {
+    function esc_html( $text ) {
+        return $text;
+    }
+}
+
+if (!function_exists('size_format')) {
+    function size_format( $bytes, $decimals = 0 ) {
+       return $bytes;
+    }
+}
+if (!function_exists('wp_mail')) {
+    function wp_mail(){
+
     }
 }
 

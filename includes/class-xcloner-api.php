@@ -387,7 +387,7 @@ class Xcloner_Api
         $init = (int)$_POST['init'];
 
         if ($params === null) {
-            $this->send_response('{"status":false,"msg":"The post_data parameter must be valid JSON"}');
+            //$this->send_response('{"status":false,"msg":"The post_data parameter must be valid JSON"}');
         }
 
         $this->process_params($params);
@@ -1116,6 +1116,7 @@ class Xcloner_Api
         $return = array();
 
         $source_backup_file = $this->xcloner_sanitization->sanitize_input_as_string($_POST['file']);
+        
         $start = $this->xcloner_sanitization->sanitize_input_as_int($_POST['start']);
         $return['part'] = $this->xcloner_sanitization->sanitize_input_as_int($_POST['part']);
 
@@ -1466,8 +1467,9 @@ class Xcloner_Api
         }
 
         if (ob_get_length()) {
-            ob_clean();
+            //ob_clean();
         }
-        wp_send_json($data);
+        
+        return wp_send_json($data);
     }
 }

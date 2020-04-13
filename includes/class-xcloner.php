@@ -358,12 +358,11 @@ class Xcloner
         $this->loader->add_action('admin_menu', $this, 'xcloner_backup_add_admin_menu');
     }
 
-    private function define_plugin_settings()
+    public function define_plugin_settings()
     {
         /**
          * register wporg_settings_init to the admin_init action hook
          */
-
         $this->xcloner_settings = new XCloner_Settings($this);
 
         if (defined('DOING_CRON') || isset($_POST['hash'])) {
@@ -538,7 +537,7 @@ class Xcloner
      * @method get_xcloner_settings()
      * @throws Exception
      */
-    private function define_ajax_hooks()
+    public function define_ajax_hooks()
     {
         //adding the pre-update hook
 
@@ -557,6 +556,7 @@ class Xcloner
 
             $xcloner_api = new Xcloner_Api($this);
 
+            
             $this->loader->add_action('wp_ajax_get_database_tables_action', $xcloner_api, 'get_database_tables_action');
             $this->loader->add_action('wp_ajax_get_file_system_action', $xcloner_api, 'get_file_system_action');
             $this->loader->add_action('wp_ajax_scan_filesystem', $xcloner_api, 'scan_filesystem');

@@ -22,16 +22,26 @@ class Xcloner_Standalone extends Xcloner
 
         $this->load_dependencies();
         
-        $this->xcloner_settings = new XCloner_Settings($this, "", $json_config);
+        $this->define_plugin_settings($json_config);
         
-        $this->xcloner_settings->generate_new_hash();
+        if(!isset($_POST['hash']) || !$_POST['hash']){
+            $_POST['hash'] = "";
+        }
+        $this->xcloner_settings = new XCloner_Settings($this, $_POST['hash'], $json_config);
         
+        
+         if( !$this->xcloner_settings->get_hash(true) ){
+            $this->xcloner_settings->generate_new_hash();
+         }
+        
+
+        $this->define_plugin_settings();
+
         $this->xcloner_logger           = new XCloner_Logger($this, "xcloner_standalone");
 
         if (WP_DEBUG && WP_DEBUG_DISPLAY) {
             $this->xcloner_logger->pushHandler(new StreamHandler('php://stdout', Logger::INFO));
         }
-
 
         $this->xcloner_filesystem       = new Xcloner_File_System($this);
         $this->archive_system           = new Xcloner_Archive($this);
@@ -40,6 +50,7 @@ class Xcloner_Standalone extends Xcloner
         $this->xcloner_remote_storage   = new Xcloner_Remote_Storage($this);
         $this->xcloner_file_transfer 	= new Xcloner_File_Transfer($this);
         $this->xcloner_encryption    	= new Xcloner_Encryption($this);
+        $this->xcloner_sanitization 	= new Xcloner_Sanitization();
         
         //$this->start();
     }
