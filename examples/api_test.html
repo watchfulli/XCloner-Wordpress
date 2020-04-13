@@ -5,20 +5,24 @@
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
-      var api_base_url =
-        "http://localhost:8888/wordpress/wp-content/plugins/XCloner-Wordpress/examples/expose_api.php";
+      var url = document.URL,
+        shortUrl = url.substring(0, url.lastIndexOf("/"));
+
+      var api_base_url = shortUrl + "/expose_api.php";
 
       var scan_filesystem_url = api_base_url + "?action=scan_filesystem";
       var backup_database_url = api_base_url + "?action=backup_database";
       var backup_files_url = api_base_url + "?action=backup_files";
 
       var global_backup_hash;
+      var backup_profile;
 
       async function make_call(call, init, params) {
         var data = new FormData();
         data.append("init", init);
         data.append("hash", global_backup_hash || "");
         data.append("extra", JSON.stringify(params) || "");
+        data.append("backup_profile", JSON.stringify(backup_profile) || "");
         return axios
           .post(window[`${call}_url`], data, {
             headers: {
@@ -55,6 +59,18 @@
 
       jQuery(document).ready(function () {
         jQuery("#button").on("click", function () {
+          try {
+            if (jQuery("#backup_profile").val()) {
+              backup_profile = JSON.parse(jQuery("#backup_profile").val());
+            }
+          } catch {
+            alert("Backup profile JSON data is invalid!");
+            return;
+          }
+          if ((api_url = jQuery("#api_url"))) {
+            api_base_url = api_url;
+          }
+
           jQuery("#loading").show();
           start_backup();
         });
@@ -62,7 +78,39 @@
     </script>
   </head>
   <body>
-    <button id="button">Start Backup</button>
+    <input
+      type="text"
+      style="width: 250px;"
+      placeholder="XCloner Standalone API url"
+      id="api_url"
+    />
+    <button id="button">Start Backup</button><br />
+    <textarea
+      id="backup_profile"
+      style="width: 250px; height: 150px;"
+      placeholder="Backup Profile JSON Config"
+    >
+{
+        "extra": [],
+        "backup_params": {
+          "backup_name": "backup_[domain]_8888-[time]-sql",
+          "email_notification": "your@email.com",
+          "diff_start_date": "",
+          "profile_name": "test2",
+          "backup_encrypt": false,
+          "target_storage": ""
+        },
+        "database": {
+          "#": [
+            "wordpress"    ]
+        },
+        "excluded_files": [
+          "wp-content",
+          "wp-includes"
+        ]
+      }</textarea
+    >
+
     <div id="output"></div>
     <img
       src="https://i.gifer.com/4V0b.gif"
