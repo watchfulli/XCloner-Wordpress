@@ -22,6 +22,7 @@
         data.append("init", init);
         data.append("hash", global_backup_hash || "");
         data.append("extra", JSON.stringify(params) || "");
+        data.append("standalone_api_key", jQuery('#standalone_api_key').val() || "");
         data.append("backup_profile", JSON.stringify(backup_profile) || "");
         return axios
           .post(window[`${call}_url`], data, {
@@ -54,6 +55,8 @@
           .then(function () {
             jQuery("#loading").hide();
             jQuery("#output").append(`<b>Backup Finished.</b>`);
+          }).catch(function(){
+            jQuery("#loading").hide();
           });
       }
 
@@ -80,14 +83,19 @@
   <body>
     <input
       type="text"
-      style="width: 250px;"
+      style="width: 350px;"
       placeholder="XCloner Standalone API url"
       id="api_url"
     />
-    <button id="button">Start Backup</button><br />
+    <button id="button">Start Backup</button> <br />
+    <input
+      type="text"
+      style="width: 350px;"
+      placeholder="API KEY = config xcloner_standalone_api_key"
+      id="standalone_api_key"> <br />
     <textarea
       id="backup_profile"
-      style="width: 250px; height: 150px;"
+      style="width: 350px; height: 150px;"
       placeholder="Backup Profile JSON Config"
     >
 {
