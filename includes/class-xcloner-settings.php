@@ -527,7 +527,7 @@ class Xcloner_Settings
             'xcloner_general_settings_group',
             array(
                 'xcloner_enable_pre_update_backup',
-                sprintf(__('Attempt to generate a core, plugins, themes or languages files backup before the automatic update of Wordpress core, plugins, themes or languages files.', 'xcloner-backup-and-restore'), $this->get_logger_filename())
+                sprintf(__('Attempt to generate a full site backup before applying automatic core updates.', 'xcloner-backup-and-restore'), $this->get_logger_filename())
             )
         );
 
