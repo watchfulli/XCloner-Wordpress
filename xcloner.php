@@ -7,7 +7,7 @@
  * registers the activation and deactivation functions, and defines a function
  * that starts the plugin.
  *
- * @link              http://www.thinkovi.com
+ * @link              https://watchful.net
  * @since             1.0.0
  * @package           Xcloner
  *
@@ -17,7 +17,7 @@
  * Description:       XCloner is a tool that will help you manage your website backups, generate/restore/move so your website will be always secured! With XCloner you will be able to clone your site to any other location with just a few clicks, as well as transfer the backup archives to remote FTP, SFTP, DropBox, Amazon S3, Google Drive, WebDAV, Backblaze, Azure accounts.
  * Version:           4.1.2
  * Author:            Liuta Ovidiu
- * Author URI:        http://www.thinkovi.com
+ * Author URI:        https://www.thinkovi.com
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       xcloner-backup-and-restore

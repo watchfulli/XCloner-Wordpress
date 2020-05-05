@@ -35,7 +35,7 @@
  * @package    Xcloner
  * @subpackage Xcloner/includes
  * @author     Liuta Ovidiu <info@thinkovi.com>
- * @link       http://www.thinkovi.com
+ * @link       https://watchful.net
  */
 class Xcloner_Activator
 {

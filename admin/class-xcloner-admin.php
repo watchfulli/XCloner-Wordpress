@@ -3,7 +3,7 @@
 /**
  * The admin-specific functionality of the plugin.
  *
- * @link       http://www.thinkovi.com
+ * @link       https://watchful.net
  * @since      1.0.0
  *
  * @package    Xcloner
