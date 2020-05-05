@@ -1,4 +1,27 @@
 {
   "name": "xcloner-backup-and-restore",
-  "version": "4.1.3"
+  "version": "3.1.4",
+  "description": "XCloner Backup and Restore plugin",
+  "main": "xcloner.php",
+  "directories": {
+    "example": "examples",
+    "lib": "lib"
+  },
+  "scripts": {
+    "build": "echo \"Error: no build specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ovidiul/XCloner-Wordpress.git"
+  },
+  "keywords": [
+    "backup"
+  ],
+  "author": "Watchful.net",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/ovidiul/XCloner-Wordpress/issues"
+  },
+  "homepage": "https://github.com/ovidiul/XCloner-Wordpress#readme"
 }
