@@ -8,7 +8,7 @@
     "lib": "lib"
   },
   "scripts": {
-    "build": "echo \"Error: no build specified\" && exit 1",
+    "build": "echo \"Error: no build specified\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
