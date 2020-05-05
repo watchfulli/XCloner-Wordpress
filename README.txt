@@ -119,6 +119,7 @@ Of course, schedules can be adjusted accordingly to how often you update your si
 * thinkovi references replace
 * plugin pre auto update text changelog
 * author name and uri change
+* standalone library addon support
 
 = 4.1.3 =
 * database include tables fix
