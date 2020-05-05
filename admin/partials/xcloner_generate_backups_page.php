@@ -293,8 +293,8 @@ $tab                    = 1;
                                 <div class="row">
                                     <h5><?php echo __("Thank you for using XCloner.", 'xcloner-backup-and-restore') ?></h5>
                                     <h6><?php echo sprintf(__("We would love to hear about your experience in the %s.", 'xcloner-backup-and-restore'), '<a href="https://wordpress.org/support/plugin/xcloner-backup-and-restore/reviews/" target="_blank">Wordpress XCloner Reviews Section</a>') ?></h6>
-                                    <a class="twitter-follow-button" href="https://twitter.com/thinkovi"
-                                       data-show-count="false">Follow @thinkovi</a>
+                                    <a class="twitter-follow-button" href="https://twitter.com/WatchfulDashbrd"
+                                       data-show-count="false">Follow @WatchfulDashbrd</a>
                                     <script src="//platform.twitter.com/widgets.js" async="" charset="utf-8"></script>
 
                                     <br/>

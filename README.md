@@ -1,6 +1,6 @@
 # XCloner Wordpress Plugin - Backup and Restore
 
-[![Author](http://img.shields.io/badge/author-@thinkovi-blue.svg?style=flat-square)](https://twitter.com/thinkovi)
+[![Author](http://img.shields.io/badge/author-@thinkovi-blue.svg?style=flat-square)](https://twitter.com/WatchfulDashbrd)
 [![Software License](https://img.shields.io/badge/license-GPL-brightgreen.svg?style=flat-square)](LICENSE.txt)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ovidiul/XCloner-Wordpress/badges/quality-score.png?b=dev)](https://scrutinizer-ci.com/g/ovidiul/XCloner-Wordpress/?branch=master)
 [![Build Status](https://scrutinizer-ci.com/g/ovidiul/XCloner-Wordpress/badges/build.png?b=dev)](https://scrutinizer-ci.com/g/ovidiul/XCloner-Wordpress/build-status/master)
