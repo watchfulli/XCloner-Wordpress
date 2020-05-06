@@ -797,27 +797,27 @@
         ]
     },
     {
-        "name": "mikey179/vfsStream",
-        "version": "v1.6.5",
-        "version_normalized": "1.6.5.0",
+        "name": "mikey179/vfsstream",
+        "version": "v1.6.8",
+        "version_normalized": "1.6.8.0",
         "source": {
             "type": "git",
             "url": "https://github.com/bovigo/vfsStream.git",
-            "reference": "d5fec95f541d4d71c4823bb5e30cf9b9e5b96145"
+            "reference": "231c73783ebb7dd9ec77916c10037eff5a2b6efe"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/bovigo/vfsStream/zipball/d5fec95f541d4d71c4823bb5e30cf9b9e5b96145",
-            "reference": "d5fec95f541d4d71c4823bb5e30cf9b9e5b96145",
+            "url": "https://api.github.com/repos/bovigo/vfsStream/zipball/231c73783ebb7dd9ec77916c10037eff5a2b6efe",
+            "reference": "231c73783ebb7dd9ec77916c10037eff5a2b6efe",
             "shasum": ""
         },
         "require": {
             "php": ">=5.3.0"
         },
         "require-dev": {
-            "phpunit/phpunit": "~4.5"
+            "phpunit/phpunit": "^4.5|^5.0"
         },
-        "time": "2017-08-01T08:02:14+00:00",
+        "time": "2019-10-30T15:31:00+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -1638,17 +1638,17 @@
     },
     {
         "name": "splitbrain/php-archive",
-        "version": "1.0.10",
-        "version_normalized": "1.0.10.0",
+        "version": "1.1.1",
+        "version_normalized": "1.1.1.0",
         "source": {
             "type": "git",
             "url": "https://github.com/splitbrain/php-archive.git",
-            "reference": "a46f3aaeb9f123fdb7db4e192b0600feebf7f773"
+            "reference": "10d89013572ba1f4d4ad7fcb74860242f4c3860b"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/splitbrain/php-archive/zipball/a46f3aaeb9f123fdb7db4e192b0600feebf7f773",
-            "reference": "a46f3aaeb9f123fdb7db4e192b0600feebf7f773",
+            "url": "https://api.github.com/repos/splitbrain/php-archive/zipball/10d89013572ba1f4d4ad7fcb74860242f4c3860b",
+            "reference": "10d89013572ba1f4d4ad7fcb74860242f4c3860b",
             "shasum": ""
         },
         "require": {
@@ -1664,7 +1664,7 @@
             "ext-iconv": "Used for proper filename encode handling",
             "ext-mbstring": "Can be used alternatively for handling filename encoding"
         },
-        "time": "2018-05-01T08:03:56+00:00",
+        "time": "2018-09-09T12:13:53+00:00",
         "type": "library",
         "installation-source": "source",
         "autoload": {
