@@ -191,7 +191,7 @@ class Xcloner
         add_action('xcloner_admin_notices', array($this, "trigger_message_notice"), 10, 2);
         do_action('xcloner_admin_notices', $message, $status);
 
-        if (defined(XCLONER_STANDALONE_MODE) && XCLONER_STANDALONE_MODE) {
+        if (defined("XCLONER_STANDALONE_MODE") && XCLONER_STANDALONE_MODE) {
             throw new Error($message);
         }
     }
