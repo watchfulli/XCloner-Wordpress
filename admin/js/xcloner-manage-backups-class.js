@@ -494,10 +494,12 @@
         sSearch: "",
         sSearchPlaceholder: "Search Backups",
       },
-      ajax:
-        ajaxurl +
-        "?action=get_manage_backups_list&storage_selection=" +
-        xcloner_manage_backups.storage_selection,
+      ajax: {
+        url:
+          ajaxurl +
+          "?action=get_manage_backups_list&storage_selection=" +
+          xcloner_manage_backups.storage_selection,
+      },
       fnDrawCallback: function (oSettings) {
         jQuery("a.expand-multipart").on("click", function () {
           jQuery(this).parent().find("ul.multipart").toggle();

@@ -932,7 +932,10 @@ class Xcloner_Api
     {
         $this->check_access();
 
-        $return = array();
+        $return = array(
+            "data" => array()
+        );
+        
         $storage_selection = "";
 
         if (isset($_GET['storage_selection']) and $_GET['storage_selection']) {
