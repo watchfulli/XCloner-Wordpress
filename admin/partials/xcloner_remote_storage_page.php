@@ -4,11 +4,74 @@ $remote_storage = $this->get_xcloner_container()->get_xcloner_remote_storage();
 $gdrive_auth_url = "";
 
 if (method_exists($remote_storage, "get_gdrive_auth_url")) {
-	$gdrive_auth_url = $remote_storage->get_gdrive_auth_url();
+    $gdrive_auth_url = $remote_storage->get_gdrive_auth_url();
 }
 
 $gdrive_construct = $remote_storage->gdrive_construct();
 ?>
+
+<?php
+function common_cleanup_html($type){
+ob_start();
+?>
+<!-- Cleanup by Days -->
+<div class="row">
+                            <div class="col s12 m3 label">
+                                <label for="{type}_cleanup_retention_limit_days"><?php echo __("Cleanup Days", 'xcloner-backup-and-restore') ?></label>
+                            </div>
+                            <div class=" col s12 m6">
+                                <input placeholder="<?php echo __("how many days to keep the backups for", 'xcloner-backup-and-restore') ?>"
+                                       id="{type}_cleanup_retention_limit_days" type="text" name="xcloner_{type}_cleanup_retention_limit_days"
+                                       class="validate" value="<?php echo get_option("xcloner_".$type."_cleanup_retention_limit_days") ?>">
+                            </div>
+                        </div>
+                        
+                        <!-- Cleanup by Quantity -->
+                        <div class="row">
+                            <div class="col s12 m3 label">
+                                <label for="xcloner_{type}_cleanup_retention_limit_archives"><?php echo __("Cleanup by Quantity", 'xcloner-backup-and-restore') ?></label>
+                            </div>
+                            <div class=" col s12 m6">
+                                <input placeholder="<?php echo __("how many backup files to keep", 'xcloner-backup-and-restore') ?>"
+                                       id="xcloner_{type}_cleanup_retention_limit_archives" type="number" name="xcloner_{type}_cleanup_retention_limit_archives"
+                                       class="validate"
+                                       value="<?php echo get_option("xcloner_".$type."_cleanup_retention_limit_archives") ?>">
+                            </div>
+                        </div>
+
+                        <!-- Cleanup by Capacity -->
+                        <div class="row">
+                            <div class="col s12 m3 label">
+                                <label for="xcloner_{type}_cleanup_capacity_limit"><?php echo __("Cleanup by Capacity(MB)", 'xcloner-backup-and-restore') ?></label>
+                            </div>
+                            <div class=" col s12 m6">
+                                <input placeholder="<?php echo __("delete backup over specified limit", 'xcloner-backup-and-restore') ?>"
+                                       id="xcloner_{type}_cleanup_capacity_limit" type="number" name="xcloner_{type}_cleanup_capacity_limit"
+                                       class="validate"
+                                       value="<?php echo get_option("xcloner_".$type."_cleanup_capacity_limit") ?>">
+                            </div>
+                        </div>
+
+                        <!-- Keep backups taken on days -->
+                        <div class="row">
+                            <div class="col s12 m3 label">
+                                <label for="xcloner_{type}_cleanup_exclude_days"><?php echo __("Keep backups taken on days", 'xcloner-backup-and-restore') ?></label>
+                            </div>
+                            <div class=" col s12 m6">
+                                <input placeholder="<?php echo __("days of month, comma separated", 'xcloner-backup-and-restore') ?>"
+                                       id="xcloner_{type}_cleanup_exclude_days" type="text" name="xcloner_{type}_cleanup_exclude_days"
+                                       class="validate"
+                                       value="<?php echo get_option("xcloner_".$type."_cleanup_exclude_days") ?>">
+                            </div>
+                        </div>
+<?php
+$common_cleanup_html = ob_get_contents();
+ob_end_clean();
+
+return str_replace("{type}", $type, $common_cleanup_html);
+}
+
+?>                        
 <h1><?= esc_html(get_admin_page_title()); ?></h1>
 
 <form class="remote-storage-form" method="POST">
@@ -26,8 +89,9 @@ $gdrive_construct = $remote_storage->gdrive_construct();
                             <label>
                                 Off
                                 <input type="checkbox" name="xcloner_ftp_enable" class="status"
-                                       value="1" <?php if (get_option("xcloner_ftp_enable"))
-									echo "checked" ?> \>
+                                       value="1" <?php if (get_option("xcloner_ftp_enable")) {
+    echo "checked";
+} ?> \>
                                 <span class="lever"></span>
                                 On
                             </label>
@@ -69,7 +133,7 @@ $gdrive_construct = $remote_storage->gdrive_construct();
                             <div class=" col s12 m6">
                                 <input placeholder="<?php echo __("Ftp Password", 'xcloner-backup-and-restore') ?>"
                                        id="ftp_password" type="text" name="xcloner_ftp_password" class="validate"
-                                       value="<?php echo str_repeat('*', strlen( get_option("xcloner_ftp_password"))) ?>"
+                                       value="<?php echo str_repeat('*', strlen(get_option("xcloner_ftp_password"))) ?>"
                                        autocomplete="off">
                             </div>
                         </div>
@@ -91,13 +155,15 @@ $gdrive_construct = $remote_storage->gdrive_construct();
                             </div>
                             <div class=" col s12 m6 input-field inline">
                                 <input name="xcloner_ftp_transfer_mode" type="radio" id="passive"
-                                       value="1" <?php if (get_option("xcloner_ftp_transfer_mode", 1))
-									echo "checked" ?> />
+                                       value="1" <?php if (get_option("xcloner_ftp_transfer_mode", 1)) {
+    echo "checked";
+} ?> />
                                 <label for="passive"><?php echo __("Passive", 'xcloner-backup-and-restore') ?></label>
 
                                 <input name="xcloner_ftp_transfer_mode" type="radio" id="active"
-                                       value="0" <?php if (!get_option("xcloner_ftp_transfer_mode", 1))
-									echo "checked" ?> />
+                                       value="0" <?php if (!get_option("xcloner_ftp_transfer_mode", 1)) {
+    echo "checked";
+} ?> />
                                 <label for="active"><?php echo __("Active", 'xcloner-backup-and-restore') ?></label>
                             </div>
                         </div>
@@ -108,13 +174,15 @@ $gdrive_construct = $remote_storage->gdrive_construct();
                             </div>
                             <div class=" col s12 m6 input-field inline">
                                 <input name="xcloner_ftp_ssl_mode" type="radio" id="ftp_ssl_mode_inactive"
-                                       value="0" <?php if (!get_option("xcloner_ftp_ssl_mode"))
-									echo "checked" ?> />
+                                       value="0" <?php if (!get_option("xcloner_ftp_ssl_mode")) {
+    echo "checked";
+} ?> />
                                 <label for="ftp_ssl_mode_inactive"><?php echo __("Disable", 'xcloner-backup-and-restore') ?></label>
 
                                 <input name="xcloner_ftp_ssl_mode" type="radio" id="ftp_ssl_mode_active"
-                                       value="1" <?php if (get_option("xcloner_ftp_ssl_mode"))
-									echo "checked" ?> />
+                                       value="1" <?php if (get_option("xcloner_ftp_ssl_mode")) {
+    echo "checked";
+} ?> />
                                 <label for="ftp_ssl_mode_active"><?php echo __("Enable", 'xcloner-backup-and-restore') ?></label>
                             </div>
                         </div>
@@ -130,16 +198,7 @@ $gdrive_construct = $remote_storage->gdrive_construct();
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div class="col s12 m3 label">
-                                <label for="ftp_cleanup_days"><?php echo __("Ftp Cleanup (days)", 'xcloner-backup-and-restore') ?></label>
-                            </div>
-                            <div class=" col s12 m6">
-                                <input placeholder="<?php echo __("how many days to keep the backups for", 'xcloner-backup-and-restore') ?>"
-                                       id="ftp_cleanup_days" type="text" name="xcloner_ftp_cleanup_days"
-                                       class="validate" value="<?php echo get_option("xcloner_ftp_cleanup_days") ?>">
-                            </div>
-                        </div>
+                        <?=common_cleanup_html('ftp')?>
 
                         <div class="row">
                             <div class="col s6 m4">
@@ -167,8 +226,9 @@ $gdrive_construct = $remote_storage->gdrive_construct();
                             <label>
                                 Off
                                 <input type="checkbox" name="xcloner_sftp_enable" class="status"
-                                       value="1" <?php if (get_option("xcloner_sftp_enable"))
-									echo "checked" ?> \>
+                                       value="1" <?php if (get_option("xcloner_sftp_enable")) {
+    echo "checked";
+} ?> \>
                                 <span class="lever"></span>
                                 On
                             </label>
@@ -210,7 +270,7 @@ $gdrive_construct = $remote_storage->gdrive_construct();
                             <div class=" col s12 m6">
                                 <input placeholder="<?php echo __("SFTP or Private Key Password", 'xcloner-backup-and-restore') ?>"
                                        id="ftp_spassword" type="text" name="xcloner_sftp_password" class="validate"
-                                       value="<?php echo str_repeat('*', strlen( get_option("xcloner_sftp_password"))) ?>"
+                                       value="<?php echo str_repeat('*', strlen(get_option("xcloner_sftp_password"))) ?>"
                                        autocomplete="off">
                             </div>
                         </div>
@@ -250,16 +310,7 @@ $gdrive_construct = $remote_storage->gdrive_construct();
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div class="col s12 m3 label">
-                                <label for="sftp_cleanup_days"><?php echo __("SFTP Cleanup (days)", 'xcloner-backup-and-restore') ?></label>
-                            </div>
-                            <div class=" col s12 m6">
-                                <input placeholder="<?php echo __("how many days to keep the backups for", 'xcloner-backup-and-restore') ?>"
-                                       id="sftp_cleanup_days" type="text" name="xcloner_sftp_cleanup_days"
-                                       class="validate" value="<?php echo get_option("xcloner_sftp_cleanup_days") ?>">
-                            </div>
-                        </div>
+                        <?=common_cleanup_html('sftp')?>
 
                         <div class="row">
                             <div class="col s6 m4">
@@ -288,8 +339,9 @@ $gdrive_construct = $remote_storage->gdrive_construct();
                             <label>
                                 Off
                                 <input type="checkbox" name="xcloner_aws_enable" class="status"
-                                       value="1" <?php if (get_option("xcloner_aws_enable"))
-									echo "checked" ?> \>
+                                       value="1" <?php if (get_option("xcloner_aws_enable")) {
+    echo "checked";
+} ?> \>
                                 <span class="lever"></span>
                                 On
                             </label>
@@ -326,7 +378,7 @@ $gdrive_construct = $remote_storage->gdrive_construct();
                             <div class=" col s12 m6">
                                 <input placeholder="<?php echo __("S3 Secret", 'xcloner-backup-and-restore') ?>"
                                        id="aws_secret" type="text" name="xcloner_aws_secret" class="validate"
-                                       value="<?php echo str_repeat('*', strlen( get_option("xcloner_aws_secret"))) ?>"
+                                       value="<?php echo str_repeat('*', strlen(get_option("xcloner_aws_secret"))) ?>"
                                        autocomplete="off">
                             </div>
                         </div>
@@ -342,15 +394,15 @@ $gdrive_construct = $remote_storage->gdrive_construct();
                                     <option readonly
                                             value=""><?php echo __("Please Select AWS S3 Region or Leave Unselected for Custom Endpoint") ?></option>
 									<?php
-									$aws_regions = $remote_storage->get_aws_regions();
+                                    $aws_regions = $remote_storage->get_aws_regions();
 
-									foreach ($aws_regions as $key => $region) {
-										?>
+                                    foreach ($aws_regions as $key => $region) {
+                                        ?>
                                         <option value="<?php echo $key ?>" <?php echo($key == get_option('xcloner_aws_region') ? "selected" : "") ?>><?php echo $region ?>
                                             = <?php echo $key ?></option>
 										<?php
-									}
-									?>
+                                    }
+                                    ?>
                                 </select>
                             </div>
                         </div>
@@ -388,16 +440,7 @@ $gdrive_construct = $remote_storage->gdrive_construct();
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div class="col s12 m3 label">
-                                <label for="aws_cleanup_days"><?php echo __("S3 Cleanup (days)", 'xcloner-backup-and-restore') ?></label>
-                            </div>
-                            <div class=" col s12 m6">
-                                <input placeholder="<?php echo __("how many days to keep the backups for", 'xcloner-backup-and-restore') ?>"
-                                       id="aws_cleanup_days" type="text" name="xcloner_aws_cleanup_days"
-                                       class="validate" value="<?php echo get_option("xcloner_aws_cleanup_days") ?>">
-                            </div>
-                        </div>
+                        <?=common_cleanup_html('aws')?>
 
                         <div class="row">
                             <div class="col s6 m4">
@@ -426,8 +469,9 @@ $gdrive_construct = $remote_storage->gdrive_construct();
                             <label>
                                 Off
                                 <input type="checkbox" name="xcloner_dropbox_enable" class="status"
-                                       value="1" <?php if (get_option("xcloner_dropbox_enable"))
-									echo "checked" ?> \>
+                                       value="1" <?php if (get_option("xcloner_dropbox_enable")) {
+                                        echo "checked";
+                                    } ?> \>
                                 <span class="lever"></span>
                                 On
                             </label>
@@ -468,7 +512,7 @@ $gdrive_construct = $remote_storage->gdrive_construct();
                                 <input placeholder="<?php echo __("Dropbox App Secret", 'xcloner-backup-and-restore') ?>"
                                        id="dropbox_app_secret" type="text" name="xcloner_dropbox_app_secret"
                                        class="validate"
-                                       value="<?php echo str_repeat('*', strlen( get_option("xcloner_dropbox_app_secret"))) ?>"
+                                       value="<?php echo str_repeat('*', strlen(get_option("xcloner_dropbox_app_secret"))) ?>"
                                        autocomplete="off">
                             </div>
                         </div>
@@ -484,17 +528,7 @@ $gdrive_construct = $remote_storage->gdrive_construct();
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div class="col s12 m3 label">
-                                <label for="dropbox_cleanup_days"><?php echo __("Dropbox Cleanup (days)", 'xcloner-backup-and-restore') ?></label>
-                            </div>
-                            <div class=" col s12 m6">
-                                <input placeholder="<?php echo __("how many days to keep the backups for", 'xcloner-backup-and-restore') ?>"
-                                       id="dropbox_cleanup_days" type="text" name="xcloner_dropbox_cleanup_days"
-                                       class="validate"
-                                       value="<?php echo get_option("xcloner_dropbox_cleanup_days") ?>">
-                            </div>
-                        </div>
+                        <?=common_cleanup_html('dropbox')?>
 
                         <div class="row">
                             <div class="col s6 m4">
@@ -523,8 +557,9 @@ $gdrive_construct = $remote_storage->gdrive_construct();
                             <label>
                                 Off
                                 <input type="checkbox" name="xcloner_azure_enable" class="status"
-                                       value="1" <?php if (get_option("xcloner_azure_enable"))
-									echo "checked" ?> \>
+                                       value="1" <?php if (get_option("xcloner_azure_enable")) {
+                                        echo "checked";
+                                    } ?> \>
                                 <span class="lever"></span>
                                 On
                             </label>
@@ -579,17 +614,7 @@ $gdrive_construct = $remote_storage->gdrive_construct();
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div class="col s12 m3 label">
-                                <label for="azure_cleanup_days"><?php echo __("Azure Cleanup (days)", 'xcloner-backup-and-restore') ?></label>
-                            </div>
-                            <div class=" col s12 m6">
-                                <input placeholder="<?php echo __("how many days to keep the backups for", 'xcloner-backup-and-restore') ?>"
-                                       id="azure_cleanup_days" type="text" name="xcloner_azure_cleanup_days"
-                                       class="validate"
-                                       value="<?php echo get_option("xcloner_azure_cleanup_days") ?>">
-                            </div>
-                        </div>
+                        <?=common_cleanup_html('azure')?>
 
                         <div class="row">
                             <div class="col s6 m4">
@@ -618,8 +643,9 @@ $gdrive_construct = $remote_storage->gdrive_construct();
                             <label>
                                 Off
                                 <input type="checkbox" name="xcloner_backblaze_enable" class="status"
-                                       value="1" <?php if (get_option("xcloner_backblaze_enable"))
-									echo "checked" ?> \>
+                                       value="1" <?php if (get_option("xcloner_backblaze_enable")) {
+                                        echo "checked";
+                                    } ?> \>
                                 <span class="lever"></span>
                                 On
                             </label>
@@ -678,17 +704,7 @@ $gdrive_construct = $remote_storage->gdrive_construct();
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div class="col s12 m3 label">
-                                <label for="backblaze_cleanup_days"><?php echo __("Backblaze Cleanup (days)", 'xcloner-backup-and-restore') ?></label>
-                            </div>
-                            <div class=" col s12 m6">
-                                <input placeholder="<?php echo __("how many days to keep the backups for", 'xcloner-backup-and-restore') ?>"
-                                       id="backblaze_cleanup_days" type="text" name="xcloner_backblaze_cleanup_days"
-                                       class="validate"
-                                       value="<?php echo get_option("xcloner_backblaze_cleanup_days") ?>">
-                            </div>
-                        </div>
+                        <?=common_cleanup_html('backblaze')?>
 
                         <div class="row">
                             <div class="col s6 m4">
@@ -717,8 +733,9 @@ $gdrive_construct = $remote_storage->gdrive_construct();
                             <label>
                                 Off
                                 <input type="checkbox" name="xcloner_webdav_enable" class="status"
-                                       value="1" <?php if (get_option("xcloner_webdav_enable"))
-									echo "checked" ?> \>
+                                       value="1" <?php if (get_option("xcloner_webdav_enable")) {
+                                        echo "checked";
+                                    } ?> \>
                                 <span class="lever"></span>
                                 On
                             </label>
@@ -785,17 +802,7 @@ $gdrive_construct = $remote_storage->gdrive_construct();
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div class="col s12 m3 label">
-                                <label for="webdav_cleanup_days"><?php echo __("WebDAV Cleanup (days)", 'xcloner-backup-and-restore') ?></label>
-                            </div>
-                            <div class=" col s12 m6">
-                                <input placeholder="<?php echo __("how many days to keep the backups for", 'xcloner-backup-and-restore') ?>"
-                                       id="webdav_cleanup_days" type="text" name="xcloner_webdav_cleanup_days"
-                                       class="validate"
-                                       value="<?php echo get_option("xcloner_webdav_cleanup_days") ?>">
-                            </div>
-                        </div>
+                        <?=common_cleanup_html('webdav')?>
 
                         <div class="row">
                             <div class="col s6 m4">
@@ -825,8 +832,9 @@ $gdrive_construct = $remote_storage->gdrive_construct();
                                 <label>
                                     Off
                                     <input type="checkbox" name="xcloner_gdrive_enable" class="status"
-                                           value="1" <?php if (get_option("xcloner_gdrive_enable"))
-										echo "checked" ?> \>
+                                           value="1" <?php if (get_option("xcloner_gdrive_enable")) {
+                                        echo "checked";
+                                    } ?> \>
                                     <span class="lever"></span>
                                     On
                                 </label>
@@ -912,17 +920,7 @@ $gdrive_construct = $remote_storage->gdrive_construct();
                                 </div>
                             </div>
 
-                            <div class="row">
-                                <div class="col s12 m3 label">
-                                    <label for="gdrive_cleanup_days"><?php echo __("Google Drive Cleanup (days)", 'xcloner-backup-and-restore') ?></label>
-                                </div>
-                                <div class=" col s12 m6">
-                                    <input placeholder="<?php echo __("how many days to keep the backups for", 'xcloner-backup-and-restore') ?>"
-                                           id="gdrive_cleanup_days" type="text" name="xcloner_gdrive_cleanup_days"
-                                           class="validate"
-                                           value="<?php echo get_option("xcloner_gdrive_cleanup_days") ?>">
-                                </div>
-                            </div>
+                            <?=common_cleanup_html('gdrive')?>
 
                             <div class="row">
                                 <div class="col s12 m3 label">
@@ -930,13 +928,15 @@ $gdrive_construct = $remote_storage->gdrive_construct();
                                 </div>
                                 <div class=" col s12 m6 input-field inline">
                                     <input name="xcloner_gdrive_empty_trash" type="radio" value="0"
-                                           id="gdrive_empty_trash_off" <?php if (!get_option("xcloner_gdrive_empty_trash", 0))
-										echo "checked" ?> />
+                                           id="gdrive_empty_trash_off" <?php if (!get_option("xcloner_gdrive_empty_trash", 0)) {
+                                        echo "checked";
+                                    } ?> />
                                     <label for="gdrive_empty_trash_off"><?php echo __("Disabled", 'xcloner-backup-and-restore') ?></label>
 
                                     <input name="xcloner_gdrive_empty_trash" type="radio" value="1"
-                                           id="gdrive_empty_trash_on" <?php if (get_option("xcloner_gdrive_empty_trash", 0))
-										echo "checked" ?> />
+                                           id="gdrive_empty_trash_on" <?php if (get_option("xcloner_gdrive_empty_trash", 0)) {
+                                        echo "checked";
+                                    } ?> />
                                     <label for="gdrive_empty_trash_on"><?php echo __("Enabled", 'xcloner-backup-and-restore') ?></label>
                                 </div>
                             </div>
@@ -962,8 +962,8 @@ $gdrive_construct = $remote_storage->gdrive_construct();
                                 <div class=" col s12">
                                     <div class="center">
 										<?php
-										$url = wp_nonce_url(self_admin_url('update.php?action=install-plugin&plugin=xcloner-google-drive'), 'install-plugin_xcloner-google-drive');
-										?>
+                                        $url = wp_nonce_url(self_admin_url('update.php?action=install-plugin&plugin=xcloner-google-drive'), 'install-plugin_xcloner-google-drive');
+                                        ?>
                                         <h6><?php echo __("This storage option requires the XCloner-Google-Drive Wordpress Plugin to be installed and activated.") ?></h6>
                                         <h6><?php echo __("PHP 5.5 minimum version is required.") ?></h6>
                                         <br/>

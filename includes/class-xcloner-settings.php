@@ -8,6 +8,7 @@ class Xcloner_Settings
     private $xcloner_sanitization;
     private $xcloner_container;
     private $xcloner_database;
+    private $xcloner_options_prefix = "xcloner";
 
     /**
      * XCloner General Settings Class
@@ -30,6 +31,15 @@ class Xcloner_Settings
         if (isset($hash)) {
             $this->set_hash($hash);
         }
+    }
+
+    /**
+     * XCloner options prefix
+     *
+     * @return string
+     */
+    public function get_options_prefix() {
+        return $this->xcloner_options_prefix;
     }
 
     /**
