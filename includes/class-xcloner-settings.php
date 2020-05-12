@@ -17,8 +17,8 @@ class Xcloner_Settings
      */
     public function __construct(Xcloner $xcloner_container, $hash = "", $json_config = "")
     {
-        if($json_config) {
-            foreach($json_config as $item) {
+        if ($json_config) {
+            foreach ($json_config as $item) {
                 add_option($item->option_name, $item->option_value);
             }
         }
@@ -212,8 +212,8 @@ class Xcloner_Settings
      *
      * @return void
      */
-    public function get_hash($readonly = false )
-    { 
+    public function get_hash($readonly = false)
+    {
         if (!$this->hash && !$readonly) {
             $this->set_hash("-".$this->get_server_unique_hash(5));
         }
@@ -845,6 +845,22 @@ class Xcloner_Settings
             )
         );
 
+        register_setting('xcloner_cleanup_settings_group', 'xcloner_cleanup_exclude_days', array(
+            $this->xcloner_sanitization,
+            "sanitize_input_as_string"
+        ));
+        add_settings_field(
+            'xcloner_cleanup_exclude_days',
+            __('Keep Backups Taken On Month Days', 'xcloner-backup-and-restore'),
+            array($this, 'do_form_text_field'),
+            'xcloner_cleanup_settings_page',
+            'xcloner_cleanup_settings_group',
+            array(
+                'xcloner_cleanup_exclude_days',
+                __('Never delete backups taken on the specified days of the month, value used can be comma separated.', 'xcloner-backup-and-restore')
+            )
+        );
+
         register_setting('xcloner_cleanup_settings_group', 'xcloner_cleanup_capacity_limit', array(
             $this->xcloner_sanitization,
             "sanitize_input_as_int"
@@ -922,13 +938,17 @@ class Xcloner_Settings
         }
         // output the field?>
         <div class="row">
+            <?php if ($params[0] !== 'xcloner_cleanup_exclude_days'):?>
             <div class="input-field col s10 m10 l8">
+            <?php else:?>
+            <div class="input-field col s10 m5 l3">
+            <?php endif?>
                 <input class="validate" <?php echo ($disabled) ? "disabled" : "" ?> name="<?php echo $fieldname ?>"
                        id="<?php echo $fieldname ?>" type="text" class="validate"
                        value="<?php echo isset($value) ? esc_attr($value) : ''; ?>">
             </div>
             <div class="col s2 m2 ">
-                <a class="btn-floating tooltipped btn-small" data-position="left" data-delay="50"
+                <a class="btn-floating tooltipped btn-small" data-position="center" data-delay="50"
                    data-tooltip="<?php echo $label ?>" data-tooltip-id=""><i class="material-icons">help_outline</i></a>
             </div>
         </div>

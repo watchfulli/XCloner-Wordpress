@@ -711,6 +711,18 @@ class Xcloner_File_System
         $_backups_counter = sizeof($_backup_files_list);
 
         foreach ($_backup_files_list as $file) {
+
+            // processing rule for exclude backups taken on certain days
+            if ($exclude_days_string = $this->xcloner_settings->get_xcloner_option('xcloner_cleanup_exclude_days')) {
+                $exclude_days = explode(",", $exclude_days_string);
+
+                $backup_day_of_month =  date('j', $file['timestamp']);
+                if (in_array($backup_day_of_month, $exclude_days)) {
+                    $this->logger->info(sprintf("Excluding %s from cleanup trashing as it was taken on month day %s ", $file['path'], $backup_day_of_month));
+                    continue;
+                }
+            }
+
             //processing rule folder capacity
             if ($this->xcloner_settings->get_xcloner_option('xcloner_cleanup_capacity_limit') &&
                 $_storage_size >= ($set_storage_limit = 1024 * 1024 * $this->xcloner_settings->get_xcloner_option('xcloner_cleanup_capacity_limit'))) {    //bytes
