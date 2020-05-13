@@ -830,7 +830,7 @@ class Xcloner_Remote_Storage
             'timeout' => $this->xcloner_settings->get_xcloner_option("xcloner_ftp_timeout", 30),
         ]);
 
-        $adapter->connect();
+        //$adapter->connect();
 
         $filesystem = new Filesystem($adapter, new Config([
             'disable_asserts' => true,

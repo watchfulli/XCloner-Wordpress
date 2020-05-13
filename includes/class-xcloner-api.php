@@ -415,7 +415,7 @@ class Xcloner_Api
      */
     private function process_params($params)
     {
-        if($params->processed) {
+        if($params && $params->processed) {
             $this->form_params = json_decode(json_encode((array)$params), true);
             return;
         }
@@ -935,7 +935,7 @@ class Xcloner_Api
         $return = array(
             "data" => array()
         );
-        
+
         $storage_selection = "";
 
         if (isset($_GET['storage_selection']) and $_GET['storage_selection']) {
