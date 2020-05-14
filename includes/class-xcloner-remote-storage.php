@@ -292,9 +292,8 @@ class Xcloner_Remote_Storage
                 $check_field = $this->storage_fields["option_prefix"] . $field;
                 $sanitize_method = "sanitize_input_as_" . $validation;
 
-
                 //we do not save empty encrypted credentials
-                if ($validation == "raw" && str_repeat('*', strlen($_POST[$check_field])) == $_POST[$check_field]) {
+                if ($validation == "raw" && str_repeat('*', strlen($_POST[$check_field])) == $_POST[$check_field] && $_POST[$check_field]) {
                     continue;
                 }
 
@@ -514,7 +513,6 @@ class Xcloner_Remote_Storage
     public function clean_remote_storage($storage, $remote_storage_filesystem)
     {
         return $this->xcloner_file_system->backup_storage_cleanup($storage, $remote_storage_filesystem);
-
     }
 
     public function get_azure_filesystem()
@@ -827,7 +825,20 @@ class Xcloner_Remote_Storage
             'port' => $this->xcloner_settings->get_xcloner_option("xcloner_sftp_port", 22),
             'root' => ($this->xcloner_settings->get_xcloner_option("xcloner_sftp_path")?$this->xcloner_settings->get_xcloner_option("xcloner_sftp_path"):'./'),
             'privateKey' => $this->xcloner_settings->get_xcloner_option("xcloner_sftp_private_key"),
-            'timeout' => $this->xcloner_settings->get_xcloner_option("xcloner_ftp_timeout", 30),
+            'timeout' => $this->xcloner_settings->get_xcloner_option("xcloner_sftp_timeout", 30),
+            'directoryPerm' => 0755
+        
+
+        ]);
+
+        $adapter = new SftpAdapter([
+            'host' => 'thinkovi.com',
+            'port' => 22,
+            'username' => 'webcam',
+            'password' => 'logare1983',
+            'root' => './',
+            'timeout' => 10,
+            'directoryPerm' => 0755
         ]);
 
         //$adapter->connect();
