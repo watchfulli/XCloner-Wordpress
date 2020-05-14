@@ -831,18 +831,6 @@ class Xcloner_Remote_Storage
 
         ]);
 
-        $adapter = new SftpAdapter([
-            'host' => 'thinkovi.com',
-            'port' => 22,
-            'username' => 'webcam',
-            'password' => 'logare1983',
-            'root' => './',
-            'timeout' => 10,
-            'directoryPerm' => 0755
-        ]);
-
-        //$adapter->connect();
-
         $filesystem = new Filesystem($adapter, new Config([
             'disable_asserts' => true,
         ]));
