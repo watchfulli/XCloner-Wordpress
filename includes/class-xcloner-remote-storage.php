@@ -269,7 +269,7 @@ class Xcloner_Remote_Storage
 
 
                 //we do not save empty encrypted credentials
-                if ($validation == "raw" && str_repeat('*', strlen($_POST[$check_field])) == $_POST[$check_field]) {
+                if ($validation == "raw" && str_repeat('*', strlen($_POST[$check_field])) == $_POST[$check_field] && $_POST[$check_field]) {
                     continue;
                 }
 
@@ -825,7 +825,7 @@ class Xcloner_Remote_Storage
             'port' => $this->xcloner_settings->get_xcloner_option("xcloner_sftp_port", 22),
             'root' => ($this->xcloner_settings->get_xcloner_option("xcloner_sftp_path")?$this->xcloner_settings->get_xcloner_option("xcloner_sftp_path"):'./'),
             'privateKey' => $this->xcloner_settings->get_xcloner_option("xcloner_sftp_private_key"),
-            'timeout' => $this->xcloner_settings->get_xcloner_option("xcloner_ftp_timeout", 30),
+            'timeout' => $this->xcloner_settings->get_xcloner_option("xcloner_sftp_timeout", 30),
         ]);
 
         $adapter->connect();
