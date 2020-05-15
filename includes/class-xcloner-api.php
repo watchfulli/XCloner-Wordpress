@@ -202,6 +202,18 @@ class Xcloner_Api
             if ($schedule['start_at'] <= time()) {
                 $schedule['start_at'] = "";
             }
+
+            //fixing table names assigment
+            foreach ($this->form_params['database'] as $db=>$tables) {
+                if ($db == "#") {
+                    continue;
+                }
+
+                foreach ($tables as $key=>$table) {
+                    //echo $this->form_params['database'][$db][$key];
+                    $this->form_params['database'][$db][$key] = substr($table, strlen($db)+1);
+                }
+            }
         }
 
         if (!$schedule['start_at']) {
@@ -220,6 +232,7 @@ class Xcloner_Api
         }
         $schedule['remote_storage'] = $this->form_params['backup_params']['schedule_storage'];
         //$schedule['backup_type'] = $this->form_params['backup_params']['backup_type'];
+        
         $schedule['params'] = json_encode($this->form_params);
 
         if (!isset($_POST['id'])) {
@@ -415,7 +428,7 @@ class Xcloner_Api
      */
     private function process_params($params)
     {
-        if($params && $params->processed) {
+        if ($params && $params->processed) {
             $this->form_params = json_decode(json_encode((array)$params), true);
             return;
         }
@@ -1031,9 +1044,9 @@ class Xcloner_Api
                                         <?php elseif ($storage_selection != "gdrive" && !$this->xcloner_file_system->get_storage_filesystem()->has($child[0])): ?>
                                             <a href="#<?php echo $child[0] ?>" class="copy-remote-to-local"
                                                title="<?php echo __(
-                                            'Push Backup To Local Storage',
-                                            'xcloner-backup-and-restore'
-                                        ) ?>"><i
+            'Push Backup To Local Storage',
+            'xcloner-backup-and-restore'
+        ) ?>"><i
                                                         class="material-icons">file_upload</i></a>
                                         <?php endif ?>
                                     </li>

@@ -233,7 +233,7 @@ jQuery(document).ready(function () {
       vibrate: true, // vibrate the device when dragging clock hand
     });
   }
-  
+
   if (typeof jQuery(".timepicker").pickatime === "function") {
     date_picker = jQuery(".datepicker").pickadate({
       format: "d mmmm yyyy",
