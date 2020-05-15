@@ -1,6 +1,5 @@
 /** global: ajaxurl */
 /** global: Materialize */
-(function ($) {
   var dataTable = "";
 
   class Xcloner_Manage_Backups {
@@ -622,4 +621,3 @@
 
     var show_delete_alert = 1;
   });
-})(jQuery);
