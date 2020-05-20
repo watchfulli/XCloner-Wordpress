@@ -386,7 +386,7 @@ class Xcloner_Remote_Storage
         return true;
     }
 
-    public function upload_backup_to_storage($file, $storage)
+    public function upload_backup_to_storage($file, $storage, $delete_local_copy_after_transfer = 0)
     {
         if (!$this->xcloner_file_system->get_storage_filesystem()->has($file)) {
             $this->logger->info(sprintf("File not found %s in local storage", $file));
@@ -443,6 +443,13 @@ class Xcloner_Remote_Storage
         }
 
         $this->logger->info(sprintf("Upload done, disconnecting from remote storage %s", strtoupper($storage)));
+
+        //CHECK IF WE SHOULD DELETE BACKUP AFTER REMOTE TRANSFER IS DONE
+        //if ( $this->xcloner_settings->get_xcloner_option('xcloner_cleanup_delete_after_remote_transfer')) {
+        if ($delete_local_copy_after_transfer) {
+            $this->logger->info(sprintf("Deleting %s from local storage matching rule xcloner_cleanup_delete_after_remote_transfer", $file));
+            $this->xcloner_file_system->delete_backup_by_name($file);
+        }
 
         return true;
     }

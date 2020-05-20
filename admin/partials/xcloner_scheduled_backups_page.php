@@ -148,7 +148,7 @@ $available_storages     = $xcloner_remote_storage->get_available_storages();
 
 					<?php if (sizeof($available_storages)): ?>
                         <div class="row">
-                            <div class="input-field col s12 l12">
+                            <div class="input-field col s12 l6">
                                 <select name="schedule_storage" id="schedule_storage" class="validate">
                                     <option value=""
                                             selected><?php echo __('none', 'xcloner-backup-and-restore') ?></option>
@@ -156,9 +156,23 @@ $available_storages     = $xcloner_remote_storage->get_available_storages();
                                         <option value="<?php echo $storage ?>"><?php echo $text ?></option>
 									<?php endforeach ?>
                                 </select>
-                                <label><?php echo __('Send To Remote Storage ', 'xcloner-backup-and-restore') ?></label>
+                                <label><?php echo __('Send To Remote Storage', 'xcloner-backup-and-restore') ?></label>
+                            </div>
+
+                            <div class="input-field col s12 l6">
+                                <div class="switch">
+                                    <label>
+                                        Off
+                                        <input type="checkbox" name="backup_delete_after_remote_transfer" id="backup_delete_after_remote_transfer" value="1">
+                                        <span class="lever"></span>
+                                        On
+                                    </label>
+                                </div>
+                                <label style="top:-0.8em"><?php echo __('Delete Local Copy After Transfer', 'xcloner-backup-and-restore') ?></label>
                             </div>
                         </div>
+
+
 					<?php endif ?>
 
                     <div class="row">

@@ -374,7 +374,7 @@ class Xcloner_Scheduler
                 call_user_func_array(array(
                     $this->xcloner_remote_storage,
                     "upload_backup_to_storage"
-                ), array($backup_file, $schedule['remote_storage']));
+                ), array($backup_file, $schedule['remote_storage'], $schedule['backup_params']->backup_delete_after_remote_transfer));
             }
         }
 
@@ -389,12 +389,6 @@ class Xcloner_Scheduler
             } catch (Exception $e) {
                 $this->logger->error($e->getMessage());
             }
-        }
-
-        //CHECK IF WE SHOULD DELETE BACKUP AFTER REMOTE TRANSFER IS DONE
-        if ($schedule['remote_storage'] && $this->xcloner_settings->get_xcloner_option('xcloner_cleanup_delete_after_remote_transfer')) {
-            $this->logger->info(sprintf("Deleting %s from local storage matching rule xcloner_cleanup_delete_after_remote_transfer", $return['extra']['backup_parent']));
-            $this->xcloner_file_system->delete_backup_by_name($return['extra']['backup_parent']);
         }
 
         //Backup Storage Cleanup

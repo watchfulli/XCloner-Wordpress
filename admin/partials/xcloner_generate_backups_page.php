@@ -113,6 +113,51 @@ $tab                    = 1;
                 </div>
             </div>
 
+            <?php if (sizeof($available_storages)): ?>
+
+                <div class="row">
+                    <div class="input-field col s12 m10 l6">
+                        <i class="material-icons prefix">cloud_upload</i>
+                        <select name="schedule_storage" id="schedule_storage" class="schedule_storage validate" >
+                                <option value="" selected><?php echo __('none', 'xcloner-backup-and-restore') ?></option>
+                                <?php foreach ($available_storages as $storage => $text): ?>
+                                    <option value="<?php echo $storage ?>"><?php echo $text ?></option>
+                                <?php endforeach ?>
+                            </select>
+                            <label><?php echo __('Send To Remote Storage', 'xcloner-backup-and-restore') ?></label>
+                    </div>
+                    <div class="hide-on-small-only m2">
+                        <a class="btn-floating tooltipped btn-small" data-position="right" data-delay="50"
+                        data-tooltip="<?php echo __('Transfer backup to the remote storage destintion once finished.', 'xcloner-backup-and-restore') ?>"
+                        data-tooltip-id=""><i class="material-icons">help_outline</i></a>
+                    </div>
+                </div>
+
+                <div class="row" id="delete_remote_storage" style="display:none">
+                    <div class="input-field col s6 m5 l4">
+                        <i class="material-icons prefix">delete</i>
+                        <label for="backup_comments"><?php echo __('Delete local copy after transfer', 'xcloner-backup-and-restore') ?></label>
+
+                    </div>
+                    <div class="input-field col s6 m5 l2">
+                        <div class="switch">
+                            <label>
+                                Off
+                                <input type="checkbox" name="backup_delete_after_remote_transfer" id="backup_delete_after_remote_transfer" value="1">
+                                <span class="lever"></span>
+                                On
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="hide-on-small-only s12 m2">
+                        <a class="btn-floating tooltipped btn-small" data-position="right" data-delay="50"
+                        data-tooltip="<?php echo __('Delete local backup file after transfer', 'xcloner-backup-and-restore') ?>"
+                        data-tooltip-id=""><i class="material-icons">help_outline</i></a>
+                    </div>
+                </div>
+			<?php endif ?>
+
             <div class="row">
                 <div class="input-field col s12 m10 l6 right-align">
                     <a class="waves-effect waves-light btn" onclick="next_tab('#database_options');"><i
@@ -376,19 +421,6 @@ $tab                    = 1;
                 </div>
             </div>
 
-			<?php if (sizeof($available_storages)): ?>
-                <div class="row">
-                    <div class="input-field col s12 m12 l7">
-                        <select name="schedule_storage" id="schedule_storage" class="validate">
-                            <option value="" selected><?php echo __('none', 'xcloner-backup-and-restore') ?></option>
-							<?php foreach ($available_storages as $storage => $text): ?>
-                                <option value="<?php echo $storage ?>"><?php echo $text ?></option>
-							<?php endforeach ?>
-                        </select>
-                        <label><?php echo __('Send To Remote Storage', 'xcloner-backup-and-restore') ?></label>
-                    </div>
-                </div>
-			<?php endif ?>
             <div class="row">
                 <div class="col s12 l7">
                     <button class="right btn waves-effect waves-light submit_schedule" type="submit"
@@ -481,6 +513,13 @@ $tab                    = 1;
 
             e.preventDefault();
             xcloner_manage_backups.cloud_upload(id)
+        })
+
+        jQuery('#schedule_storage').on('change', function(){
+            jQuery('#delete_remote_storage').hide();
+            if(jQuery(this).val()) {
+                jQuery('#delete_remote_storage').show();
+            }
         })
 
         jQuery("#generate_backup_form").on("submit", function () {

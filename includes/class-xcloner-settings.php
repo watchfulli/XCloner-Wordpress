@@ -887,6 +887,8 @@ class Xcloner_Settings
             )
         );
 
+        /*
+        //deprecated setting
         register_setting('xcloner_cleanup_settings_group', 'xcloner_cleanup_delete_after_remote_transfer', array(
             $this->xcloner_sanitization,
             "sanitize_input_as_int"
@@ -902,6 +904,7 @@ class Xcloner_Settings
                 __('Remove backup created automatically from local storage after sending the backup to Remote Storage', 'xcloner-backup-and-restore')
             )
         );
+        */
 
         //REGISTERING THE 'CRON SECTION' FIELDS
         register_setting('xcloner_cron_settings_group', 'xcloner_cron_frequency');

@@ -353,7 +353,10 @@
       }
     }
 
-    cloud_upload(backup_file) {
+    cloud_upload(backup_file, delete_after_transfer) {
+      
+      delete_after_transfer = delete_after_transfer || 0;
+
       jQuery("#remote_storage_modal").find(".backup_name").text(backup_file);
       jQuery("#remote_storage_modal")
         .find("input.backup_name")
@@ -384,6 +387,7 @@
                 action: "upload_backup_to_remote",
                 file: backup_file,
                 storage_type: storage_type,
+                delete_after_transfer: delete_after_transfer
               },
               success: function (response) {
                 if (response.error) {

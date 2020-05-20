@@ -154,9 +154,12 @@ class Xcloner_Api
             }
             $this->form_params['backup_params']['schedule_name'] = $this->xcloner_sanitization->sanitize_input_as_string($_POST['schedule_name']);
             $this->form_params['backup_params']['backup_encrypt'] = $this->xcloner_sanitization->sanitize_input_as_int($_POST['backup_encrypt']);
+            
             $this->form_params['backup_params']['start_at'] = strtotime($_POST['schedule_start_date']);
             $this->form_params['backup_params']['schedule_frequency'] = $this->xcloner_sanitization->sanitize_input_as_string($_POST['schedule_frequency']);
             $this->form_params['backup_params']['schedule_storage'] = $this->xcloner_sanitization->sanitize_input_as_string($_POST['schedule_storage']);
+            $this->form_params['backup_params']['backup_delete_after_remote_transfer'] = $this->xcloner_sanitization->sanitize_input_as_int($_POST['backup_delete_after_remote_transfer']);
+            
             $this->form_params['database'] = (stripslashes($this->xcloner_sanitization->sanitize_input_as_raw($_POST['table_params'])));
             $this->form_params['excluded_files'] = (stripslashes($this->xcloner_sanitization->sanitize_input_as_raw($_POST['excluded_files'])));
 
@@ -1249,6 +1252,7 @@ class Xcloner_Api
 
         $backup_file = $this->xcloner_sanitization->sanitize_input_as_string($_POST['file']);
         $storage_type = $this->xcloner_sanitization->sanitize_input_as_string($_POST['storage_type']);
+        $delete_local_copy_after_transfer = $this->xcloner_sanitization->sanitize_input_as_string($_POST['delete_after_transfer']);
 
         $xcloner_remote_storage = $this->get_xcloner_container()->get_xcloner_remote_storage();
 
@@ -1257,7 +1261,7 @@ class Xcloner_Api
                 $return = call_user_func_array(array(
                     $xcloner_remote_storage,
                     "upload_backup_to_storage"
-                ), array($backup_file, $storage_type));
+                ), array($backup_file, $storage_type, $delete_local_copy_after_transfer));
             }
         } catch (Exception $e) {
             $return['error'] = 1;
