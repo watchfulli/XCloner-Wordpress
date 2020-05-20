@@ -334,7 +334,7 @@ return str_replace("{type}", $type, $common_cleanup_html);
                 <!-- AWS STORAGE-->
                 <li id="aws">
                     <div class="collapsible-header">
-                        <i class="material-icons">computer</i><?php echo __("S3 Storage", 'xcloner-backup-and-restore') ?>
+                        <i class="material-icons">computer</i><?php echo __("Amazon S3 Storage", 'xcloner-backup-and-restore') ?>
                         <div class="switch right">
                             <label>
                                 Off
@@ -638,7 +638,7 @@ return str_replace("{type}", $type, $common_cleanup_html);
                 <!-- BACKBLAZE STORAGE-->
                 <li id="backblaze">
                     <div class="collapsible-header">
-                        <i class="material-icons">computer</i><?php echo __("Backblaze Storage", 'xcloner-backup-and-restore') ?>
+                        <i class="material-icons">computer</i><?php echo __("Backblaze B2 Storage", 'xcloner-backup-and-restore') ?>
                         <div class="switch right">
                             <label>
                                 Off
