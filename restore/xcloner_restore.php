@@ -370,7 +370,14 @@ class Xcloner_Restore
 				//check if line is empty	
 				if ($line == "\n" or trim($line) == "")
 					continue;
-					
+				
+				//exclude usermeta info for local restores to fix potential session logout
+                if (defined('XCLONER_PLUGIN_ACCESS') && XCLONER_PLUGIN_ACCESS) {
+                    if (strpos($line, "_usermeta`") !== false) {
+                        $line = str_replace("_usermeta`", "_usermeta2`", $line);
+                    }
+                }
+
 				if (substr($line, strlen($line) - 2, strlen($line)) == ";\n")
 					$query .= $line;
 				else {
@@ -432,7 +439,7 @@ class Xcloner_Restore
 			{
 				$return['finished'] = 0;
 			} else {
-				$this->logger->info(sprintf("Mysql Import Done."));
+				$this->logger->info(sprintf("Mysql Import Done."));	
 			}
 
 			fclose($fp);
@@ -574,6 +581,19 @@ class Xcloner_Restore
 			$this->delete_backup_temporary_folder($remote_path);
 		}
 		
+		if (defined('XCLONER_PLUGIN_ACCESS') && XCLONER_PLUGIN_ACCESS)
+		{
+						//fixing usermeta table for local restores
+						global $wpdb;
+						if ($result = $wpdb->get_var("SELECT count(*) FROM ".$wpdb->prefix."usermeta2")) {
+							if($result > 0 ) {
+								$wpdb->query("DROP TABLE IF EXISTS ".$wpdb->prefix."usermeta_backup" );
+								$wpdb->query("ALTER TABLE ".$wpdb->prefix."usermeta RENAME TO ".$wpdb->prefix."usermeta_backup" );
+								$wpdb->query("ALTER TABLE ".$wpdb->prefix."usermeta2 RENAME TO ".$wpdb->prefix."usermeta" );
+							}
+						}	
+		}
+
 		if (!defined('XCLONER_PLUGIN_ACCESS') || XCLONER_PLUGIN_ACCESS != 1)
 		{
 			if ($delete_restore_script)
