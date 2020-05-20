@@ -959,7 +959,12 @@ class Xcloner_Api
         }
         $available_storages = $this->xcloner_remote_storage->get_available_storages();
 
-        $backup_list = $this->xcloner_file_system->get_backup_archives_list($storage_selection);
+        try {
+            $backup_list = $this->xcloner_file_system->get_backup_archives_list($storage_selection);
+        }catch(Exception $e){
+            $this->send_response($return, 0);
+            return;
+        }
 
         $i = -1;
         foreach ($backup_list as $file_info):?>
