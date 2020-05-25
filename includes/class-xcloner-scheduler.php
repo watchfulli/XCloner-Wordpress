@@ -444,6 +444,11 @@ class Xcloner_Scheduler
 
         array_multisort($intervals, SORT_ASC, $new_schedules);
 
+        $new_schedules['profile'] = [
+            'interval'=> '-1',
+            'display'=> 'No execution, save as profile'
+        ];
+
         return $new_schedules;
     }
 }

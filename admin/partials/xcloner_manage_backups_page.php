@@ -7,7 +7,7 @@ $xcloner_encryption = $this->get_xcloner_container()->get_xcloner_encryption();
 $storage_selection = "";
 
 if (isset($_GET['storage_selection']) and $_GET['storage_selection']) {
-	$storage_selection = $xcloner_sanitization->sanitize_input_as_string($_GET['storage_selection']);
+    $storage_selection = $xcloner_sanitization->sanitize_input_as_string($_GET['storage_selection']);
 }
 
 //$backup_list = $xcloner_file_system->get_backup_archives_list($storage_selection);
@@ -25,7 +25,7 @@ $available_storages = $xcloner_remote_storage->get_available_storages();
         <h1><?= esc_html(get_admin_page_title()); ?></h1>
     </div>
     <?php if (sizeof($available_storages)): ?>
-    <div class="col s12 m6 l3 remote-storage-selection">
+    <div class="input-field  col s12 m6 l3 remote-storage-selection">
         <select name="storage_selection" id="storage_selection" class="validate" required>
 
             <?php if ($storage_selection): ?>
@@ -37,37 +37,41 @@ $available_storages = $xcloner_remote_storage->get_available_storages();
             <?php endif; ?>
 
             <?php foreach ($available_storages as $storage => $text): ?>
-                <option value="<?php echo $storage ?>"<?php if ($storage == $storage_selection)
-					echo "selected" ?>><?php echo $text ?></option>
+                <option value="<?php echo $storage ?>"<?php if ($storage == $storage_selection) {
+    echo "selected";
+} ?>><?php echo $text ?></option>
             <?php endforeach ?>
         </select>
         <?php endif ?>
     </div>
+    
+    <div class="col s12">
+        <table id="manage_backups" style="width:100%">
+            <thead>
+            <tr class="grey lighten-2">
+                <th class="no-sort">
+                    <p>
+                        <input name="select_all" class="" id="select_all" value="1" type="checkbox">
+                        <label for="select_all">&nbsp;</label>
+                    </p>
+                </th>
+                <th data-field="id"><?php echo __("Backup Name", 'xcloner-backup-and-restore') ?></th>
+                <th data-field="name"><?php echo __("Created Time", 'xcloner-backup-and-restore') ?></th>
+                <th data-field="name"><?php echo __("Size", 'xcloner-backup-and-restore') ?></th>
+                <th class="no-sort" data-field="price"><?php echo __("Action", 'xcloner-backup-and-restore') ?></th>
 
-    <table id="manage_backups" style="width:100%">
-        <thead>
-        <tr class="grey lighten-2">
-            <th class="no-sort">
-                <p>
-                    <input name="select_all" class="" id="select_all" value="1" type="checkbox">
-                    <label for="select_all">&nbsp;</label>
-                </p>
-            </th>
-            <th data-field="id"><?php echo __("Backup Name", 'xcloner-backup-and-restore') ?></th>
-            <th data-field="name"><?php echo __("Created Time", 'xcloner-backup-and-restore') ?></th>
-            <th data-field="name"><?php echo __("Size", 'xcloner-backup-and-restore') ?></th>
-            <th class="no-sort" data-field="price"><?php echo __("Action", 'xcloner-backup-and-restore') ?></th>
+            </tr>
+            </thead>
 
-        </tr>
-        </thead>
+            <tbody>
 
-        <tbody>
-
-        </tbody>
-    </table>
-
-    <a class="waves-effect waves-light btn delete-all"><i
+            </tbody>
+        </table>
+        
+        <a class="waves-effect waves-light btn delete-all"><i
                 class="material-icons left">delete</i><?php echo __("Delete", 'xcloner-backup-and-restore') ?></a>
+    </div>        
+
 
     <!-- List Backup Content Modal-->
     <div id="backup_cotent_modal" class="modal">
@@ -162,8 +166,10 @@ $available_storages = $xcloner_remote_storage->get_available_storages();
                     <?php if (sizeof($available_storages)): ?>
                 <div class="row">
                     <div class="col s12 label">
-                        <label><?php echo sprintf(__('Send %s to remote storage', 'xcloner-backup-and-restore'),
-								"<span class='backup_name'></span>") ?></label>
+                        <label><?php echo sprintf(
+    __('Send %s to remote storage', 'xcloner-backup-and-restore'),
+    "<span class='backup_name'></span>"
+) ?></label>
                     </div>
                     <div class="input-field col s8 m10">
                         <select name="transfer_storage" id="transfer_storage" class="validate" required>
@@ -193,4 +199,3 @@ $available_storages = $xcloner_remote_storage->get_available_storages();
             </div>
         </form>
     </div>
-

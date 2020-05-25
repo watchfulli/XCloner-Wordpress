@@ -114,9 +114,9 @@ jQuery(document).ready(function () {
 
       this.edit_modal.find("#excluded_files").val(exclude_files_list);
 
-      jQuery(".col select").material_select();
+      jQuery(".col select").formSelect();
 
-      Materialize.updateTextFields();
+      M.updateTextFields();
 
       this.edit_modal.modal("open");
     }
@@ -241,7 +241,7 @@ jQuery(document).ready(function () {
     });
   }
 
-  if (typeof jQuery(".timepicker").pickatime === "function") {
+  if (typeof jQuery(".timepicker").pickadate === "function") {
     date_picker = jQuery(".datepicker").pickadate({
       format: "d mmmm yyyy",
       selectMonths: true, // Creates a dropdown to control month

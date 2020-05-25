@@ -8,6 +8,7 @@
       this.storage_selection = "";
       this.dataTable = "";
       //this.edit_modal = jQuery('.modal').modal();
+      
     }
 
     download_backup_by_name(id) {
@@ -361,8 +362,8 @@
       jQuery("#remote_storage_modal")
         .find("input.backup_name")
         .val(backup_file);
-      Materialize.updateTextFields();
-      jQuery(".col select").material_select();
+      M.updateTextFields();
+      jQuery(".col select").formSelect();
       jQuery("#remote_storage_modal").modal("open");
       jQuery("#remote_storage_modal .status").hide();
 

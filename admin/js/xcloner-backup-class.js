@@ -114,7 +114,9 @@ class Xcloner_Backup {
 
         var elem = "#generate_backup ul.backup-status li.database-backup";
         jQuery(elem).show();
-        jQuery(elem + ' .status-body').show();
+        //jQuery(elem + ' .status-body').show();
+
+        jQuery(elem).find('.collapsible-header').trigger('click');
 
         jQuery(elem).find(".total-records").text(0);
         jQuery(elem).find(".total-records").attr('data-processed', 0);

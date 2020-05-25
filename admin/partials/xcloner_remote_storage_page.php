@@ -11,9 +11,9 @@ $gdrive_construct = $remote_storage->gdrive_construct();
 ?>
 
 <?php
-function common_cleanup_html($type){
-ob_start();
-?>
+function common_cleanup_html($type)
+{
+    ob_start(); ?>
 <!-- Cleanup by Days -->
 <div class="row">
                             <div class="col s12 m3 label">
@@ -66,9 +66,9 @@ ob_start();
                         </div>
 <?php
 $common_cleanup_html = ob_get_contents();
-ob_end_clean();
+    ob_end_clean();
 
-return str_replace("{type}", $type, $common_cleanup_html);
+    return str_replace("{type}", $type, $common_cleanup_html);
 }
 
 ?>                        
@@ -154,17 +154,24 @@ return str_replace("{type}", $type, $common_cleanup_html);
                                 <label for="ftp_root"><?php echo __("Ftp Transfer Mode", 'xcloner-backup-and-restore') ?></label>
                             </div>
                             <div class=" col s12 m6 input-field inline">
-                                <input name="xcloner_ftp_transfer_mode" type="radio" id="passive"
-                                       value="1" <?php if (get_option("xcloner_ftp_transfer_mode", 1)) {
-    echo "checked";
-} ?> />
-                                <label for="passive"><?php echo __("Passive", 'xcloner-backup-and-restore') ?></label>
-
-                                <input name="xcloner_ftp_transfer_mode" type="radio" id="active"
-                                       value="0" <?php if (!get_option("xcloner_ftp_transfer_mode", 1)) {
-    echo "checked";
-} ?> />
-                                <label for="active"><?php echo __("Active", 'xcloner-backup-and-restore') ?></label>
+                            <p>
+                                <label for="passive">
+                                    <input name="xcloner_ftp_transfer_mode" type="radio" id="passive"
+                                        value="1" <?php if (get_option("xcloner_ftp_transfer_mode", 1)) {
+        echo "checked";
+    } ?> />
+                                    <span><?php echo __("Passive", 'xcloner-backup-and-restore') ?></span>
+                                </label>
+                            </p>
+                            <p>
+                                <label for="active">
+                                    <input name="xcloner_ftp_transfer_mode" type="radio" id="active"
+                                        value="0" <?php if (!get_option("xcloner_ftp_transfer_mode", 1)) {
+        echo "checked";
+    } ?> />
+                                    <span><?php echo __("Active", 'xcloner-backup-and-restore') ?></span>
+                                </label>
+                            </p>
                             </div>
                         </div>
 
@@ -173,17 +180,22 @@ return str_replace("{type}", $type, $common_cleanup_html);
                                 <label for="ftp_ssl_mode"><?php echo __("Ftp Secure Connection", 'xcloner-backup-and-restore') ?></label>
                             </div>
                             <div class=" col s12 m6 input-field inline">
-                                <input name="xcloner_ftp_ssl_mode" type="radio" id="ftp_ssl_mode_inactive"
-                                       value="0" <?php if (!get_option("xcloner_ftp_ssl_mode")) {
-    echo "checked";
-} ?> />
-                                <label for="ftp_ssl_mode_inactive"><?php echo __("Disable", 'xcloner-backup-and-restore') ?></label>
-
+                                <p>
+                                    <label for="ftp_ssl_mode_inactive">
+                                    <input name="xcloner_ftp_ssl_mode" type="radio" id="ftp_ssl_mode_inactive"
+                                        value="0" <?php if (!get_option("xcloner_ftp_ssl_mode")) {
+        echo "checked";
+    } ?> />
+                                    <span><?php echo __("Disable", 'xcloner-backup-and-restore') ?></span>
+                                </label></p>
+                                <p>
+                                <label for="ftp_ssl_mode_active">
                                 <input name="xcloner_ftp_ssl_mode" type="radio" id="ftp_ssl_mode_active"
                                        value="1" <?php if (get_option("xcloner_ftp_ssl_mode")) {
     echo "checked";
 } ?> />
-                                <label for="ftp_ssl_mode_active"><?php echo __("Enable", 'xcloner-backup-and-restore') ?></label>
+                                <span><?php echo __("Enable", 'xcloner-backup-and-restore') ?></span>
+                                </label></p>
                             </div>
                         </div>
 
@@ -927,17 +939,24 @@ return str_replace("{type}", $type, $common_cleanup_html);
                                     <label for="gdrive_empty_trash"><?php echo __("Automatically Empty Trash?", 'xcloner-backup-and-restore') ?></label>
                                 </div>
                                 <div class=" col s12 m6 input-field inline">
-                                    <input name="xcloner_gdrive_empty_trash" type="radio" value="0"
-                                           id="gdrive_empty_trash_off" <?php if (!get_option("xcloner_gdrive_empty_trash", 0)) {
-                                        echo "checked";
-                                    } ?> />
-                                    <label for="gdrive_empty_trash_off"><?php echo __("Disabled", 'xcloner-backup-and-restore') ?></label>
-
-                                    <input name="xcloner_gdrive_empty_trash" type="radio" value="1"
-                                           id="gdrive_empty_trash_on" <?php if (get_option("xcloner_gdrive_empty_trash", 0)) {
-                                        echo "checked";
-                                    } ?> />
-                                    <label for="gdrive_empty_trash_on"><?php echo __("Enabled", 'xcloner-backup-and-restore') ?></label>
+                                    <p>
+                                    <label for="gdrive_empty_trash_off">
+                                        <input name="xcloner_gdrive_empty_trash" type="radio" value="0"
+                                            id="gdrive_empty_trash_off" <?php if (!get_option("xcloner_gdrive_empty_trash", 0)) {
+                                            echo "checked";
+                                        } ?> />
+                                        <span><?php echo __("Disabled", 'xcloner-backup-and-restore') ?></span>
+                                    </label>
+                                    </p>
+                                    <p>
+                                        <label for="gdrive_empty_trash_on">
+                                        <input name="xcloner_gdrive_empty_trash" type="radio" value="1"
+                                            id="gdrive_empty_trash_on" <?php if (get_option("xcloner_gdrive_empty_trash", 0)) {
+                                            echo "checked";
+                                        } ?> />
+                                        <span><?php echo __("Enabled", 'xcloner-backup-and-restore') ?></span>
+                                    </label>
+                                    </p>
                                 </div>
                             </div>
 
@@ -1043,7 +1062,7 @@ return str_replace("{type}", $type, $common_cleanup_html);
 
         jQuery('.collapsible').collapsible();
 
-        Materialize.updateTextFields();
+        M.updateTextFields();
 
 
     });

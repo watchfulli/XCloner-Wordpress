@@ -108,16 +108,8 @@ $available_storages     = $xcloner_remote_storage->get_available_storages();
                                     On
                                 </label>
                             </div>
-                            <label style="top:-0.8em">Encrypt Backup</label>
+                            <label style="top:-1.8em"><?php echo __('Encrypt Backup', 'xcloner-backup-and-restore') ?></label>
                         </div>
-                        <!--<div class="input-field inline col s12 l6">
-						<select id="backup_type" class="" name="backup_type" id="backup_type">
-							<option value=""><?php echo __("Full Backup", "xcloner-backup-and-restore"); ?></option>
-							<option value="diff"><?php echo __("Differential Backups", "xcloner-backup-and-restore"); ?></option>
-							<option value="full_diff"><?php echo __("Full Backup + Differential Backups", "xcloner-backup-and-restore"); ?></option>
-						</select>
-						<label for="backup_type"><?php echo __('Scheduled Backup Type', 'xcloner-backup-and-restore') ?></label>
-					</div>-->
                     </div>
 
                     <div class="row">
@@ -168,7 +160,7 @@ $available_storages     = $xcloner_remote_storage->get_available_storages();
                                         On
                                     </label>
                                 </div>
-                                <label style="top:-0.8em"><?php echo __('Delete Local Copy After Transfer', 'xcloner-backup-and-restore') ?></label>
+                                <label style="top:-1.8em"><?php echo __('Delete Local Copy After Transfer', 'xcloner-backup-and-restore') ?></label>
                             </div>
                         </div>
 
