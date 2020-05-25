@@ -89,7 +89,7 @@ class Xcloner_Admin {
 		 */
 
 		wp_enqueue_style($this->plugin_name."_materialize", plugin_dir_url(__FILE__).'css/materialize.min.css', array(), $this->version, 'all');
-		wp_enqueue_style($this->plugin_name."_materialize.clockpicker", plugin_dir_url(__FILE__).'css/materialize.clockpicker.css', array(), $this->version, 'all');
+		//wp_enqueue_style($this->plugin_name."_materialize.clockpicker", plugin_dir_url(__FILE__).'css/materialize.clockpicker.css', array(), $this->version, 'all');
 		wp_enqueue_style($this->plugin_name."_materialize.icons", '//fonts.googleapis.com/icon?family=Material+Icons', array(), $this->version, 'all');
 		wp_enqueue_style($this->plugin_name."_jquery.datatables", plugin_dir_url(__FILE__).'css/jquery.dataTables.min.css', array(), $this->version, 'all');
 		wp_enqueue_style($this->plugin_name."_jquery.datatables.responsive", plugin_dir_url(__FILE__).'css/responsive.dataTables.css', array(), $this->version, 'all');
@@ -125,7 +125,7 @@ class Xcloner_Admin {
 		wp_enqueue_script('plugin-install');
 		wp_enqueue_script('updates');
 		wp_enqueue_script($this->plugin_name."_materialize", plugin_dir_url(__FILE__).'js/materialize.min.js', array('jquery'), $this->version, false);
-		wp_enqueue_script($this->plugin_name."_materialize.clockpicker", plugin_dir_url(__FILE__).'js/materialize.clockpicker.js', array('jquery'), $this->version, false);
+		//wp_enqueue_script($this->plugin_name."_materialize.clockpicker", plugin_dir_url(__FILE__).'js/materialize.clockpicker.js', array('jquery'), $this->version, false);
 		wp_enqueue_script($this->plugin_name."_jquery.datatables", plugin_dir_url(__FILE__).'js/jquery.dataTables.min.js', array('jquery'), $this->version, false);
 		wp_enqueue_script($this->plugin_name."_jquery.datatables.respnsive", plugin_dir_url(__FILE__).'js/dataTables.responsive.js', array('jquery'), $this->version, false);
 		wp_enqueue_script($this->plugin_name."_vakata", dirname(plugin_dir_url(__FILE__)).'/vendor/vakata/jstree/dist/jstree.min.js', array('jquery'), '3.3', false);

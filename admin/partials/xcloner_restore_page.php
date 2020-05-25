@@ -19,7 +19,7 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 
 <div class="row xcloner-restore">
     <div class="col s12">
-        <ul class="collapsible xcloner-restore " data-collapsible="accordion">
+        <ul class="collapsible xcloner-restore collapsible-accordion" data-collapsible="accordion">
             <li data-step="1" class="restore-script-upload-step steps active show">
                 <div class="collapsible-header active"><i
                             class="material-icons">settings_remote</i><?php echo __("Restore Script Upload", 'xcloner-backup-and-restore') ?>
@@ -67,7 +67,7 @@ $backup_list = $xcloner_file_system->get_latest_backups();
             </li>
 
             <li data-step="2" class="backup-upload-step steps">
-                <div class="collapsible-header active"><i
+                <div class="collapsible-header "><i
                             class="material-icons">file_upload</i><?php echo __("Upload Local Backup Archive To Target Host", 'xcloner-backup-and-restore') ?>
                 </div>
                 <div class="collapsible-body row">
@@ -112,7 +112,7 @@ $backup_list = $xcloner_file_system->get_latest_backups();
                 </div>
             </li>
 
-            <li data-step="3" class="restore-remote-backup-step steps active">
+            <li data-step="3" class="restore-remote-backup-step steps ">
                 <div class="collapsible-header"><i
                             class="material-icons">folder_open</i><?php echo __("Restore Files Backup Available On Target Location", 'xcloner-backup-and-restore') ?>
                     <i class="material-icons right" title="Refresh Target Backup Files List"
@@ -234,7 +234,7 @@ $backup_list = $xcloner_file_system->get_latest_backups();
                 </div>
             </li>
 
-            <li data-step="4" class="restore-remote-database-step steps active">
+            <li data-step="4" class="restore-remote-database-step steps ">
                 <div class="collapsible-header"><i
                             class="material-icons">list</i><?php echo __("Restore Target Database - Search and Replace", 'xcloner-backup-and-restore') ?>
                     <i class="material-icons right" title="Refresh Database Backup Files List"
@@ -361,7 +361,7 @@ $backup_list = $xcloner_file_system->get_latest_backups();
                 </div>
             </li>
 
-            <li data-step="5" class="restore-finish-step steps active">
+            <li data-step="5" class="restore-finish-step steps ">
                 <div class="collapsible-header"><i
                             class="material-icons">folder_open</i><?php echo __("Finishing up...", 'xcloner-backup-and-restore') ?>
                 </div>
