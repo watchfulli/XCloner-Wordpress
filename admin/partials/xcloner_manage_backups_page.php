@@ -51,8 +51,11 @@ $available_storages = $xcloner_remote_storage->get_available_storages();
             <tr class="grey lighten-2">
                 <th class="no-sort">
                     <p>
+                    <label for="select_all">
                         <input name="select_all" class="" id="select_all" value="1" type="checkbox">
-                        <label for="select_all">&nbsp;</label>
+                        <span>&nbsp;</span>
+                    </label>
+
                     </p>
                 </th>
                 <th data-field="id"><?php echo __("Backup Name", 'xcloner-backup-and-restore') ?></th>

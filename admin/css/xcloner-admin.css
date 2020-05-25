@@ -215,7 +215,7 @@ a.expand-multipart.remove {
 }
 
 .remote-storage .collapsible-header {
-    padding: 2px 5px;
+    padding: 10px;
     display: block;
     line-height: 25px;
 }
@@ -430,6 +430,9 @@ i.backup_warning {
     margin-top: 20px;
 }
 
+.collapsible-header i {
+    vertical-align: middle;
+}
 
 @media only screen and (min-width: 993px) {
     .dashboard .backup-ready {

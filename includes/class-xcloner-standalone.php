@@ -14,7 +14,7 @@ require_once(__DIR__ . '/../includes/class-xcloner.php');
 
 class Xcloner_Standalone extends Xcloner
 {
-    public function __construct($json_config)
+    public function __construct($json_config = "")
     {
         if (WP_DEBUG && WP_DEBUG_DISPLAY) {
             $this->log_php_errors();
@@ -60,7 +60,7 @@ class Xcloner_Standalone extends Xcloner
      *
      * @return void
      */
-    public function start()
+    public function start($profile_id)
     {
         $profile_config = ($this->xcloner_settings->get_xcloner_option('profile'));
 
@@ -68,8 +68,13 @@ class Xcloner_Standalone extends Xcloner
         $data['backup_params']          = $profile_config->backup_params;
         $data['table_params']           = json_encode($profile_config->database);
         $data['excluded_files']         = json_encode($profile_config->excluded_files);
+        if (isset($profile_id) && $profile_id) {
+            $data['id']                     = $profile_id;
+        }
 
-        return $this->xcloner_scheduler->xcloner_scheduler_callback(null, $data, $this);
+        //print_r($data);exit;
+
+        return $this->xcloner_scheduler->xcloner_scheduler_callback($data['id'], $data, $this);
     }
 
     /**

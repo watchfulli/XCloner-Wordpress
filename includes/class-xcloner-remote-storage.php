@@ -274,7 +274,7 @@ class Xcloner_Remote_Storage
                 $return[$storage] = $data['text'];
             }
         }
-
+        
         return $return;
     }
 

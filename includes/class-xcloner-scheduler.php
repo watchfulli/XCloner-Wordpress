@@ -74,9 +74,35 @@ class Xcloner_Scheduler
     {
         $data = $this->db->get_row("SELECT * FROM ".$this->scheduler_table." WHERE id=".$id);
 
+        if (!$data) {
+            return false;
+        }
+
         return $data;
     }
 
+    /**
+     * Get schedule by id or name
+     *
+     * @param [type] $id
+     * @return array
+     */
+    public function get_schedule_by_id_or_name($id) {
+        $data = $this->db->get_row("SELECT * FROM ".$this->scheduler_table." WHERE id='".$id."' or name='".$id."'", ARRAY_A);
+
+        if (!$data) {
+            return false;
+        }
+
+        return $data;
+    }
+
+    /**
+     * Get schedule by id
+     *
+     * @param [type] $id
+     * @return array
+     */
     public function get_schedule_by_id($id)
     {
         $data = $this->db->get_row("SELECT * FROM ".$this->scheduler_table." WHERE id=".$id, ARRAY_A);
@@ -363,7 +389,7 @@ class Xcloner_Scheduler
                 }
             }
         }
-
+        
         //Sending backup to remote storage
         if (isset($schedule['remote_storage']) && $schedule['remote_storage'] && array_key_exists($schedule['remote_storage'], $this->xcloner_remote_storage->get_available_storages())) {
             $backup_file = $return['extra']['backup_parent'];

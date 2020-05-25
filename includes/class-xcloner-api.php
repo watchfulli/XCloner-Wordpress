@@ -983,9 +983,11 @@ class Xcloner_Api
 
                 <?php ob_start(); ?>
                         <p>
+                        <label for="checkbox_<?php echo $i ?>">
                             <input name="backup[]" value="<?php echo $file_info['basename'] ?>" type="checkbox"
                                    id="checkbox_<?php echo ++$i ?>">
-                            <label for="checkbox_<?php echo $i ?>">&nbsp;</label>
+                            <span>&nbsp;</span>
+                        </label>
                         </p>
                 <?php
                 $return['data'][$i][] = ob_get_contents();
