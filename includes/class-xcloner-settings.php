@@ -829,7 +829,7 @@ class Xcloner_Settings
         ));
         add_settings_field(
             'xcloner_cleanup_retention_limit_days',
-            __('Cleanup by Date(days)', 'xcloner-backup-and-restore'),
+            __('Cleanup by Age(days)', 'xcloner-backup-and-restore'),
             array($this, 'do_form_number_field'),
             'xcloner_cleanup_settings_page',
             'xcloner_cleanup_settings_group',

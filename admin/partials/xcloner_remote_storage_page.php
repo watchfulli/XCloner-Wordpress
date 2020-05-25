@@ -17,7 +17,7 @@ function common_cleanup_html($type)
 <!-- Cleanup by Days -->
 <div class="row">
                             <div class="col s12 m3 label">
-                                <label for="{type}_cleanup_retention_limit_days"><?php echo __("Cleanup Days", 'xcloner-backup-and-restore') ?></label>
+                                <label for="{type}_cleanup_retention_limit_days"><?php echo __("Cleanup by Age", 'xcloner-backup-and-restore') ?></label>
                             </div>
                             <div class=" col s12 m6">
                                 <input placeholder="<?php echo __("how many days to keep the backups for", 'xcloner-backup-and-restore') ?>"
