@@ -271,7 +271,7 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 
 
                             <div class="input-field  col s12 m6">
-                                <input type="text" name="remote_mysql_pass" id="remote_mysql_pass" class="validate"
+                                <input type="password" name="remote_mysql_pass" id="remote_mysql_pass" class="validate"
                                        placeholder="Target Mysql Password">
                                 <label><?php echo __("Target Mysql Password", 'xcloner-backup-and-restore') ?></label>
                             </div>
