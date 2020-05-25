@@ -749,7 +749,7 @@ class Xcloner_Api
                 $backup_text = "<span title='".$backup_time."' class='shorten_string'>".$res->last_backup." (".$backup_size.")</span>";
             }
 
-            $schedules = wp_get_schedules();
+            $schedules = $this->xcloner_scheduler->get_available_intervals();
 
             if (isset($schedules[$res->recurrence])) {
                 $res->recurrence = $schedules[$res->recurrence]['display'];

@@ -472,7 +472,7 @@ class Xcloner_Scheduler
 
         $new_schedules['profile'] = [
             'interval'=> '-1',
-            'display'=> 'No execution, save as profile'
+            'display'=> 'Manual Execution'
         ];
 
         return $new_schedules;
