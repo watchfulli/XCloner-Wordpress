@@ -953,6 +953,111 @@ class Xcloner_Archive extends Tar
         return $return;
     }
 
+    /**
+     * Extract archive contents
+     *
+     * @param [type] $outdir
+     * @param string $strip
+     * @param string $exclude
+     * @param string $include
+     * @param integer $files_limit
+     * @return void
+     */
+    public function extract($outdir, $strip = '', $exclude = '', $include = '', $files_limit = 0)
+    {
+
+        if ($this->closed || !$this->file) {
+            throw new ArchiveIOException('Can not read from a closed archive');
+        }
+
+        $outdir = rtrim($outdir, '/');
+        if(!is_dir($outdir))
+				@mkdir($outdir, 0755, true);
+			else
+				@chmod($outdir, 0777);
+
+        //@mkdir($outdir, 0777, true);
+
+        if (!is_dir($outdir)) {
+            throw new ArchiveIOException("Could not create directory '$outdir'");
+        }
+
+		$files_counter = 0;
+		$return = array();
+
+        $extracted = array();
+        while ($dat = $this->readbytes(512)) {
+            // read the file header
+            $header = $this->parseHeader($dat);
+            if (!is_array($header)) {
+                continue;
+            }
+
+            if($files_limit)
+            {
+				if(++$files_counter > $files_limit)
+				{
+					$return['extracted_files'] = $extracted;
+					$return['start'] = ftell($this->fh)-512;
+					return $return;
+				}
+			}
+
+            $fileinfo = $this->header2fileinfo($header);
+
+            // apply strip rules
+            $fileinfo->strip($strip);
+
+            // skip unwanted files
+            if (!strlen($fileinfo->getPath()) || !$fileinfo->match($include, $exclude)) {
+                $this->skipbytes(ceil($header['size'] / 512) * 512);
+                continue;
+            }
+
+            // create output directory
+            $output    = $outdir.'/'.$fileinfo->getPath();
+            $directory = ($fileinfo->getIsdir()) ? $output : dirname($output);
+            if(!is_dir($directory))
+				@mkdir($directory, 0755, true);
+			else
+				@chmod($directory, 0755);
+
+            // extract data
+            if (!$fileinfo->getIsdir()) {
+				if(file_exists($output))
+					unlink($output);
+
+                $fp = fopen($output, "wb");
+                if (!$fp) {
+                    throw new ArchiveIOException('Could not open file for writing: '.$output);
+                }
+
+                $size = floor($header['size'] / 512);
+                for ($i = 0; $i < $size; $i++) {
+                    fwrite($fp, $this->readbytes(512), 512);
+                }
+                if (($header['size'] % 512) != 0) {
+                    fwrite($fp, $this->readbytes(512), $header['size'] % 512);
+                }
+
+                fclose($fp);
+                touch($output, $fileinfo->getMtime());
+                chmod($output, $fileinfo->getMode());
+            } else {
+                //$this->skipbytes(ceil($header['size'] / 512) * 512); // the size is usually 0 for directories
+                $this->skipbytes(ceil(0 / 512) * 512); // the size is usually 0 for directories
+            }
+
+            $extracted[] = $fileinfo;
+        }
+
+        $this->close();
+
+        $return['extracted_files'] = $extracted;
+
+        return $return;
+    }
+
 
 
     /**
