@@ -14,7 +14,7 @@ if (!defined('XCLONER_PLUGIN_ACCESS') || XCLONER_PLUGIN_ACCESS != 1)
 {	
 	if (!AUTH_KEY)
 	{
-			Xcloner_Restore::send_response("404", "Could not run restore script, AUTH_KEY not set!");
+			Xcloner_Restore::send_response("404", "Could not run restore script, AUTH_KEY not set! Your should not access this script directly, it's url should go inside the XCloner Restore area from where you downloaded this script.");
 			exit;
 	}
 	
@@ -26,7 +26,7 @@ if (!defined('XCLONER_PLUGIN_ACCESS') || XCLONER_PLUGIN_ACCESS != 1)
 	
 	if ($_REQUEST['hash'] != AUTH_KEY)
 	{
-			Xcloner_Restore::send_response("404", "Could not run restore script, AUTH_KEY doesn't match the sent HASH!");
+			Xcloner_Restore::send_response("404", "Could not run restore script, AUTH_KEY doesn't match the sent HASH. Please replace the restore script on the remote/target host with a new copy downloaded from the local site and try again.");
 			exit;
 	}
 }
