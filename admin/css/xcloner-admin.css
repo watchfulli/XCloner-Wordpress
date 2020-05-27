@@ -434,6 +434,10 @@ i.backup_warning {
     vertical-align: middle;
 }
 
+#backup-status .title{
+    display: inline;
+}
+
 @media only screen and (min-width: 993px) {
     .dashboard .backup-ready {
         float: right;

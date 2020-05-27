@@ -54,7 +54,9 @@ class Xcloner_Scheduler
             foreach ($list as $res) {
                 if ($res->status) {
                     $res->next_run_time = wp_next_scheduled('xcloner_scheduler_'.$res->id, array($res->id)) + ($this->xcloner_settings->get_xcloner_option('gmt_offset') * HOUR_IN_SECONDS);
-                    $new_list[]         = $res;
+                    if ($res->next_run_time) {
+                        $new_list[]         = $res;
+                    }
                 }
             }
             $list = $new_list;
@@ -302,7 +304,7 @@ class Xcloner_Scheduler
             $this->update_hash($schedule['id'], $this->xcloner_settings->get_hash());
         }
 
-        $this->logger->info(sprintf("Starting cron schedule '%s'", $schedule['name']), array("CRON"));
+        $this->logger->info(sprintf("Starting backup profile '%s'", $schedule['name']), array("CRON"));
 
         $this->xcloner_file_system->set_excluded_files(json_decode($schedule['excluded_files']));
 

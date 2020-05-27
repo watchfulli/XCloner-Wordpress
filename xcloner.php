@@ -24,6 +24,41 @@
  * Domain Path:       /languages
  */
 
+  // detect CLI mode
+  if (php_sapi_name() == "cli") {
+	  define('WP_DEBUG', true);
+	  define('WP_DEBUG_DISPLAY', true);
+	 
+	  if (file_exists(__DIR__ . "/../../../wp-load.php")) {
+		  require_once(__DIR__ .'/../../../wp-load.php');
+	  }
+	 
+	  require_once(__DIR__ . '/includes/class-xcloner-standalone.php');
+	 
+	  $profile = [
+		 'id' => 0
+	 ];
+	 
+	  if (isset($argv[1]) && $argv[1]) {
+		  $profile_name = $argv[1];
+	  }
+	 
+	  //pass json config to Xcloner_Standalone lib
+	  $xcloner_backup = new Xcloner_Standalone();
+	 
+	  if (isset($profile_name) && $profile_name) {
+		  $profile = ($xcloner_backup->xcloner_scheduler->get_schedule_by_id_or_name($profile_name));
+	  }
+	 
+      if ($profile['id']) {
+          $xcloner_backup->start($profile['id']);
+      }else{
+		  die("Could not find profile ". $profile_name);
+	  }
+
+	  return;
+  }
+
 // If this file is called directly, abort.
 if (!defined('WPINC')) {
 	die;
