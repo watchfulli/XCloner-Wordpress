@@ -39,6 +39,8 @@
 		 'id' => 0
 	 ];
 	 
+	 $profile_name = "undefined";
+
 	  if (isset($argv[1]) && $argv[1]) {
 		  $profile_name = $argv[1];
 	  }
@@ -53,7 +55,7 @@
       if ($profile['id']) {
           $xcloner_backup->start($profile['id']);
       }else{
-		  die("Could not find profile ". $profile_name);
+		  die("Could not find profile ". $profile_name."\n");
 	  }
 
 	  return;
