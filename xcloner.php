@@ -26,8 +26,16 @@
 
   // detect CLI mode
   if (php_sapi_name() == "cli") {
-	  define('WP_DEBUG', true);
-	  define('WP_DEBUG_DISPLAY', true);
+
+	$opts = getopt('v::p:');
+
+    if (isset($opts['v'])) {
+        define('WP_DEBUG', true);
+        define('WP_DEBUG_DISPLAY', true);
+    }else{
+		define('WP_DEBUG', false);
+        define('WP_DEBUG_DISPLAY', false);
+	}
 	 
 	  if (file_exists(__DIR__ . "/../../../wp-load.php")) {
 		  require_once(__DIR__ .'/../../../wp-load.php');
@@ -41,8 +49,8 @@
 	 
 	 $profile_name = "undefined";
 
-	  if (isset($argv[1]) && $argv[1]) {
-		  $profile_name = $argv[1];
+	  if (isset($opts['p']) && $opts['p']) {
+		  $profile_name = $opts['p'];
 	  }
 	 
 	  //pass json config to Xcloner_Standalone lib
