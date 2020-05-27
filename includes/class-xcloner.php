@@ -100,7 +100,7 @@ class Xcloner
         $this->log_php_errors();
 
         $this->plugin_name = 'xcloner';
-        $this->version = '4.0.4';
+        $this->version = '4.2.0';
 
         $this->load_dependencies();
         $this->set_locale();
