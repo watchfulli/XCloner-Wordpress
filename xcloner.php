@@ -55,7 +55,7 @@
       if ($profile['id']) {
           $xcloner_backup->start($profile['id']);
       }else{
-		  die("Could not find profile ". $profile_name."\n");
+		  die("Could not find profile ". $profile_name." \n");
 	  }
 
 	  return;
