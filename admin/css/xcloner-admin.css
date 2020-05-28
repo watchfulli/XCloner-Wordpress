@@ -438,6 +438,10 @@ i.backup_warning {
     display: inline;
 }
 
+.wp-core-ui select {
+    max-width: initial;
+}
+
 @media only screen and (min-width: 993px) {
     .dashboard .backup-ready {
         float: right;
