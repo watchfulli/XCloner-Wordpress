@@ -602,6 +602,7 @@
               .parent()
               .parent()
               .parent()
+              .parent()
               .find(".delete")
               .trigger("click");
           }
