@@ -20,7 +20,7 @@ if (!defined('XCLONER_PLUGIN_ACCESS') || XCLONER_PLUGIN_ACCESS != 1)
 	
 	if (!isset($_REQUEST['hash']))
 	{
-			Xcloner_Restore::send_response("404", "Could not run restore script directly. Enter the URL above in the Restore Backup area of XCloner and click Check Connection.!");
+			Xcloner_Restore::send_response("404", "Could not run restore script directly. Enter the URL above in the `Restore Backup` area of XCloner and click `Check Connection`.");
 			exit;
 	}
 	
