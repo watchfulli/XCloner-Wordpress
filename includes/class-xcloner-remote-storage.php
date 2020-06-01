@@ -834,8 +834,6 @@ class Xcloner_Remote_Storage
             'privateKey' => $this->xcloner_settings->get_xcloner_option("xcloner_sftp_private_key"),
             'timeout' => $this->xcloner_settings->get_xcloner_option("xcloner_sftp_timeout", 30),
             'directoryPerm' => 0755
-        
-
         ]);
 
         $filesystem = new Filesystem($adapter, new Config([
