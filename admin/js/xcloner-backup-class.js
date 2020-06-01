@@ -114,7 +114,9 @@ class Xcloner_Backup {
 
         var elem = "#generate_backup ul.backup-status li.database-backup";
         jQuery(elem).show();
-        jQuery(elem + ' .status-body').show();
+        //jQuery(elem + ' .status-body').show();
+
+        jQuery(elem).find('.collapsible-header').trigger('click');
 
         jQuery(elem).find(".total-records").text(0);
         jQuery(elem).find(".total-records").attr('data-processed', 0);
@@ -248,6 +250,19 @@ class Xcloner_Backup {
         if( jQuery('#backup_options #backup_encrypt').is(':checked')) {
             this.do_backup_encryption();
             return;
+        }
+
+        var remote_storage = jQuery('#schedule_storage').val() 
+        
+        // sending backup to remote storage automatically
+        if( remote_storage) {
+            var delete_backup_after_transfer = Number(jQuery("#backup_delete_after_remote_transfer").is(":checked"));
+
+            jQuery('#remote_storage_modal #transfer_storage').val(remote_storage)
+            //jQuery(".backup-done .cloud-upload").trigger('click')
+            var xcloner_manage_backups = new Xcloner_Manage_Backups();
+            xcloner_manage_backups.cloud_upload(json.extra.backup_parent, delete_backup_after_transfer)
+            jQuery("#remote_storage_modal .upload-submit").trigger('click')
         }
 
         //this.restart_backup();

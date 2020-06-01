@@ -100,7 +100,7 @@ class Xcloner
         $this->log_php_errors();
 
         $this->plugin_name = 'xcloner';
-        $this->version = '4.0.4';
+        $this->version = '4.2.0';
 
         $this->load_dependencies();
         $this->set_locale();
@@ -114,7 +114,8 @@ class Xcloner
         $this->define_cron_hooks();
     }
 
-    public function log_php_errors(){
+    public function log_php_errors()
+    {
         register_shutdown_function(array($this, 'exception_handler'));
     }
 
@@ -163,9 +164,9 @@ class Xcloner
             if (!@mkdir($backup_storage_path)) {
                 $status = "error";
                 $message = sprintf(
-                        __("Unable to create the Backup Storage Location Folder %s . Please fix this before starting the backup process."),
-                        $backup_storage_path
-                    );
+                    __("Unable to create the Backup Storage Location Folder %s . Please fix this before starting the backup process."),
+                    $backup_storage_path
+                );
                 $this->trigger_message($message, $status, $backup_storage_path);
                 return;
             }
@@ -174,9 +175,9 @@ class Xcloner
         if (!is_writable($backup_storage_path)) {
             $status = "error";
             $message = sprintf(
-                    __("Unable to write to the Backup Storage Location Folder %s . Please fix this before starting the backup process."),
-                    $backup_storage_path
-                );
+                __("Unable to write to the Backup Storage Location Folder %s . Please fix this before starting the backup process."),
+                $backup_storage_path
+            );
             $this->trigger_message($message, $status, $backup_storage_path);
 
             return;
@@ -186,12 +187,12 @@ class Xcloner
     }
 
     public function trigger_message($message, $status = "error", $message_param1 = "", $message_param2 = "", $message_param3 = "")
-    {        
+    {
         $message = sprintf(__($message), $message_param1, $message_param2, $message_param3);
         add_action('xcloner_admin_notices', array($this, "trigger_message_notice"), 10, 2);
         do_action('xcloner_admin_notices', $message, $status);
 
-        if (defined(XCLONER_STANDALONE_MODE) && XCLONER_STANDALONE_MODE) {
+        if (defined("XCLONER_STANDALONE_MODE") && XCLONER_STANDALONE_MODE) {
             throw new Error($message);
         }
     }

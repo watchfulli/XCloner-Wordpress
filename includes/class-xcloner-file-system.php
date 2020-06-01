@@ -684,17 +684,28 @@ class Xcloner_File_System
         return $return;
     }
 
-    public function backup_storage_cleanup()
+    public function backup_storage_cleanup($storage_name = "local", $storage_filesystem = "")
     {
-        $this->logger->info(sprintf(("Cleaning the backup storage on matching rules")));
+        //$storage_name = "webdav";
+
+        $storage_name = strtoupper($storage_name);
+
+        $this->logger->info(sprintf("Cleaning the backup storage %s on matching rules", $storage_name));
+
+        if (!$storage_filesystem) {
+            $storage_filesystem = $this->storage_filesystem;
+        }
 
         $_storage_size = 0;
         $_backup_files_list = array();
 
-        //rule date limit
-        $current_timestamp = strtotime("-".$this->xcloner_settings->get_xcloner_option('xcloner_cleanup_retention_limit_days')." days");
+        $options_prefix = $this->xcloner_settings->get_options_prefix()."_".($storage_name == "LOCAL"?"":strtolower( $storage_name)."_");
 
-        $files = $this->storage_filesystem->listContents();
+        //rule date limit
+        $xcloner_cleanup_retention_limit_days = $options_prefix . "cleanup_retention_limit_days";
+        $current_timestamp = strtotime("-".$this->xcloner_settings->get_xcloner_option($xcloner_cleanup_retention_limit_days)." days");
+
+        $files = $storage_filesystem->listContents();
 
         if (is_array($files)) {
             foreach ($files as $file) {
@@ -711,33 +722,53 @@ class Xcloner_File_System
         $_backups_counter = sizeof($_backup_files_list);
 
         foreach ($_backup_files_list as $file) {
+
+            // processing rule for exclude backups taken on certain days
+            $xcloner_cleanup_exclude_days = $options_prefix . "cleanup_exclude_days";
+            if ($exclude_days_string = $this->xcloner_settings->get_xcloner_option($xcloner_cleanup_exclude_days)) {
+                $exclude_days = explode(",", $exclude_days_string);
+
+                $backup_day_of_month =  date('j', $file['timestamp']);
+                if (in_array($backup_day_of_month, $exclude_days)) {
+                    $this->logger->info(sprintf("Excluding %s from storage %s cleanup trashing as it was taken on month day %s ", 
+                                                    $file['path'], 
+                                                    $storage_name,
+                                                    $backup_day_of_month)
+                                                );
+                    continue;
+                }
+            }
+
             //processing rule folder capacity
-            if ($this->xcloner_settings->get_xcloner_option('xcloner_cleanup_capacity_limit') &&
+            $xcloner_cleanup_capacity_limit = $options_prefix."cleanup_capacity_limit";
+            if ($this->xcloner_settings->get_xcloner_option($xcloner_cleanup_capacity_limit) &&
                 $_storage_size >= ($set_storage_limit = 1024 * 1024 * $this->xcloner_settings->get_xcloner_option('xcloner_cleanup_capacity_limit'))) {    //bytes
-                $this->storage_filesystem->delete($file['path']);
+                $storage_filesystem->delete($file['path']);
                 $_storage_size -= $file['size'];
-                $this->logger->info("Deleting backup ".$file['path']." matching rule", array(
+                $this->logger->info("Deleting backup ".$file['path']." from storage system ".$storage_name." matching rule", array(
                     "STORAGE SIZE LIMIT",
                     $_storage_size." >= ".$set_storage_limit
                 ));
             }
 
             //processing rule days limit
-            if ($this->xcloner_settings->get_xcloner_option('xcloner_cleanup_retention_limit_days') && $current_timestamp >= $file['timestamp']) {
-                $this->storage_filesystem->delete($file['path']);
-                $this->logger->info("Deleting backup ".$file['path']." matching rule", array(
+            $xcloner_cleanup_retention_limit_days = $options_prefix . "cleanup_retention_limit_days";
+            if ($this->xcloner_settings->get_xcloner_option($xcloner_cleanup_retention_limit_days) && $current_timestamp >= $file['timestamp']) {
+                $storage_filesystem->delete($file['path']);
+                $this->logger->info("Deleting backup ".$file['path']." from storage system ".$storage_name." matching rule", array(
                     "RETENTION LIMIT TIMESTAMP",
-                    $file['timestamp']." =< ".$this->xcloner_settings->get_xcloner_option('xcloner_cleanup_retention_limit_days')
+                    $file['timestamp']." =< ".$this->xcloner_settings->get_xcloner_option($xcloner_cleanup_retention_limit_days)
                 ));
             }
 
             //processing backup countert limit
+            $xcloner_cleanup_retention_limit_archives = $options_prefix . "cleanup_retention_limit_archives";
             if ($this->xcloner_settings->get_xcloner_option('xcloner_cleanup_retention_limit_archives') && $_backups_counter >= $this->xcloner_settings->get_xcloner_option('xcloner_cleanup_retention_limit_archives')) {
-                $this->storage_filesystem->delete($file['path']);
+                $storage_filesystem->delete($file['path']);
                 $_backups_counter--;
-                $this->logger->info("Deleting backup ".$file['path']." matching rule", array(
+                $this->logger->info("Deleting backup ".$file['path']." from storage system ".$storage_name." matching rule", array(
                     "BACKUP QUANTITY LIMIT",
-                    $_backups_counter." >= ".$this->xcloner_settings->get_xcloner_option('xcloner_cleanup_retention_limit_archives')
+                    $_backups_counter." >= ".$this->xcloner_settings->get_xcloner_option($xcloner_cleanup_retention_limit_archives)
                 ));
             }
         }

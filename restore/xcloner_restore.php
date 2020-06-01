@@ -14,19 +14,19 @@ if (!defined('XCLONER_PLUGIN_ACCESS') || XCLONER_PLUGIN_ACCESS != 1)
 {	
 	if (!AUTH_KEY)
 	{
-			Xcloner_Restore::send_response("404", "Could not run restore script, AUTH_KEY not set!");
+			Xcloner_Restore::send_response("404", "Could not run restore script, AUTH_KEY not set! Your should not access this script directly, it's url should go inside the XCloner Restore area from where you downloaded this script.");
 			exit;
 	}
 	
 	if (!isset($_REQUEST['hash']))
 	{
-			Xcloner_Restore::send_response("404", "Could not run restore script, sent HASH is empty!");
+			Xcloner_Restore::send_response("404", "Could not run restore script directly. Enter the URL above in the `Restore Backup` area of XCloner and click `Check Connection`.");
 			exit;
 	}
 	
 	if ($_REQUEST['hash'] != AUTH_KEY)
 	{
-			Xcloner_Restore::send_response("404", "Could not run restore script, AUTH_KEY doesn't match the sent HASH!");
+			Xcloner_Restore::send_response("404", "Could not run restore script, AUTH_KEY doesn't match the sent HASH. Please replace the restore script on the remote/target host with a new copy downloaded from the local site and try again.");
 			exit;
 	}
 }
@@ -370,7 +370,14 @@ class Xcloner_Restore
 				//check if line is empty	
 				if ($line == "\n" or trim($line) == "")
 					continue;
-					
+				
+				//exclude usermeta info for local restores to fix potential session logout
+                if (defined('XCLONER_PLUGIN_ACCESS') && XCLONER_PLUGIN_ACCESS) {
+                    if (strpos($line, "_usermeta`") !== false) {
+                        $line = str_replace("_usermeta`", "_usermeta2`", $line);
+                    }
+                }
+
 				if (substr($line, strlen($line) - 2, strlen($line)) == ";\n")
 					$query .= $line;
 				else {
@@ -432,7 +439,7 @@ class Xcloner_Restore
 			{
 				$return['finished'] = 0;
 			} else {
-				$this->logger->info(sprintf("Mysql Import Done."));
+				$this->logger->info(sprintf("Mysql Import Done."));	
 			}
 
 			fclose($fp);
@@ -493,7 +500,7 @@ class Xcloner_Restore
 		}
 		
 		try {
-			$tar = new Tar();
+			$tar = new Xcloner_Archive_Restore();
 			$tar->open($this->backup_storage_dir.DS.$backup_file, $start);
 		
 			$data = $tar->contents($this->process_files_limit_list);
@@ -574,6 +581,19 @@ class Xcloner_Restore
 			$this->delete_backup_temporary_folder($remote_path);
 		}
 		
+		if (defined('XCLONER_PLUGIN_ACCESS') && XCLONER_PLUGIN_ACCESS)
+		{
+						//fixing usermeta table for local restores
+						global $wpdb;
+						if ($result = $wpdb->get_var("SELECT count(*) FROM ".$wpdb->prefix."usermeta2")) {
+							if($result > 0 ) {
+								$wpdb->query("DROP TABLE IF EXISTS ".$wpdb->prefix."usermeta_backup" );
+								$wpdb->query("ALTER TABLE ".$wpdb->prefix."usermeta RENAME TO ".$wpdb->prefix."usermeta_backup" );
+								$wpdb->query("ALTER TABLE ".$wpdb->prefix."usermeta2 RENAME TO ".$wpdb->prefix."usermeta" );
+							}
+						}	
+		}
+
 		if (!defined('XCLONER_PLUGIN_ACCESS') || XCLONER_PLUGIN_ACCESS != 1)
 		{
 			if ($delete_restore_script)
@@ -895,7 +915,7 @@ class Xcloner_Restore
 		$return['extracted_files'] = array();
 		$return['total_size'] = $this->get_backup_size($backup_file);
 		
-		$backup_archive = new Tar();
+		$backup_archive = new Xcloner_Archive_Restore();
 		if ($this->is_multipart($backup_file))
 		{
 			if (!$return['part'])
@@ -1269,3 +1289,157 @@ class Xcloner_Restore
 	}
 }
 
+class Xcloner_Archive_Restore extends Tar {
+	public function open($file, $start_byte = 0)
+    {
+       parent::open($file);
+
+        if ($start_byte) {
+            fseek($this->fh, $start_byte);
+        }
+	}
+	
+    /**
+     * Read the contents of a TAR archive
+     *
+     * This function lists the files stored in the archive
+     *
+     * The archive is closed afer reading the contents, because rewinding is not possible in bzip2 streams.
+     * Reopen the file with open() again if you want to do additional operations
+     *
+     * @throws ArchiveIOException
+     * @returns FileInfo[]
+     */
+    public function contents($files_limit = 0)
+    {
+        if ($this->closed || !$this->file) {
+            throw new ArchiveIOException('Can not read from a closed archive');
+        }
+
+		$files_counter = 0;
+        $result = array();
+
+        while ($read = $this->readbytes(512)) {
+            $header = $this->parseHeader($read);
+            if (!is_array($header)) {
+                continue;
+            }
+
+            if($files_limit)
+            {
+				if(++$files_counter > $files_limit)
+				{
+					$return['extracted_files'] = $result;
+					$return['start'] = ftell($this->fh)-512;
+					return $return;
+				}
+			}
+
+			if($header['typeflag'] == 5)
+				$header['size'] = 0;
+
+            $this->skipbytes(ceil($header['size'] / 512) * 512);
+            $result[] = $this->header2fileinfo($header);
+        }
+
+		$return['extracted_files'] = $result;
+
+        $this->close();
+        return $return;
+	}
+	
+	public function extract($outdir, $strip = '', $exclude = '', $include = '', $files_limit = 0)
+    {
+
+        if ($this->closed || !$this->file) {
+            throw new ArchiveIOException('Can not read from a closed archive');
+        }
+
+        $outdir = rtrim($outdir, '/');
+        if(!is_dir($outdir))
+				@mkdir($outdir, 0755, true);
+			else
+				@chmod($outdir, 0777);
+
+        //@mkdir($outdir, 0777, true);
+
+        if (!is_dir($outdir)) {
+            throw new ArchiveIOException("Could not create directory '$outdir'");
+        }
+
+		$files_counter = 0;
+		$return = array();
+
+        $extracted = array();
+        while ($dat = $this->readbytes(512)) {
+            // read the file header
+            $header = $this->parseHeader($dat);
+            if (!is_array($header)) {
+                continue;
+            }
+
+            if($files_limit)
+            {
+				if(++$files_counter > $files_limit)
+				{
+					$return['extracted_files'] = $extracted;
+					$return['start'] = ftell($this->fh)-512;
+					return $return;
+				}
+			}
+
+            $fileinfo = $this->header2fileinfo($header);
+
+            // apply strip rules
+            $fileinfo->strip($strip);
+
+            // skip unwanted files
+            if (!strlen($fileinfo->getPath()) || !$fileinfo->match($include, $exclude)) {
+                $this->skipbytes(ceil($header['size'] / 512) * 512);
+                continue;
+            }
+
+            // create output directory
+            $output    = $outdir.'/'.$fileinfo->getPath();
+            $directory = ($fileinfo->getIsdir()) ? $output : dirname($output);
+            if(!is_dir($directory))
+				@mkdir($directory, 0755, true);
+			else
+				@chmod($directory, 0755);
+
+            // extract data
+            if (!$fileinfo->getIsdir()) {
+				if(file_exists($output))
+					unlink($output);
+
+                $fp = fopen($output, "wb");
+                if (!$fp) {
+                    throw new ArchiveIOException('Could not open file for writing: '.$output);
+                }
+
+                $size = floor($header['size'] / 512);
+                for ($i = 0; $i < $size; $i++) {
+                    fwrite($fp, $this->readbytes(512), 512);
+                }
+                if (($header['size'] % 512) != 0) {
+                    fwrite($fp, $this->readbytes(512), $header['size'] % 512);
+                }
+
+                fclose($fp);
+                touch($output, $fileinfo->getMtime());
+                chmod($output, $fileinfo->getMode());
+            } else {
+                //$this->skipbytes(ceil($header['size'] / 512) * 512); // the size is usually 0 for directories
+                $this->skipbytes(ceil(0 / 512) * 512); // the size is usually 0 for directories
+            }
+
+            $extracted[] = $fileinfo;
+        }
+
+        $this->close();
+
+        $return['extracted_files'] = $extracted;
+
+        return $return;
+    }
+}

@@ -154,9 +154,12 @@ class Xcloner_Api
             }
             $this->form_params['backup_params']['schedule_name'] = $this->xcloner_sanitization->sanitize_input_as_string($_POST['schedule_name']);
             $this->form_params['backup_params']['backup_encrypt'] = $this->xcloner_sanitization->sanitize_input_as_int($_POST['backup_encrypt']);
+            
             $this->form_params['backup_params']['start_at'] = strtotime($_POST['schedule_start_date']);
             $this->form_params['backup_params']['schedule_frequency'] = $this->xcloner_sanitization->sanitize_input_as_string($_POST['schedule_frequency']);
             $this->form_params['backup_params']['schedule_storage'] = $this->xcloner_sanitization->sanitize_input_as_string($_POST['schedule_storage']);
+            $this->form_params['backup_params']['backup_delete_after_remote_transfer'] = $this->xcloner_sanitization->sanitize_input_as_int($_POST['backup_delete_after_remote_transfer']);
+            
             $this->form_params['database'] = (stripslashes($this->xcloner_sanitization->sanitize_input_as_raw($_POST['table_params'])));
             $this->form_params['excluded_files'] = (stripslashes($this->xcloner_sanitization->sanitize_input_as_raw($_POST['excluded_files'])));
 
@@ -202,6 +205,18 @@ class Xcloner_Api
             if ($schedule['start_at'] <= time()) {
                 $schedule['start_at'] = "";
             }
+
+            //fixing table names assigment
+            foreach ($this->form_params['database'] as $db=>$tables) {
+                if ($db == "#") {
+                    continue;
+                }
+
+                foreach ($tables as $key=>$table) {
+                    //echo $this->form_params['database'][$db][$key];
+                    $this->form_params['database'][$db][$key] = substr($table, strlen($db)+1);
+                }
+            }
         }
 
         if (!$schedule['start_at']) {
@@ -220,6 +235,7 @@ class Xcloner_Api
         }
         $schedule['remote_storage'] = $this->form_params['backup_params']['schedule_storage'];
         //$schedule['backup_type'] = $this->form_params['backup_params']['backup_type'];
+        
         $schedule['params'] = json_encode($this->form_params);
 
         if (!isset($_POST['id'])) {
@@ -415,7 +431,7 @@ class Xcloner_Api
      */
     private function process_params($params)
     {
-        if($params->processed) {
+        if ($params && $params->processed) {
             $this->form_params = json_decode(json_encode((array)$params), true);
             return;
         }
@@ -733,7 +749,7 @@ class Xcloner_Api
                 $backup_text = "<span title='".$backup_time."' class='shorten_string'>".$res->last_backup." (".$backup_size.")</span>";
             }
 
-            $schedules = wp_get_schedules();
+            $schedules = $this->xcloner_scheduler->get_available_intervals();
 
             if (isset($schedules[$res->recurrence])) {
                 $res->recurrence = $schedules[$res->recurrence]['display'];
@@ -932,7 +948,10 @@ class Xcloner_Api
     {
         $this->check_access();
 
-        $return = array();
+        $return = array(
+            "data" => array()
+        );
+
         $storage_selection = "";
 
         if (isset($_GET['storage_selection']) and $_GET['storage_selection']) {
@@ -940,7 +959,12 @@ class Xcloner_Api
         }
         $available_storages = $this->xcloner_remote_storage->get_available_storages();
 
-        $backup_list = $this->xcloner_file_system->get_backup_archives_list($storage_selection);
+        try {
+            $backup_list = $this->xcloner_file_system->get_backup_archives_list($storage_selection);
+        }catch(Exception $e){
+            $this->send_response($return, 0);
+            return;
+        }
 
         $i = -1;
         foreach ($backup_list as $file_info):?>
@@ -959,9 +983,11 @@ class Xcloner_Api
 
                 <?php ob_start(); ?>
                         <p>
+                        <label for="checkbox_<?php echo $i ?>">
                             <input name="backup[]" value="<?php echo $file_info['basename'] ?>" type="checkbox"
                                    id="checkbox_<?php echo ++$i ?>">
-                            <label for="checkbox_<?php echo $i ?>">&nbsp;</label>
+                            <span>&nbsp;</span>
+                        </label>
                         </p>
                 <?php
                 $return['data'][$i][] = ob_get_contents();
@@ -1028,9 +1054,9 @@ class Xcloner_Api
                                         <?php elseif ($storage_selection != "gdrive" && !$this->xcloner_file_system->get_storage_filesystem()->has($child[0])): ?>
                                             <a href="#<?php echo $child[0] ?>" class="copy-remote-to-local"
                                                title="<?php echo __(
-                                            'Push Backup To Local Storage',
-                                            'xcloner-backup-and-restore'
-                                        ) ?>"><i
+            'Push Backup To Local Storage',
+            'xcloner-backup-and-restore'
+        ) ?>"><i
                                                         class="material-icons">file_upload</i></a>
                                         <?php endif ?>
                                     </li>
@@ -1233,6 +1259,7 @@ class Xcloner_Api
 
         $backup_file = $this->xcloner_sanitization->sanitize_input_as_string($_POST['file']);
         $storage_type = $this->xcloner_sanitization->sanitize_input_as_string($_POST['storage_type']);
+        $delete_local_copy_after_transfer = $this->xcloner_sanitization->sanitize_input_as_string($_POST['delete_after_transfer']);
 
         $xcloner_remote_storage = $this->get_xcloner_container()->get_xcloner_remote_storage();
 
@@ -1241,7 +1268,7 @@ class Xcloner_Api
                 $return = call_user_func_array(array(
                     $xcloner_remote_storage,
                     "upload_backup_to_storage"
-                ), array($backup_file, $storage_type));
+                ), array($backup_file, $storage_type, $delete_local_copy_after_transfer));
             }
         } catch (Exception $e) {
             $return['error'] = 1;

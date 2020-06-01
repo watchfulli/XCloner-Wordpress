@@ -68,7 +68,10 @@ class Xcloner_Remote_Storage
             "ftp_transfer_mode" => "int",
             "ftp_ssl_mode" => "int",
             "ftp_timeout" => "int",
-            "ftp_cleanup_days" => "float",
+            "ftp_cleanup_retention_limit_days" => "float",
+            "ftp_cleanup_exclude_days" => "string",
+            "ftp_cleanup_retention_limit_archives" => "int",
+            "ftp_cleanup_capacity_limit" => "int"
         ),
         "sftp" => array(
             "text" => "SFTP",
@@ -80,7 +83,10 @@ class Xcloner_Remote_Storage
             "sftp_path" => "path",
             "sftp_private_key" => "raw",
             "sftp_timeout" => "int",
-            "sftp_cleanup_days" => "float",
+            "sftp_cleanup_retention_limit_days" => "float",
+            "sftp_cleanup_exclude_days" => "string",
+            "sftp_cleanup_retention_limit_archives" => "int",
+            "sftp_cleanup_capacity_limit" => "int"
         ),
         "aws" => array(
             "text" => "S3",
@@ -91,7 +97,10 @@ class Xcloner_Remote_Storage
             "aws_region" => "string",
             "aws_bucket_name" => "string",
             "aws_prefix" => "string",
-            "aws_cleanup_days" => "float",
+            "aws_cleanup_retention_limit_days" => "float",
+            "aws_cleanup_exclude_days" => "string",
+            "aws_cleanup_retention_limit_archives" => "int",
+            "aws_cleanup_capacity_limit" => "int"
         ),
         "dropbox" => array(
             "text" => "Dropbox",
@@ -99,7 +108,10 @@ class Xcloner_Remote_Storage
             "dropbox_access_token" => "string",
             "dropbox_app_secret" => "raw",
             "dropbox_prefix" => "string",
-            "dropbox_cleanup_days" => "float",
+            "dropbox_cleanup_retention_limit_days" => "float",
+            "dropbox_cleanup_exclude_days" => "string",
+            "dropbox_cleanup_retention_limit_archives" => "int",
+            "dropbox_cleanup_capacity_limit" => "int"
         ),
         "azure" => array(
             "text" => "Azure BLOB",
@@ -107,7 +119,10 @@ class Xcloner_Remote_Storage
             "azure_account_name" => "string",
             "azure_api_key" => "raw",
             "azure_container" => "string",
-            "azure_cleanup_days" => "float",
+            "azure_cleanup_retention_limit_days" => "float",
+            "azure_cleanup_exclude_days" => "string",
+            "azure_cleanup_retention_limit_archives" => "int",
+            "azure_cleanup_capacity_limit" => "int"
         ),
         "backblaze" => array(
             "text" => "Backblaze",
@@ -115,7 +130,10 @@ class Xcloner_Remote_Storage
             "backblaze_account_id" => "string",
             "backblaze_application_key" => "raw",
             "backblaze_bucket_name" => "string",
-            "backblaze_cleanup_days" => "float",
+            "backblaze_cleanup_retention_limit_days" => "float",
+            "backblaze_cleanup_exclude_days" => "string",
+            "backblaze_cleanup_retention_limit_archives" => "int",
+            "backblaze_cleanup_capacity_limit" => "int"
         ),
 
         "webdav" => array(
@@ -125,7 +143,11 @@ class Xcloner_Remote_Storage
             "webdav_username" => "string",
             "webdav_password" => "raw",
             "webdav_target_folder" => "string",
-            "webdav_cleanup_days" => "float",
+            "webdav_cleanup_retention_limit_days" => "float",
+            "webdav_cleanup_exclude_days" => "string",
+            "webdav_cleanup_retention_limit_archives" => "int",
+            "webdav_cleanup_capacity_limit" => "int"
+
         ),
 
         "gdrive" => array(
@@ -135,8 +157,11 @@ class Xcloner_Remote_Storage
             "gdrive_client_id" => "string",
             "gdrive_client_secret" => "raw",
             "gdrive_target_folder" => "string",
-            "gdrive_cleanup_days" => "float",
+            "gdrive_cleanup_retention_limit_days" => "float",
             "gdrive_empty_trash" => "int",
+            "gdrive_cleanup_exclude_days" => "string",
+            "gdrive_cleanup_retention_limit_archives" => "int",
+            "gdrive_cleanup_capacity_limit" => "int"
         ),
     );
 
@@ -249,7 +274,7 @@ class Xcloner_Remote_Storage
                 $return[$storage] = $data['text'];
             }
         }
-
+        
         return $return;
     }
 
@@ -266,7 +291,6 @@ class Xcloner_Remote_Storage
             foreach ($this->storage_fields[$storage] as $field => $validation) {
                 $check_field = $this->storage_fields["option_prefix"] . $field;
                 $sanitize_method = "sanitize_input_as_" . $validation;
-
 
                 //we do not save empty encrypted credentials
                 if ($validation == "raw" && str_repeat('*', strlen($_POST[$check_field])) == $_POST[$check_field] && $_POST[$check_field]) {
@@ -362,7 +386,7 @@ class Xcloner_Remote_Storage
         return true;
     }
 
-    public function upload_backup_to_storage($file, $storage)
+    public function upload_backup_to_storage($file, $storage, $delete_local_copy_after_transfer = 0)
     {
         if (!$this->xcloner_file_system->get_storage_filesystem()->has($file)) {
             $this->logger->info(sprintf("File not found %s in local storage", $file));
@@ -419,6 +443,13 @@ class Xcloner_Remote_Storage
         }
 
         $this->logger->info(sprintf("Upload done, disconnecting from remote storage %s", strtoupper($storage)));
+
+        //CHECK IF WE SHOULD DELETE BACKUP AFTER REMOTE TRANSFER IS DONE
+        //if ( $this->xcloner_settings->get_xcloner_option('xcloner_cleanup_delete_after_remote_transfer')) {
+        if ($delete_local_copy_after_transfer) {
+            $this->logger->info(sprintf("Deleting %s from local storage matching rule xcloner_cleanup_delete_after_remote_transfer", $file));
+            $this->xcloner_file_system->delete_backup_by_name($file);
+        }
 
         return true;
     }
@@ -488,31 +519,7 @@ class Xcloner_Remote_Storage
 
     public function clean_remote_storage($storage, $remote_storage_filesystem)
     {
-        $check_field = $this->storage_fields["option_prefix"] . $storage . "_cleanup_days";
-        if ($expire_days = $this->xcloner_settings->get_xcloner_option($check_field)) {
-            $this->logger->info(sprintf(
-                "Doing %s remote storage cleanup for %s days limit",
-                strtoupper($storage),
-                $expire_days
-            ));
-            $files = $remote_storage_filesystem->listContents();
-
-            $current_timestamp = strtotime("-" . $expire_days . " days");
-
-            if (is_array($files)) {
-                foreach ($files as $file) {
-                    $file['timestamp'] = $remote_storage_filesystem->getTimestamp($file['path']);
-
-                    if ($current_timestamp >= $file['timestamp']) {
-                        $remote_storage_filesystem->delete($file['path']);
-                        $this->logger->info("Deleting remote file " . $file['path'] . " matching rule", array(
-                            "RETENTION LIMIT TIMESTAMP",
-                            $file['timestamp'] . " =< " . $expire_days
-                        ));
-                    }
-                }
-            }
-        }
+        return $this->xcloner_file_system->backup_storage_cleanup($storage, $remote_storage_filesystem);
     }
 
     public function get_azure_filesystem()
@@ -826,9 +833,8 @@ class Xcloner_Remote_Storage
             'root' => ($this->xcloner_settings->get_xcloner_option("xcloner_sftp_path")?$this->xcloner_settings->get_xcloner_option("xcloner_sftp_path"):'./'),
             'privateKey' => $this->xcloner_settings->get_xcloner_option("xcloner_sftp_private_key"),
             'timeout' => $this->xcloner_settings->get_xcloner_option("xcloner_sftp_timeout", 30),
+            'directoryPerm' => 0755
         ]);
-
-        $adapter->connect();
 
         $filesystem = new Filesystem($adapter, new Config([
             'disable_asserts' => true,

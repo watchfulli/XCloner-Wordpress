@@ -92,7 +92,9 @@ class Xcloner_Restore{
 			if(e.detail.$this !== undefined)
 			{
 				var $this = e.detail.$this
-				jQuery(".xcloner-restore li."+$this.steps[$this.set_current_step]).addClass('active').show().find(".collapsible-header").trigger('click');
+				console.log($this.steps[$this.set_current_step])
+				jQuery(".xcloner-restore li."+$this.steps[$this.set_current_step]).show().find(".collapsible-header").trigger('click');
+				//jQuery(".xcloner-restore li."+$this.steps[$this.set_current_step]).addClass('active').show().find(".collapsible-body").show();
 			}
 				
 		}, false);
@@ -860,7 +862,7 @@ jQuery(document).ready(function(){
 	
 	xcloner_restore.set_current_step(0);
 	
-	jQuery('.col select').material_select();
+	jQuery('.col select').formSelect();
 	
 	jQuery(".xcloner-restore .upload-backup.cancel").on("click", function(){
 		//jQuery(".xcloner-restore #upload_backup").show();

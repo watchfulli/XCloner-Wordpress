@@ -65,7 +65,7 @@ $tab                    = 1;
             <div class="row">
                 <div class="input-field inline col s10 m10 l6">
                     <i class="material-icons prefix">access_time</i>
-                    <input type="datetime-local" id="diff_start_date" class="datepicker_max_today"
+                    <input type="text" id="diff_start_date" class="datepicker_max_today"
                            name="diff_start_date">
                     <label for="diff_start_date"><?php echo __('Backup Only Files Modified/Created After', 'xcloner-backup-and-restore') ?></label>
                 </div>
@@ -112,6 +112,51 @@ $tab                    = 1;
                        data-tooltip-id=""><i class="material-icons">help_outline</i></a>
                 </div>
             </div>
+
+            <?php if (sizeof($available_storages)): ?>
+
+                <div class="row">
+                    <div class="input-field col s12 m10 l6">
+                        <i class="material-icons prefix">cloud_upload</i>
+                        <select name="schedule_storage" id="schedule_storage" class="schedule_storage validate" >
+                                <option value="" selected><?php echo __('none', 'xcloner-backup-and-restore') ?></option>
+                                <?php foreach ($available_storages as $storage => $text): ?>
+                                    <option value="<?php echo $storage ?>"><?php echo $text ?></option>
+                                <?php endforeach ?>
+                            </select>
+                            <label><?php echo __('Send To Remote Storage', 'xcloner-backup-and-restore') ?></label>
+                    </div>
+                    <div class="hide-on-small-only m2">
+                        <a class="btn-floating tooltipped btn-small" data-position="right" data-delay="50"
+                        data-tooltip="<?php echo __('Transfer backup to the remote storage destintion once finished.', 'xcloner-backup-and-restore') ?>"
+                        data-tooltip-id=""><i class="material-icons">help_outline</i></a>
+                    </div>
+                </div>
+
+                <div class="row" id="delete_remote_storage" style="display:none">
+                    <div class="input-field col s6 m5 l4">
+                        <i class="material-icons prefix">delete</i>
+                        <label for="backup_comments"><?php echo __('Delete local copy after transfer', 'xcloner-backup-and-restore') ?></label>
+
+                    </div>
+                    <div class="input-field col s6 m5 l2">
+                        <div class="switch">
+                            <label>
+                                Off
+                                <input type="checkbox" name="backup_delete_after_remote_transfer" id="backup_delete_after_remote_transfer" value="1">
+                                <span class="lever"></span>
+                                On
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="hide-on-small-only s12 m2">
+                        <a class="btn-floating tooltipped btn-small" data-position="right" data-delay="50"
+                        data-tooltip="<?php echo __('Delete local backup file after transfer', 'xcloner-backup-and-restore') ?>"
+                        data-tooltip-id=""><i class="material-icons">help_outline</i></a>
+                    </div>
+                </div>
+			<?php endif ?>
 
             <div class="row">
                 <div class="input-field col s12 m10 l6 right-align">
@@ -182,7 +227,7 @@ $tab                    = 1;
                                 class="material-icons left">cancel</i></a>
                 </div>
                 <div class="col l10 s12">
-                    <ul class="backup-status collapsible" data-collapsible="accordion">
+                    <ul class="backup-status collapsible collapsible-accordion" data-collapsible="accordion">
                         <li class="file-system">
                             <div class="collapsible-header">
                                 <i class="material-icons">folder</i><?php echo __('Scanning The File System...', 'xcloner-backup-and-restore') ?>
@@ -283,7 +328,7 @@ $tab                    = 1;
                                        title="<?php echo __("List Backup Content", 'xcloner-backup-and-restore') ?>"><i
                                                 class="material-icons">folder_open</i></a>
                                 </p>
-
+                                <div class="clear"></div>                
                                 <div class="progress">
                                     <div class="determinate" style="width:100%"></div>
                                 </div>
@@ -323,40 +368,21 @@ $tab                    = 1;
             <div class="row">
                 <div class="input-field inline col s12 l7">
                     <input type="text" id="schedule_name" class="" name="schedule_name" required>
-                    <label for="schedule_name"><?php echo __('Schedule Name', 'xcloner-backup-and-restore') ?></label>
+                    <label for="schedule_name"><?php echo __('Profile Name', 'xcloner-backup-and-restore') ?></label>
                 </div>
             </div>
 
             <div class="row">
                 <div class="input-field inline col s12 m8 l4">
-                    <input type="datetime-local" id="datepicker" class="datepicker" name="schedule_start_date">
+                    <input type="text" id="datepicker" class="datepicker" name="schedule_start_date">
                     <label for="datepicker"><?php echo __('Schedule Backup To Start On:', 'xcloner-backup-and-restore') ?></label>
                 </div>
                 <div class="input-field inline col s12 m4 l3">
-                    <input id="timepicker_ampm_dark" class="timepicker" type="time" name="schedule_start_time">
+                    <input id="timepicker_ampm_dark" class="timepicker" type="text" name="schedule_start_time">
                     <label for="timepicker_ampm_dark"><?php echo __('At:', 'xcloner-backup-and-restore') ?></label>
                 </div>
             </div>
 
-            <!--
-			<div class="row">
-				<div class="input-field inline col s10 m11 l7">
-					<select id="backup_type" class="" name="backup_type">
-						<option value=""><?php echo __("Full Backup", "xcloner-backup-and-restore"); ?></option>
-						<option value="diff"><?php echo __("Differential Backups", "xcloner-backup-and-restore"); ?></option>
-						<option value="full_diff"><?php echo __("Full Backup + Differential Backups", "xcloner-backup-and-restore"); ?></option>
-					</select>
-					<label for="backup_type"><?php echo __('Scheduled Backup Type', 'xcloner-backup-and-restore') ?></label>
-				</div>
-				<div class="col s2 m1">	
-					<a class="btn-floating tooltipped btn-small" data-html="true" data-position="center" data-delay="50" data-tooltip="<ul style='max-width:760px; text-align:left;'>
-						<li><?php echo __("Full Backup = it will generate a full backup of all included files each time schedule runs", "xcloner-backup-and-restore"); ?></li>
-						<li><?php echo __("Differentials Backups = backups will include only changed files since the schedule started to run", "xcloner-backup-and-restore"); ?></li>
-						<li><?php echo __("Full Backup +  Differential Backups = the first time schedule runs, it will create a full backup and all next scheduled backups will include only files created/modified since that last full backup; a full backup is recreated when the number of changed files is bigger than the 'Differetial Backups Max Days' XCloner option.", "xcloner-backup-and-restore"); ?></li>
-					</ul>"><i class="material-icons">help_outline</i></a>
-				</div>
-			</div>	
-			-->
             <div class="row">
                 <div class="input-field col s12 l7">
                     <select name="schedule_frequency" id="schedule_frequency" class="validate" required>
@@ -376,23 +402,10 @@ $tab                    = 1;
                 </div>
             </div>
 
-			<?php if (sizeof($available_storages)): ?>
-                <div class="row">
-                    <div class="input-field col s12 m12 l7">
-                        <select name="schedule_storage" id="schedule_storage" class="validate">
-                            <option value="" selected><?php echo __('none', 'xcloner-backup-and-restore') ?></option>
-							<?php foreach ($available_storages as $storage => $text): ?>
-                                <option value="<?php echo $storage ?>"><?php echo $text ?></option>
-							<?php endforeach ?>
-                        </select>
-                        <label><?php echo __('Send To Remote Storage', 'xcloner-backup-and-restore') ?></label>
-                    </div>
-                </div>
-			<?php endif ?>
             <div class="row">
                 <div class="col s12 l7">
                     <button class="right btn waves-effect waves-light submit_schedule" type="submit"
-                            name="action"><?php echo __("Submit", 'xcloner-backup-and-restore') ?>
+                            name="action"><?php echo __("Save Schedule", 'xcloner-backup-and-restore') ?>
                         <i class="material-icons right">send</i>
                     </button>
                 </div>
@@ -472,7 +485,7 @@ $tab                    = 1;
 <script>
     jQuery(function () {
 
-        jQuery('.col select').material_select();
+        jQuery('.col select').formSelect();
         jQuery("select[required]").css({display: "block", height: 0, padding: 0, width: 0, position: 'absolute'});
         jQuery(".backup-done .cloud-upload").on("click", function (e) {
             var xcloner_manage_backups = new Xcloner_Manage_Backups();
@@ -481,6 +494,13 @@ $tab                    = 1;
 
             e.preventDefault();
             xcloner_manage_backups.cloud_upload(id)
+        })
+
+        jQuery('#schedule_storage').on('change', function(){
+            jQuery('#delete_remote_storage').hide();
+            if(jQuery(this).val()) {
+                jQuery('#delete_remote_storage').show();
+            }
         })
 
         jQuery("#generate_backup_form").on("submit", function () {
@@ -512,26 +532,27 @@ $tab                    = 1;
             xcloner_manage_backups.list_backup_content(id)
         })
 
-        jQuery('.timepicker').pickatime({
+        jQuery('.timepicker').timepicker({
             default: 'now',
             min: [7, 30],
             twelvehour: false, // change to 12 hour AM/PM clock from 24 hour
             donetext: 'OK',
-            autoclose: false,
+            autoClose: true,
             vibrate: true // vibrate the device when dragging clock hand
         });
 
-        var date_picker = jQuery('.datepicker').pickadate({
+        var date_picker = jQuery('.datepicker').datepicker({
             format: 'd mmmm yyyy',
             selectMonths: true, // Creates a dropdown to control month
             selectYears: 15, // Creates a dropdown of 15 years to control year
             min: +0.1,
+            autoClose: true,
             onSet: function () {
                 //this.close();
             }
         });
 
-        var date_picker_allowed = jQuery('.datepicker_max_today').pickadate({
+        var date_picker_allowed = jQuery('.datepicker_max_today').datepicker({
             format: 'd mmmm yyyy',
             selectMonths: true, // Creates a dropdown to control month
             selectYears: 15, // Creates a dropdown of 15 years to control year

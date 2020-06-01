@@ -154,11 +154,8 @@ class Xcloner_Activator
             * */
 
         if (!get_option('xcloner_regex_exclude')) {
-            update_option('xcloner_regex_exclude', "(wp-content\/updraft|wp-content\/uploads\/wp_all_backup)(.*)$".PHP_EOL."(.*)\.(svn|git)(.*)$".PHP_EOL."wp-content\/cache(.*)$".PHP_EOL."(.*)error_log$");
+            update_option('xcloner_regex_exclude', "(wp-content\/updraft|wp-content\/uploads\/wp_all_backup|wp-content\/ai1wm-backups|wp-content\/plugins\/akeebabackupwp\/app\/backups)(.*)\.(.*)$(?<!config|php|html|htaccess|htm)".PHP_EOL."(.*)\.(svn|git)(.*)$".PHP_EOL."wp-content\/cache(.*)$".PHP_EOL."(.*)error_log$".PHP_EOL."xcloner-[0-9a-zA-Z]{5}$");
         }
 
-        if (!get_option('xcloner_regex_exclude')) {
-            update_option('xcloner_regex_exclude', "(wp-content\/updraft|wp-content\/uploads\/wp_all_backup)(.*)$".PHP_EOL."(.*)\.(svn|git)(.*)$".PHP_EOL."wp-content\/cache(.*)$".PHP_EOL."(.*)error_log$");
-        }
     }
 }

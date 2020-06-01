@@ -4,7 +4,7 @@ Donate link: http://www.xcloner.com
 Tags: backup, database backup, cloud backup, WordPress backup, WordPress migration
 Requires at least: 3.0.1
 Tested up to: 5.4
-Stable tag: 4.1.5
+Stable tag: 4.2.0
 
 XCloner is a backup plugin that allows you to safely back up and restore your WordPress sites. You can send site backups to SFTP, Dropbox, Amazon, Google Drive, Backblaze and other locations. 
 
@@ -114,6 +114,31 @@ Of course, schedules can be adjusted accordingly to how often you update your si
 11. Generate Backup Screen
 
 == Changelog ==
+
+* 4.2.0 *
+
+** Implemented enhancements: **
+
+* Improve error when connecting to remote site using restore script from another site  [\#89](https://github.com/watchfulli/XCloner-Wordpress/issues/89)
+* Improve error message when accessing restore script directly [\#86](https://github.com/watchfulli/XCloner-Wordpress/issues/86)
+* Encrypt database password during restore [\#84](https://github.com/watchfulli/XCloner-Wordpress/issues/84)
+* Update default regex exclusions [\#78](https://github.com/watchfulli/XCloner-Wordpress/issues/78)
+* Replace youtube links [\#76](https://github.com/watchfulli/XCloner-Wordpress/issues/76)
+* Add additional cleanup & quota options for backup storage [\#61](https://github.com/watchfulli/XCloner-Wordpress/issues/61)
+* Add standalone CLI for making backups [\#60](https://github.com/watchfulli/XCloner-Wordpress/issues/60)
+* Move `send to remote destination` option to the `Backup Options` tab [\#56](https://github.com/watchfulli/XCloner-Wordpress/issues/56)
+
+** Fixed bugs: **
+
+* Select All Backups delete does not work [\#92](https://github.com/watchfulli/XCloner-Wordpress/issues/92)
+* JS Error during restoration [\#91](https://github.com/watchfulli/XCloner-Wordpress/issues/91)
+* Ajax error when viewing empty storage area [\#79](https://github.com/watchfulli/XCloner-Wordpress/issues/79)
+* Javascript error when running a backup, and clicking "Send Backup to remote storage" [\#74](https://github.com/watchfulli/XCloner-Wordpress/issues/74)
+* SFTP bug [\#72](https://github.com/watchfulli/XCloner-Wordpress/issues/72)
+* Live DB restore replaces WP Options table [\#69](https://github.com/watchfulli/XCloner-Wordpress/issues/69)
+
+= 4.1.5 =
+* SFTP upoad fix
 
 = 4.1.4 =
 * thinkovi references replace
@@ -350,165 +375,3 @@ Of course, schedules can be adjusted accordingly to how often you update your si
 10. Generate Backup Process
 11. Generate Backup Screen
 
-== Changelog ==
-
-= 4.1.3 =
-* database include tables fix
-
-= 4.1.2 = 
-* improved default backup storage path security
-* improved remote storage security
-
-= 4.1.2 = 
-* vendor lib updates
-* flysystem azure storage Upgrade
-
-= 4.1.1 = 
-* log tmp directories fix, tracking only ERROR reports from php
-* security improvement backup log name
-* database restore resume fix
-* memory limit fix
-
-= 4.1.0 =
-* added AES-128-CBC backup encryption and decryption option
-* manage backup fixes
-* scheduled backup screen fixes and addon backup encryption option
-* automated backups encryption option addon
-* generate backups encrypt option addon
-
-= 4.0.9 =
-* remote storage password encryption addon for database
-* vendor cleanup packages
-* database silent fail fix
-* copyright changes
-* jstree fix database display
-* microtime float div fix
-* manage backups data order fix
-
-= 4.0.8 = 
-* updated vendor library dependencies, AWS, phpseclib
-* TAR compression fix
-* 7.2 compatibility checks and fixes
-
-= 4.0.7 =
-* added log fixes for Wordpress cron
-* remove storage fixes
-
-= 4.0.6 =
-* S3 prefix addon for defining folders
-* S3 custom endpoint addon to support minio.io
-* code fixes
-
-= 4.0.5 =
-* Dropbox API update to V2
-* Code fixes and text changes
-
-= 4.0.4 =
-* remote storage view fix
-* added automatic backups option before WP automatic update
-* deactivate exception handling fix
-* restore pages improvements
-* old XCloner backup format compatibility fixes
-
-= 4.0.3 =
-* added differential backups with the option to only backup files modified after a certain date
-* added localhost restore option with direct access to the restore restore
-* added schedule name fixes
-* added restore filter All Files, Only Plugins Files, Only Theme Files, Only Uploads Files, Only Database Backup
-* added remote backup list archive option on restore page
-* tmp directory cleanup on deactivate
-* sftp text fixes
-
-= 4.0.2 =
-* added WebDAV remote storage support
-* added Google Drive Suppor through XCloner-Google-Drive plugin
-* added depedency injection code refactoring
-* added TAR PAX support on restore
-* improving code quality scrutinizer
-* fixing phpversion requirement
-* adding Backblaze remote storage support
-* added Remote Storage Manage Backups dropdown selection
-* fixed windows opendir error
-* added total archived files to notifications email
-* timezone scheduler fix
-* added default error sending to admin when no notification email is set
-
-
-= 4.0.1 =
-* Code rewritten from ground up to make use of latest code standards
-* Added support for Dropbox, Amazon S3, Azure Blob and SFTP storage
-* Added a new restore script
-* Added an improved backup and system logger 
-* New Setting Panel
-* New Manage Backups Panel with the options to Delete, Transfer to Remote Storage, Download and List Backup archive contents
-* Added mail notifications for scheduled backups 
-* Added a new Cron Scheduler to make use of Wordpress System Cron option
-* Improved user input sanitization
-* Improved recursive file scanning and archiving
-* Improved Mysql Backup dump
-* Added Multiple Cleanup options both for local storage and remote
-* Added Improved Backup Compressing option
-
-= 3.1.5 =
-* Config variables save sanitization addon
-
-= 3.1.4 =
-* DropPHP DropBox library update, upload fixes for files larger than 150MB
-
-= 3.1.3 = 
-* XSS fix
-
-= 3.1.2 =
-* vulnerability fix
-
-= 3.1.1 = 
-* added CSRF protection
-
-= 3.1.0 =
-* added Wordpress login-less integration
-* plugin settings are now saved to database
-* security audit and hardening
-
-= 3.0.8 =
-* added russian language support
-
-= 3.0.7 =
-* added sftp support for backup transfer, thanks Todd Bluhm - dynamicts.com
-
-= 3.0.6 =
-* added php 5.4 compatibility
-
-= 3.0.4 =
-* LFI vulnerability fix
-
-= 3.0.3 =
-* added amazon ssl option box
-* moved the compress option to the System tab, don't use it unless you know what you are doing!
-
-= 3.0.1 =
-* several important security and bug fixes
-
-= 3.0 =
-* incremental database backup
-* incremental file system scan
-* backup size limit and option to split it into additional archives, default 2GB
-* exclude files larger than a certain size option
-* incremental files restore
-* JQuery Start interface
-
-= 2.2.1 =
-* Added JSON AJAX interface to the Generate Backup process
-* Added incremental filesystem scan
-* several bug fixes
-* php >=5.2.0 version check
-
-= 2.1.2 =
-* Added Amazon S3 cron storage support
-
-= 2.1 =
-* Initial release
-
-== Upgrade Notice ==
-
-= 3.0.3 =
-Please check changelog!
