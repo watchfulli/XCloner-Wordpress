@@ -1,8 +1,8 @@
 # Changelog
 
-## [Unreleased](https://github.com/watchfulli/XCloner-Wordpress/tree/HEAD)
+## [4.2.0](https://github.com/watchfulli/XCloner-Wordpress/tree/4.2.0) (2020-06-01)
 
-[Full Changelog](https://github.com/watchfulli/XCloner-Wordpress/compare/4.1.5...HEAD)
+[Full Changelog](https://github.com/watchfulli/XCloner-Wordpress/compare/4.1.5...4.2.0)
 
 **Implemented enhancements:**
 
@@ -32,6 +32,10 @@
 - Update Remote Storage names [\#77](https://github.com/watchfulli/XCloner-Wordpress/issues/77)
 - Small JS bug in Manage Backups interface [\#68](https://github.com/watchfulli/XCloner-Wordpress/issues/68)
 - New settings option: delete remote file when deleting backup [\#66](https://github.com/watchfulli/XCloner-Wordpress/issues/66)
+
+**Merged pull requests:**
+
+- Milestone4.2.0 [\#93](https://github.com/watchfulli/XCloner-Wordpress/pull/93) ([ovidiul](https://github.com/ovidiul))
 
 ## [4.1.5](https://github.com/watchfulli/XCloner-Wordpress/tree/4.1.5) (2020-05-14)
 
@@ -99,6 +103,7 @@
 - Scrutinizer Auto-Fixes [\#32](https://github.com/watchfulli/XCloner-Wordpress/pull/32) ([scrutinizer-auto-fixer](https://github.com/scrutinizer-auto-fixer))
 - Scrutinizer Auto-Fixes [\#31](https://github.com/watchfulli/XCloner-Wordpress/pull/31) ([scrutinizer-auto-fixer](https://github.com/scrutinizer-auto-fixer))
 - Scrutinizer Auto-Fixes [\#30](https://github.com/watchfulli/XCloner-Wordpress/pull/30) ([scrutinizer-auto-fixer](https://github.com/scrutinizer-auto-fixer))
+- Scrutinizer Auto-Fixes [\#28](https://github.com/watchfulli/XCloner-Wordpress/pull/28) ([scrutinizer-auto-fixer](https://github.com/scrutinizer-auto-fixer))
 
 ## [untagged-0681671b0a71d1a1d73e](https://github.com/watchfulli/XCloner-Wordpress/tree/untagged-0681671b0a71d1a1d73e) (2018-06-21)
 
