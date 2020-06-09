@@ -693,8 +693,8 @@ class Xcloner
             );
             add_submenu_page(
                 'xcloner_init_page',
-                __('Scheduled Backups', 'xcloner-backup-and-restore'),
-                __('Scheduled Backups', 'xcloner-backup-and-restore'),
+                __('Schedules & Profiles', 'xcloner-backup-and-restore'),
+                __('Schedules & Profiles', 'xcloner-backup-and-restore'),
                 'manage_options',
                 'xcloner_scheduled_backups_page',
                 array($this, 'xcloner_display')
