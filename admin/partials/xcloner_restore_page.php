@@ -385,11 +385,11 @@ $backup_list = $xcloner_file_system->get_latest_backups();
                 <div class="collapsible-header"><i
                             class="material-icons">folder_open</i><?php echo __("Finishing up...", 'xcloner-backup-and-restore') ?>
                 </div>
-                <div class="collapsible-body">
+                <div class="collapsible-body row" style="padding-left:40px;">
 
                     <div class="row">
                         <div class="col s4">
-                            <label><?php echo __("Update wp-config.php mysql details and update the Target Site Url", 'xcloner-backup-and-restore') ?></label>
+                            <span><?php echo __("Update wp-config.php mysql details and update the Target Site Url", 'xcloner-backup-and-restore') ?></span>
                         </div>
 
                         <div class="col s8">
@@ -407,7 +407,7 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 
                     <div class="row">
                         <div class="col s4">
-                            <label><?php echo __("Delete Restored Backup Temporary Folder", 'xcloner-backup-and-restore') ?></label>
+                            <span><?php echo __("Delete Restored Backup Temporary Folder", 'xcloner-backup-and-restore') ?></span>
                         </div>
                         <div class="col s8">
                             <div class="switch">
@@ -424,7 +424,7 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 
                     <div class="row">
                         <div class="col s4">
-                            <label><?php echo __("Delete Restore Script", 'xcloner-backup-and-restore') ?></label>
+                            <span><?php echo __("Delete Restore Script", 'xcloner-backup-and-restore') ?></span>
                         </div>
                         <div class="col s8">
                             <div class="switch">
