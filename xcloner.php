@@ -26,6 +26,10 @@
 
   // detect CLI mode
   if (php_sapi_name() == "cli") {
+      if (basename($argv[0]) != "xcloner.php") {
+          return;
+      }
+
       $opts = getopt('v::p:h::');
 
       if (isset($opts['h'])) {
