@@ -32,6 +32,12 @@ $adapter = new BackblazeAdapter($client,$bucketName);
 
 $filesystem = new Filesystem($adapter);
 ```
+## *ApplicationKey is not supported yet, please use MasterKey only*
+
+
+## Doccumentation
+Here is the [complete guide](https://flysystem.thephpleague.com/docs/usage/filesystem-api/) of all available options.
+
 
 ## Change log
 

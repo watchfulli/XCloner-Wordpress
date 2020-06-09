@@ -6,6 +6,9 @@ tests/cov
 # Custom settings for tests
 tests/config.user.php
 
+# PHPUnit test Cache
+.phpunit.result.cache
+
 # ViM
 *.swp
 
@@ -14,14 +17,9 @@ composer.lock
 vendor
 
 # Composer binaries
-bin/phing
-bin/phpunit
 bin/vobject
 bin/generate_vcards
 bin/phpdocmd
-bin/phpunit
-bin/php-cs-fixer
-bin/sabre-cs-fixer
 
 # Assuming every .php file in the root is for testing
 /*.php
@@ -39,5 +37,4 @@ build.properties
 docs/api
 docs/wikidocs
 
-# Mac
-.DS_Store
+.php_cs.cache

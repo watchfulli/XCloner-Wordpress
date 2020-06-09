@@ -1,0 +1,9 @@
+.php_cs.cache
+php-cs-fixer
+bin
+composer.lock
+coverage
+coverage.xml
+phpstan.phar
+tests/files
+vendor

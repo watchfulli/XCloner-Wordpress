@@ -8,11 +8,9 @@ use League\Flysystem\Adapter\Polyfill\StreamedCopyTrait;
 use League\Flysystem\AdapterInterface;
 use League\Flysystem\Config;
 use League\Flysystem\Util;
-use LogicException;
 use phpseclib\Crypt\RSA;
 use phpseclib\Net\SFTP;
 use phpseclib\System\SSH\Agent;
-use RuntimeException;
 
 class SftpAdapter extends AbstractFtpAdapter
 {
@@ -36,7 +34,7 @@ class SftpAdapter extends AbstractFtpAdapter
     /**
      * @var string
      */
-    protected $privatekey;
+    protected $privateKey;
 
     /**
      * @var bool
@@ -51,7 +49,7 @@ class SftpAdapter extends AbstractFtpAdapter
     /**
      * @var array
      */
-    protected $configurable = ['host', 'hostFingerprint', 'port', 'username', 'password', 'useAgent', 'agent', 'timeout', 'root', 'privateKey', 'permPrivate', 'permPublic', 'directoryPerm', 'NetSftpConnection'];
+    protected $configurable = ['host', 'hostFingerprint', 'port', 'username', 'password', 'useAgent', 'agent', 'timeout', 'root', 'privateKey', 'passphrase', 'permPrivate', 'permPublic', 'directoryPerm', 'NetSftpConnection'];
 
     /**
      * @var array
@@ -62,6 +60,11 @@ class SftpAdapter extends AbstractFtpAdapter
      * @var int
      */
     protected $directoryPerm = 0744;
+
+    /**
+     * @var string
+     */
+    private $passphrase;
 
     /**
      * Prefix a path.
@@ -101,7 +104,21 @@ class SftpAdapter extends AbstractFtpAdapter
      */
     public function setPrivateKey($key)
     {
-        $this->privatekey = $key;
+        $this->privateKey = $key;
+
+        return $this;
+    }
+
+    /**
+     * Set the passphrase for the privatekey.
+     *
+     * @param string $passphrase
+     *
+     * @return $this
+     */
+    public function setPassphrase($passphrase)
+    {
+        $this->passphrase = $passphrase;
 
         return $this;
     }
@@ -182,7 +199,7 @@ class SftpAdapter extends AbstractFtpAdapter
     /**
      * Login.
      *
-     * @throws LogicException
+     * @throws ConnectionErrorException
      */
     protected function login()
     {
@@ -190,21 +207,31 @@ class SftpAdapter extends AbstractFtpAdapter
             $publicKey = $this->connection->getServerPublicHostKey();
 
             if ($publicKey === false) {
-                throw new LogicException('Could not connect to server to verify public key.');
+                throw new ConnectionErrorException('Could not connect to server to verify public key.');
             }
 
             $actualFingerprint = $this->getHexFingerprintFromSshPublicKey($publicKey);
 
             if (0 !== strcasecmp($this->hostFingerprint, $actualFingerprint)) {
-                throw new LogicException('The authenticity of host '.$this->host.' can\'t be established.');
+                throw new ConnectionErrorException('The authenticity of host '.$this->host.' can\'t be established.');
             }
         }
 
         $authentication = $this->getAuthentication();
 
-        if (! $this->connection->login($this->getUsername(), $authentication)) {
-            throw new LogicException('Could not login with username: '.$this->getUsername().', host: '.$this->host);
+
+        if ($this->connection->login($this->getUsername(), $authentication)) {
+            goto past_login;
         }
+
+        // try double authentication, key is already given so now give password
+        if ($authentication instanceof RSA && $this->connection->login($this->getUsername(), $this->getPassword())) {
+            goto past_login;
+        }
+
+        throw new ConnectionErrorException('Could not login with username: '.$this->getUsername().', host: '.$this->host);
+
+        past_login:
 
         if ($authentication instanceof Agent) {
             $authentication->startSSHForwarding($this->connection);
@@ -225,6 +252,8 @@ class SftpAdapter extends AbstractFtpAdapter
 
     /**
      * Set the connection root.
+     *
+     * @throws InvalidRootException
      */
     protected function setConnectionRoot()
     {
@@ -235,9 +264,10 @@ class SftpAdapter extends AbstractFtpAdapter
         }
 
         if (! $this->connection->chdir($root)) {
-            throw new RuntimeException('Root is invalid or does not exist: '.$root);
+            throw new InvalidRootException('Root is invalid or does not exist: '.$root);
         }
-        $this->root = $this->connection->pwd() . $this->separator;
+
+        $this->setRoot($this->connection->pwd());
     }
 
     /**
@@ -251,7 +281,7 @@ class SftpAdapter extends AbstractFtpAdapter
             return $this->getAgent();
         }
 
-        if ($this->privatekey) {
+        if ($this->privateKey) {
             return $this->getPrivateKey();
         }
 
@@ -265,19 +295,31 @@ class SftpAdapter extends AbstractFtpAdapter
      */
     public function getPrivateKey()
     {
-        if ("---" !== substr($this->privatekey, 0, 3) && is_file($this->privatekey)) {
-            $this->privatekey = file_get_contents($this->privatekey);
+        if ("---" !== substr($this->privateKey, 0, 3) && is_file($this->privateKey)) {
+            $this->privateKey = file_get_contents($this->privateKey);
         }
 
         $key = new RSA();
 
-        if ($password = $this->getPassword()) {
+        if ($password = $this->getPassphrase()) {
             $key->setPassword($password);
         }
 
-        $key->loadKey($this->privatekey);
+        $key->loadKey($this->privateKey);
 
         return $key;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPassphrase()
+    {
+        if ($this->passphrase === null) {
+            //Added for backward compatibility
+            return $this->getPassword();
+        }
+        return $this->passphrase;
     }
 
     /**
@@ -312,6 +354,8 @@ class SftpAdapter extends AbstractFtpAdapter
         }
 
         foreach ($listing as $filename => $object) {
+            // When directory entries have a numeric filename they are changed to int
+            $filename = (string) $filename;
             if (in_array($filename, ['.', '..'])) {
                 continue;
             }

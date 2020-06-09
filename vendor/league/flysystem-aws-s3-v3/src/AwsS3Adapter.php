@@ -5,10 +5,12 @@ namespace League\Flysystem\AwsS3v3;
 use Aws\Result;
 use Aws\S3\Exception\DeleteMultipleObjectsException;
 use Aws\S3\Exception\S3Exception;
+use Aws\S3\Exception\S3MultipartUploadException;
 use Aws\S3\S3Client;
+use Aws\S3\S3ClientInterface;
+use League\Flysystem\AdapterInterface;
 use League\Flysystem\Adapter\AbstractAdapter;
 use League\Flysystem\Adapter\CanOverwriteFiles;
-use League\Flysystem\AdapterInterface;
 use League\Flysystem\Config;
 use League\Flysystem\Util;
 
@@ -27,6 +29,7 @@ class AwsS3Adapter extends AbstractAdapter implements CanOverwriteFiles
         'Metadata'      => 'metadata',
         'StorageClass'  => 'storageclass',
         'ETag'          => 'etag',
+        'VersionId'     => 'versionid'
     ];
 
     /**
@@ -57,7 +60,7 @@ class AwsS3Adapter extends AbstractAdapter implements CanOverwriteFiles
     ];
 
     /**
-     * @var S3Client
+     * @var S3ClientInterface
      */
     protected $s3Client;
 
@@ -74,12 +77,12 @@ class AwsS3Adapter extends AbstractAdapter implements CanOverwriteFiles
     /**
      * Constructor.
      *
-     * @param S3Client $client
+     * @param S3ClientInterface $client
      * @param string   $bucket
      * @param string   $prefix
      * @param array    $options
      */
-    public function __construct(S3Client $client, $bucket, $prefix = '', array $options = [])
+    public function __construct(S3ClientInterface $client, $bucket, $prefix = '', array $options = [])
     {
         $this->s3Client = $client;
         $this->bucket = $bucket;
@@ -110,7 +113,7 @@ class AwsS3Adapter extends AbstractAdapter implements CanOverwriteFiles
     /**
      * Get the S3Client instance.
      *
-     * @return S3Client
+     * @return S3ClientInterface
      */
     public function getClient()
     {
@@ -316,9 +319,7 @@ class AwsS3Adapter extends AbstractAdapter implements CanOverwriteFiles
         try {
             $result = $this->s3Client->execute($command);
         } catch (S3Exception $exception) {
-            $response = $exception->getResponse();
-
-            if ($response !== null && $response->getStatusCode() === 404) {
+            if ($this->is404Exception($exception)) {
                 return false;
             }
 
@@ -326,6 +327,20 @@ class AwsS3Adapter extends AbstractAdapter implements CanOverwriteFiles
         }
 
         return $this->normalizeResponse($result->toArray(), $path);
+    }
+
+    /**
+     * @return bool
+     */
+    private function is404Exception(S3Exception $exception)
+    {
+        $response = $exception->getResponse();
+
+        if ($response !== null && $response->getStatusCode() === 404) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -407,7 +422,7 @@ class AwsS3Adapter extends AbstractAdapter implements CanOverwriteFiles
             [
                 'Bucket'     => $this->bucket,
                 'Key'        => $this->applyPathPrefix($newpath),
-                'CopySource' => urlencode($this->bucket . '/' . $this->applyPathPrefix($path)),
+                'CopySource' => S3Client::encodeKey($this->bucket . '/' . $this->applyPathPrefix($path)),
                 'ACL'        => $this->getRawVisibility($path) === AdapterInterface::VISIBILITY_PUBLIC
                     ? 'public-read' : 'private',
             ] + $this->options
@@ -444,7 +459,7 @@ class AwsS3Adapter extends AbstractAdapter implements CanOverwriteFiles
     /**
      * Read an object and normalize the response.
      *
-     * @param $path
+     * @param string $path
      *
      * @return array|bool
      */
@@ -566,11 +581,11 @@ class AwsS3Adapter extends AbstractAdapter implements CanOverwriteFiles
     /**
      * Upload an object.
      *
-     * @param        $path
-     * @param        $body
-     * @param Config $config
+     * @param string          $path
+     * @param string|resource $body
+     * @param Config          $config
      *
-     * @return array
+     * @return array|bool
      */
     protected function upload($path, $body, Config $config)
     {
@@ -578,21 +593,39 @@ class AwsS3Adapter extends AbstractAdapter implements CanOverwriteFiles
         $options = $this->getOptionsFromConfig($config);
         $acl = array_key_exists('ACL', $options) ? $options['ACL'] : 'private';
 
-        if ( ! isset($options['ContentType'])) {
-            $options['ContentType'] = Util::guessMimeType($path, $body);
+        if (!$this->isOnlyDir($path)) {
+            if ( ! isset($options['ContentType'])) {
+                $options['ContentType'] = Util::guessMimeType($path, $body);
+            }
+
+            if ( ! isset($options['ContentLength'])) {
+                $options['ContentLength'] = is_resource($body) ? Util::getStreamSize($body) : Util::contentSize($body);
+            }
+
+            if ($options['ContentLength'] === null) {
+                unset($options['ContentLength']);
+            }
         }
 
-        if ( ! isset($options['ContentLength'])) {
-            $options['ContentLength'] = is_string($body) ? Util::contentSize($body) : Util::getStreamSize($body);
+        try {
+            $this->s3Client->upload($this->bucket, $key, $body, $acl, ['params' => $options]);
+        } catch (S3MultipartUploadException $multipartUploadException) {
+            return false;
         }
 
-        if ($options['ContentLength'] === null) {
-            unset($options['ContentLength']);
-        }
+        return $this->normalizeResponse($options, $path);
+    }
 
-        $this->s3Client->upload($this->bucket, $key, $body, $acl, ['params' => $options]);
-
-        return $this->normalizeResponse($options, $key);
+    /**
+     * Check if the path contains only directories
+     *
+     * @param string $path
+     *
+     * @return bool
+     */
+    private function isOnlyDir($path)
+    {
+        return substr($path, -1) === '/';
     }
 
     /**
@@ -651,7 +684,7 @@ class AwsS3Adapter extends AbstractAdapter implements CanOverwriteFiles
             $result['timestamp'] = strtotime($response['LastModified']);
         }
 
-        if (substr($result['path'], -1) === '/') {
+        if ($this->isOnlyDir($result['path'])) {
             $result['type'] = 'dir';
             $result['path'] = rtrim($result['path'], '/');
 
@@ -662,7 +695,7 @@ class AwsS3Adapter extends AbstractAdapter implements CanOverwriteFiles
     }
 
     /**
-     * @param $location
+     * @param string $location
      *
      * @return bool
      */

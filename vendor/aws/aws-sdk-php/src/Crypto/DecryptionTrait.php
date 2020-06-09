@@ -3,6 +3,7 @@ namespace Aws\Crypto;
 
 use GuzzleHttp\Psr7;
 use GuzzleHttp\Psr7\LimitStream;
+use Psr\Http\Message\StreamInterface;
 
 trait DecryptionTrait
 {
@@ -52,7 +53,7 @@ trait DecryptionTrait
      *
      * @internal
      */
-    protected function decrypt(
+    public function decrypt(
         $cipherText,
         MaterialsProvider $provider,
         MetadataEnvelope $envelope,
@@ -90,7 +91,7 @@ trait DecryptionTrait
     }
 
     private function getTagFromCiphertextStream(
-        Psr7\Stream $cipherText,
+        StreamInterface $cipherText,
         $tagLength
     ) {
         $cipherTextSize = $cipherText->getSize();
@@ -106,7 +107,7 @@ trait DecryptionTrait
     }
 
     private function getStrippedCiphertextStream(
-        Psr7\Stream $cipherText,
+        StreamInterface $cipherText,
         $tagLength
     ) {
         $cipherTextSize = $cipherText->getSize();

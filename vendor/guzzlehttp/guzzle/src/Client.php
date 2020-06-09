@@ -2,7 +2,7 @@
 namespace GuzzleHttp;
 
 use GuzzleHttp\Cookie\CookieJar;
-use GuzzleHttp\Exception\InvalidArgumentException;
+use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Promise;
 use GuzzleHttp\Psr7;
 use Psr\Http\Message\RequestInterface;
@@ -47,9 +47,8 @@ class Client implements ClientInterface
      *   wire. The function is called with a Psr7\Http\Message\RequestInterface
      *   and array of transfer options, and must return a
      *   GuzzleHttp\Promise\PromiseInterface that is fulfilled with a
-     *   Psr7\Http\Message\ResponseInterface on success. "handler" is a
-     *   constructor only option that cannot be overridden in per/request
-     *   options. If no handler is provided, a default handler will be created
+     *   Psr7\Http\Message\ResponseInterface on success.
+     *   If no handler is provided, a default handler will be created
      *   that enables all of the request options below by attaching all of the
      *   default middleware to the handler.
      * - base_uri: (string|UriInterface) Base URI of the client that is merged
@@ -102,7 +101,7 @@ class Client implements ClientInterface
      * @param array $options Request options to apply to the given
      *                       request and to the transfer. See \GuzzleHttp\RequestOptions.
      *
-     * @return PromiseInterface
+     * @return Promise\PromiseInterface
      */
     public function sendAsync(RequestInterface $request, array $options = [])
     {
@@ -142,7 +141,7 @@ class Client implements ClientInterface
      * @param string|UriInterface $uri     URI object or string.
      * @param array               $options Request options to apply. See \GuzzleHttp\RequestOptions.
      *
-     * @return PromiseInterface
+     * @return Promise\PromiseInterface
      */
     public function requestAsync($method, $uri = '', array $options = [])
     {
@@ -215,36 +214,9 @@ class Client implements ClientInterface
             $uri = Psr7\UriResolver::resolve(Psr7\uri_for($config['base_uri']), $uri);
         }
 
-        if ($uri->getHost() && isset($config['idn_conversion']) && ($config['idn_conversion'] !== false)) {
+        if (isset($config['idn_conversion']) && ($config['idn_conversion'] !== false)) {
             $idnOptions = ($config['idn_conversion'] === true) ? IDNA_DEFAULT : $config['idn_conversion'];
-
-            $asciiHost = idn_to_ascii($uri->getHost(), $idnOptions, INTL_IDNA_VARIANT_UTS46, $info);
-            if ($asciiHost === false) {
-                $errorBitSet = isset($info['errors']) ? $info['errors'] : 0;
-
-                $errorConstants = array_filter(array_keys(get_defined_constants()), function ($name) {
-                    return substr($name, 0, 11) === 'IDNA_ERROR_';
-                });
-
-                $errors = [];
-                foreach ($errorConstants as $errorConstant) {
-                    if ($errorBitSet & constant($errorConstant)) {
-                        $errors[] = $errorConstant;
-                    }
-                }
-
-                $errorMessage = 'IDN conversion failed';
-                if ($errors) {
-                    $errorMessage .= ' (errors: ' . implode(', ', $errors) . ')';
-                }
-
-                throw new InvalidArgumentException($errorMessage);
-            } else {
-                if ($uri->getHost() !== $asciiHost) {
-                    // Replace URI only if the ASCII version is different
-                    $uri = $uri->withHost($asciiHost);
-                }
-            }
+            $uri = Utils::idnUriConvert($uri, $idnOptions);
         }
 
         return $uri->getScheme() === '' && $uri->getHost() !== '' ? $uri->withScheme('http') : $uri;
@@ -263,11 +235,9 @@ class Client implements ClientInterface
             'http_errors'     => true,
             'decode_content'  => true,
             'verify'          => true,
-            'cookies'         => false
+            'cookies'         => false,
+            'idn_conversion'  => true,
         ];
-
-        // idn_to_ascii() is a part of ext-intl and might be not available
-        $defaults['idn_conversion'] = function_exists('idn_to_ascii');
 
         // Use the standard Linux HTTP_PROXY and HTTPS_PROXY if set.
 
@@ -518,7 +488,7 @@ class Client implements ClientInterface
     /**
      * Throw Exception with pre-set message.
      * @return void
-     * @throws InvalidArgumentException Invalid body.
+     * @throws \InvalidArgumentException Invalid body.
      */
     private function invalidBody()
     {

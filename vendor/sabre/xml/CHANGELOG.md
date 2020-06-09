@@ -1,6 +1,57 @@
 ChangeLog
 =========
 
+2.2.1 (2020-05-11)
+------------------
+
+* #183: fixed warning 'xml cannot be empty while reading', which might lead to a infinite-loop (@mrow4a)
+* #179, #178, #177 #176: several build/continous integration related improvements (@phil-davis)
+
+2.2.0 (2020-01-31)
+------------------
+
+* #171: Added Support for PHP 7.4, dropped Support for PHP 7.0 (@staabm, @phil-davis)
+* #174: Update testsuite to phpunit8 (@phil-davis)
+* Added phpstan coverage (@phil-davis)
+* #144: Added a new `functionCaller` deserializer function for executing a callable when reading a XML
+element (@vsouz4)
+
+
+2.1.3 (2019-08-14)
+------------------
+
+* #166: Throw exception when empty inputs found
+
+
+2.1.2 (2019-01-09)
+------------------
+
+* #161: Prevent infinite loop on empty xml elements
+
+
+2.1.1 (2018-10-09)
+------------------
+
+* #149: Properly detect xml parse errors in `parseCurrentElement()` edge-cases
+
+
+2.1.0 (2018-02-08)
+------------------
+
+* #112: Added a `mixedContent` deserializer function, which might be useful
+  if you're parsing HTML-like documents with elements that contain both text
+  and other elements as siblings. (@staabm).
+
+
+2.0.0 (2016-11-15)
+------------------
+
+* Now requires PHP 7.
+* Uses typehints everywhere.
+* Fixed some minor strict typing-related issues.
+* Removed workaround for PHP bug [64230](https://bugs.php.net/bug.php?id=64230).
+
+
 1.5.0 (2016-10-09)
 ------------------
 

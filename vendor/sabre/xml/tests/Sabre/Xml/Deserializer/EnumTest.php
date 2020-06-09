@@ -1,13 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Sabre\Xml\Deserializer;
 
 use Sabre\Xml\Service;
 
-class EnumTest extends \PHPUnit_Framework_TestCase {
-
-    function testDeserialize() {
-
+class EnumTest extends \PHPUnit\Framework\TestCase
+{
+    public function testDeserialize()
+    {
         $service = new Service();
         $service->elementMap['{urn:test}root'] = 'Sabre\Xml\Deserializer\enum';
 
@@ -26,16 +28,13 @@ XML;
             '{urn:test}foo2',
         ];
 
-
         $this->assertEquals($expected, $result);
-
-
     }
 
-    function testDeserializeDefaultNamespace() {
-
+    public function testDeserializeDefaultNamespace()
+    {
         $service = new Service();
-        $service->elementMap['{urn:test}root'] = function($reader) {
+        $service->elementMap['{urn:test}root'] = function ($reader) {
             return enum($reader, 'urn:test');
         };
 
@@ -54,9 +53,33 @@ XML;
             'foo2',
         ];
 
-
         $this->assertEquals($expected, $result);
-
     }
 
+    public function testEmptyEnum()
+    {
+        $service = new Service();
+        $service->elementMap['{urn:test}enum'] = 'Sabre\Xml\Deserializer\enum';
+
+        $xml = <<<XML
+<?xml version="1.0"?>
+<root xmlns="urn:test">
+<inner>
+  <enum></enum>
+</inner>
+</root>
+XML;
+
+        $result = $service->parse($xml);
+
+        $this->assertEquals([[
+            'name' => '{urn:test}inner',
+            'value' => [[
+                'name' => '{urn:test}enum',
+                'value' => [],
+                'attributes' => [],
+            ]],
+            'attributes' => [],
+        ]], $result);
+    }
 }

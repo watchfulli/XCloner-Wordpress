@@ -13,5 +13,11 @@
     },
     "prefer-stable": true,
     "require-dev": {
-    }
+    },
+    "repositories":[
+        {
+          "type": "vcs",
+          "url": "git@github.com:watchfulli/xcloner-core.git"
+        }
+      ]
 }

@@ -1,5 +1,22 @@
 # Changelog
 
+## 1.0.22 - 2019-10-16
+
+* Trim extra slashes while setting connection root (#93)
+
+## 1.0.21 - 2019-09-19
+
+* Support double authentication (#63)
+* Added marker interface to some exceptions (#86)
+
+## 1.0.20 - 2019-06-07
+
+* From #77 / Bugfix: Directories or files named '0' do not show up in listContents
+
+## 1.0.19 - 2019-04-25
+
+* Fixed casing of `privateKey` property
+
 ## 1.0.18 - 2019-01-07
 
 * Throw an Exception if can't connect to check Host Fingerprint
