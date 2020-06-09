@@ -26,34 +26,36 @@
 
 // If this file is called directly, abort.
 if (!defined('WPINC')) {
-	die;
+    die;
 }
 
 //i will not load the plugin outside admin or cron
 if (!is_admin() and !defined('DOING_CRON')) {
-	return;
+    return;
 }
 
 if (!defined("DS")) {
-	define("DS", DIRECTORY_SEPARATOR);
+    define("DS", DIRECTORY_SEPARATOR);
 }
 
 /**
  * The code that runs during plugin activation.
  * This action is documented in includes/class-xcloner-activator.php
  */
-function activate_xcloner() {
-	require_once plugin_dir_path(__FILE__).'includes/class-xcloner-activator.php';
-	Xcloner_Activator::activate();
+function activate_xcloner()
+{
+    require_once plugin_dir_path(__FILE__).'includes/class-xcloner-activator.php';
+    Xcloner_Activator::activate();
 }
 
 /**
  * The code that runs during plugin deactivation.
  * This action is documented in includes/class-xcloner-deactivator.php
  */
-function deactivate_xcloner() {
-	require_once plugin_dir_path(__FILE__).'includes/class-xcloner-deactivator.php';
-	Xcloner_Deactivator::deactivate();
+function deactivate_xcloner()
+{
+    require_once plugin_dir_path(__FILE__).'includes/class-xcloner-deactivator.php';
+    Xcloner_Deactivator::deactivate();
 }
 
 register_activation_hook(__FILE__, 'activate_xcloner');
@@ -62,22 +64,24 @@ register_deactivation_hook(__FILE__, 'deactivate_xcloner');
 require_once plugin_dir_path(__FILE__).'includes/class-xcloner-activator.php';
 
 if (version_compare(phpversion(), Xcloner_Activator::xcloner_minimum_version, '<')) {
-	?>
+    ?>
     <div class="error notice">
         <p><?php echo sprintf(__("XCloner requires minimum PHP version %s in order to run correctly. We have detected your version as %s. Plugin is now deactivated."), Xcloner_Activator::xcloner_minimum_version, phpversion()) ?></p>
     </div>
 	<?php
-	require_once(ABSPATH.'wp-admin/includes/plugin.php');
-	deactivate_plugins(plugin_basename(__FILE__));
+    require_once(ABSPATH.'wp-admin/includes/plugin.php');
+    if (function_exists('deactivate_plugins')) {
+        deactivate_plugins(plugin_basename(__FILE__));
+    }
 
-	return;
+    return;
 }
 
 $db_installed_ver   = get_option("xcloner_db_version");
 $xcloner_db_version = Xcloner_Activator::xcloner_db_version;
 
 if ($db_installed_ver != $xcloner_db_version) {
-	Xcloner_Activator::activate();
+    Xcloner_Activator::activate();
 }
 
 
@@ -86,12 +90,13 @@ if ($db_installed_ver != $xcloner_db_version) {
  * admin-specific hooks, and public-facing site hooks.
  */
 
-function xcloner_stop_heartbeat() {
-	wp_deregister_script('heartbeat');
+function xcloner_stop_heartbeat()
+{
+    wp_deregister_script('heartbeat');
 }
 
 if (isset($_GET['page']) and stristr($_GET['page'], "xcloner_")) {
-	add_action('init', 'xcloner_stop_heartbeat', 1);
+    add_action('init', 'xcloner_stop_heartbeat', 1);
 }
 
 /**
@@ -103,22 +108,23 @@ if (isset($_GET['page']) and stristr($_GET['page'], "xcloner_")) {
  *
  * @since    1.0.0
  */
-function run_xcloner() {
-	$plugin = new Xcloner();
-	$plugin->check_dependencies();
-	$plugin->init();
-	$plugin->run();
+function run_xcloner()
+{
+    $plugin = new Xcloner();
+    $plugin->check_dependencies();
+    $plugin->init();
+    $plugin->run();
 
-	return $plugin;
+    return $plugin;
 }
 
 require_once(plugin_dir_path(__FILE__).'/vendor/autoload.php');
 require plugin_dir_path(__FILE__).'includes/class-xcloner.php';
 
 try {
-	$xcloner_plugin = run_xcloner();
-}catch (Exception $e) {
-	echo $e->getMessage();
+    $xcloner_plugin = run_xcloner();
+} catch (Exception $e) {
+    echo $e->getMessage();
 }
 
 /*

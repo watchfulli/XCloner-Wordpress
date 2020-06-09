@@ -258,15 +258,6 @@ if (!function_exists('register_deactivation_hook')) {
 /**
  *
  */
-if (!function_exists('deactivate_plugins')) {
-    function deactivate_plugins($path)
-    {
-    }
-}
-
-/**
- *
- */
 if (!function_exists('wp_deregister_script')) {
     function wp_deregister_script($path)
     {
