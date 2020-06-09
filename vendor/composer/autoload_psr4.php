@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'watchfulli\\XClonerCore\\' => array($vendorDir . '/watchfulli/xcloner-core/src'),
     'splitbrain\\PHPArchive\\' => array($vendorDir . '/splitbrain/php-archive/src'),
     'phpseclib\\' => array($vendorDir . '/phpseclib/phpseclib/phpseclib'),
     'Symfony\\Polyfill\\Php72\\' => array($vendorDir . '/symfony/polyfill-php72'),

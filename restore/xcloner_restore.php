@@ -82,6 +82,7 @@ if (defined('XCLONER_PLUGIN_ACCESS') && XCLONER_PLUGIN_ACCESS)
 {
 	$that = $this;
 }
+
 $xcloner_restore = new Xcloner_Restore($that);
 
 try {
@@ -120,7 +121,8 @@ class Xcloner_Restore
 
 		if (defined('XCLONER_PLUGIN_ACCESS') && XCLONER_PLUGIN_ACCESS)
 		{
-			$dir = $parent_api->get_xcloner_container()->get_xcloner_settings()->get_xcloner_store_path();
+			$xcloner_settings =  new watchfulli\XClonerCore\XCloner_Settings($parent_api);
+			$dir = $xcloner_settings->get_xcloner_store_path();
 		}
 		
 		if (!isset($dir) || !$dir) {
@@ -342,8 +344,7 @@ class Xcloner_Restore
 			$remote_mysql_user 	= $wpdb->dbuser;
 			$remote_mysql_pass 	= $wpdb->dbpassword;
 			$remote_mysql_db 	= $wpdb->dbname;
-		}*/
-		
+		}*/		
 		{
 			$mysqli = $this->mysql_connect($remote_mysql_host, $remote_mysql_user, $remote_mysql_pass, $remote_mysql_db);
 		}
@@ -498,6 +499,12 @@ class Xcloner_Restore
 			$backup_parts = $this->get_multipart_files($backup_file);
 			$backup_file = $backup_parts[$return['part']];
 		}
+
+		if ($this->is_encrypted_file($backup_file)) {
+            $return['error'] = true;
+            $return['message'] = __("Backup archive is encrypted, please decrypt it first before you can list it's content.", "xcloner-backup-and-restore");
+            $this->send_response(200, $return);
+        }
 		
 		try {
 			$tar = new Xcloner_Archive_Restore();
@@ -1441,5 +1448,25 @@ class Xcloner_Archive_Restore extends Tar {
         $return['extracted_files'] = $extracted;
 
         return $return;
+	}
+	
+	/**
+     * Check if provided filename has encrypted suffix
+     *
+     * @param $filename
+     * @return bool
+     */
+    public function is_encrypted_file($filename)
+    {
+        $fp = fopen($filename, 'r');
+        if (is_resource($fp)) {
+            $encryption_length = fread($fp, 16);
+            fclose($fp);
+            if (is_numeric($encryption_length)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

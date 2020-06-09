@@ -1,5 +1,6 @@
 {
     "require": {
+        "watchfulli/xcloner-core": "@dev",
         "splitbrain/php-archive": "^1.0",
         "vakata/jstree": "^3.3",
         "league/flysystem": "^1.0",
@@ -14,10 +15,13 @@
     "prefer-stable": true,
     "require-dev": {
     },
-    "repositories":[
+    "repositories": [
         {
-          "type": "vcs",
-          "url": "git@github.com:watchfulli/xcloner-core.git"
+            "type": "path",
+            "url": "./composer-package",
+            "options": {
+                "symlink": true
+            }
         }
-      ]
+    ]
 }

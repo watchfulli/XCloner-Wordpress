@@ -2240,5 +2240,42 @@
         ],
         "description": "jsTree is jquery plugin, that provides interactive trees.",
         "homepage": "http://jstree.com"
+    },
+    {
+        "name": "watchfulli/xcloner-core",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "dist": {
+            "type": "path",
+            "url": "./composer-package",
+            "reference": "9d1e2fdf86a211226f0a958cd3f979a2d7116219",
+            "shasum": null
+        },
+        "require": {
+            "league/flysystem": "^1.0",
+            "league/flysystem-sftp": "^1.0",
+            "monolog/monolog": "^1.22",
+            "splitbrain/php-archive": "^1.0"
+        },
+        "type": "package",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "watchfulli\\XClonerCore\\": "src/"
+            }
+        },
+        "license": [
+            "GNU/GPL"
+        ],
+        "authors": [
+            {
+                "name": "Ovidiu Liuta",
+                "email": "info@thinkovi.com"
+            }
+        ],
+        "description": "XCloner Core Library for Backup and Restore",
+        "transport-options": {
+            "symlink": true
+        }
     }
 ]

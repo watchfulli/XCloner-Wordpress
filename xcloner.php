@@ -24,11 +24,8 @@
  * Domain Path:       /languages
  */
 
-  // detect CLI mode
-  if (php_sapi_name() == "cli") {
-      if (basename($argv[0]) != "xcloner.php") {
-          return;
-      }
+// detect CLI mode
+  if (php_sapi_name() == "cli" && basename($argv[0]) == "xcloner.php") {
 
       $opts = getopt('v::p:h::');
 
@@ -51,7 +48,7 @@
           require_once(__DIR__ .'/../../../wp-load.php');
       }
      
-      require_once(__DIR__ . '/includes/class-xcloner-standalone.php');
+      //require_once(__DIR__ . '/includes/class-xcloner-standalone.php');
      
       $profile = [
          'id' => 0
@@ -62,12 +59,14 @@
       if (isset($opts['p']) && $opts['p']) {
           $profile_name = $opts['p'];
       }
-     
+      
+      require_once(plugin_dir_path(__FILE__).'/vendor/autoload.php');
+      
       //pass json config to Xcloner_Standalone lib
-      $xcloner_backup = new Xcloner_Standalone();
+      $xcloner_backup = new watchfulli\XClonerCore\Xcloner_Standalone();
      
       if (isset($profile_name) && $profile_name) {
-          $profile = ($xcloner_backup->xcloner_scheduler->get_schedule_by_id_or_name($profile_name));
+          $profile = ($xcloner_backup->get_xcloner_scheduler()->get_schedule_by_id_or_name($profile_name));
       }
      
       if ($profile['id']) {
@@ -167,15 +166,30 @@ if (isset($_GET['page']) and stristr($_GET['page'], "xcloner_")) {
  */
 function run_xcloner()
 {
-    $plugin = new Xcloner();
+    $plugin = new \Xcloner();
     $plugin->check_dependencies();
+
+    /**
+         * The class responsible for defining all actions that occur in the admin area.
+         */
+    require_once plugin_dir_path((__FILE__)).'admin/class-xcloner-admin.php';
+
+    /**
+     * The class responsible for defining all actions that occur in the public-facing
+     * side of the site.
+     */
+    //require_once plugin_dir_path((__FILE__)).'public/class-xcloner-public.php';
+        
     $plugin->init();
+    $plugin->extra_define_ajax_hooks();
     $plugin->run();
 
     return $plugin;
 }
 
 require_once(plugin_dir_path(__FILE__).'/vendor/autoload.php');
+//use watchfulli\XClonerCore\Xcloner as Xcloner;
+
 require plugin_dir_path(__FILE__).'includes/class-xcloner.php';
 
 try {
@@ -183,9 +197,3 @@ try {
 } catch (Exception $e) {
     echo $e->getMessage();
 }
-
-/*
-if(isset($_GET['page']) && $_GET['page'] == "xcloner_pre_auto_update")
-{
-    wp_maybe_auto_update();
-}*/

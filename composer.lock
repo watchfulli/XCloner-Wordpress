@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9f4f73e8f1e0da6721fc7330e0cc1733",
+    "content-hash": "594af7a44036842af7ec601ad7a9b6d7",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -2173,12 +2173,49 @@
             "description": "jsTree is jquery plugin, that provides interactive trees.",
             "homepage": "http://jstree.com",
             "time": "2020-02-10T22:25:09+00:00"
+        },
+        {
+            "name": "watchfulli/xcloner-core",
+            "version": "dev-master",
+            "dist": {
+                "type": "path",
+                "url": "./composer-package",
+                "reference": "9d1e2fdf86a211226f0a958cd3f979a2d7116219",
+                "shasum": null
+            },
+            "require": {
+                "league/flysystem": "^1.0",
+                "league/flysystem-sftp": "^1.0",
+                "monolog/monolog": "^1.22",
+                "splitbrain/php-archive": "^1.0"
+            },
+            "type": "package",
+            "autoload": {
+                "psr-4": {
+                    "watchfulli\\XClonerCore\\": "src/"
+                }
+            },
+            "license": [
+                "GNU/GPL"
+            ],
+            "authors": [
+                {
+                    "name": "Ovidiu Liuta",
+                    "email": "info@thinkovi.com"
+                }
+            ],
+            "description": "XCloner Core Library for Backup and Restore",
+            "transport-options": {
+                "symlink": true
+            }
         }
     ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "watchfulli/xcloner-core": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": [],
