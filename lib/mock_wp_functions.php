@@ -421,6 +421,13 @@ if (!function_exists('wp_mail')) {
     }
 }
 
+if (!function_exists('wp_debug_backtrace_summary')) {
+    function wp_debug_backtrace_summary(){
+
+    }
+}
+
+
 // function current_user_can(){}
 // function sanitize_key(){}
 // function plugin_dir_url() {}

@@ -88,6 +88,13 @@ jQuery(document).ready(function () {
         this.edit_modal.find("#backup_encrypt").attr("checked", "checked");
       }
 
+      if (
+        response.backup_params.backup_delete_after_remote_transfer !== undefined &&
+        response.backup_params.backup_delete_after_remote_transfer == 1
+      ) {
+        this.edit_modal.find("#backup_delete_after_remote_transfer").attr("checked", "checked");
+      }
+
       var tables = jQuery.parseJSON(response.table_params);
 
       var tables_list = "";
@@ -107,9 +114,9 @@ jQuery(document).ready(function () {
 
       this.edit_modal.find("#excluded_files").val(exclude_files_list);
 
-      jQuery(".col select").material_select();
+      jQuery(".col select").formSelect();
 
-      Materialize.updateTextFields();
+      M.updateTextFields();
 
       this.edit_modal.modal("open");
     }
@@ -233,8 +240,8 @@ jQuery(document).ready(function () {
       vibrate: true, // vibrate the device when dragging clock hand
     });
   }
-  
-  if (typeof jQuery(".timepicker").pickatime === "function") {
+
+  if (typeof jQuery(".timepicker").pickadate === "function") {
     date_picker = jQuery(".datepicker").pickadate({
       format: "d mmmm yyyy",
       selectMonths: true, // Creates a dropdown to control month

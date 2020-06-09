@@ -120,4 +120,19 @@ class Xcloner_Logger extends Logger
 
         return $lines;
     }
+
+    /**
+     * Info message logging
+     *
+     * @param [type] $msg
+     * @param boolean $print
+     * @return void
+     */
+    public function print_info($message, $context = array())
+    {
+        if (!WP_DEBUG) {
+            echo sprintf("[%s] %s \n", date("Y-m-d H:i:s"), $message);
+        }
+        return parent::info($message, $context);
+    }
 }

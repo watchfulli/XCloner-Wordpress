@@ -127,6 +127,11 @@ ul.backup-name {
     font-size: 1rem;
 }
 
+.input-field>label:not(.label-icon).active {
+    -webkit-transform: translateY(-14px) scale(1);
+    transform: translateY(-14px) scale(1);
+}
+
 #schedule_backup .server-time h2 {
     color: #fff;
 }
@@ -210,7 +215,18 @@ a.expand-multipart.remove {
 }
 
 .remote-storage .collapsible-header {
-    padding: 2px 5px;
+    padding: 10px;
+    display: block;
+    line-height: 25px;
+}
+
+#generate_backup p {
+    margin: 0px;
+}
+
+#generate_backup .collapsible-header,
+.xcloner-debugger .collapsible-header{
+    display: block;
 }
 
 #manage_backups td.checkbox {
@@ -404,6 +420,26 @@ i.backup_warning {
 
 .input-field .switch label {
     color: #000;
+}
+
+.wp-core-ui .select-wrapper select {
+    border: 0px;
+}
+
+#save_schedule .switch {
+    margin-top: 20px;
+}
+
+.collapsible-header i {
+    vertical-align: middle;
+}
+
+#backup-status .title{
+    display: inline;
+}
+
+.wp-core-ui select {
+    max-width: initial;
 }
 
 @media only screen and (min-width: 993px) {

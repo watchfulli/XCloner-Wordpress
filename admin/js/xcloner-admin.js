@@ -3,6 +3,9 @@
 
     jQuery(document).ready(function () {
 
+        jQuery('.tooltipped').tooltip();
+        jQuery('.collapsible').collapsible();
+
         jQuery("span.shorten_string").click(function () {
             jQuery(this).toggleClass("full");
             doShortText(jQuery(this));

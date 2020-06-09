@@ -19,7 +19,7 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 
 <div class="row xcloner-restore">
     <div class="col s12">
-        <ul class="collapsible xcloner-restore " data-collapsible="accordion">
+        <ul class="collapsible xcloner-restore collapsible-accordion" data-collapsible="accordion">
             <li data-step="1" class="restore-script-upload-step steps active show">
                 <div class="collapsible-header active"><i
                             class="material-icons">settings_remote</i><?php echo __("Restore Script Upload", 'xcloner-backup-and-restore') ?>
@@ -51,7 +51,7 @@ $backup_list = $xcloner_file_system->get_latest_backups();
                     </ul>
 
                     <div class="input-field col l9 s12">
-                        <input value="<?php echo (is_ssl()) ? "https://" : "" ?>" id="restore_script_url" type="text"
+                        <input value="<?php echo (is_ssl()) ? "https://" : "" ?>" autocomplete="false" id="restore_script_url" type="text"
                                class="validate"
                                placeholder="Url to XCloner Restore Script, example http://myddns.com/xcloner/xcloner_restore.php">
                         <label for="restore_script_url"></label>
@@ -67,7 +67,7 @@ $backup_list = $xcloner_file_system->get_latest_backups();
             </li>
 
             <li data-step="2" class="backup-upload-step steps">
-                <div class="collapsible-header active"><i
+                <div class="collapsible-header "><i
                             class="material-icons">file_upload</i><?php echo __("Upload Local Backup Archive To Target Host", 'xcloner-backup-and-restore') ?>
                 </div>
                 <div class="collapsible-body row">
@@ -112,7 +112,7 @@ $backup_list = $xcloner_file_system->get_latest_backups();
                 </div>
             </li>
 
-            <li data-step="3" class="restore-remote-backup-step steps active">
+            <li data-step="3" class="restore-remote-backup-step steps ">
                 <div class="collapsible-header"><i
                             class="material-icons">folder_open</i><?php echo __("Restore Files Backup Available On Target Location", 'xcloner-backup-and-restore') ?>
                     <i class="material-icons right" title="Refresh Target Backup Files List"
@@ -163,44 +163,64 @@ $backup_list = $xcloner_file_system->get_latest_backups();
                             </div>
 
                             <div class="col s12">
-                                <input class="with-gap" name="filter_files" type="radio" id="filter_files_all" checked
-                                       value="" disabled/>
+                                
                                 <label for="filter_files_all" class="tooltipped" data-position="right"
-                                       data-tooltip="<?php echo __("Restore all backup files. Available only when doing a Remote Target System Restore", 'xcloner-backup-and-restore') ?>"><?php echo __("Restore All Files", "xcloner-backup-and-restore") ?></label>
-
-                                <input class="with-gap" name="filter_files" type="radio" id="filter_files_wp_content"
-                                       value="/^wp-content\/(.*)/"/>
+                                       data-tooltip="<?php echo __("Restore all backup files. Available only when doing a Remote Target System Restore", 'xcloner-backup-and-restore') ?>">
+                                        <input class="with-gap" name="filter_files" type="radio" id="filter_files_all" checked
+                                        value="" disabled/>
+                                        <span>
+                                            <?php echo __("Restore All Files", "xcloner-backup-and-restore") ?>
+                                        </span>
+                                </label>
+                                
+                                
                                 <label for="filter_files_wp_content" class="tooltipped"
                                        data-tooltip="<?php echo __('Restore the files only of the wp-content/ folder', 'xcloner-backup-and-restore') ?>">
-									<?php echo __("Only wp-content", "xcloner-backup-and-restore") ?>
+                                       <input class="with-gap" name="filter_files" type="radio" id="filter_files_wp_content"
+                                       value="/^wp-content\/(.*)/"/>
+                                       <span>
+                                            <?php echo __("Only wp-content", "xcloner-backup-and-restore") ?>
+                                        </span>
                                 </label>
 
-                                <input class="with-gap" name="filter_files" type="radio" id="filter_files_plugins"
-                                       value="/^wp-content\/plugins(.*)/"/>
+                
                                 <label for="filter_files_plugins" class="tooltipped"
                                        data-tooltip="<?php echo __('Restore the files only of the wp-content/plugins/ folder', 'xcloner-backup-and-restore') ?>">
-									<?php echo __("Only Plugins", "xcloner-backup-and-restore") ?>
+                                       <input class="with-gap" name="filter_files" type="radio" id="filter_files_plugins"
+                                       value="/^wp-content\/plugins(.*)/"/>
+                                        <span>    
+                                            <?php echo __("Only Plugins", "xcloner-backup-and-restore") ?>
+                                        </span>
                                 </label>
 
-                                <input class="with-gap" name="filter_files" type="radio" id="filter_files_uploads"
-                                       value="/^wp-content\/uploads(.*)/"/>
+                            
                                 <label for="filter_files_uploads" class="tooltipped"
                                        data-tooltip="<?php echo __('Restore the files only of the wp-content/uploads/ folder only', 'xcloner-backup-and-restore') ?>">
-									<?php echo __("Only Uploads", "xcloner-backup-and-restore") ?>
+                                       <input class="with-gap" name="filter_files" type="radio" id="filter_files_uploads"
+                                       value="/^wp-content\/uploads(.*)/"/>
+                                        <span>
+                                            <?php echo __("Only Uploads", "xcloner-backup-and-restore") ?>
+                                        </span>
                                 </label>
 
-                                <input class="with-gap" name="filter_files" type="radio" id="filter_files_themes"
-                                       value="/^wp-content\/themes(.*)/"/>
+                                
                                 <label for="filter_files_themes" class="tooltipped"
                                        data-tooltip="<?php echo __('Restore the files only of the wp-content/themes/ folder', 'xcloner-backup-and-restore') ?>">
-									<?php echo __("Only Themes", "xcloner-backup-and-restore") ?>
+                                       <input class="with-gap" name="filter_files" type="radio" id="filter_files_themes"
+                                       value="/^wp-content\/themes(.*)/"/>
+                                       <span>
+                                            <?php echo __("Only Themes", "xcloner-backup-and-restore") ?>
+                                        </span>
                                 </label>
 
-                                <input class="with-gap" name="filter_files" type="radio" id="filter_files_database"
-                                       value="/^xcloner-(.*)\/(.*)\.sql/"/>
+                                
                                 <label for="filter_files_database" class="tooltipped"
                                        data-tooltip="<?php echo __('Restore the database-sql.sql mysql backup from the xcloner-xxxxx/ folder', 'xcloner-backup-and-restore') ?>">
-									<?php echo __("Only Database Backup", "xcloner-backup-and-restore") ?>
+                                       <input class="with-gap" name="filter_files" type="radio" id="filter_files_database"
+                                       value="/^xcloner-(.*)\/(.*)\.sql/"/>
+                                       <span>
+                                            <?php echo __("Only Database Backup", "xcloner-backup-and-restore") ?>
+                                        </span>
                                 </label>
                             </div>
                         </div>
@@ -234,7 +254,7 @@ $backup_list = $xcloner_file_system->get_latest_backups();
                 </div>
             </li>
 
-            <li data-step="4" class="restore-remote-database-step steps active">
+            <li data-step="4" class="restore-remote-database-step steps ">
                 <div class="collapsible-header"><i
                             class="material-icons">list</i><?php echo __("Restore Target Database - Search and Replace", 'xcloner-backup-and-restore') ?>
                     <i class="material-icons right" title="Refresh Database Backup Files List"
@@ -271,7 +291,7 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 
 
                             <div class="input-field  col s12 m6">
-                                <input type="text" name="remote_mysql_pass" id="remote_mysql_pass" class="validate"
+                                <input type="password" name="remote_mysql_pass" id="remote_mysql_pass" class="validate"
                                        placeholder="Target Mysql Password">
                                 <label><?php echo __("Target Mysql Password", 'xcloner-backup-and-restore') ?></label>
                             </div>
@@ -361,7 +381,7 @@ $backup_list = $xcloner_file_system->get_latest_backups();
                 </div>
             </li>
 
-            <li data-step="5" class="restore-finish-step steps active">
+            <li data-step="5" class="restore-finish-step steps ">
                 <div class="collapsible-header"><i
                             class="material-icons">folder_open</i><?php echo __("Finishing up...", 'xcloner-backup-and-restore') ?>
                 </div>

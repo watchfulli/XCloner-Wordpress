@@ -86,7 +86,7 @@ if ($requirements->check_backup_ready_status()) {
                     <div class="collapsible-header active"><i class="material-icons">info</i>Backup Status</div>
                     <div class="collapsible-body">
                         <div class="" id="backup-status">
-                            <div class="row">
+                            <div class="">
                                 <h5><?php echo __("Latest Backup", 'xcloner-backup-and-restore') ?></h5>
                                 <blockquote>
 									<?php if (isset($latest_backup)): ?>

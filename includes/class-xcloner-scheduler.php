@@ -54,7 +54,9 @@ class Xcloner_Scheduler
             foreach ($list as $res) {
                 if ($res->status) {
                     $res->next_run_time = wp_next_scheduled('xcloner_scheduler_'.$res->id, array($res->id)) + ($this->xcloner_settings->get_xcloner_option('gmt_offset') * HOUR_IN_SECONDS);
-                    $new_list[]         = $res;
+                    if ($res->next_run_time) {
+                        $new_list[]         = $res;
+                    }
                 }
             }
             $list = $new_list;
@@ -74,9 +76,36 @@ class Xcloner_Scheduler
     {
         $data = $this->db->get_row("SELECT * FROM ".$this->scheduler_table." WHERE id=".$id);
 
+        if (!$data) {
+            return false;
+        }
+
         return $data;
     }
 
+    /**
+     * Get schedule by id or name
+     *
+     * @param [type] $id
+     * @return array
+     */
+    public function get_schedule_by_id_or_name($id)
+    {
+        $data = $this->db->get_row("SELECT * FROM ".$this->scheduler_table." WHERE id='".$id."' or name='".$id."'", ARRAY_A);
+
+        if (!$data) {
+            return false;
+        }
+
+        return $data;
+    }
+
+    /**
+     * Get schedule by id
+     *
+     * @param [type] $id
+     * @return array
+     */
     public function get_schedule_by_id($id)
     {
         $data = $this->db->get_row("SELECT * FROM ".$this->scheduler_table." WHERE id=".$id, ARRAY_A);
@@ -229,6 +258,8 @@ class Xcloner_Scheduler
     {
         set_time_limit(0);
 
+        $start_time = time();
+
         if (!$xcloner) {
             $xcloner = new XCloner();
             $xcloner->init();
@@ -276,7 +307,7 @@ class Xcloner_Scheduler
             $this->update_hash($schedule['id'], $this->xcloner_settings->get_hash());
         }
 
-        $this->logger->info(sprintf("Starting cron schedule '%s'", $schedule['name']), array("CRON"));
+        $this->logger->print_info(sprintf("Starting backup profile '%s'", $schedule['name']), array("CRON"));
 
         $this->xcloner_file_system->set_excluded_files(json_decode($schedule['excluded_files']));
 
@@ -289,9 +320,9 @@ class Xcloner_Scheduler
             $init = 0;
         }
 
-        $this->logger->info(sprintf("File scan finished"), array("CRON"));
+        $this->logger->print_info(sprintf("File scan finished"), array("CRON"));
 
-        $this->logger->info(sprintf("Starting the database backup"), array("CRON"));
+        $this->logger->print_info(sprintf("Starting the database backup"), array("CRON"));
 
         $init               = 1;
         $return['finished'] = 0;
@@ -301,9 +332,9 @@ class Xcloner_Scheduler
             $init   = 0;
         }
 
-        $this->logger->info(sprintf("Database backup done"), array("CRON"));
+        $this->logger->print_info(sprintf("Database backup done"), array("CRON"));
 
-        $this->logger->info(sprintf("Starting file archive process"), array("CRON"));
+        $this->logger->print_info(sprintf("Starting file archive process"), array("CRON"));
 
         $init               = 0;
         $return['finished'] = 0;
@@ -313,7 +344,7 @@ class Xcloner_Scheduler
             $return = $this->archive_system->start_incremental_backup((array)$schedule['backup_params'], $return['extra'], $init);
             $init   = 0;
         }
-        $this->logger->info(sprintf("File archive process FINISHED."), array("CRON"));
+        $this->logger->print_info(sprintf("File archive process FINISHED."), array("CRON"));
 
         //getting the last backup archive file
         $return['extra']['backup_parent'] = $this->archive_system->get_archive_name_with_extension();
@@ -333,7 +364,7 @@ class Xcloner_Scheduler
         $backup_parts = array();
 
         if (isset($schedule['backup_params']->backup_encrypt) && $schedule['backup_params']->backup_encrypt) {
-            $this->logger->info(sprintf("Encrypting backup archive %s.", $return['extra']['backup_parent']), array("CRON"));
+            $this->logger->print_info(sprintf("Encrypting backup archive %s.", $return['extra']['backup_parent']), array("CRON"));
 
             $backup_file = $return['extra']['backup_parent'];
 
@@ -363,18 +394,18 @@ class Xcloner_Scheduler
                 }
             }
         }
-
+        
         //Sending backup to remote storage
         if (isset($schedule['remote_storage']) && $schedule['remote_storage'] && array_key_exists($schedule['remote_storage'], $this->xcloner_remote_storage->get_available_storages())) {
             $backup_file = $return['extra']['backup_parent'];
 
-            $this->logger->info(sprintf("Transferring backup to remote storage %s", strtoupper($schedule['remote_storage'])), array("CRON"));
+            $this->logger->print_info(sprintf("Transferring backup to remote storage %s", strtoupper($schedule['remote_storage'])), array("CRON"));
 
             if (method_exists($this->xcloner_remote_storage, "upload_backup_to_storage")) {
                 call_user_func_array(array(
                     $this->xcloner_remote_storage,
                     "upload_backup_to_storage"
-                ), array($backup_file, $schedule['remote_storage']));
+                ), array($backup_file, $schedule['remote_storage'], $schedule['backup_params']->backup_delete_after_remote_transfer));
             }
         }
 
@@ -391,12 +422,6 @@ class Xcloner_Scheduler
             }
         }
 
-        //CHECK IF WE SHOULD DELETE BACKUP AFTER REMOTE TRANSFER IS DONE
-        if ($schedule['remote_storage'] && $this->xcloner_settings->get_xcloner_option('xcloner_cleanup_delete_after_remote_transfer')) {
-            $this->logger->info(sprintf("Deleting %s from local storage matching rule xcloner_cleanup_delete_after_remote_transfer", $return['extra']['backup_parent']));
-            $this->xcloner_file_system->delete_backup_by_name($return['extra']['backup_parent']);
-        }
-
         //Backup Storage Cleanup
         $this->xcloner_file_system->backup_storage_cleanup();
 
@@ -405,6 +430,8 @@ class Xcloner_Scheduler
 
         //Removing the tmp filesystem used for backup
         $this->xcloner_file_system->remove_tmp_filesystem();
+
+        $this->logger->print_info(sprintf("Profile '%s' finished in %d seconds.", $schedule['name'], time() - $start_time), array("CRON"));
 
         return $return;
     }
@@ -449,6 +476,11 @@ class Xcloner_Scheduler
         }
 
         array_multisort($intervals, SORT_ASC, $new_schedules);
+
+        $new_schedules['profile'] = [
+            'interval'=> '-1',
+            'display'=> 'Manual Execution'
+        ];
 
         return $new_schedules;
     }

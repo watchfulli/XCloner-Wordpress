@@ -15,7 +15,7 @@
  * Plugin Name:       XCloner - Site Backup and Restore
  * Plugin URI:        https://xcloner.com/
  * Description:       XCloner is a tool that will help you manage your website backups, generate/restore/move so your website will be always secured! With XCloner you will be able to clone your site to any other location with just a few clicks, as well as transfer the backup archives to remote FTP, SFTP, DropBox, Amazon S3, Google Drive, WebDAV, Backblaze, Azure accounts.
- * Version:           4.1.4
+ * Version:           4.2.0
  * Author:            watchful
  * Author URI:        https://watchful.net/
  * License:           GPL-2.0+
@@ -23,6 +23,57 @@
  * Text Domain:       xcloner-backup-and-restore
  * Domain Path:       /languages
  */
+
+  // detect CLI mode
+  if (php_sapi_name() == "cli") {
+      $opts = getopt('v::p:h::');
+
+      if (isset($opts['h'])) {
+          echo sprintf("-h                Display help\n");
+          echo sprintf("-p <profile name> Specify the backup profile name or ID\n");
+          echo sprintf("-v                Verbose output\n");
+          return;
+      }
+      
+      if (isset($opts['v'])) {
+          define('WP_DEBUG', true);
+          define('WP_DEBUG_DISPLAY', true);
+      } else {
+          define('WP_DEBUG', false);
+          define('WP_DEBUG_DISPLAY', false);
+      }
+     
+      if (file_exists(__DIR__ . "/../../../wp-load.php")) {
+          require_once(__DIR__ .'/../../../wp-load.php');
+      }
+     
+      require_once(__DIR__ . '/includes/class-xcloner-standalone.php');
+     
+      $profile = [
+         'id' => 0
+     ];
+     
+      $profile_name = "undefined";
+
+      if (isset($opts['p']) && $opts['p']) {
+          $profile_name = $opts['p'];
+      }
+     
+      //pass json config to Xcloner_Standalone lib
+      $xcloner_backup = new Xcloner_Standalone();
+     
+      if (isset($profile_name) && $profile_name) {
+          $profile = ($xcloner_backup->xcloner_scheduler->get_schedule_by_id_or_name($profile_name));
+      }
+     
+      if ($profile['id']) {
+          $xcloner_backup->start($profile['id']);
+      } else {
+          die("Could not find profile ". $profile_name."\n");
+      }
+
+      return;
+  }
 
 // If this file is called directly, abort.
 if (!defined('WPINC')) {
@@ -70,9 +121,11 @@ if (version_compare(phpversion(), Xcloner_Activator::xcloner_minimum_version, '<
     </div>
 	<?php
     require_once(ABSPATH.'wp-admin/includes/plugin.php');
+
     if (function_exists('deactivate_plugins')) {
         deactivate_plugins(plugin_basename(__FILE__));
     }
+
 
     return;
 }

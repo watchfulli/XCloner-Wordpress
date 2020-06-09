@@ -1,6 +1,5 @@
 /** global: ajaxurl */
 /** global: Materialize */
-(function ($) {
   var dataTable = "";
 
   class Xcloner_Manage_Backups {
@@ -9,6 +8,7 @@
       this.storage_selection = "";
       this.dataTable = "";
       //this.edit_modal = jQuery('.modal').modal();
+      
     }
 
     download_backup_by_name(id) {
@@ -354,13 +354,16 @@
       }
     }
 
-    cloud_upload(backup_file) {
+    cloud_upload(backup_file, delete_after_transfer) {
+      
+      delete_after_transfer = delete_after_transfer || 0;
+
       jQuery("#remote_storage_modal").find(".backup_name").text(backup_file);
       jQuery("#remote_storage_modal")
         .find("input.backup_name")
         .val(backup_file);
-      Materialize.updateTextFields();
-      jQuery(".col select").material_select();
+      M.updateTextFields();
+      jQuery(".col select").formSelect();
       jQuery("#remote_storage_modal").modal("open");
       jQuery("#remote_storage_modal .status").hide();
 
@@ -385,6 +388,7 @@
                 action: "upload_backup_to_remote",
                 file: backup_file,
                 storage_type: storage_type,
+                delete_after_transfer: delete_after_transfer
               },
               success: function (response) {
                 if (response.error) {
@@ -494,10 +498,12 @@
         sSearch: "",
         sSearchPlaceholder: "Search Backups",
       },
-      ajax:
-        ajaxurl +
-        "?action=get_manage_backups_list&storage_selection=" +
-        xcloner_manage_backups.storage_selection,
+      ajax: {
+        url:
+          ajaxurl +
+          "?action=get_manage_backups_list&storage_selection=" +
+          xcloner_manage_backups.storage_selection,
+      },
       fnDrawCallback: function (oSettings) {
         jQuery("a.expand-multipart").on("click", function () {
           jQuery(this).parent().find("ul.multipart").toggle();
@@ -596,6 +602,7 @@
               .parent()
               .parent()
               .parent()
+              .parent()
               .find(".delete")
               .trigger("click");
           }
@@ -620,4 +627,3 @@
 
     var show_delete_alert = 1;
   });
-})(jQuery);
