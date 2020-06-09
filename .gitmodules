@@ -1,0 +1,3 @@
+[submodule "vendor/watchfulli/xcloner-core"]
+	path = vendor/watchfulli/xcloner-core
+	url = https://github.com/watchfulli/xcloner-core
