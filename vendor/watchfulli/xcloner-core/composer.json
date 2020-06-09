@@ -1,0 +1,22 @@
+{
+    "name": "watchfulli/xcloner-core",
+    "description": "XCloner Core Library for Backup and Restore",
+    "type": "package",
+    "require": {
+        "splitbrain/php-archive": "^1.0",
+        "league/flysystem": "^1.0",
+        "monolog/monolog": "^1.22",
+        "league/flysystem-sftp": "^1.0"
+    },
+    "license": "GNU/GPL",
+    "authors": [
+        {
+            "name": "Ovidiu Liuta",
+            "email": "info@thinkovi.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "autoload": {
+        "psr-4": {"watchfulli\\XClonerCore\\": "src/"}
+    }
+}
