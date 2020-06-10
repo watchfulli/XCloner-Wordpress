@@ -2243,26 +2243,31 @@
     },
     {
         "name": "watchfulli/xcloner-core",
-        "version": "v1.0.1",
-        "version_normalized": "1.0.1.0",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
         "source": {
             "type": "git",
             "url": "https://github.com/watchfulli/xcloner-core.git",
-            "reference": "7b358ea9deef97389af68e675a7b851f74579f31"
+            "reference": "c8cada3dd7fb4275eddc9eb312575101a8c0c03c"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/watchfulli/xcloner-core/zipball/7b358ea9deef97389af68e675a7b851f74579f31",
-            "reference": "7b358ea9deef97389af68e675a7b851f74579f31",
+            "url": "https://api.github.com/repos/watchfulli/xcloner-core/zipball/c8cada3dd7fb4275eddc9eb312575101a8c0c03c",
+            "reference": "c8cada3dd7fb4275eddc9eb312575101a8c0c03c",
             "shasum": ""
         },
         "require": {
             "league/flysystem": "^1.0",
+            "league/flysystem-aws-s3-v3": "^1.0",
+            "league/flysystem-azure-blob-storage": "^0.1.6",
             "league/flysystem-sftp": "^1.0",
+            "league/flysystem-webdav": "^1.0",
+            "mhetreramesh/flysystem-backblaze": "^1.0",
             "monolog/monolog": "^1.22",
-            "splitbrain/php-archive": "^1.0"
+            "splitbrain/php-archive": "^1.0",
+            "srmklive/flysystem-dropbox-v2": "^1.0"
         },
-        "time": "2020-06-10T11:25:52+00:00",
+        "time": "2020-06-10T13:36:59+00:00",
         "type": "package",
         "installation-source": "source",
         "autoload": {
@@ -2270,8 +2275,9 @@
                 "watchfulli\\XClonerCore\\": "src/"
             }
         },
+        "notification-url": "https://packagist.org/downloads/",
         "license": [
-            "GNU/GPL"
+            "AGPL-3.0-or-later"
         ],
         "authors": [
             {
@@ -2279,10 +2285,6 @@
                 "email": "info@thinkovi.com"
             }
         ],
-        "description": "XCloner Core Library for Backup and Restore",
-        "support": {
-            "source": "https://github.com/watchfulli/xcloner-core/tree/v1.0.1",
-            "issues": "https://github.com/watchfulli/xcloner-core/issues"
-        }
+        "description": "XCloner Core Library for Backup and Restore"
     }
 ]
