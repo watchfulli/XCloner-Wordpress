@@ -25,11 +25,12 @@
  */
 
 // composer library autoload
-require_once(plugin_dir_path(__FILE__).'/vendor/autoload.php');
+require_once(__DIR__.'/vendor/autoload.php');
 
 // detect CLI mode
   if (php_sapi_name() == "cli" && basename($argv[0]) == "xcloner.php") {
 
+    
       $opts = getopt('v::p:h::');
 
       if (isset($opts['h'])) {
@@ -50,9 +51,7 @@ require_once(plugin_dir_path(__FILE__).'/vendor/autoload.php');
       if (file_exists(__DIR__ . "/../../../wp-load.php")) {
           require_once(__DIR__ .'/../../../wp-load.php');
       }
-     
-      //require_once(__DIR__ . '/includes/class-xcloner-standalone.php');
-     
+          
       $profile = [
          'id' => 0
      ];
