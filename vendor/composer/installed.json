@@ -2243,17 +2243,17 @@
     },
     {
         "name": "watchfulli/xcloner-core",
-        "version": "v1.0",
-        "version_normalized": "1.0.0.0",
+        "version": "v1.0.1",
+        "version_normalized": "1.0.1.0",
         "source": {
             "type": "git",
             "url": "https://github.com/watchfulli/xcloner-core.git",
-            "reference": "c1db3951f375fcb938a4ca9248f71e4cc8e0c51d"
+            "reference": "7b358ea9deef97389af68e675a7b851f74579f31"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/watchfulli/xcloner-core/zipball/c1db3951f375fcb938a4ca9248f71e4cc8e0c51d",
-            "reference": "c1db3951f375fcb938a4ca9248f71e4cc8e0c51d",
+            "url": "https://api.github.com/repos/watchfulli/xcloner-core/zipball/7b358ea9deef97389af68e675a7b851f74579f31",
+            "reference": "7b358ea9deef97389af68e675a7b851f74579f31",
             "shasum": ""
         },
         "require": {
@@ -2262,7 +2262,7 @@
             "monolog/monolog": "^1.22",
             "splitbrain/php-archive": "^1.0"
         },
-        "time": "2020-06-10T10:52:09+00:00",
+        "time": "2020-06-10T11:25:52+00:00",
         "type": "package",
         "installation-source": "source",
         "autoload": {
@@ -2281,7 +2281,7 @@
         ],
         "description": "XCloner Core Library for Backup and Restore",
         "support": {
-            "source": "https://github.com/watchfulli/xcloner-core/tree/master",
+            "source": "https://github.com/watchfulli/xcloner-core/tree/v1.0.1",
             "issues": "https://github.com/watchfulli/xcloner-core/issues"
         }
     }
