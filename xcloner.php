@@ -24,6 +24,9 @@
  * Domain Path:       /languages
  */
 
+// composer library autoload
+require_once(plugin_dir_path(__FILE__).'/vendor/autoload.php');
+
 // detect CLI mode
   if (php_sapi_name() == "cli" && basename($argv[0]) == "xcloner.php") {
 
@@ -59,8 +62,6 @@
       if (isset($opts['p']) && $opts['p']) {
           $profile_name = $opts['p'];
       }
-      
-      require_once(plugin_dir_path(__FILE__).'/vendor/autoload.php');
       
       //pass json config to Xcloner_Standalone lib
       $xcloner_backup = new watchfulli\XClonerCore\Xcloner_Standalone();
@@ -112,10 +113,10 @@ function deactivate_xcloner()
     Xcloner_Deactivator::deactivate();
 }
 
+require_once plugin_dir_path(__FILE__).'includes/class-xcloner-activator.php';
+
 register_activation_hook(__FILE__, 'activate_xcloner');
 register_deactivation_hook(__FILE__, 'deactivate_xcloner');
-
-require_once plugin_dir_path(__FILE__).'includes/class-xcloner-activator.php';
 
 if (version_compare(phpversion(), Xcloner_Activator::xcloner_minimum_version, '<')) {
     ?>
@@ -170,8 +171,8 @@ function run_xcloner()
     $plugin->check_dependencies();
 
     /**
-         * The class responsible for defining all actions that occur in the admin area.
-         */
+    * The class responsible for defining all actions that occur in the admin area.
+    */
     require_once plugin_dir_path((__FILE__)).'admin/class-xcloner-admin.php';
 
     /**
@@ -186,9 +187,6 @@ function run_xcloner()
 
     return $plugin;
 }
-
-require_once(plugin_dir_path(__FILE__).'/vendor/autoload.php');
-//use watchfulli\XClonerCore\Xcloner as Xcloner;
 
 require plugin_dir_path(__FILE__).'includes/class-xcloner.php';
 
