@@ -2,7 +2,7 @@
 name: Pre-release testing
 about: Use this checklist template when all issues for a milestone are complete.
 title: ''
-labels: ''
+labels: testing
 assignees: jimiero
 
 ---
