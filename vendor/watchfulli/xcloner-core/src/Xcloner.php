@@ -286,7 +286,7 @@ class Xcloner
         /**
          * register wporg_settings_init to the admin_init action hook
          */
-        $this->xcloner_settings = new XCloner_Settings($this);
+        $this->xcloner_settings = new Xcloner_Settings($this);
 
         if (defined('DOING_CRON') || isset($_POST['hash'])) {
             if (defined('DOING_CRON') || $_POST['hash'] == "generate_hash") {
@@ -431,7 +431,7 @@ class Xcloner
 
     public function exception_handler()
     {
-        $logger = new XCloner_Logger($this, "php_system");
+        $logger = new Xcloner_Logger($this, "php_system");
         $error = error_get_last();
 
         if ($error['type'] and $error['type'] === E_ERROR and $logger) {
@@ -465,7 +465,7 @@ class Xcloner
         //adding the pre-update hook
 
         if (is_admin() || defined('DOING_CRON')) {
-            $this->xcloner_logger = new XCloner_Logger($this, "xcloner_api");
+            $this->xcloner_logger = new Xcloner_Logger($this, "xcloner_api");
             $this->xcloner_filesystem = new Xcloner_File_System($this);
 
             //$this->xcloner_filesystem->set_diff_timestamp_start (strtotime("-15 days"));
