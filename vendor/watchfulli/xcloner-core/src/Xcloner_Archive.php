@@ -287,7 +287,8 @@ class Xcloner_Archive extends Tar
             $subject = sprintf(__("New backup generated %s"), $backup_name);
         }
 
-        $body = sprintf(__("Generated Backup Size: %s"), size_format($this->filesystem->get_backup_size($backup_name)));
+        //$body = sprintf(__("Generated Backup Size: %s"), size_format($this->filesystem->get_backup_size($backup_name)));
+        $body = sprintf(__("Generated Backup Size: %s"), $additional['backup_size']);
         $body .= "<br /><br />";
 
         if (isset($additional['lines_total'])) {

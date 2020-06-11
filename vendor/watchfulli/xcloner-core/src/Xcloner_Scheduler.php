@@ -396,12 +396,14 @@ class Xcloner_Scheduler
             }
         }
         
+        $additional['backup_size'] = size_format($this->xcloner_file_system->get_backup_size($return['extra']['backup_parent']));
+
         //Sending backup to remote storage
         if (isset($schedule['remote_storage']) && $schedule['remote_storage'] && array_key_exists($schedule['remote_storage'], $this->xcloner_remote_storage->get_available_storages())) {
             $backup_file = $return['extra']['backup_parent'];
 
             $this->logger->print_info(sprintf("Transferring backup to remote storage %s", strtoupper($schedule['remote_storage'])), array("CRON"));
-
+            
             if (method_exists($this->xcloner_remote_storage, "upload_backup_to_storage")) {
                 call_user_func_array(array(
                     $this->xcloner_remote_storage,

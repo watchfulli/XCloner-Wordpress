@@ -391,7 +391,7 @@ class Xcloner_Remote_Storage
     public function upload_backup_to_storage($file, $storage, $delete_local_copy_after_transfer = 0)
     {
         if (!$this->xcloner_file_system->get_storage_filesystem()->has($file)) {
-            $this->logger->info(sprintf("File not found %s in local storage", $file));
+            $this->logger->print_info(sprintf("File not found %s in local storage", $file));
 
             return false;
         }
@@ -421,7 +421,7 @@ class Xcloner_Remote_Storage
         $backup_file_stream = $this->xcloner_file_system->get_storage_filesystem()->readStream($file);
 
         if (!$remote_storage_filesystem->writeStream($file, $backup_file_stream)) {
-            $this->logger->info(sprintf("Could not transfer file %s", $file));
+            $this->logger->print_info(sprintf("Could not transfer file %s", $file));
 
             return false;
         }
@@ -430,7 +430,7 @@ class Xcloner_Remote_Storage
             $parts = $this->xcloner_file_system->get_multipart_files($file);
             if (is_array($parts)) {
                 foreach ($parts as $part_file) {
-                    $this->logger->info(sprintf(
+                    $this->logger->print_info(sprintf(
                         "Transferring backup %s to remote storage %s",
                         $part_file,
                         strtoupper($storage)
@@ -444,12 +444,12 @@ class Xcloner_Remote_Storage
             }
         }
 
-        $this->logger->info(sprintf("Upload done, disconnecting from remote storage %s", strtoupper($storage)));
+        $this->logger->print_info(sprintf("Upload done, disconnecting from remote storage %s", strtoupper($storage)));
 
         //CHECK IF WE SHOULD DELETE BACKUP AFTER REMOTE TRANSFER IS DONE
         //if ( $this->xcloner_settings->get_xcloner_option('xcloner_cleanup_delete_after_remote_transfer')) {
         if ($delete_local_copy_after_transfer) {
-            $this->logger->info(sprintf("Deleting %s from local storage matching rule xcloner_cleanup_delete_after_remote_transfer", $file));
+            $this->logger->print_info(sprintf("Deleting %s from local storage matching rule xcloner_cleanup_delete_after_remote_transfer", $file));
             $this->xcloner_file_system->delete_backup_by_name($file);
         }
 
