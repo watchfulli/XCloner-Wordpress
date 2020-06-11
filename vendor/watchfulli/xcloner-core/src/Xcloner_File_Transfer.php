@@ -73,7 +73,7 @@ class Xcloner_File_Transfer extends Xcloner_File_System
 	public function transfer_file($file, $start = 0, $hash = "")
 	{
 		if (!$this->target_url) {
-			throw new Exception("Please setup a target url for upload");
+			throw new \Exception("Please setup a target url for upload");
 		}
 
 
@@ -125,11 +125,11 @@ class Xcloner_File_Transfer extends Xcloner_File_System
 		$result = json_decode($original_result);
 
 		if (!$result) {
-			throw new Exception("We have received no valid response from the remote host, original message: ".$original_result);
+			throw new \Exception("We have received no valid response from the remote host, original message: ".$original_result);
 		}
 
 		if ($result->status != 200) {
-			throw new Exception($result->response);
+			throw new \Exception($result->response);
 		}
 
 		if (ftell($fp) >= $this->get_storage_filesystem()->getSize($file)) {

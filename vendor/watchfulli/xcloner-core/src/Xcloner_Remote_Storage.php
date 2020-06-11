@@ -360,7 +360,7 @@ class Xcloner_Remote_Storage
 
         if ($storage_type == "gdrive") {
             if (!is_array($filesystem->listContents())) {
-                throw new Exception(__("Could not read data", 'xcloner-backup-and-restore'));
+                throw new \Exception(__("Could not read data", 'xcloner-backup-and-restore'));
             }
             $this->logger->debug(sprintf("I can list data from remote storage %s", strtoupper($storage_type)));
 
@@ -369,19 +369,19 @@ class Xcloner_Remote_Storage
 
         //testing write access
         if (!$filesystem->write($test_file, "data")) {
-            throw new Exception(__("Could not write data", 'xcloner-backup-and-restore'));
+            throw new \Exception(__("Could not write data", 'xcloner-backup-and-restore'));
         }
         $this->logger->debug(sprintf("I can write data to remote storage %s", strtoupper($storage_type)));
 
         //testing read access
         if (!$filesystem->has($test_file)) {
-            throw new Exception(__("Could not read data", 'xcloner-backup-and-restore'));
+            throw new \Exception(__("Could not read data", 'xcloner-backup-and-restore'));
         }
         $this->logger->debug(sprintf("I can read data to remote storage %s", strtoupper($storage_type)));
 
         //delete test file
         if (!$filesystem->delete($test_file)) {
-            throw new Exception(__("Could not delete data", 'xcloner-backup-and-restore'));
+            throw new \Exception(__("Could not delete data", 'xcloner-backup-and-restore'));
         }
         $this->logger->debug(sprintf("I can delete data to remote storage %s", strtoupper($storage_type)));
 
@@ -529,11 +529,11 @@ class Xcloner_Remote_Storage
         $this->logger->info(sprintf("Creating the AZURE BLOB remote storage connection"), array(""));
 
         if (version_compare(phpversion(), '5.6.0', '<')) {
-            throw new Exception("AZURE BLOB requires PHP 5.6 to be installed!");
+            throw new \Exception("AZURE BLOB requires PHP 5.6 to be installed!");
         }
 
         if (!class_exists('XmlWriter')) {
-            throw new Exception("AZURE BLOB requires libxml PHP module to be installed with XmlWriter class enabled!");
+            throw new \Exception("AZURE BLOB requires libxml PHP module to be installed with XmlWriter class enabled!");
         }
 
         $endpoint = sprintf(
@@ -558,7 +558,7 @@ class Xcloner_Remote_Storage
         $this->logger->info(sprintf("Creating the DROPBOX remote storage connection"), array(""));
 
         if (version_compare(phpversion(), '5.6.0', '<')) {
-            throw new Exception("DROPBOX requires PHP 5.6 to be installed!");
+            throw new \Exception("DROPBOX requires PHP 5.6 to be installed!");
         }
 
         $client = new DropboxClient($this->xcloner_settings->get_xcloner_option("xcloner_dropbox_access_token"));
@@ -576,11 +576,11 @@ class Xcloner_Remote_Storage
         $this->logger->info(sprintf("Creating the S3 remote storage connection"), array(""));
 
         if (version_compare(phpversion(), '5.6.0', '<')) {
-            throw new Exception("S3 class requires PHP 5.6 to be installed!");
+            throw new \Exception("S3 class requires PHP 5.6 to be installed!");
         }
 
         if (!class_exists('XmlWriter')) {
-            throw new Exception("AZURE BLOB requires libxml PHP module to be installed with XmlWriter class enabled!");
+            throw new \Exception("AZURE BLOB requires libxml PHP module to be installed with XmlWriter class enabled!");
         }
 
 
@@ -614,7 +614,7 @@ class Xcloner_Remote_Storage
         $this->logger->info(sprintf("Creating the BACKBLAZE remote storage connection"), array(""));
 
         if (version_compare(phpversion(), '5.6.0', '<')) {
-            throw new Exception("BACKBLAZE API requires PHP 5.6 to be installed!");
+            throw new \Exception("BACKBLAZE API requires PHP 5.6 to be installed!");
         }
 
 
@@ -636,7 +636,7 @@ class Xcloner_Remote_Storage
         $this->logger->info(sprintf("Creating the WEBDAV remote storage connection"), array(""));
 
         if (version_compare(phpversion(), '5.6.0', '<')) {
-            throw new Exception("WEBDAV API requires PHP 5.6 to be installed!");
+            throw new \Exception("WEBDAV API requires PHP 5.6 to be installed!");
         }
 
         $settings = array(
@@ -723,7 +723,7 @@ class Xcloner_Remote_Storage
     public function get_gdrive_filesystem()
     {
         if (version_compare(phpversion(), '5.6.0', '<')) {
-            throw new Exception("Google Drive API requires PHP 5.6 to be installed!");
+            throw new \Exception("Google Drive API requires PHP 5.6 to be installed!");
         }
 
         $this->logger->info(sprintf("Creating the Google Drive remote storage connection"), array(""));
@@ -733,7 +733,7 @@ class Xcloner_Remote_Storage
         if (!$client) {
             $error_msg = "Could not initialize the Google Drive Class, please check that the xcloner-google-drive plugin is enabled...";
             $this->logger->error($error_msg);
-            throw new Exception($error_msg);
+            throw new \Exception($error_msg);
         }
 
         $client->refreshToken($this->xcloner_settings->get_xcloner_option("xcloner_gdrive_refresh_token"));
