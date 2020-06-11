@@ -1,7 +1,7 @@
 <?php
 
 if (!defined('AUTH_KEY')) {
-    define('AUTH_KEY', '1d4b731e470fd3b64ea639a4d63984b1');
+    define('AUTH_KEY', '');
 }
 
 if (!defined("DS")) {
