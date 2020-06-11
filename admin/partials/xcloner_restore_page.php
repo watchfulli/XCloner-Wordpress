@@ -27,11 +27,15 @@ $backup_list = $xcloner_file_system->get_latest_backups();
                 <div class="collapsible-body row">
 
                     <ul class="text-steps">
-                        <li><?php echo __("If you want to do a <strong>Local Target System Restore</strong>, leave Url field below empty and click 'Check Connection', you can skip the next steps.", 'xcloner-backup-and-restore') ?>
+                        <li><?php echo __("If you want to do a <strong>Local Target System Restore</strong>, leave Url field below empty and click 'Check Connection' button, next steps can be skipped.", 'xcloner-backup-and-restore') ?>
                         </li>
-                        <li><?php echo __("If you want to do a <strong>Remote Target System Restore</strong>, please download the restore script from", 'xcloner-backup-and-restore') ?>
-                            <a href='#'
-                               onclick="window.location=ajaxurl+'?action=download_restore_script&phar=true'"><strong><?php echo __("here", 'xcloner-backup-and-restore') ?></strong></a>
+                        <li><?php echo __("If you want to do a <strong>Remote Target System Restore</strong>, please ", 'xcloner-backup-and-restore') ?>
+                            
+                        <button class="btn waves-effect waves-light" type="submit" 
+                               onclick="window.location=ajaxurl+'?action=download_restore_script&phar=true'">
+                               <?php echo __("download the restore script", 'xcloner-backup-and-restore') ?>
+                        </button>       
+
                         </li>
                         <li>
 							<?php echo __("Extract the restore script archive files on your new host", 'xcloner-backup-and-restore') ?>
