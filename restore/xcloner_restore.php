@@ -38,14 +38,21 @@ if (file_exists($file)) {
 } elseif (file_exists("vendor.phar") and extension_loaded('phar')) {
     require_once(__DIR__.DS."vendor.phar");
 } else {
-    $file = dirname(__FILE__).DS.'vendor'.DS.'autoload.php';
+    /*$file = dirname(__FILE__).DS.'vendor'.DS.'autoload.php';
     
     if (!file_exists($file)) {
         Xcloner_Restore::send_response("404", "File $file does not exists, please extract the vendor.tgz archive on the server or enable PHP Phar module!");
         exit;
     }
     
-    require_once($file);
+    require_once($file);*/
+    if(!file_exists("vendor.phar")) {
+        Xcloner_Restore::send_response("404", "Please upload the vendor.phar file as well!");
+    exit;
+    }
+    
+    Xcloner_Restore::send_response("404", "Please enable PHP Phar module support or run `composer require watchfulli/xcloner-core` in the same directory as xcloner_restore.php!");
+    exit;
 }
 
 

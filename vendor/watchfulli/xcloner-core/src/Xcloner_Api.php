@@ -1340,7 +1340,7 @@ class Xcloner_Api
         $tar = $this->archive_system;
         $tar->create($tmp_file);
 
-        $tar->addFile(dirname(__DIR__)."/restore/vendor.build.txt", "vendor.phar");
+        $tar->addFile(__DIR__."/../../../../restore/vendor.build.txt", "vendor.phar");
         //$tar->addFile(dirname(__DIR__)."/restore/vendor.tgz", "vendor.tgz");
 
         $files = $xcloner_plugin_filesystem->listContents("vendor/", true);
