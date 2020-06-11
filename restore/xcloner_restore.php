@@ -1,7 +1,7 @@
 <?php
 
 if (!defined('AUTH_KEY')) {
-    define('AUTH_KEY', '');
+    define('AUTH_KEY', '1d4b731e470fd3b64ea639a4d63984b1');
 }
 
 if (!defined("DS")) {
@@ -31,27 +31,23 @@ if (version_compare(phpversion(), Xcloner_Restore::xcloner_minimum_version, '<')
     exit;
 }
 
-$file = dirname(__DIR__).DS.'vendor'.DS.'autoload.php';
+$vendor_source_1 = dirname(__DIR__).DS.'vendor'.DS.'autoload.php';
+$vendor_source_2 = __DIR__.DS.'vendor'.DS.'autoload.php';
 
-if (file_exists($file)) {
-    require_once($file);
+if (file_exists($vendor_source_1)) {
+    require_once($vendor_source_1);
+} elseif (file_exists($vendor_source_2)) {
+    require_once($vendor_source_2);
 } elseif (file_exists("vendor.phar") and extension_loaded('phar')) {
     require_once(__DIR__.DS."vendor.phar");
 } else {
-    /*$file = dirname(__FILE__).DS.'vendor'.DS.'autoload.php';
-    
-    if (!file_exists($file)) {
-        Xcloner_Restore::send_response("404", "File $file does not exists, please extract the vendor.tgz archive on the server or enable PHP Phar module!");
+
+    if(!file_exists("vendor.phar")) {
+        Xcloner_Restore::send_response("500", "Please upload the vendor.phar file as well!");
         exit;
     }
-    
-    require_once($file);*/
-    if(!file_exists("vendor.phar")) {
-        Xcloner_Restore::send_response("404", "Please upload the vendor.phar file as well!");
-    exit;
-    }
-    
-    Xcloner_Restore::send_response("404", "Please enable PHP Phar module support or run `composer require watchfulli/xcloner-core` in the same directory as xcloner_restore.php!");
+
+    Xcloner_Restore::send_response("500", "Please enable PHP Phar module support or run `composer require watchfulli/xcloner-core:dev-restore` in the same directory as xcloner_restore.php!");
     exit;
 }
 
@@ -68,21 +64,17 @@ use splitbrain\PHPArchive\FileInfo;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 
+use watchfulli\XClonerCore\Xcloner_Archive;
+
 //do not modify below
 $that = "";
 if (defined('XCLONER_PLUGIN_ACCESS') && XCLONER_PLUGIN_ACCESS) {
     $that = $this;
 }
 
-$xcloner_restore = new Xcloner_Restore($that);
-
-try {
-    $return = $xcloner_restore->init();
-    $xcloner_restore->send_response(200, $return);
-} catch (Exception $e) {
-    $xcloner_restore->send_response(417, $e->getMessage());
-}
-
+/**
+*Xcloner_Restore Class
+*/
 class Xcloner_Restore
 {
     const 	xcloner_minimum_version = "5.4.0";
@@ -479,7 +471,7 @@ class Xcloner_Restore
 
         if ($this->is_encrypted_file($backup_file)) {
             $return['error'] = true;
-            $return['message'] = __("Backup archive is encrypted, please decrypt it first before you can list it's content.", "xcloner-backup-and-restore");
+            $return['message'] = "Backup archive is encrypted, please decrypt it first before you can list it's content.";
             $this->send_response(200, $return);
         }
         
@@ -1247,177 +1239,26 @@ class Xcloner_Restore
     }
 }
 
-class Xcloner_Archive_Restore extends Tar
-{
-    public function open($file, $start_byte = 0)
-    {
-        parent::open($file);
-
-        if ($start_byte) {
-            fseek($this->fh, $start_byte);
+/**
+* Xcloner_Archive_Restore Class
+*/
+class Xcloner_Archive_Restore extends Xcloner_Archive
+{       
+    public function __construct($archive_name = "") {
+        if (isset($archive_name) && $archive_name) {
+            $this->set_archive_name($archive_name);
         }
     }
     
-    /**
-     * Read the contents of a TAR archive
-     *
-     * This function lists the files stored in the archive
-     *
-     * The archive is closed afer reading the contents, because rewinding is not possible in bzip2 streams.
-     * Reopen the file with open() again if you want to do additional operations
-     *
-     * @throws ArchiveIOException
-     * @returns FileInfo[]
-     */
-    public function contents($files_limit = 0)
-    {
-        if ($this->closed || !$this->file) {
-            throw new ArchiveIOException('Can not read from a closed archive');
-        }
+}
 
-        $files_counter = 0;
-        $result = array();
 
-        while ($read = $this->readbytes(512)) {
-            $header = $this->parseHeader($read);
-            if (!is_array($header)) {
-                continue;
-            }
+/** Main Program */
+$xcloner_restore = new Xcloner_Restore($that);
 
-            if ($files_limit) {
-                if (++$files_counter > $files_limit) {
-                    $return['extracted_files'] = $result;
-                    $return['start'] = ftell($this->fh)-512;
-                    return $return;
-                }
-            }
-
-            if ($header['typeflag'] == 5) {
-                $header['size'] = 0;
-            }
-
-            $this->skipbytes(ceil($header['size'] / 512) * 512);
-            $result[] = $this->header2fileinfo($header);
-        }
-
-        $return['extracted_files'] = $result;
-
-        $this->close();
-        return $return;
-    }
-    
-    public function extract($outdir, $strip = '', $exclude = '', $include = '', $files_limit = 0)
-    {
-        if ($this->closed || !$this->file) {
-            throw new ArchiveIOException('Can not read from a closed archive');
-        }
-
-        $outdir = rtrim($outdir, '/');
-        if (!is_dir($outdir)) {
-            @mkdir($outdir, 0755, true);
-        } else {
-            @chmod($outdir, 0777);
-        }
-
-        //@mkdir($outdir, 0777, true);
-
-        if (!is_dir($outdir)) {
-            throw new ArchiveIOException("Could not create directory '$outdir'");
-        }
-
-        $files_counter = 0;
-        $return = array();
-
-        $extracted = array();
-        while ($dat = $this->readbytes(512)) {
-            // read the file header
-            $header = $this->parseHeader($dat);
-            if (!is_array($header)) {
-                continue;
-            }
-
-            if ($files_limit) {
-                if (++$files_counter > $files_limit) {
-                    $return['extracted_files'] = $extracted;
-                    $return['start'] = ftell($this->fh)-512;
-                    return $return;
-                }
-            }
-
-            $fileinfo = $this->header2fileinfo($header);
-
-            // apply strip rules
-            $fileinfo->strip($strip);
-
-            // skip unwanted files
-            if (!strlen($fileinfo->getPath()) || !$fileinfo->match($include, $exclude)) {
-                $this->skipbytes(ceil($header['size'] / 512) * 512);
-                continue;
-            }
-
-            // create output directory
-            $output    = $outdir.'/'.$fileinfo->getPath();
-            $directory = ($fileinfo->getIsdir()) ? $output : dirname($output);
-            if (!is_dir($directory)) {
-                @mkdir($directory, 0755, true);
-            } else {
-                @chmod($directory, 0755);
-            }
-
-            // extract data
-            if (!$fileinfo->getIsdir()) {
-                if (file_exists($output)) {
-                    unlink($output);
-                }
-
-                $fp = fopen($output, "wb");
-                if (!$fp) {
-                    throw new ArchiveIOException('Could not open file for writing: '.$output);
-                }
-
-                $size = floor($header['size'] / 512);
-                for ($i = 0; $i < $size; $i++) {
-                    fwrite($fp, $this->readbytes(512), 512);
-                }
-                if (($header['size'] % 512) != 0) {
-                    fwrite($fp, $this->readbytes(512), $header['size'] % 512);
-                }
-
-                fclose($fp);
-                touch($output, $fileinfo->getMtime());
-                chmod($output, $fileinfo->getMode());
-            } else {
-                //$this->skipbytes(ceil($header['size'] / 512) * 512); // the size is usually 0 for directories
-                $this->skipbytes(ceil(0 / 512) * 512); // the size is usually 0 for directories
-            }
-
-            $extracted[] = $fileinfo;
-        }
-
-        $this->close();
-
-        $return['extracted_files'] = $extracted;
-
-        return $return;
-    }
-    
-    /**
-     * Check if provided filename has encrypted suffix
-     *
-     * @param $filename
-     * @return bool
-     */
-    public function is_encrypted_file($filename)
-    {
-        $fp = fopen($filename, 'r');
-        if (is_resource($fp)) {
-            $encryption_length = fread($fp, 16);
-            fclose($fp);
-            if (is_numeric($encryption_length)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
+try {
+    $return = $xcloner_restore->init();
+    $xcloner_restore->send_response(200, $return);
+} catch (Exception $e) {
+    $xcloner_restore->send_response(417, $e->getMessage());
 }

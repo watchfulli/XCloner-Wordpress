@@ -1348,7 +1348,8 @@ class Xcloner_Api
             $tar->addFile(dirname(__DIR__).DS.$file['path'], $file['path']);
         }
 
-        $content = file_get_contents(dirname(__DIR__)."/restore/xcloner_restore.php");
+        $content = file_get_contents(__DIR__."/../../../../restore/xcloner_restore.php");
+        //$content = file_get_contents(dirname(__DIR__)."/restore/xcloner_restore.php");
         $content = str_replace("define('AUTH_KEY', '');", "define('AUTH_KEY', '".md5(AUTH_KEY)."');", $content);
 
         $tar->addData("xcloner_restore.php", $content);
