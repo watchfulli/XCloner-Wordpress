@@ -2180,12 +2180,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/watchfulli/xcloner-core.git",
-                "reference": "4fd8af3d5db4dde3c8a4a93ae4d9d952c871338c"
+                "reference": "907a2370af6f6bd166a5970d35e3dcfca1ddddaf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/watchfulli/xcloner-core/zipball/4fd8af3d5db4dde3c8a4a93ae4d9d952c871338c",
-                "reference": "4fd8af3d5db4dde3c8a4a93ae4d9d952c871338c",
+                "url": "https://api.github.com/repos/watchfulli/xcloner-core/zipball/907a2370af6f6bd166a5970d35e3dcfca1ddddaf",
+                "reference": "907a2370af6f6bd166a5970d35e3dcfca1ddddaf",
                 "shasum": ""
             },
             "require": {
@@ -2216,7 +2216,7 @@
                 }
             ],
             "description": "XCloner Core Library for Backup and Restore",
-            "time": "2020-06-11T07:37:03+00:00"
+            "time": "2020-06-11T09:00:13+00:00"
         }
     ],
     "packages-dev": [],

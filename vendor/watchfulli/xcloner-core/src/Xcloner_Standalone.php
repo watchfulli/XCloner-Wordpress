@@ -28,7 +28,7 @@ class Xcloner_Standalone extends Xcloner
         if(!isset($_POST['hash']) || !$_POST['hash']){
             $_POST['hash'] = "";
         }
-        $this->xcloner_settings = new XCloner_Settings($this, $_POST['hash'], $json_config);
+        $this->xcloner_settings = new Xcloner_Settings($this, $_POST['hash'], $json_config);
         
         
          if( !$this->xcloner_settings->get_hash(true) ){
@@ -38,7 +38,7 @@ class Xcloner_Standalone extends Xcloner
 
         $this->define_plugin_settings();
 
-        $this->xcloner_logger           = new XCloner_Logger($this, "xcloner_standalone");
+        $this->xcloner_logger           = new Xcloner_Logger($this, "xcloner_standalone");
 
         if (WP_DEBUG && WP_DEBUG_DISPLAY) {
             $this->xcloner_logger->pushHandler(new StreamHandler('php://stdout', Logger::INFO));

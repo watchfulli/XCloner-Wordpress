@@ -4,7 +4,7 @@
     "verson": "1.0.2",
     "type": "package",
     "require": {
-        "splitbrain/php-archive": "^1.0",
+	"splitbrain/php-archive": "^1.0",
         "league/flysystem": "^1.0",
         "monolog/monolog": "^1.22",
         "league/flysystem-sftp": "^1.0",
