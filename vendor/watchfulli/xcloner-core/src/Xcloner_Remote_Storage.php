@@ -444,7 +444,7 @@ class Xcloner_Remote_Storage
             }
         }
 
-        $this->logger->print_info(sprintf("Upload done, disconnecting from remote storage %s", strtoupper($storage)));
+        $this->logger->info(sprintf("Upload done, disconnecting from remote storage %s", strtoupper($storage)));
 
         //CHECK IF WE SHOULD DELETE BACKUP AFTER REMOTE TRANSFER IS DONE
         //if ( $this->xcloner_settings->get_xcloner_option('xcloner_cleanup_delete_after_remote_transfer')) {
