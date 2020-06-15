@@ -115,6 +115,24 @@ Of course, schedules can be adjusted accordingly to how often you update your si
 
 == Changelog ==
 
+
+* 4.2.1 *
+
+** Implemented enhancements: **
+
+- Remove links in changelog for 4.2.0 release
+- Rename `Scheduled Backups` menu to `Schedules & Profiles`
+- Exclude `docs` folder from releases
+
+** Fixed bugs: **
+
+- Fixed `redeclare deactivate\_plugin` bug in CLI 
+
+** Closed issues: **
+
+- Move xcloner library to a separate repo: `XCloner\_core`
+- Integrate standalone library into Wordpress plugin
+
 * 4.2.0 *
 
 ** Implemented enhancements: **

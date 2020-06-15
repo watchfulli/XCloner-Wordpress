@@ -1,5 +1,28 @@
 # Changelog
 
+## [Unreleased](https://github.com/watchfulli/XCloner-Wordpress/tree/HEAD)
+
+[Full Changelog](https://github.com/watchfulli/XCloner-Wordpress/compare/4.2.0...HEAD)
+
+**Implemented enhancements:**
+
+- Remove links in changelog for 4.2.0 release [\#101](https://github.com/watchfulli/XCloner-Wordpress/issues/101)
+- Rename `Scheduled Backups` menu to `Schedules & Profiles` [\#98](https://github.com/watchfulli/XCloner-Wordpress/issues/98)
+- Exclude `docs` folder from releases [\#63](https://github.com/watchfulli/XCloner-Wordpress/issues/63)
+
+**Fixed bugs:**
+
+- Fixed `redeclare deactivate\_plugin` bug in CLI [\#96](https://github.com/watchfulli/XCloner-Wordpress/issues/96)
+
+**Closed issues:**
+
+- Move xcloner library to a separate repo: `XCloner\_core` [\#97](https://github.com/watchfulli/XCloner-Wordpress/issues/97)
+- Integrate standalone library into Wordpress plugin [\#95](https://github.com/watchfulli/XCloner-Wordpress/issues/95)
+
+**Merged pull requests:**
+
+- Milestone4.2.0 [\#94](https://github.com/watchfulli/XCloner-Wordpress/pull/94) ([ovidiul](https://github.com/ovidiul))
+
 ## [4.2.0](https://github.com/watchfulli/XCloner-Wordpress/tree/4.2.0) (2020-06-01)
 
 [Full Changelog](https://github.com/watchfulli/XCloner-Wordpress/compare/4.1.5...4.2.0)
@@ -27,7 +50,6 @@
 **Closed issues:**
 
 - Rename `Cleanup by Date\(days\)` [\#85](https://github.com/watchfulli/XCloner-Wordpress/issues/85)
-- Add `Local Storage` to the `Remote Storage` area? [\#81](https://github.com/watchfulli/XCloner-Wordpress/issues/81)
 - Bug selecting the time in the `schedule backup` tab [\#80](https://github.com/watchfulli/XCloner-Wordpress/issues/80)
 - Update Remote Storage names [\#77](https://github.com/watchfulli/XCloner-Wordpress/issues/77)
 - Small JS bug in Manage Backups interface [\#68](https://github.com/watchfulli/XCloner-Wordpress/issues/68)
@@ -103,7 +125,6 @@
 - Scrutinizer Auto-Fixes [\#32](https://github.com/watchfulli/XCloner-Wordpress/pull/32) ([scrutinizer-auto-fixer](https://github.com/scrutinizer-auto-fixer))
 - Scrutinizer Auto-Fixes [\#31](https://github.com/watchfulli/XCloner-Wordpress/pull/31) ([scrutinizer-auto-fixer](https://github.com/scrutinizer-auto-fixer))
 - Scrutinizer Auto-Fixes [\#30](https://github.com/watchfulli/XCloner-Wordpress/pull/30) ([scrutinizer-auto-fixer](https://github.com/scrutinizer-auto-fixer))
-- Scrutinizer Auto-Fixes [\#28](https://github.com/watchfulli/XCloner-Wordpress/pull/28) ([scrutinizer-auto-fixer](https://github.com/scrutinizer-auto-fixer))
 
 ## [untagged-0681671b0a71d1a1d73e](https://github.com/watchfulli/XCloner-Wordpress/tree/untagged-0681671b0a71d1a1d73e) (2018-06-21)
 
