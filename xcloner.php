@@ -15,7 +15,7 @@
  * Plugin Name:       XCloner - Site Backup and Restore
  * Plugin URI:        https://xcloner.com/
  * Description:       XCloner is a tool that will help you manage your website backups, generate/restore/move so your website will be always secured! With XCloner you will be able to clone your site to any other location with just a few clicks, as well as transfer the backup archives to remote FTP, SFTP, DropBox, Amazon S3, Google Drive, WebDAV, Backblaze, Azure accounts.
- * Version:           4.2.3
+ * Version:           4.2.4
  * Author:            watchful
  * Author URI:        https://watchful.net/
  * License:           GPL-2.0+
@@ -23,6 +23,28 @@
  * Text Domain:       xcloner-backup-and-restore
  * Domain Path:       /languages
  */
+
+require_once plugin_dir_path(__FILE__).'includes/class-xcloner-activator.php';
+
+register_activation_hook(__FILE__, 'activate_xcloner');
+register_deactivation_hook(__FILE__, 'deactivate_xcloner');
+
+if (version_compare(phpversion(), Xcloner_Activator::xcloner_minimum_version, '<')) {
+    ?>
+    <div class="error notice">
+        <p><?php echo sprintf(__("XCloner requires minimum PHP version %s in order to run correctly. We have detected your version as %s. Plugin is now deactivated."), Xcloner_Activator::xcloner_minimum_version, phpversion()) ?></p>
+    </div>
+	<?php
+    include_once(ABSPATH.'wp-admin/includes/plugin.php');
+
+    if (function_exists('deactivate_plugins')) {
+        deactivate_plugins(plugin_basename(__FILE__));
+    }
+
+
+    return;
+}
+
 
 // composer library autoload
 require_once(__DIR__.'/vendor/autoload.php');
@@ -110,27 +132,6 @@ function deactivate_xcloner()
 {
     require_once plugin_dir_path(__FILE__).'includes/class-xcloner-deactivator.php';
     Xcloner_Deactivator::deactivate();
-}
-
-require_once plugin_dir_path(__FILE__).'includes/class-xcloner-activator.php';
-
-register_activation_hook(__FILE__, 'activate_xcloner');
-register_deactivation_hook(__FILE__, 'deactivate_xcloner');
-
-if (version_compare(phpversion(), Xcloner_Activator::xcloner_minimum_version, '<')) {
-    ?>
-    <div class="error notice">
-        <p><?php echo sprintf(__("XCloner requires minimum PHP version %s in order to run correctly. We have detected your version as %s. Plugin is now deactivated."), Xcloner_Activator::xcloner_minimum_version, phpversion()) ?></p>
-    </div>
-	<?php
-    require_once(ABSPATH.'wp-admin/includes/plugin.php');
-
-    if (function_exists('deactivate_plugins')) {
-        deactivate_plugins(plugin_basename(__FILE__));
-    }
-
-
-    return;
 }
 
 $db_installed_ver   = get_option("xcloner_db_version");
