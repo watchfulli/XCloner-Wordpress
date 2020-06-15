@@ -262,7 +262,7 @@ class Xcloner_Scheduler
         $start_time = time();
 
         if (!$xcloner) {
-            $xcloner = new XCloner();
+            $xcloner = new \XCloner();
             $xcloner->init();
         }
         $this->set_xcloner_container($xcloner);
