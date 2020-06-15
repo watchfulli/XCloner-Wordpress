@@ -115,6 +115,10 @@ Of course, schedules can be adjusted accordingly to how often you update your si
 
 == Changelog ==
 
+* 4.2.4 *
+
+* PHP 7.x bug fix
+
 * 4.2.3 *
 
 * PHP 7.x minimum support activation
