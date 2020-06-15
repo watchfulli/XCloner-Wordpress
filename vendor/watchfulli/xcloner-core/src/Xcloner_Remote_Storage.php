@@ -781,8 +781,8 @@ class Xcloner_Remote_Storage
 
         $this->logger->info(sprintf("Using target folder with ID %s on the remote storage", $folderID));
 
-        if (class_exists('XCloner_Google_Drive_Adapter')) {
-            $adapter = new XCloner_Google_Drive_Adapter($service, $folderID);
+        if (class_exists('\XCloner_Google_Drive_Adapter')) {
+            $adapter = new \XCloner_Google_Drive_Adapter($service, $folderID);
         } else {
             $adapter = new \Hypweb\Flysystem\GoogleDrive\GoogleDriveAdapter($service, $folderID);
         }
