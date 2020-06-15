@@ -4,7 +4,7 @@ Donate link: http://www.xcloner.com
 Tags: backup, database backup, cloud backup, WordPress backup, WordPress migration
 Requires at least: 3.0.1
 Tested up to: 5.4
-Stable tag: 4.2.0
+Stable tag: 4.2.1
 
 XCloner is a backup plugin that allows you to safely back up and restore your WordPress sites. You can send site backups to SFTP, Dropbox, Amazon, Google Drive, Backblaze and other locations. 
 
@@ -115,27 +115,35 @@ Of course, schedules can be adjusted accordingly to how often you update your si
 
 == Changelog ==
 
+
+* 4.2.1 *
+
+** Implemented enhancements: **
+* Rename `Scheduled Backups` menu to `Schedules & Profiles`
+** Fixed bugs: **
+* Fixed `redeclare deactivate\_plugin` bug in CLI
+
 * 4.2.0 *
 
 ** Implemented enhancements: **
 
-* Improve error when connecting to remote site using restore script from another site  [\#89](https://github.com/watchfulli/XCloner-Wordpress/issues/89)
-* Improve error message when accessing restore script directly [\#86](https://github.com/watchfulli/XCloner-Wordpress/issues/86)
-* Encrypt database password during restore [\#84](https://github.com/watchfulli/XCloner-Wordpress/issues/84)
-* Update default regex exclusions [\#78](https://github.com/watchfulli/XCloner-Wordpress/issues/78)
-* Replace youtube links [\#76](https://github.com/watchfulli/XCloner-Wordpress/issues/76)
-* Add additional cleanup & quota options for backup storage [\#61](https://github.com/watchfulli/XCloner-Wordpress/issues/61)
-* Add standalone CLI for making backups [\#60](https://github.com/watchfulli/XCloner-Wordpress/issues/60)
-* Move `send to remote destination` option to the `Backup Options` tab [\#56](https://github.com/watchfulli/XCloner-Wordpress/issues/56)
+* Improve error when connecting to remote site using restore script from another site  
+* Improve error message when accessing restore script directly 
+* Encrypt database password during restore 
+* Update default regex exclusions 
+* Replace youtube links 
+* Add additional cleanup & quota options for backup storage 
+* Add standalone CLI for making backups 
+* Move `send to remote destination` option to the `Backup Options` tab 
 
 ** Fixed bugs: **
 
-* Select All Backups delete does not work [\#92](https://github.com/watchfulli/XCloner-Wordpress/issues/92)
-* JS Error during restoration [\#91](https://github.com/watchfulli/XCloner-Wordpress/issues/91)
-* Ajax error when viewing empty storage area [\#79](https://github.com/watchfulli/XCloner-Wordpress/issues/79)
-* Javascript error when running a backup, and clicking "Send Backup to remote storage" [\#74](https://github.com/watchfulli/XCloner-Wordpress/issues/74)
-* SFTP bug [\#72](https://github.com/watchfulli/XCloner-Wordpress/issues/72)
-* Live DB restore replaces WP Options table [\#69](https://github.com/watchfulli/XCloner-Wordpress/issues/69)
+* Select All Backups delete does not work 
+* JS Error during restoration 
+* Ajax error when viewing empty storage area 
+* Javascript error when running a backup, and clicking "Send Backup to remote storage"
+* SFTP bug 
+* Live DB restore replaces WP Options table 
 
 = 4.1.5 =
 * SFTP upoad fix

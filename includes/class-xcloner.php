@@ -1,4 +1,18 @@
 <?php
+use watchfulli\XClonerCore\Xcloner_Loader;
+use watchfulli\XClonerCore\Xcloner_i18n;
+use watchfulli\XClonerCore\Xcloner_Sanitization;
+use watchfulli\XClonerCore\Xcloner_Scheduler;
+use watchfulli\XClonerCore\Xcloner_Settings;
+use watchfulli\XClonerCore\Xcloner_File_System;
+use watchfulli\XClonerCore\Xcloner_File_Transfer;
+use watchfulli\XClonerCore\Xcloner_Encryption;
+use watchfulli\XClonerCore\Xcloner_Database;
+use watchfulli\XClonerCore\Xcloner_Remote_Storage;
+use watchfulli\XClonerCore\Xcloner_Requirements;
+use watchfulli\XClonerCore\Xcloner_Logger;
+use watchfulli\XClonerCore\Xcloner_Archive;
+use watchfulli\XClonerCore\Xcloner_Api;
 /**
  * XCloner - Backup and Restore backup plugin for Wordpress
  *
@@ -41,7 +55,7 @@
  * @author     Liuta Ovidiu <info@thinkovi.com>
  * @link       https://watchful.net
  */
-class Xcloner
+class Xcloner extends watchfulli\XClonerCore\Xcloner
 {
 
     /**
@@ -75,6 +89,7 @@ class Xcloner
     protected $version;
 
     private $xcloner_settings;
+    private $xcloner_api;
     private $xcloner_logger;
     private $xcloner_sanitization;
     private $xcloner_requirements;
@@ -100,12 +115,12 @@ class Xcloner
         $this->log_php_errors();
 
         $this->plugin_name = 'xcloner';
-        $this->version = '4.2.0';
+        $this->version = '4.2.1';
 
         $this->load_dependencies();
         $this->set_locale();
         $this->define_admin_hooks();
-        $this->define_public_hooks();
+        //$this->define_public_hooks();
 
         $this->define_admin_menu();
         $this->define_plugin_settings();
@@ -114,8 +129,7 @@ class Xcloner
         $this->define_cron_hooks();
     }
 
-    public function log_php_errors()
-    {
+    public function log_php_errors(){
         register_shutdown_function(array($this, 'exception_handler'));
     }
 
@@ -164,9 +178,9 @@ class Xcloner
             if (!@mkdir($backup_storage_path)) {
                 $status = "error";
                 $message = sprintf(
-                    __("Unable to create the Backup Storage Location Folder %s . Please fix this before starting the backup process."),
-                    $backup_storage_path
-                );
+                        __("Unable to create the Backup Storage Location Folder %s . Please fix this before starting the backup process."),
+                        $backup_storage_path
+                    );
                 $this->trigger_message($message, $status, $backup_storage_path);
                 return;
             }
@@ -175,9 +189,9 @@ class Xcloner
         if (!is_writable($backup_storage_path)) {
             $status = "error";
             $message = sprintf(
-                __("Unable to write to the Backup Storage Location Folder %s . Please fix this before starting the backup process."),
-                $backup_storage_path
-            );
+                    __("Unable to write to the Backup Storage Location Folder %s . Please fix this before starting the backup process."),
+                    $backup_storage_path
+                );
             $this->trigger_message($message, $status, $backup_storage_path);
 
             return;
@@ -187,12 +201,12 @@ class Xcloner
     }
 
     public function trigger_message($message, $status = "error", $message_param1 = "", $message_param2 = "", $message_param3 = "")
-    {
+    {        
         $message = sprintf(__($message), $message_param1, $message_param2, $message_param3);
         add_action('xcloner_admin_notices', array($this, "trigger_message_notice"), 10, 2);
         do_action('xcloner_admin_notices', $message, $status);
 
-        if (defined("XCLONER_STANDALONE_MODE") && XCLONER_STANDALONE_MODE) {
+        if (defined(XCLONER_STANDALONE_MODE) && XCLONER_STANDALONE_MODE) {
             throw new Error($message);
         }
     }
@@ -223,92 +237,11 @@ class Xcloner
      * @access   private
      */
     public function load_dependencies()
-    {
-
-        /**
-         * The class responsible for orchestrating the actions and filters of the
-         * core plugin.
-         */
-        require_once plugin_dir_path(dirname(__FILE__)).'includes/class-xcloner-loader.php';
-
-        /**
-         * The class responsible for defining internationalization functionality
-         * of the plugin.
-         */
-        require_once plugin_dir_path(dirname(__FILE__)).'includes/class-xcloner-i18n.php';
-
-        /**
-         * The class responsible for defining all actions that occur in the admin area.
-         */
-        require_once plugin_dir_path(dirname(__FILE__)).'admin/class-xcloner-admin.php';
-
-        /**
-         * The class responsible for debugging XCloner.
-         */
-        require_once plugin_dir_path(dirname(__FILE__)).'includes/class-xcloner-logger.php';
-
-        /**
-         * The class responsible for defining the admin settings area.
-         */
-        require_once plugin_dir_path(dirname(__FILE__)).'includes/class-xcloner-settings.php';
-
-        /**
-         * The class responsible for defining the Remote Storage settings area.
-         */
-        require_once plugin_dir_path(dirname(__FILE__)).'includes/class-xcloner-remote-storage.php';
-
-        /**
-         * The class responsible for implementing the database backup methods.
-         */
-        require_once plugin_dir_path(dirname(__FILE__)).'includes/class-xcloner-database.php';
-
-        /**
-         * The class responsible for sanitization of users input.
-         */
-        require_once plugin_dir_path(dirname(__FILE__)).'includes/class-xcloner-sanitization.php';
-
-        /**
-         * The class responsible for XCloner system requirements validation.
-         */
-        require_once plugin_dir_path(dirname(__FILE__)).'includes/class-xcloner-requirements.php';
-
-        /**
-         * The class responsible for XCloner backup archive creation.
-         */
-        require_once plugin_dir_path(dirname(__FILE__)).'includes/class-xcloner-archive.php';
-
-        /**
-         * The class responsible for XCloner API requests.
-         */
-        require_once plugin_dir_path(dirname(__FILE__)).'includes/class-xcloner-api.php';
-
-        /**
-         * The class responsible for the XCloner File System methods.
-         */
-        require_once plugin_dir_path(dirname(__FILE__)).'includes/class-xcloner-file-system.php';
-
-        /**
-         * The class responsible for the XCloner File Transfer methods.
-         */
-        require_once plugin_dir_path(dirname(__FILE__)).'includes/class-xcloner-file-transfer.php';
-
-        /**
-         * The class responsible for the XCloner Scheduler methods.
-         */
-        require_once plugin_dir_path(dirname(__FILE__)).'includes/class-xcloner-scheduler.php';
-
-        /**
-         * The class responsible for the XCloner Encryption methods.
-         */
-        require_once plugin_dir_path(dirname(__FILE__)).'includes/class-xcloner-encryption.php';
-
-        /**
-         * The class responsible for defining all actions that occur in the public-facing
-         * side of the site.
-         */
-        require_once plugin_dir_path(dirname(__FILE__)).'public/class-xcloner-public.php';
+    {   
 
         $this->loader = new Xcloner_Loader($this);
+
+        return;
     }
 
     /**
@@ -339,7 +272,7 @@ class Xcloner
      */
     private function define_admin_hooks()
     {
-        $plugin_admin = new Xcloner_Admin($this);
+        $plugin_admin = new \Xcloner_Admin($this);
         $this->plugin_admin = $plugin_admin;
 
         $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_styles');
@@ -364,7 +297,7 @@ class Xcloner
         /**
          * register wporg_settings_init to the admin_init action hook
          */
-        $this->xcloner_settings = new XCloner_Settings($this);
+        $this->xcloner_settings = new Xcloner_Settings($this);
 
         if (defined('DOING_CRON') || isset($_POST['hash'])) {
             if (defined('DOING_CRON') || $_POST['hash'] == "generate_hash") {
@@ -501,7 +434,7 @@ class Xcloner
      */
     private function define_public_hooks()
     {
-        $plugin_public = new Xcloner_Public($this);
+        $plugin_public = new \Xcloner_Public($this);
 
         $this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_styles');
         $this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');
@@ -509,7 +442,7 @@ class Xcloner
 
     public function exception_handler()
     {
-        $logger = new XCloner_Logger($this, "php_system");
+        $logger = new Xcloner_Logger($this, "php_system");
         $error = error_get_last();
 
         if ($error['type'] and $error['type'] === E_ERROR and $logger) {
@@ -543,21 +476,20 @@ class Xcloner
         //adding the pre-update hook
 
         if (is_admin() || defined('DOING_CRON')) {
-            $this->xcloner_logger = new XCloner_Logger($this, "xcloner_api");
+            $this->xcloner_logger = new Xcloner_Logger($this, "xcloner_api");
             $this->xcloner_filesystem = new Xcloner_File_System($this);
 
             //$this->xcloner_filesystem->set_diff_timestamp_start (strtotime("-15 days"));
-
             $this->archive_system = new Xcloner_Archive($this);
             $this->xcloner_database = new Xcloner_Database($this);
             $this->xcloner_scheduler = new Xcloner_Scheduler($this);
             $this->xcloner_remote_storage = new Xcloner_Remote_Storage($this);
             $this->xcloner_file_transfer 	= new Xcloner_File_Transfer($this);
             $this->xcloner_encryption    	= new Xcloner_Encryption($this);
-
+                
             $xcloner_api = new Xcloner_Api($this);
+            $this->xcloner_api   = $xcloner_api;
 
-            
             $this->loader->add_action('wp_ajax_get_database_tables_action', $xcloner_api, 'get_database_tables_action');
             $this->loader->add_action('wp_ajax_get_file_system_action', $xcloner_api, 'get_file_system_action');
             $this->loader->add_action('wp_ajax_scan_filesystem', $xcloner_api, 'scan_filesystem');
@@ -575,7 +507,7 @@ class Xcloner
             $this->loader->add_action('wp_ajax_restore_upload_backup', $xcloner_api, 'restore_upload_backup');
             $this->loader->add_action('wp_ajax_download_restore_script', $xcloner_api, 'download_restore_script');
             $this->loader->add_action('wp_ajax_copy_backup_remote_to_local', $xcloner_api, 'copy_backup_remote_to_local');
-            $this->loader->add_action('wp_ajax_restore_backup', $xcloner_api, 'restore_backup');
+            $this->loader->add_action('wp_ajax_restore_backup', $this, 'restore_backup');
             $this->loader->add_action('wp_ajax_backup_encryption', $xcloner_api, 'backup_encryption');
             $this->loader->add_action('wp_ajax_backup_decryption', $xcloner_api, 'backup_decryption');
             $this->loader->add_action('wp_ajax_get_manage_backups_list', $xcloner_api, 'get_manage_backups_list');
@@ -694,8 +626,8 @@ class Xcloner
             );
             add_submenu_page(
                 'xcloner_init_page',
-                __('Scheduled Backups', 'xcloner-backup-and-restore'),
-                __('Scheduled Backups', 'xcloner-backup-and-restore'),
+                __('Schedules & Profiles', 'xcloner-backup-and-restore'),
+                __('Schedules & Profiles', 'xcloner-backup-and-restore'),
                 'manage_options',
                 'xcloner_scheduled_backups_page',
                 array($this, 'xcloner_display')
@@ -768,9 +700,22 @@ class Xcloner
 
     public function display($page)
     {
-        $plugin_admin = new Xcloner_Admin($this);
+        $plugin_admin = new \Xcloner_Admin($this);
         $this->plugin_admin = $plugin_admin;
 
         call_user_func_array(array($this->plugin_admin, $page), array());
+    }
+
+    /**
+     * Restore backup api call
+     */
+    public function restore_backup()
+    {
+        $this->check_access();
+
+        define("XCLONER_PLUGIN_ACCESS", 1);
+        include_once(dirname(__DIR__).DS."restore".DS."xcloner_restore.php");
+
+        return;
     }
 }

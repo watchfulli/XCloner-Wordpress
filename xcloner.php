@@ -15,7 +15,7 @@
  * Plugin Name:       XCloner - Site Backup and Restore
  * Plugin URI:        https://xcloner.com/
  * Description:       XCloner is a tool that will help you manage your website backups, generate/restore/move so your website will be always secured! With XCloner you will be able to clone your site to any other location with just a few clicks, as well as transfer the backup archives to remote FTP, SFTP, DropBox, Amazon S3, Google Drive, WebDAV, Backblaze, Azure accounts.
- * Version:           4.2.0
+ * Version:           4.2.1
  * Author:            watchful
  * Author URI:        https://watchful.net/
  * License:           GPL-2.0+
@@ -24,17 +24,22 @@
  * Domain Path:       /languages
  */
 
-  // detect CLI mode
-  if (php_sapi_name() == "cli") {
+// composer library autoload
+require_once(__DIR__.'/vendor/autoload.php');
+
+// detect CLI mode
+  if (php_sapi_name() == "cli" && basename($argv[0]) == "xcloner.php") {
+
+    
       $opts = getopt('v::p:h::');
 
       if (isset($opts['h'])) {
           echo sprintf("-h                Display help\n");
-		  echo sprintf("-p <profile name> Specify the backup profile name or ID\n");
-		  echo sprintf("-v                Verbose output\n");
-		  return;
+          echo sprintf("-p <profile name> Specify the backup profile name or ID\n");
+          echo sprintf("-v                Verbose output\n");
+          return;
       }
-	  
+      
       if (isset($opts['v'])) {
           define('WP_DEBUG', true);
           define('WP_DEBUG_DISPLAY', true);
@@ -46,9 +51,7 @@
       if (file_exists(__DIR__ . "/../../../wp-load.php")) {
           require_once(__DIR__ .'/../../../wp-load.php');
       }
-     
-      require_once(__DIR__ . '/includes/class-xcloner-standalone.php');
-     
+          
       $profile = [
          'id' => 0
      ];
@@ -58,12 +61,12 @@
       if (isset($opts['p']) && $opts['p']) {
           $profile_name = $opts['p'];
       }
-     
+      
       //pass json config to Xcloner_Standalone lib
-      $xcloner_backup = new Xcloner_Standalone();
+      $xcloner_backup = new watchfulli\XClonerCore\Xcloner_Standalone();
      
       if (isset($profile_name) && $profile_name) {
-          $profile = ($xcloner_backup->xcloner_scheduler->get_schedule_by_id_or_name($profile_name));
+          $profile = ($xcloner_backup->get_xcloner_scheduler()->get_schedule_by_id_or_name($profile_name));
       }
      
       if ($profile['id']) {
@@ -109,10 +112,10 @@ function deactivate_xcloner()
     Xcloner_Deactivator::deactivate();
 }
 
+require_once plugin_dir_path(__FILE__).'includes/class-xcloner-activator.php';
+
 register_activation_hook(__FILE__, 'activate_xcloner');
 register_deactivation_hook(__FILE__, 'deactivate_xcloner');
-
-require_once plugin_dir_path(__FILE__).'includes/class-xcloner-activator.php';
 
 if (version_compare(phpversion(), Xcloner_Activator::xcloner_minimum_version, '<')) {
     ?>
@@ -121,7 +124,11 @@ if (version_compare(phpversion(), Xcloner_Activator::xcloner_minimum_version, '<
     </div>
 	<?php
     require_once(ABSPATH.'wp-admin/includes/plugin.php');
-    deactivate_plugins(plugin_basename(__FILE__));
+
+    if (function_exists('deactivate_plugins')) {
+        deactivate_plugins(plugin_basename(__FILE__));
+    }
+
 
     return;
 }
@@ -159,15 +166,27 @@ if (isset($_GET['page']) and stristr($_GET['page'], "xcloner_")) {
  */
 function run_xcloner()
 {
-    $plugin = new Xcloner();
+    $plugin = new \Xcloner();
     $plugin->check_dependencies();
+
+    /**
+    * The class responsible for defining all actions that occur in the admin area.
+    */
+    require_once plugin_dir_path((__FILE__)).'admin/class-xcloner-admin.php';
+
+    /**
+     * The class responsible for defining all actions that occur in the public-facing
+     * side of the site.
+     */
+    //require_once plugin_dir_path((__FILE__)).'public/class-xcloner-public.php';
+        
     $plugin->init();
+    $plugin->extra_define_ajax_hooks();
     $plugin->run();
 
     return $plugin;
 }
 
-require_once(plugin_dir_path(__FILE__).'/vendor/autoload.php');
 require plugin_dir_path(__FILE__).'includes/class-xcloner.php';
 
 try {
@@ -175,9 +194,3 @@ try {
 } catch (Exception $e) {
     echo $e->getMessage();
 }
-
-/*
-if(isset($_GET['page']) && $_GET['page'] == "xcloner_pre_auto_update")
-{
-    wp_maybe_auto_update();
-}*/

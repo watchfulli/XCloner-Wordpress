@@ -2,6 +2,7 @@
 
 namespace League\Flysystem\Adapter;
 
+use DateTime;
 use ErrorException;
 use League\Flysystem\Config;
 use PHPUnit\Framework\TestCase;
@@ -88,15 +89,19 @@ function ftp_chdir($connection, $directory)
         return false;
     }
 
-    if ($directory === 'not.found') {
-        return false;
-    }
-
-    if ($directory === 'windows.not.found') {
-        return false;
-    }
-
-    if (in_array($directory, ['rawlist-total-0.txt', 'file1.txt', 'file2.txt', 'file3.txt', 'file4.txt', 'dir1', 'file1.with-total-line.txt', 'file1.with-invalid-line.txt'])) {
+    if (in_array($directory, [
+        'not.found',
+        'windows.not.found',
+        'syno.not.found',
+        'rawlist-total-0.txt',
+        'file1.txt',
+        'file2.txt',
+        'file3.txt',
+        'file4.txt',
+        'dir1',
+        'file1.with-total-line.txt',
+        'file1.with-invalid-line.txt',
+    ], true)) {
         return false;
     }
 
@@ -114,8 +119,16 @@ function ftp_raw($connection, $command)
         return [0 => '421 Service not available, closing control connection'];
     }
 
-	if ($command === 'OPTS UTF8 ON') {
+    if ($command === 'OPTS UTF8 ON') {
         return [0 => '200 UTF8 set to on'];
+    }
+
+    if ($command === 'NOOP') {
+        if (getenv('FTP_CLOSE_THROW') === 'DISCONNECT_CATCH') {
+            return [0 => '500 Internal error'];
+        }
+
+        return [0 => '200 Zzz...'];
     }
 
     if ($command === 'STAT syno.not.found') {
@@ -439,19 +452,6 @@ class FtpTests extends TestCase
     /**
      * @depends testInstantiable
      */
-    public function testIsConnectedTimeoutPassthu()
-    {
-        putenv('FTP_CLOSE_THROW=DISCONNECT_RETHROW');
-
-        $this->expectException('ErrorException');
-        $adapter = new Ftp(array_merge($this->options, ['host' => 'disconnect.check']));
-        $adapter->connect();
-        $adapter->isConnected();
-    }
-
-    /**
-     * @depends testInstantiable
-     */
     public function testIsConnectedTimeout()
     {
         putenv('FTP_CLOSE_THROW=DISCONNECT_CATCH');
@@ -605,7 +605,6 @@ class FtpTests extends TestCase
         $adapter = new Ftp($this->options);
 
         $listing = $adapter->listContents('lastfiledir');
-
         $last_modified_file = reset($listing);
         foreach ($listing as $file) {
             $file_time = $adapter->getTimestamp($file['path'])['timestamp'];
@@ -634,14 +633,154 @@ class FtpTests extends TestCase
     /**
      * @depends testInstantiable
      */
-    public function testListingDoNotIncludeTimestamp()
+    public function testListingNotEmpty()
     {
         $adapter = new Ftp($this->options);
 
         $listing = $adapter->listContents('');
 
         $this->assertNotEmpty($listing);
-        $this->assertArrayNotHasKey('timestamp', $listing);
+    }
+
+    public function expectedUnixListings()
+    {
+        return [
+            [
+                /*$directory=*/ '',
+                /*$recursive=*/ false,
+                /*$enableTimestamps=*/ true,
+                /*'expectedListing'=>*/ [
+                    [
+                        'type' => 'dir',
+                        'path' => 'cgi-bin',
+                    ],
+                    [
+                        'type' => 'dir',
+                        'path' => 'folder',
+                    ],
+                    [
+                        'type' => 'file',
+                        'path' => 'index.html',
+                        'visibility' => 'public',
+                        'size' => 409,
+                        'timestamp' => 1350086400,
+                    ],
+                    [
+                        'type' => 'file',
+                        'path' => 'somewhere/folder/dummy.txt',
+                        'visibility' => 'public',
+                        'size' => 0,
+                        'timestamp' => DateTime::createFromFormat('M d H:i', 'Nov 24 13:59')->getTimestamp(),
+                    ],
+                ]
+            ],
+            [
+                /*$directory=*/ '',
+                /*$recursive=*/ true,
+                /*$enableTimestamps=*/ true,
+                /*'expectedListing'=>*/ [
+                    [
+                        'type' => 'dir',
+                        'path' => 'cgi-bin',
+                    ],
+                    [
+                        'type' => 'dir',
+                        'path' => 'folder',
+                    ],
+                    [
+                        'type' => 'file',
+                        'path' => 'index.html',
+                        'visibility' => 'public',
+                        'size' => 409,
+                        'timestamp' => 1350086400,
+                    ],
+                    [
+                        'type' => 'file',
+                        'path' => 'somewhere/folder/dummy.txt',
+                        'visibility' => 'public',
+                        'size' => 0,
+                        'timestamp' => DateTime::createFromFormat('M d H:i', 'Nov 24 13:59')->getTimestamp(),
+                    ],
+                ]
+            ],
+            [
+                /*$directory=*/ 'lastfiledir',
+                /*$recursive=*/ true,
+                /*$enableTimestamps=*/ true,
+                /*'expectedListing'=>*/ [
+                    [
+                        'type' => 'file',
+                        'path' => 'lastfiledir/file1.txt',
+                        'visibility' => 'public',
+                        'size' => 409,
+                        'timestamp' => DateTime::createFromFormat('M d H:i', 'Aug 19 09:01')->getTimestamp(),
+                    ],
+                    [
+                        'type' => 'file',
+                        'path' => 'lastfiledir/file2.txt',
+                        'visibility' => 'public',
+                        'size' => 409,
+                        'timestamp' => DateTime::createFromFormat('M d H:i', 'Aug 14 09:01')->getTimestamp(),
+                    ],
+                    [
+                        'type' => 'file',
+                        'path' => 'lastfiledir/file3.txt',
+                        'visibility' => 'public',
+                        'size' => 409,
+                        'timestamp' => DateTime::createFromFormat('M d H:i', 'Feb 6 10:06')->getTimestamp(),
+                    ],
+                    [
+                        'type' => 'file',
+                        'path' => 'lastfiledir/file4.txt',
+                        'visibility' => 'public',
+                        'size' => 409,
+                        'timestamp' => 1395273600,
+                    ],
+                ]
+            ],
+            [
+                /*$directory=*/ 'lastfiledir',
+                /*$recursive=*/ true,
+                /*$enableTimestamps=*/ false,
+                /*'expectedListing'=>*/ [
+                    [
+                        'type' => 'file',
+                        'path' => 'lastfiledir/file1.txt',
+                        'visibility' => 'public',
+                        'size' => 409,
+                    ],
+                    [
+                        'type' => 'file',
+                        'path' => 'lastfiledir/file2.txt',
+                        'visibility' => 'public',
+                        'size' => 409,
+                    ],
+                    [
+                        'type' => 'file',
+                        'path' => 'lastfiledir/file3.txt',
+                        'visibility' => 'public',
+                        'size' => 409,
+                    ],
+                    [
+                        'type' => 'file',
+                        'path' => 'lastfiledir/file4.txt',
+                        'visibility' => 'public',
+                        'size' => 409,
+                    ],
+                ]
+            ]
+        ];
+    }
+
+    /**
+     * @depends testInstantiable
+     * @dataProvider expectedUnixListings
+     */
+    public function testListingFromUnixFormat($directory, $recursive, $enableTimestamps, $expectedListing)
+    {
+        $adapter = new Ftp($this->options += ['enableTimestampsOnUnixListings' => $enableTimestamps]);
+        $listing = $adapter->listContents($directory, $recursive);
+        $this->assertEquals($listing, $expectedListing);
     }
 
     /**

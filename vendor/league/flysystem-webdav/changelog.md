@@ -1,6 +1,25 @@
 # Changelog
 
-### 1.0.5 - 2016-12-14
+## 1.0.9 - 2019-11-13
+
+* Made detection of directories compliant with rfc4918 (#53).
+* Allow higher deps versions.
+
+## 1.0.8 - 2019-07-08
+
+* Made some properties private to allow them to be overwritten so other types of WebDAV servers can be supported (#51).
+
+## 1.0.7 - 2019-06-23
+
+* Fixed prefix handling from listContent
+
+## 1.0.6 - 2018-12-14
+
+### Fixed
+
+* Create directories with a trailing "/".
+
+## 1.0.5 - 2016-12-14
 
 ### Fixed
 

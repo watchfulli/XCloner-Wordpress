@@ -9,6 +9,7 @@ use BackblazeB2\Exceptions\BucketAlreadyExistsException;
 use BackblazeB2\Exceptions\BucketNotEmptyException;
 use BackblazeB2\Exceptions\FileNotPresentException;
 use BackblazeB2\Exceptions\NotFoundException;
+use BackblazeB2\Exceptions\UnauthorizedAccessException;
 use GuzzleHttp\Psr7\Response;
 
 class ErrorHandler
@@ -20,6 +21,7 @@ class ErrorHandler
         'not_found'                      => NotFoundException::class,
         'file_not_present'               => FileNotPresentException::class,
         'cannot_delete_non_empty_bucket' => BucketNotEmptyException::class,
+        'unauthorized'                   => UnauthorizedAccessException::class,
     ];
 
     public static function handleErrorResponse(Response $response)

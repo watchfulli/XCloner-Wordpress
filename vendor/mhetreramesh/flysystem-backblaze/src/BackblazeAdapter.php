@@ -3,13 +3,13 @@
 namespace Mhetreramesh\Flysystem;
 
 use BackblazeB2\Client;
+use GuzzleHttp\Psr7;
 use League\Flysystem\Adapter\AbstractAdapter;
 use League\Flysystem\Adapter\Polyfill\NotSupportingVisibilityTrait;
 use League\Flysystem\Config;
-use GuzzleHttp\Psr7;
 
-class BackblazeAdapter extends AbstractAdapter {
-
+class BackblazeAdapter extends AbstractAdapter
+{
     use NotSupportingVisibilityTrait;
 
     protected $client;
@@ -37,9 +37,10 @@ class BackblazeAdapter extends AbstractAdapter {
     {
         $file = $this->getClient()->upload([
             'BucketName' => $this->bucketName,
-            'FileName' => $path,
-            'Body' => $contents
+            'FileName'   => $path,
+            'Body'       => $contents,
         ]);
+
         return $this->getFileInfo($file);
     }
 
@@ -50,9 +51,10 @@ class BackblazeAdapter extends AbstractAdapter {
     {
         $file = $this->getClient()->upload([
             'BucketName' => $this->bucketName,
-            'FileName' => $path,
-            'Body' => $resource
+            'FileName'   => $path,
+            'Body'       => $resource,
         ]);
+
         return $this->getFileInfo($file);
     }
 
@@ -63,9 +65,10 @@ class BackblazeAdapter extends AbstractAdapter {
     {
         $file = $this->getClient()->upload([
             'BucketName' => $this->bucketName,
-            'FileName' => $path,
-            'Body' => $contents
+            'FileName'   => $path,
+            'Body'       => $contents,
         ]);
+
         return $this->getFileInfo($file);
     }
 
@@ -76,9 +79,10 @@ class BackblazeAdapter extends AbstractAdapter {
     {
         $file = $this->getClient()->upload([
             'BucketName' => $this->bucketName,
-            'FileName' => $path,
-            'Body' => $resource
+            'FileName'   => $path,
+            'Body'       => $resource,
         ]);
+
         return $this->getFileInfo($file);
     }
 
@@ -89,11 +93,12 @@ class BackblazeAdapter extends AbstractAdapter {
     {
         $file = $this->getClient()->getFile([
             'BucketName' => $this->bucketName,
-            'FileName' => $path
+            'FileName'   => $path,
         ]);
         $fileContent = $this->getClient()->download([
-            'FileId' => $file->getId()
+            'FileId' => $file->getId(),
         ]);
+
         return ['contents' => $fileContent];
     }
 
@@ -105,15 +110,17 @@ class BackblazeAdapter extends AbstractAdapter {
         $stream = Psr7\stream_for();
         $download = $this->getClient()->download([
             'BucketName' => $this->bucketName,
-            'FileName' => $path,
-            'SaveAs' => $stream,
+            'FileName'   => $path,
+            'SaveAs'     => $stream,
         ]);
         $stream->seek(0);
+
         try {
             $resource = Psr7\StreamWrapper::getResource($stream);
         } catch (InvalidArgumentException $e) {
             return false;
         }
+
         return $download === true ? ['stream' => $resource] : false;
     }
 
@@ -132,8 +139,8 @@ class BackblazeAdapter extends AbstractAdapter {
     {
         return $this->getClient()->upload([
             'BucketName' => $this->bucketName,
-            'FileName' => $newPath,
-            'Body' => @file_get_contents($path)
+            'FileName'   => $newPath,
+            'Body'       => @file_get_contents($path),
         ]);
     }
 
@@ -160,8 +167,8 @@ class BackblazeAdapter extends AbstractAdapter {
     {
         return $this->getClient()->upload([
             'BucketName' => $this->bucketName,
-            'FileName' => $path,
-            'Body' => ''
+            'FileName'   => $path,
+            'Body'       => '',
         ]);
     }
 
@@ -219,12 +226,12 @@ class BackblazeAdapter extends AbstractAdapter {
         ]);
         if ($recursive === true && $directory === '') {
             $regex = '/^.*$/';
-        } else if ($recursive === true && $directory !== '') {
-            $regex = '/^' . preg_quote($directory) . '\/.*$/';
-        } else if ($recursive === false && $directory === '') {
+        } elseif ($recursive === true && $directory !== '') {
+            $regex = '/^'.preg_quote($directory).'\/.*$/';
+        } elseif ($recursive === false && $directory === '') {
             $regex = '/^(?!.*\\/).*$/';
-        } else if ($recursive === false && $directory !== '') {
-            $regex = '/^' . preg_quote($directory) . '\/(?!.*\\/).*$/';
+        } elseif ($recursive === false && $directory !== '') {
+            $regex = '/^'.preg_quote($directory).'\/(?!.*\\/).*$/';
         } else {
             throw new \InvalidArgumentException();
         }
@@ -234,24 +241,24 @@ class BackblazeAdapter extends AbstractAdapter {
         $normalized = array_map(function ($fileObject) {
             return $this->getFileInfo($fileObject);
         }, $fileObjects);
+
         return array_values($normalized);
     }
 
     /**
-     * Get file info
+     * Get file info.
      *
      * @param $file
      *
      * @return array
      */
-
     protected function getFileInfo($file)
     {
         $normalized = [
-            'type' => 'file',
-            'path' => $file->getName(),
+            'type'      => 'file',
+            'path'      => $file->getName(),
             'timestamp' => substr($file->getUploadTimestamp(), 0, -3),
-            'size' => $file->getSize()
+            'size'      => $file->getSize(),
         ];
 
         return $normalized;

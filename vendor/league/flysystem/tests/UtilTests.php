@@ -18,6 +18,16 @@ class UtilTests extends TestCase
         $output = Util::emulateDirectories($input);
         $this->assertCount(4, $output);
     }
+    public function testEmulateDirectoriesWithNumberZeroDirectoryName()
+    {
+        $input = [
+            ['dirname' => 'something/0', 'path' => 'something/0/dirname', 'type' => 'dir'],
+            ['dirname' => '0/other', 'path' => '0/other/dir', 'type' => 'dir'],
+        ];
+        $output = Util::emulateDirectories($input);
+
+        $this->assertCount(6, $output);
+    }
 
     public function testContentSize()
     {
@@ -157,6 +167,13 @@ class UtilTests extends TestCase
         fwrite($stream, 'aaa');
         $size = Util::getStreamSize($stream);
         $this->assertEquals(3, $size);
+        fclose($stream);
+    }
+
+    public function testStreamSizeForUrl()
+    {
+        $stream = \fopen('https://flysystem.thephpleague.com/img/flysystem.svg', 'r');
+        $this->assertNull(Util::getStreamSize($stream));
         fclose($stream);
     }
 

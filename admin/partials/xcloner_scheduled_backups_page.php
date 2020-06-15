@@ -22,7 +22,7 @@ $available_storages     = $xcloner_remote_storage->get_available_storages();
         <thead>
         <tr class="grey lighten-2">
             <th><?php echo __('ID', 'xcloner-backup-and-restore') ?></th>
-            <th><?php echo __('Schedule Name', 'xcloner-backup-and-restore') ?></th>
+            <th><?php echo __('Profile Name', 'xcloner-backup-and-restore') ?></th>
             <th><?php echo __('Recurrence', 'xcloner-backup-and-restore') ?></th>
             <th class="hide-on-med-and-down"><?php echo __('Next Execution', 'xcloner-backup-and-restore') ?></th>
             <th><?php echo __('Remote Storage', 'xcloner-backup-and-restore') ?></th>

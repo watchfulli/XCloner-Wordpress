@@ -1,5 +1,103 @@
 # Changelog
 
+## 2.0.26 - 2020-03-22
+
+- SFTP: another attempt at speeding up uploads (#1455)
+- SSH2: try logging in with none as an auth method first (#1454)
+- ASN1: fix for malformed ASN1 strings (#1456)
+
+## 2.0.25 - 2020-02-25
+
+- SFTP: re-add buffering (#1455)
+
+## 2.0.24 - 2020-02-22
+
+- X509: fix PHP 5.3 compatability issue
+- SSH2: arcfour128 / arcfour256 were being included twice
+- SSH2: make window resizing behave more consistently with PuTTY (#1421)
+- SSH2: sodium_compat doesn't support memzero (#1432)
+- SSH2: logging enhancements
+- SFTP: don't buffer up download requests (PuTTY doesn't) (#1425)
+- RSA: make PSS verification work for key length that aren't a power of 2 (#1423)
+
+## 2.0.23 - 2019-09-16
+
+- SSH2: fix regression for connecting to servers with bad hostnames (#1405)
+
+## 2.0.22 - 2019-09-15
+
+- SSH2: backport setPreferredAlgorithms() / getAlgorithmsNegotiated (#1156)
+- SSH2 / SFTP: fix issues with ping() (#1402)
+- X509: IPs in nameconstraints extension include netmask (#1387)
+- X509: fix issue with explicit time tags whose maps expect implicit (#1388)
+- BigInteger: fix bug with toBytes() with fixed precision negative numbers
+- fix PHP 7.4 deprecations
+
+## 2.0.21 - 2019-07-14
+
+- SSH2: only auto close the channel for exec() timeouts (#1384)
+
+## 2.0.20 - 2019-06-23
+
+- BigInteger: lower PHP req back down to PHP 5.3.3 (#1382)
+
+## 2.0.19 - 2019-06-19
+
+- BigInteger: fix issues with divide method in pure-PHP mode
+
+## 2.0.18 - 2019-06-13
+
+- SSH2: close channel when a timeout occurs (#1378)
+- SFTP: improve handling of malformed packets (#1371)
+- RSA: add support for OpenSSH private keys (#1372)
+
+## 2.0.17 - 2019-05-26
+
+- BigInteger: new BigInteger('-0') caused issues with GMP
+
+## 2.0.16 - 2019-05-26
+
+- BigInteger: new BigInteger('00') caused issues with GMP
+- BigInteger: GMP engine didn't always return 1 or -1
+- ASN1: revamp how OIDs are handled (#1367)
+- ASN1: correctly handle long tags
+- SSH2: fix issue with reconnecting via ping() (#1353)
+- RSA: use hash_equals if available
+
+## 2.0.15 - 2019-03-10
+
+- SFTP: make it so get() can correctly handle out of order responses (#1343)
+- Crypt: avoid bogus IV errors in ECB mode with OpenSSL (#1087)
+- RSA: protect against possible timing attack during OAEP decryption
+- RSA: fix possible memory leak with XML keys (#1346)
+- Hash: fix issue with undefined constants (#1347)
+- Hash: fix issues with the mode
+- SCP: issue error if remote_file is empty in put() call (#1335)
+- X509: whitelist OID 1.3.6.1.4.1.11129.2.4.2 (#1341)
+
+## 2.0.14 - 2019-01-27
+
+- SSH2: ssh-rsa is sometimes incorrectly used instead of rsa-sha2-256 (#1331)
+- SSH2: more strictly adhere to RFC8332 for rsa-sha2-256/512 (#1332)
+
+## 2.0.13 - 2018-12-16
+
+- SSH2: fix order of user_error() / bitmap reset (#1314)
+- SSH2: setTimeout(0) didn't work as intended (#1116)
+- Agent: add support for rsa-sha2-256 / rsa-sha2-512 (#1319)
+- Agent: add parameter to constructor (#1319)
+- X509: fix errors with validateDate (#1318)
+
+## 2.0.12 - 2018-11-04
+
+- SSH2: fixes relating to delayed global requests (#1271)
+- SSH2: setEngine -> setPreferredEngine (#1294)
+- SSH2: reset $this->bitmap when the connection fails (#1298)
+- SSH2: add ping() method (#1298)
+- SSH2: add support for rsa-sha2-256 / rsa-sha2-512 (RFC8332)
+- SFTP: make rawlist give same result regardless of stat cache (#1287)
+- Hash: save hashed keys for re-use
+
 ## 2.0.11 - 2018-04-15
 
 - X509: auto download intermediate certs
@@ -115,6 +213,69 @@
 
 - Classes were renamed and namespaced ([#243](https://github.com/phpseclib/phpseclib/issues/243))
 - The use of an autoloader is now required (e.g. Composer)
+
+## 1.0.18 - 2019-09-16
+
+- SSH2: fix regression for connecting to servers with bad hostnames (#1405)
+
+## 1.0.17 - 2019-09-15
+
+- SSH2: backport setPreferredAlgorithms() / getAlgorithmsNegotiated (#1156)
+- SSH2 / SFTP: fix issues with ping() (#1402)
+- SSH2: only auto close the channel for exec() timeouts (#1384)
+- SSH2 / SFTP: fix issues with ping() (#1402)
+- SFTP: add progress callback to get() (#1375)
+- SFTP: fix array_merge(): Argument #1 is not an array error (#1379)
+- X509: IPs in nameconstraints extension include netmask (#1387)
+- X509: fix issue with explicit time tags whose maps expect implicit (#1388)
+- BigInteger: fix issues with divide method
+- BigInteger: fix bug with toBytes() with fixed precision negative numbers
+- fix PHP 7.4 deprecations
+
+## 1.0.16 - 2019-06-13
+
+- BigInteger: new BigInteger('-0') caused issues with GMP
+- BigInteger: new BigInteger('00') caused issues with GMP
+- BigInteger: GMP engine didn't always return 1 or -1
+- ASN1: revamp how OIDs are handled (#1367)
+- ASN1: correctly handle long tags
+- SSH2: fix issue with reconnecting via ping() (#1353)
+- SSH2: close channel when a timeout occurs (#1378)
+- SFTP: improve handling of malformed packets (#1371)
+- RSA: add support for OpenSSH private keys (#1372)
+- RSA: use hash_equals if available
+
+## 1.0.15 - 2019-03-10
+
+- SFTP: make it so get() can correctly handle out of order responses (#1343)
+- Crypt: avoid bogus IV errors in ECB mode with OpenSSL (#1087)
+- RSA: protect against possible timing attack during OAEP decryption
+- RSA: fix possible memory leak with XML keys (#1346)
+- Hash: fix issues with the mode
+- SCP: issue error if remote_file is empty in put() call (#1335)
+- X509: whitelist OID 1.3.6.1.4.1.11129.2.4.2 (#1341)
+
+## 1.0.14 - 2019-01-27
+
+- SSH2: ssh-rsa is sometimes incorrectly used instead of rsa-sha2-256 (#1331)
+- SSH2: more strictly adhere to RFC8332 for rsa-sha2-256/512 (#1332)
+
+## 1.0.13 - 2018-12-16
+
+- SSH2: fix order of user_error() / bitmap reset (#1314)
+- SSH2: setTimeout(0) didn't work as intended (#1116)
+- Agent: add support for rsa-sha2-256 / rsa-sha2-512 (#1319)
+- Agent: add parameter to constructor (#1319)
+
+## 1.0.12 - 2018-11-04
+
+- SSH2: fixes relating to delayed global requests (#1271)
+- SSH2: setEngine -> setPreferredEngine (#1294)
+- SSH2: reset $this->bitmap when the connection fails (#1298)
+- SSH2: add ping() method (#1298)
+- SSH2: add support for rsa-sha2-256 / rsa-sha2-512 (RFC8332)
+- SFTP: make rawlist give same result regardless of stat cache (#1287)
+- Hash: save hashed keys for re-use
 
 ## 1.0.11 - 2018-04-15
 

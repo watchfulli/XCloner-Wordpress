@@ -314,6 +314,7 @@ a.expand-multipart.remove {
 
 .xcloner-restore ul.text-steps li {
     list-style-type: decimal;
+    padding:5px 0px;
 }
 
 .xcloner-restore ul.text-steps li.warning {
@@ -329,7 +330,7 @@ a.expand-multipart.remove {
 }
 
 .xcloner-restore ul.text-steps {
-    margin-left: 20px;
+    margin-left: 50px;
 }
 
 .xcloner-restore .restore-remote-backup-step .files-list {

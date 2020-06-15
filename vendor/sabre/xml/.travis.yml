@@ -1,26 +1,38 @@
 language: php
+sudo: required
 php:
-  - 5.5
-  - 5.6
-  - 7.0
   - 7.1
+  - 7.2
+  - 7.3
+  - 7.4
+
+env:
+  global:
+    - RUN_PHPSTAN="FALSE"
+  matrix:
+    - PREFER_LOWEST="" REPORT_COVERAGE="TRUE" WITH_COVERAGE="--coverage-clover=coverage.xml"
+    - PREFER_LOWEST="--prefer-lowest" REPORT_COVERAGE="FALSE" WITH_COVERAGE=""
 
 matrix:
+  include:
+    - name: 'PHPStan'
+      php: 7.4
+      env:
+        - RUN_PHPSTAN="TRUE"
+        - REPORT_COVERAGE="FALSE"
   fast_finish: true
-
-sudo: false
 
 cache:
   directories:
     - $HOME/.composer/cache
 
-before_install:
-  - phpenv config-rm xdebug.ini; true
-
-install:
-  - composer install
+before_script:
+  - composer update $PREFER_LOWEST
 
 script:
-  - ./bin/phpunit --configuration tests/phpunit.xml.dist
-  - ./bin/sabre-cs-fixer fix . --dry-run --diff
+  - if [ $RUN_PHPSTAN == "FALSE" ]; then php vendor/bin/php-cs-fixer fix --dry-run --diff; fi
+  - if [ $RUN_PHPSTAN == "FALSE" ]; then php vendor/bin/phpunit --configuration tests/phpunit.xml $WITH_COVERAGE; fi
+  - if [ $RUN_PHPSTAN == "TRUE" ]; then composer phpstan; fi
 
+after_success:
+  - if [ $REPORT_COVERAGE == "TRUE" ]; then bash <(curl -s https://codecov.io/bash); fi

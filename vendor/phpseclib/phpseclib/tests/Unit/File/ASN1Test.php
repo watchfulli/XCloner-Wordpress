@@ -331,4 +331,65 @@ class Unit_File_ASN1Test extends PhpseclibTestCase
 
         $this->assertSame($data, $arr);
     }
+
+    /**
+     * @group github1296
+     */
+    public function testInvalidCertificate()
+    {
+        $data = 'a' . base64_decode('MD6gJQYKKwYBBAGCNxQCA6AXDBVvZmZpY2VAY2VydGRpZ2l0YWwucm+BFW9mZmljZUBjZXJ0ZGlnaXRhbC5ybw==');
+        $asn1 = new ASN1();
+        $asn1->decodeBER($data);
+    }
+
+    /**
+     * @group github1367
+     */
+    public function testOIDs()
+    {
+        // from the example in 8.19.5 in the following:
+        // https://www.itu.int/ITU-T/studygroups/com17/languages/X.690-0207.pdf#page=22
+        $orig = pack('H*', '813403');
+        $asn1 = new ASN1();
+        $new = $asn1->_decodeOID($orig);
+        $this->assertSame('2.100.3', $new);
+        $this->assertSame($orig, $asn1->_encodeOID($new));
+
+        // UUID OID from the following:
+        // https://healthcaresecprivacy.blogspot.com/2011/02/creating-and-using-unique-id-uuid-oid.html
+        $orig = '2.25.329800735698586629295641978511506172918';
+        $asn1 = new ASN1();
+        $new = $asn1->_encodeOID($orig);
+        $this->assertSame(pack('H*', '6983f09da7ebcfdee0c7a1a7b2c0948cc8f9d776'), $new);
+        $this->assertSame($orig, $asn1->_decodeOID($new));
+    }
+
+    /**
+     * @group github1388
+     */
+    public function testExplicitImplicitDate()
+    {
+        $map = array(
+            'type'     => ASN1::TYPE_SEQUENCE,
+            'children' => array(
+                'notBefore' => array(
+                                             'constant' => 0,
+                                             'optional' => true,
+                                             'implicit' => true,
+                                             'type' => ASN1::TYPE_GENERALIZED_TIME),
+                'notAfter'  => array(
+                                             'constant' => 1,
+                                             'optional' => true,
+                                             'implicit' => true,
+                                             'type' => ASN1::TYPE_GENERALIZED_TIME)
+            )
+        );
+
+        $asn1 = new ASN1();
+        $a = pack('H*', '3026a011180f32303137303432313039303535305aa111180f32303138303432313230353935395a');
+        $a = $asn1->decodeBER($a);
+        $a = $asn1->asn1map($a[0], $map);
+
+        $this->assertInternalType('array', $a);
+    }
 }

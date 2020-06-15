@@ -7,6 +7,10 @@
 define('WP_DEBUG', true);
 define('WP_DEBUG_DISPLAY', true);
 
+if(file_exists(__DIR__ . "/../../../../wp-load.php")) {
+    require_once(__DIR__ .'/../../../../wp-load.php');
+}
+
 if (isset($argv[1])) {
     $backup_name = $argv[1];
 }
@@ -25,7 +29,9 @@ if (isset($argv[3]) && substr($argv[3], 0, 6) == '--key=') {
     $key = substr($argv[3], 6, strlen($argv[3]));
 }
 
-require_once(dirname(__DIR__) . '/includes/class-xcloner-standalone.php');
+require_once(plugin_dir_path(__FILE__).'/../vendor/autoload.php');
+
+//require_once(dirname(__DIR__) . '/includes/class-xcloner-standalone.php');
 
 //loading the default xcloner settings in format [{'option_name':'value', {'option_value': 'value'}}]
 $json_config = json_decode(file_get_contents(__DIR__ . '/standalone_backup_trigger_config.json'));
@@ -35,7 +41,7 @@ if (!$json_config) {
 }
 
 //pass json config to Xcloner_Standalone lib
-$xcloner = new Xcloner_Standalone($json_config);
+$xcloner = new watchfulli\XClonerCore\Xcloner_Standalone($json_config);
 
 if (!$backup_name) {
     $return = $xcloner->start();

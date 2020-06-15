@@ -1,5 +1,6 @@
 {
     "require": {
+        "watchfulli/xcloner-core": "dev-master",
         "splitbrain/php-archive": "^1.0",
         "vakata/jstree": "^3.3",
         "league/flysystem": "^1.0",
