@@ -120,6 +120,7 @@ Of course, schedules can be adjusted accordingly to how often you update your si
 
 ** Implemented enhancements: **
 * Rename `Scheduled Backups` menu to `Schedules & Profiles`
+* PHP 7.x minimum support activation
 ** Fixed bugs: **
 * Fixed `redeclare deactivate\_plugin` bug in CLI
 
