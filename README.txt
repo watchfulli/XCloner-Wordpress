@@ -115,21 +115,21 @@ Of course, schedules can be adjusted accordingly to how often you update your si
 
 == Changelog ==
 
-* 4.2.8 *
+= 4.2.8 =
 
 * scheduler fix call init
 * google drive support fix
 * PHP 7.1 minimum requirement
 
-* 4.2.4 *
+= 4.2.4 =
 
 * PHP 7.x bug fix
 
-* 4.2.3 *
+= 4.2.3 =
 
 * PHP 7.x minimum support activation
 
-* 4.2.1 *
+= 4.2.1 =
 
 ** Implemented enhancements: **
 * Rename `Scheduled Backups` menu to `Schedules & Profiles`
@@ -137,7 +137,7 @@ Of course, schedules can be adjusted accordingly to how often you update your si
 ** Fixed bugs: **
 * Fixed `redeclare deactivate\_plugin` bug in CLI
 
-* 4.2.0 *
+= 4.2.0 =
 
 ** Implemented enhancements: **
 
