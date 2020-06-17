@@ -34,3 +34,5 @@ assignees: jimiero
 - [ ] Restore full backup locally
 - [ ] Restore full backup to a remote location
 - [ ] Enable/Disable logs - check if enabling/disabling logs in XCloner works
+- [ ] Site connects/validates in Watchful (test `Refresh data` success)
+- [ ] XCloner backup works as expected in Watchful
