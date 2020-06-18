@@ -49,6 +49,10 @@ class Xcloner_Scheduler
     {
         $list = $this->db->get_results("SELECT * FROM ".$this->scheduler_table);
 
+        if(!$list){
+            return array();
+        }
+        
         if ($return_only_enabled) {
             $new_list = array();
 
