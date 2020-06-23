@@ -114,15 +114,16 @@ function do_cli_execution($args = array(), $opts = array())
     return;
 }
 
-$foo = function( $args, $assoc_args ) {
-    WP_CLI::success( $args[0] . ' ' . $assoc_args['append'] );
+$foo = function ($args, $assoc_args) {
+    WP_CLI::success($args[0] . ' ' . $assoc_args['append']);
 };
 
 
 //detect CLI mode
-if (php_sapi_name() == "cli" && defined('WP_CLI') && WP_CLI) {
-
-    WP_CLI::add_command('xcloner_generate_backup', 
+if (php_sapi_name() == "cli") {
+    if (defined('WP_CLI') && WP_CLI) {
+        WP_CLI::add_command(
+            'xcloner_generate_backup',
     /**
      * XCloner Generate backup based on supplied profile Name or ID
      *
@@ -133,10 +134,12 @@ if (php_sapi_name() == "cli" && defined('WP_CLI') && WP_CLI) {
      */
     function ($args, $assoc_args) {
         return do_cli_execution($args, $assoc_args);
-    });
-}elseif (php_sapi_name() == "cli" && isset($argv) && basename($argv[0]) == "xcloner.php") {
-    return do_cli_execution();
-  }
+    }
+        );
+    } elseif (isset($argv) && basename($argv[0]) == "xcloner.php") {
+        return do_cli_execution();
+    }
+}
 
   
     
