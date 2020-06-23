@@ -514,7 +514,7 @@ class Xcloner extends watchfulli\XClonerCore\Xcloner
             $this->loader->add_action('wp_ajax_backup_decryption', $xcloner_api, 'backup_decryption');
             $this->loader->add_action('wp_ajax_get_manage_backups_list', $xcloner_api, 'get_manage_backups_list');
             $this->loader->add_action('admin_notices', $this, 'xcloner_error_admin_notices');
-        }
+                                }
 
         //Do a pre-update backup of targeted files
         if ($this->get_xcloner_settings()->get_xcloner_option('xcloner_enable_pre_update_backup')) {
