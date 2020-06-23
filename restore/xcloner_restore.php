@@ -526,18 +526,20 @@ class Xcloner_Restore
      */
     public function restore_finish_action()
     {
-        $remote_path 		= filter_input(INPUT_POST, 'remote_path', FILTER_SANITIZE_STRING);
+        $remote_path 		    = filter_input(INPUT_POST, 'remote_path', FILTER_SANITIZE_STRING);
+        $backup_archive 		= filter_input(INPUT_POST, 'backup_archive', FILTER_SANITIZE_STRING);
         
-        $wp_home_url 		= filter_input(INPUT_POST, 'wp_home_url', FILTER_SANITIZE_STRING);
-        $remote_restore_url = filter_input(INPUT_POST, 'remote_restore_url', FILTER_SANITIZE_STRING);
+        $wp_home_url 		    = filter_input(INPUT_POST, 'wp_home_url', FILTER_SANITIZE_STRING);
+        $remote_restore_url     = filter_input(INPUT_POST, 'remote_restore_url', FILTER_SANITIZE_STRING);
         
-        $remote_mysql_user 	= filter_input(INPUT_POST, 'remote_mysql_user', FILTER_SANITIZE_STRING);
-        $remote_mysql_pass 	= filter_input(INPUT_POST, 'remote_mysql_pass', FILTER_SANITIZE_STRING);
-        $remote_mysql_db = filter_input(INPUT_POST, 'remote_mysql_db', FILTER_SANITIZE_STRING);
-        $remote_mysql_host 	= filter_input(INPUT_POST, 'remote_mysql_host', FILTER_SANITIZE_STRING);
+        $remote_mysql_user 	    = filter_input(INPUT_POST, 'remote_mysql_user', FILTER_SANITIZE_STRING);
+        $remote_mysql_pass 	    = filter_input(INPUT_POST, 'remote_mysql_pass', FILTER_SANITIZE_STRING);
+        $remote_mysql_db        = filter_input(INPUT_POST, 'remote_mysql_db', FILTER_SANITIZE_STRING);
+        $remote_mysql_host 	    = filter_input(INPUT_POST, 'remote_mysql_host', FILTER_SANITIZE_STRING);
         
         $update_remote_site_url = filter_input(INPUT_POST, 'update_remote_site_url', FILTER_SANITIZE_NUMBER_INT);
-        $delete_restore_script = filter_input(INPUT_POST, 'delete_restore_script', FILTER_SANITIZE_NUMBER_INT);
+        $delete_restore_script  = filter_input(INPUT_POST, 'delete_restore_script', FILTER_SANITIZE_NUMBER_INT);
+        $delete_backup_archive  = filter_input(INPUT_POST, 'delete_backup_archive', FILTER_SANITIZE_NUMBER_INT);
         $delete_backup_temporary_folder = filter_input(INPUT_POST, 'delete_backup_temporary_folder', FILTER_SANITIZE_NUMBER_INT);
                 
         if ($update_remote_site_url) {
@@ -548,6 +550,10 @@ class Xcloner_Restore
         
         if ($delete_backup_temporary_folder) {
             $this->delete_backup_temporary_folder($remote_path);
+        }
+
+        if ($delete_backup_archive) {
+            $this->filesystem->delete($backup_archive);
         }
         
         if (defined('XCLONER_PLUGIN_ACCESS') && XCLONER_PLUGIN_ACCESS) {

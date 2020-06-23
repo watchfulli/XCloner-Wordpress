@@ -499,6 +499,8 @@ class Xcloner_Restore{
 		this.set_cancel(false);
 		
 		var params = new Object()
+
+		params.backup_archive 		= jQuery(".xcloner-restore #remote_backup_file").val();
 		
 		params.remote_mysql_host 	= jQuery(".xcloner-restore #remote_mysql_host").val();
 		params.remote_mysql_db 		= jQuery(".xcloner-restore #remote_mysql_db").val();
@@ -513,10 +515,15 @@ class Xcloner_Restore{
 			
 		if(jQuery(".xcloner-restore #delete_backup_temporary_folder").is(":checked"))
 			params.delete_backup_temporary_folder 	= 1;
+		
 		if(jQuery(".xcloner-restore #delete_restore_script").is(":checked"))
 			params.delete_restore_script 			= 1;
+		
 		if(jQuery(".xcloner-restore #update_remote_site_url").is(":checked"))
 			params.update_remote_site_url 			= 1;
+
+		if(jQuery(".xcloner-restore #delete_backup_archive").is(":checked"))
+			params.delete_backup_archive 			= 1;
 
 		this.do_ajax('restore_finish_callback', 'restore_finish', params)
 	
@@ -619,7 +626,7 @@ class Xcloner_Restore{
 			this.restore_script_url = ajaxurl+"?action=restore_backup";
 			this.local_restore = 1;
 			//jQuery("#remote-restore-options").hide();
-			//jQuery("#update_remote_site_url").attr("disabled", "disabled").removeAttr("checked");
+			jQuery("#delete_backup_archive").attr("disabled", "disabled").removeAttr("checked");
 			jQuery("#delete_restore_script").attr("disabled", "disabled").removeAttr("checked");
 		}else{
 			this.local_restore = 0;

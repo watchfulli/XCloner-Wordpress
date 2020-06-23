@@ -428,6 +428,23 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 
                     <div class="row">
                         <div class="col s4">
+                            <span><?php echo __("Delete Backup Archive", 'xcloner-backup-and-restore') ?></span>
+                        </div>
+                        <div class="col s8">
+                            <div class="switch">
+                                <label>
+                                    Off
+                                    <input type="checkbox" id="delete_backup_archive" name="delete_backup_archive"
+                                            value="1">
+                                    <span class="lever"></span>
+                                    On
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col s4">
                             <span><?php echo __("Delete Restore Script", 'xcloner-backup-and-restore') ?></span>
                         </div>
                         <div class="col s8">
@@ -442,6 +459,7 @@ $backup_list = $xcloner_file_system->get_latest_backups();
                             </div>
                         </div>
                     </div>
+                    
 
                     <div class=" row col s12">
                         <div class="status"></div>
