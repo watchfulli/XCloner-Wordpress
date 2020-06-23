@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "52e5fc953cbddf115b66d5cd732778d4",
+    "content-hash": "250d059bdc729c62a9a6bb69e8139255",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -826,6 +826,51 @@
             "time": "2020-01-02T07:15:54+00:00"
         },
         {
+            "name": "microsoft/microsoft-graph",
+            "version": "1.13.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/microsoftgraph/msgraph-sdk-php.git",
+                "reference": "584b71bf888659596003d9c8acab06161def8ae5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/microsoftgraph/msgraph-sdk-php/zipball/584b71bf888659596003d9c8acab06161def8ae5",
+                "reference": "584b71bf888659596003d9c8acab06161def8ae5",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^6.2",
+                "php": "^7.1"
+            },
+            "require-dev": {
+                "mikey179/vfsstream": "^1.2",
+                "phpdocumentor/phpdocumentor": "^2.9",
+                "phpunit/phpunit": "^7.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Microsoft\\Graph\\": "src/",
+                    "Microsoft\\Graph\\Test\\": "tests/Functional/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Mainer",
+                    "email": "mmainer@microsoft.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "The Microsoft Graph SDK for PHP",
+            "homepage": "https://developer.microsoft.com/en-us/graph",
+            "time": "2020-02-04T23:16:38+00:00"
+        },
+        {
             "name": "mikey179/vfsstream",
             "version": "v1.6.8",
             "source": {
@@ -1065,6 +1110,57 @@
                 "time"
             ],
             "time": "2019-10-14T05:51:36+00:00"
+        },
+        {
+            "name": "nicolasbeauvais/flysystem-onedrive",
+            "version": "v1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nicolasbeauvais/flysystem-onedrive.git",
+                "reference": "38ad35f2bbe4efb8f41391ef6ebba057f95b8f47"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nicolasbeauvais/flysystem-onedrive/zipball/38ad35f2bbe4efb8f41391ef6ebba057f95b8f47",
+                "reference": "38ad35f2bbe4efb8f41391ef6ebba057f95b8f47",
+                "shasum": ""
+            },
+            "require": {
+                "league/flysystem": "^1.0",
+                "microsoft/microsoft-graph": "^1.0",
+                "php": "^7.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^6.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "NicolasBeauvais\\FlysystemOneDrive\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Beauvais",
+                    "email": "nicolasbeauvais1@gmail.com",
+                    "homepage": "http://nicolas-beauvais.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Flysystem Adapter for the OneDrive API",
+            "homepage": "https://github.com/nicolasbeauvais/flysystem-onedrive",
+            "keywords": [
+                "Flysystem",
+                "OneDrive",
+                "api",
+                "flysystem-onedrive"
+            ],
+            "abandoned": true,
+            "time": "2017-08-12T15:18:08+00:00"
         },
         {
             "name": "phpseclib/phpseclib",
