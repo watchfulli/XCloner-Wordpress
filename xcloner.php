@@ -132,12 +132,10 @@ if (php_sapi_name() == "cli" && defined('WP_CLI') && WP_CLI) {
      * @when before_wp_load
      */
     function ($args, $assoc_args) {
-        do_cli_execution($args, $assoc_args);
-        exit;
+        return do_cli_execution($args, $assoc_args);
     });
-    return;
 }elseif (php_sapi_name() == "cli" && isset($argv) && basename($argv[0]) == "xcloner.php") {
-      do_cli_execution();
+    return do_cli_execution();
   }
 
   
