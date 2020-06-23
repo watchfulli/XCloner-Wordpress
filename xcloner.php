@@ -87,8 +87,8 @@ function do_cli_execution($args = array(), $opts = array())
     }
   
     $profile = [
- 'id' => 0
-];
+    'id' => 0
+    ];
 
     $profile_name = "undefined";
 
