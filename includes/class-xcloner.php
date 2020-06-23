@@ -198,6 +198,8 @@ class Xcloner extends watchfulli\XClonerCore\Xcloner
         }
 
         update_option("xcloner_store_path", $backup_storage_path);
+
+        return $backup_storage_path;
     }
 
     public function trigger_message($message, $status = "error", $message_param1 = "", $message_param2 = "", $message_param3 = "")
@@ -610,8 +612,8 @@ class Xcloner extends watchfulli\XClonerCore\Xcloner
             );
             add_submenu_page(
                 'xcloner_init_page',
-                __('Remote Storage Settings', 'xcloner-backup-and-restore'),
-                __('Remote Storage', 'xcloner-backup-and-restore'),
+                __('Storage Locations Settings', 'xcloner-backup-and-restore'),
+                __('Storage Locations', 'xcloner-backup-and-restore'),
                 'manage_options',
                 'xcloner_remote_storage_page',
                 array($this, 'xcloner_display')

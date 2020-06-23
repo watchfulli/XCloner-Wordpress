@@ -13,16 +13,21 @@ $gdrive_construct = $remote_storage->gdrive_construct();
 <?php
 function common_cleanup_html($type)
 {
+    if ($type == "local") {
+        $type = "";
+    }else{
+        $type .= $type."_";
+    }
     ob_start(); ?>
 <!-- Cleanup by Days -->
 <div class="row">
                             <div class="col s12 m3 label">
-                                <label for="{type}_cleanup_retention_limit_days"><?php echo __("Cleanup by Age", 'xcloner-backup-and-restore') ?></label>
+                                <label for="xcloner_{type}_cleanup_retention_limit_days"><?php echo __("Cleanup by Age", 'xcloner-backup-and-restore') ?></label>
                             </div>
                             <div class=" col s12 m6">
                                 <input placeholder="<?php echo __("how many days to keep the backups for", 'xcloner-backup-and-restore') ?>"
-                                       id="{type}_cleanup_retention_limit_days" type="text" name="xcloner_{type}_cleanup_retention_limit_days"
-                                       class="validate" value="<?php echo get_option("xcloner_".$type."_cleanup_retention_limit_days") ?>">
+                                       id="xcloner_{type}cleanup_retention_limit_days" type="text" name="xcloner_{type}cleanup_retention_limit_days"
+                                       class="validate" value="<?php echo get_option("xcloner_".$type."cleanup_retention_limit_days") ?>">
                             </div>
                         </div>
                         
@@ -33,9 +38,9 @@ function common_cleanup_html($type)
                             </div>
                             <div class=" col s12 m6">
                                 <input placeholder="<?php echo __("how many backup files to keep", 'xcloner-backup-and-restore') ?>"
-                                       id="xcloner_{type}_cleanup_retention_limit_archives" type="number" name="xcloner_{type}_cleanup_retention_limit_archives"
+                                       id="xcloner_{type}cleanup_retention_limit_archives" type="number" name="xcloner_{type}cleanup_retention_limit_archives"
                                        class="validate"
-                                       value="<?php echo get_option("xcloner_".$type."_cleanup_retention_limit_archives") ?>">
+                                       value="<?php echo get_option("xcloner_".$type."cleanup_retention_limit_archives") ?>">
                             </div>
                         </div>
 
@@ -46,9 +51,9 @@ function common_cleanup_html($type)
                             </div>
                             <div class=" col s12 m6">
                                 <input placeholder="<?php echo __("delete backup over specified limit", 'xcloner-backup-and-restore') ?>"
-                                       id="xcloner_{type}_cleanup_capacity_limit" type="number" name="xcloner_{type}_cleanup_capacity_limit"
+                                       id="xcloner_{type}cleanup_capacity_limit" type="number" name="xcloner_{type}cleanup_capacity_limit"
                                        class="validate"
-                                       value="<?php echo get_option("xcloner_".$type."_cleanup_capacity_limit") ?>">
+                                       value="<?php echo get_option("xcloner_".$type."cleanup_capacity_limit") ?>">
                             </div>
                         </div>
 
@@ -59,9 +64,9 @@ function common_cleanup_html($type)
                             </div>
                             <div class=" col s12 m6">
                                 <input placeholder="<?php echo __("days of month, comma separated", 'xcloner-backup-and-restore') ?>"
-                                       id="xcloner_{type}_cleanup_exclude_days" type="text" name="xcloner_{type}_cleanup_exclude_days"
+                                       id="xcloner_{type}cleanup_exclude_days" type="text" name="xcloner_{type}cleanup_exclude_days"
                                        class="validate"
-                                       value="<?php echo get_option("xcloner_".$type."_cleanup_exclude_days") ?>">
+                                       value="<?php echo get_option("xcloner_".$type."cleanup_exclude_days") ?>">
                             </div>
                         </div>
 <?php
@@ -81,6 +86,66 @@ $common_cleanup_html = ob_get_contents();
     <div class="row remote-storage">
         <div class="col s12 m12 l10">
             <ul class="collapsible popout" data-collapsible="accordion">
+
+            <!-- LOCAL STORAGE-->
+            <li id="local">
+                    <div class="collapsible-header">
+                        <i class="material-icons">computer</i><?php echo __("Local Storage", 'xcloner-backup-and-restore') ?>
+                        <div class="switch right">
+                            <label>
+                                Off
+                                <input type="checkbox" checked disabled class="disabled readonly" \>
+                                <span class="lever"></span>
+                                On
+                            </label>
+                        </div>
+                    </div>
+                    <div class="collapsible-body">
+
+                        <div class="row">
+                            <div class="col s12 m3 label">
+                                <label for="aws_key"><?php echo __("Backup Start Location", 'xcloner-backup-and-restore') ?></label>
+                            </div>
+                            <div class=" col s12 m6">
+                                <input placeholder="<?php echo __("Backup Start Location", 'xcloner-backup-and-restore') ?>"
+                                       id="aws_key" type="text" name="xcloner_start_path" class="validate"
+                                       value="<?php echo get_option("xcloner_start_path") ?>" autocomplete="off">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col s12 m3 label">
+                                <label for="aws_key"><?php echo __("Backup Storage Location", 'xcloner-backup-and-restore') ?></label>
+                            </div>
+                            <div class=" col s12 m6">
+                                <input placeholder="<?php echo __("Backup Storage Location", 'xcloner-backup-and-restore') ?>"
+                                       id="aws_key" type="text" name="xcloner_store_path" class="validate"
+                                       value="<?php echo get_option("xcloner_store_path") ?>" autocomplete="off">
+                            </div>
+                        </div>
+
+                        <?=common_cleanup_html('local')?>
+
+                        <div class="row">
+                            <div class="col s6 m4">
+                                <button class="btn waves-effect waves-light" type="submit" name="action" id="action"
+                                        value="local"><?php echo __("Save Settings", 'xcloner-backup-and-restore') ?>
+                                    <i class="material-icons right">save</i>
+                                </button>
+                            </div>
+                            <div class="col s6 m4">
+                                <button class="btn waves-effect waves-light orange" type="submit" name="action"
+                                        id="action" value="local"
+                                        onclick="jQuery('#connection_check').val('1')"><?php echo __("Verify", 'xcloner-backup-and-restore') ?>
+                                    <i class="material-icons right">import_export</i>
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </li>
+
+            
                 <!-- FTP STORAGE-->
                 <li id="ftp">
                     <div class="collapsible-header">
@@ -158,8 +223,8 @@ $common_cleanup_html = ob_get_contents();
                                 <label for="passive">
                                     <input name="xcloner_ftp_transfer_mode" type="radio" id="passive"
                                         value="1" <?php if (get_option("xcloner_ftp_transfer_mode", 1)) {
-        echo "checked";
-    } ?> />
+    echo "checked";
+} ?> />
                                     <span><?php echo __("Passive", 'xcloner-backup-and-restore') ?></span>
                                 </label>
                             </p>
@@ -167,8 +232,8 @@ $common_cleanup_html = ob_get_contents();
                                 <label for="active">
                                     <input name="xcloner_ftp_transfer_mode" type="radio" id="active"
                                         value="0" <?php if (!get_option("xcloner_ftp_transfer_mode", 1)) {
-        echo "checked";
-    } ?> />
+    echo "checked";
+} ?> />
                                     <span><?php echo __("Active", 'xcloner-backup-and-restore') ?></span>
                                 </label>
                             </p>
@@ -184,8 +249,8 @@ $common_cleanup_html = ob_get_contents();
                                     <label for="ftp_ssl_mode_inactive">
                                     <input name="xcloner_ftp_ssl_mode" type="radio" id="ftp_ssl_mode_inactive"
                                         value="0" <?php if (!get_option("xcloner_ftp_ssl_mode")) {
-        echo "checked";
-    } ?> />
+    echo "checked";
+} ?> />
                                     <span><?php echo __("Disable", 'xcloner-backup-and-restore') ?></span>
                                 </label></p>
                                 <p>
@@ -943,8 +1008,8 @@ $common_cleanup_html = ob_get_contents();
                                     <label for="gdrive_empty_trash_off">
                                         <input name="xcloner_gdrive_empty_trash" type="radio" value="0"
                                             id="gdrive_empty_trash_off" <?php if (!get_option("xcloner_gdrive_empty_trash", 0)) {
-                                            echo "checked";
-                                        } ?> />
+                                        echo "checked";
+                                    } ?> />
                                         <span><?php echo __("Disabled", 'xcloner-backup-and-restore') ?></span>
                                     </label>
                                     </p>
@@ -952,8 +1017,8 @@ $common_cleanup_html = ob_get_contents();
                                         <label for="gdrive_empty_trash_on">
                                         <input name="xcloner_gdrive_empty_trash" type="radio" value="1"
                                             id="gdrive_empty_trash_on" <?php if (get_option("xcloner_gdrive_empty_trash", 0)) {
-                                            echo "checked";
-                                        } ?> />
+                                        echo "checked";
+                                    } ?> />
                                         <span><?php echo __("Enabled", 'xcloner-backup-and-restore') ?></span>
                                     </label>
                                     </p>
@@ -1057,8 +1122,10 @@ $common_cleanup_html = ob_get_contents();
 
         });
 
-        if (location.hash)
-            jQuery(location.hash + " div.collapsible-header").addClass("active");
+        console.log(location.hash)
+        if (location.hash) {
+            jQuery(location.hash).addClass("active");
+        }
 
         jQuery('.collapsible').collapsible();
 

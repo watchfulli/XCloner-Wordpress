@@ -255,9 +255,9 @@ class Xcloner_Admin {
             <li><a href="?page=xcloner_settings_page&tab=system_options"
                    class="nav-tab col s12 m3 l2 <?php echo $active_tab == 'system_options' ? 'nav-tab-active' : ''; ?>"><?php echo __('System Options', 'xcloner-backup-and-restore') ?></a>
             </li>
-            <li><a href="?page=xcloner_settings_page&tab=cleanup_options"
+            <!--<li><a href="?page=xcloner_settings_page&tab=cleanup_options"
                    class="nav-tab col s12 m3 l2 <?php echo $active_tab == 'cleanup_options' ? 'nav-tab-active' : ''; ?>"><?php echo __('Cleanup Options', 'xcloner-backup-and-restore') ?></a>
-            </li>
+            </li>-->
         </ul>
 
         <div class="wrap">
