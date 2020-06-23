@@ -447,9 +447,9 @@ class Xcloner extends watchfulli\XClonerCore\Xcloner
         $logger = new Xcloner_Logger($this, "php_system");
         $error = error_get_last();
 
-        if ($error['type'] and $error['type'] === E_ERROR and $logger) {
+        if (isset($error['type']) && $error['type'] === E_ERROR and $logger) {
             $logger->error($this->friendly_error_type($error['type']).": ".var_export($error, true));
-        } elseif ($error['type'] and $logger) {
+        } elseif (isset($error['type']) && $logger) {
             $logger->debug($this->friendly_error_type($error['type']).": ".var_export($error, true));
         }
     }
