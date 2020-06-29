@@ -224,7 +224,7 @@ function run_xcloner()
      * side of the site.
      */
     //require_once plugin_dir_path((__FILE__)).'public/class-xcloner-public.php';
-        
+    
     $plugin->init();
     $plugin->extra_define_ajax_hooks();
     $plugin->run();
