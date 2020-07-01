@@ -126,7 +126,8 @@ class Xcloner_Remote_Storage
             "onedrive_cleanup_retention_limit_days" => "float",
             "onedrive_cleanup_exclude_days" => "string",
             "onedrive_cleanup_retention_limit_archives" => "int",
-            "onedrive_cleanup_capacity_limit" => "int"
+            "onedrive_cleanup_capacity_limit" => "int",
+            "onedrive_path" => "path"
         ),
         "dropbox" => array(
             "text" => "Dropbox",
@@ -705,21 +706,14 @@ class Xcloner_Remote_Storage
      */
     public function get_onedrive_filesystem()
     {
-        
-        /*
-        GET https://login.microsoftonline.com/common/oauth2/v2.0/authorize?
-        client_id=25701c80-590f-4fbe-95fd-a8c9ecdc831e&
-        scope=offline_access files.readwrite.all  files.read files.read.all files.readwrite&
-        response_type=code&
-        redirect_uri=http://localhost:8888/wordpress/wp-admin/admin.php
-        */
-        
+            
         $accessToken = get_option('xcloner_onedrive_access_token');
 
         $graph = new Graph();
         $graph->setAccessToken($accessToken);
 
-        $adapter = new OneDriveAdapter($graph, 'root');
+        $adapter = new OneDriveAdapter($graph, 'root', 1);
+        $adapter->setPathPrefix('/drive/root:/'.get_option('xcloner_onedrive_path')."/");
         $filesystem = new Filesystem($adapter);
 
         //print_r($filesystem->listContents());

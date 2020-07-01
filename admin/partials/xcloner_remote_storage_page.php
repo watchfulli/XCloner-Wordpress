@@ -693,7 +693,18 @@ $common_cleanup_html = ob_get_contents();
                                     <input type="text" name="authentification_code" id="authentification_code"
                                            placeholder="<?php echo __("Paste Authorization Code Here", "xcloner-backup-and-restore") ?>">
                                 </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col s12 m3 label">
+                                <label for="onedrive_path"><?php echo __("OneDrive Storage Folder", 'xcloner-backup-and-restore') ?></label>
                             </div>
+                            <div class=" col s12 m6">
+                                <input placeholder="<?php echo __("OneDrive Storage Folder Path", 'xcloner-backup-and-restore') ?>"
+                                       id="onedrive_path" type="text" name="xcloner_onedrive_path" class="validate"
+                                       value="<?php echo get_option("xcloner_onedrive_path") ?>">
+                            </div>
+                        </div>
 
                         <?=common_cleanup_html('onedrive')?>
 

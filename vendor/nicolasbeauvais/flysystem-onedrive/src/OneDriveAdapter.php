@@ -212,7 +212,8 @@ class OneDriveAdapter extends AbstractAdapter
     public function listContents($directory = '', $recursive = false): array
     {
         if ($directory === '' && $this->usePath) {
-            $endpoint = str_replace(':/', '', $this->getPathPrefix()).'/children';
+            $endpoint = str_replace(':/', ':/', $this->getPathPrefix()).':/children';
+            $endpoint = str_replace(':/:/','/', $endpoint);
         } else {
             $endpoint = $this->applyPathPrefix($directory).($this->usePath ? ':' : '').'/children';
         }
