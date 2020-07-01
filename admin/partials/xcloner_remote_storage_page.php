@@ -674,8 +674,8 @@ $common_cleanup_html = ob_get_contents();
                             </div>
                             <div class=" col s12 m6">
                                 <input placeholder="<?php echo __("OneDrive Client Secret", 'xcloner-backup-and-restore') ?>"
-                                       id="onedrive_client_secret" type="password" name="xcloner_onedrive_client_secret" class="validate"
-                                       value="<?=get_option("xcloner_onedrive_client_secret") ?>"
+                                       id="onedrive_client_secret" type="text" name="xcloner_onedrive_client_secret" class="validate"
+                                       value="<?php echo str_repeat('*', strlen(get_option("xcloner_onedrive_client_secret"))) ?>"
                                        autocomplete="off">
                             </div>
                         </div>
