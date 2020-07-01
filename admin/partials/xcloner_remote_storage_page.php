@@ -651,7 +651,7 @@ $common_cleanup_html = ob_get_contents();
                             <div class=" col s12 m6">
                                 <p>
                                     <?php echo sprintf(__('Visit <a href="%s" target="_blank">Microsoft Azure App Registrations</a> and get your Client ID and Client Secret. More details on setting up the code flow authentication can be found <a href="%s">here</a>. 
-                                    Make sure to also add the %s to the Authentication->Redirect URIs area', 'xcloner-backup-and-restore'), 'https://portal.azure.com/#blade/Microsoft_AAD_RegisteredApps/ApplicationsListBlade', 'https://docs.microsoft.com/en-us/onedrive/developer/rest-api/getting-started/graph-oauth?view=odsp-graph-online#token-flow', get_admin_url()) ?>
+                                    Make sure to also add the %s to the Authentication->Redirect URIs area', 'xcloner-backup-and-restore'), 'https://portal.azure.com/#blade/Microsoft_AAD_RegisteredApps/ApplicationsListBlade', 'https://docs.microsoft.com/en-us/onedrive/developer/rest-api/getting-started/graph-oauth?view=odsp-graph-online#code-flow', get_admin_url()) ?>
                                 </p>
                             </div>
                         </div>
