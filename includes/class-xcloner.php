@@ -530,10 +530,10 @@ class Xcloner extends watchfulli\XClonerCore\Xcloner
      */
     public function onedrive_auth_token(){
 
-        $onedrive_expire_in  = get_option('xcloner_onedrive_expire_in');
+        $onedrive_expire_in  = get_option('xcloner_onedrive_expires_in');
         $onedrive_refresh_token = get_option('xcloner_onedrive_refresh_token');
 
-        if($onedrive_refresh_token && time()< $onedrive_expire_in)  {
+        if($onedrive_refresh_token && time()> $onedrive_expire_in)  {
             $parameters = array(
                 'client_id' => get_option("xcloner_onedrive_client_id"),
                 'client_secret' => get_option("xcloner_onedrive_client_secret"),
@@ -552,7 +552,7 @@ class Xcloner extends watchfulli\XClonerCore\Xcloner
                 'grant_type'=> 'authorization_code'
             );
         }
-            
+
         if ($parameters) {
             $response = wp_remote_post("https://login.microsoftonline.com/common/oauth2/v2.0/token", array('body' => $parameters));
 
