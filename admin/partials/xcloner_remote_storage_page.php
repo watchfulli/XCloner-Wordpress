@@ -658,7 +658,7 @@ $common_cleanup_html = ob_get_contents();
 
                         <div class="row">
                             <div class="col s12 m3 label">
-                                <label for="onedrive_client_id"><?php echo __("OneDrive Cliend ID", 'xcloner-backup-and-restore') ?></label>
+                                <label for="onedrive_client_id"><?php echo __("OneDrive Client ID", 'xcloner-backup-and-restore') ?></label>
                             </div>
                             <div class=" col s12 m6">
                                 <input placeholder="<?php echo __("OneDrive Client ID", 'xcloner-backup-and-restore') ?>"
@@ -670,7 +670,7 @@ $common_cleanup_html = ob_get_contents();
 
                         <div class="row">
                             <div class="col s12 m3 label">
-                                <label for="onedrive_client_secret"><?php echo __("OneDrive Cliend Secret", 'xcloner-backup-and-restore') ?></label>
+                                <label for="onedrive_client_secret"><?php echo __("OneDrive Client Secret", 'xcloner-backup-and-restore') ?></label>
                             </div>
                             <div class=" col s12 m6">
                                 <input placeholder="<?php echo __("OneDrive Client Secret", 'xcloner-backup-and-restore') ?>"

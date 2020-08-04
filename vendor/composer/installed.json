@@ -188,17 +188,17 @@
     },
     {
         "name": "guzzlehttp/guzzle",
-        "version": "6.5.4",
-        "version_normalized": "6.5.4.0",
+        "version": "6.5.5",
+        "version_normalized": "6.5.5.0",
         "source": {
             "type": "git",
             "url": "https://github.com/guzzle/guzzle.git",
-            "reference": "a4a1b6930528a8f7ee03518e6442ec7a44155d9d"
+            "reference": "9d4290de1cfd701f38099ef7e183b64b4b7b0c5e"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/guzzle/guzzle/zipball/a4a1b6930528a8f7ee03518e6442ec7a44155d9d",
-            "reference": "a4a1b6930528a8f7ee03518e6442ec7a44155d9d",
+            "url": "https://api.github.com/repos/guzzle/guzzle/zipball/9d4290de1cfd701f38099ef7e183b64b4b7b0c5e",
+            "reference": "9d4290de1cfd701f38099ef7e183b64b4b7b0c5e",
             "shasum": ""
         },
         "require": {
@@ -206,7 +206,7 @@
             "guzzlehttp/promises": "^1.0",
             "guzzlehttp/psr7": "^1.6.1",
             "php": ">=5.5",
-            "symfony/polyfill-intl-idn": "1.17.0"
+            "symfony/polyfill-intl-idn": "^1.17.0"
         },
         "require-dev": {
             "ext-curl": "*",
@@ -216,7 +216,7 @@
         "suggest": {
             "psr/log": "Required for using the Log middleware"
         },
-        "time": "2020-05-25T19:35:05+00:00",
+        "time": "2020-06-16T21:01:06+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -380,53 +380,6 @@
             "uri",
             "url"
         ]
-    },
-    {
-        "name": "kylekatarnls/update-helper",
-        "version": "1.2.1",
-        "version_normalized": "1.2.1.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/kylekatarnls/update-helper.git",
-            "reference": "429be50660ed8a196e0798e5939760f168ec8ce9"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/kylekatarnls/update-helper/zipball/429be50660ed8a196e0798e5939760f168ec8ce9",
-            "reference": "429be50660ed8a196e0798e5939760f168ec8ce9",
-            "shasum": ""
-        },
-        "require": {
-            "composer-plugin-api": "^1.1.0 || ^2.0.0",
-            "php": ">=5.3.0"
-        },
-        "require-dev": {
-            "codeclimate/php-test-reporter": "dev-master",
-            "composer/composer": "2.0.x-dev || ^2.0.0-dev",
-            "phpunit/phpunit": ">=4.8.35 <6.0"
-        },
-        "time": "2020-04-07T20:44:10+00:00",
-        "type": "composer-plugin",
-        "extra": {
-            "class": "UpdateHelper\\ComposerPlugin"
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-0": {
-                "UpdateHelper\\": "src/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Kyle",
-                "email": "kylekatarnls@gmail.com"
-            }
-        ],
-        "description": "Update helper"
     },
     {
         "name": "league/flysystem",
