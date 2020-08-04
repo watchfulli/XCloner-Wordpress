@@ -44,7 +44,7 @@ class Xcloner_Activator
      * XCloner Database Version
      * @var string
      */
-    const xcloner_db_version = '1.1.7';
+    const xcloner_db_version = '1.1.8';
     /**
      * Minimum required PHP version to run this plugin.
      * @var string
