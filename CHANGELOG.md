@@ -2,7 +2,71 @@
 
 ## [Unreleased](https://github.com/watchfulli/XCloner-Wordpress/tree/HEAD)
 
-[Full Changelog](https://github.com/watchfulli/XCloner-Wordpress/compare/4.2.0...HEAD)
+[Full Changelog](https://github.com/watchfulli/XCloner-Wordpress/compare/4.2.9d...HEAD)
+
+**Merged pull requests:**
+
+- Milestone4.2.10 [\#115](https://github.com/watchfulli/XCloner-Wordpress/pull/115) ([ovidiul](https://github.com/ovidiul))
+
+## [4.2.9d](https://github.com/watchfulli/XCloner-Wordpress/tree/4.2.9d) (2020-06-29)
+
+[Full Changelog](https://github.com/watchfulli/XCloner-Wordpress/compare/4.2.9c...4.2.9d)
+
+## [4.2.9c](https://github.com/watchfulli/XCloner-Wordpress/tree/4.2.9c) (2020-06-19)
+
+[Full Changelog](https://github.com/watchfulli/XCloner-Wordpress/compare/4.2.9b...4.2.9c)
+
+## [4.2.9b](https://github.com/watchfulli/XCloner-Wordpress/tree/4.2.9b) (2020-06-18)
+
+[Full Changelog](https://github.com/watchfulli/XCloner-Wordpress/compare/4.2.9a...4.2.9b)
+
+## [4.2.9a](https://github.com/watchfulli/XCloner-Wordpress/tree/4.2.9a) (2020-06-18)
+
+[Full Changelog](https://github.com/watchfulli/XCloner-Wordpress/compare/4.2.9...4.2.9a)
+
+## [4.2.9](https://github.com/watchfulli/XCloner-Wordpress/tree/4.2.9) (2020-06-18)
+
+[Full Changelog](https://github.com/watchfulli/XCloner-Wordpress/compare/4.2.8r...4.2.9)
+
+## [4.2.8r](https://github.com/watchfulli/XCloner-Wordpress/tree/4.2.8r) (2020-06-15)
+
+[Full Changelog](https://github.com/watchfulli/XCloner-Wordpress/compare/4.2.8...4.2.8r)
+
+## [4.2.8](https://github.com/watchfulli/XCloner-Wordpress/tree/4.2.8) (2020-06-15)
+
+[Full Changelog](https://github.com/watchfulli/XCloner-Wordpress/compare/4.2.7...4.2.8)
+
+## [4.2.7](https://github.com/watchfulli/XCloner-Wordpress/tree/4.2.7) (2020-06-15)
+
+[Full Changelog](https://github.com/watchfulli/XCloner-Wordpress/compare/4.2.6...4.2.7)
+
+## [4.2.6](https://github.com/watchfulli/XCloner-Wordpress/tree/4.2.6) (2020-06-15)
+
+[Full Changelog](https://github.com/watchfulli/XCloner-Wordpress/compare/4.2.5...4.2.6)
+
+## [4.2.5](https://github.com/watchfulli/XCloner-Wordpress/tree/4.2.5) (2020-06-15)
+
+[Full Changelog](https://github.com/watchfulli/XCloner-Wordpress/compare/4.2.4...4.2.5)
+
+## [4.2.4](https://github.com/watchfulli/XCloner-Wordpress/tree/4.2.4) (2020-06-15)
+
+[Full Changelog](https://github.com/watchfulli/XCloner-Wordpress/compare/4.2.3...4.2.4)
+
+## [4.2.3](https://github.com/watchfulli/XCloner-Wordpress/tree/4.2.3) (2020-06-15)
+
+[Full Changelog](https://github.com/watchfulli/XCloner-Wordpress/compare/4.2.2...4.2.3)
+
+## [4.2.2](https://github.com/watchfulli/XCloner-Wordpress/tree/4.2.2) (2020-06-15)
+
+[Full Changelog](https://github.com/watchfulli/XCloner-Wordpress/compare/4.2.1...4.2.2)
+
+**Merged pull requests:**
+
+- Milestone4.2.1 [\#106](https://github.com/watchfulli/XCloner-Wordpress/pull/106) ([ovidiul](https://github.com/ovidiul))
+
+## [4.2.1](https://github.com/watchfulli/XCloner-Wordpress/tree/4.2.1) (2020-06-15)
+
+[Full Changelog](https://github.com/watchfulli/XCloner-Wordpress/compare/4.2.0...4.2.1)
 
 **Implemented enhancements:**
 
@@ -21,6 +85,7 @@
 
 **Merged pull requests:**
 
+- Milestone4.2.1 [\#105](https://github.com/watchfulli/XCloner-Wordpress/pull/105) ([ovidiul](https://github.com/ovidiul))
 - Milestone4.2.0 [\#94](https://github.com/watchfulli/XCloner-Wordpress/pull/94) ([ovidiul](https://github.com/ovidiul))
 
 ## [4.2.0](https://github.com/watchfulli/XCloner-Wordpress/tree/4.2.0) (2020-06-01)
@@ -140,7 +205,7 @@
 
 ## [4.0.6](https://github.com/watchfulli/XCloner-Wordpress/tree/4.0.6) (2017-12-18)
 
-[Full Changelog](https://github.com/watchfulli/XCloner-Wordpress/compare/4.0.1...4.0.6)
+[Full Changelog](https://github.com/watchfulli/XCloner-Wordpress/compare/4.0.2...4.0.6)
 
 **Closed issues:**
 
@@ -152,13 +217,13 @@
 
 - German Translation  [\#5](https://github.com/watchfulli/XCloner-Wordpress/pull/5) ([QuadStingray](https://github.com/QuadStingray))
 
-## [4.0.1](https://github.com/watchfulli/XCloner-Wordpress/tree/4.0.1) (2017-03-20)
-
-[Full Changelog](https://github.com/watchfulli/XCloner-Wordpress/compare/4.0.2...4.0.1)
-
 ## [4.0.2](https://github.com/watchfulli/XCloner-Wordpress/tree/4.0.2) (2017-03-20)
 
-[Full Changelog](https://github.com/watchfulli/XCloner-Wordpress/compare/89d1407d361293c1f1a0bf9ac020990a082ac8f0...4.0.2)
+[Full Changelog](https://github.com/watchfulli/XCloner-Wordpress/compare/4.0.1...4.0.2)
+
+## [4.0.1](https://github.com/watchfulli/XCloner-Wordpress/tree/4.0.1) (2017-03-20)
+
+[Full Changelog](https://github.com/watchfulli/XCloner-Wordpress/compare/89d1407d361293c1f1a0bf9ac020990a082ac8f0...4.0.1)
 
 **Closed issues:**
 

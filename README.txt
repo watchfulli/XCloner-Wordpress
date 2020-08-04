@@ -116,6 +116,16 @@ Of course, schedules can be adjusted accordingly to how often you update your si
 
 == Changelog ==
 
+= 4.2.10=
+
+* Add `Local Storage` to the `Remote Storage` area
+* Cleanup uploaded archive after restore 
+* Add WP-CLI support
+* Add Microsoft OneDrive support to remote storage 
+* BUG: Load webdav vendor lib only if webdav is activated
+* Add support for Backblaze application keys
+* BUG: Google Drive upload issue
+
 = 4.2.9 =
 
 * scheduler fix call init
