@@ -15,7 +15,7 @@
  * Plugin Name:       XCloner - Site Backup and Restore
  * Plugin URI:        https://xcloner.com/
  * Description:       XCloner is a tool that will help you manage your website backups, generate/restore/move so your website will be always secured! With XCloner you will be able to clone your site to any other location with just a few clicks, as well as transfer the backup archives to remote FTP, SFTP, DropBox, Amazon S3, Google Drive, WebDAV, Backblaze, Azure accounts.
- * Version:           4.2.9
+ * Version:           4.2.10
  * Author:            watchful
  * Author URI:        https://watchful.net/
  * License:           GPL-2.0+
@@ -24,10 +24,15 @@
  * Domain Path:       /languages
  */
 
-require_once plugin_dir_path(__FILE__).'includes/class-xcloner-activator.php';
+require_once __DIR__.'/includes/class-xcloner-activator.php';
 
-register_activation_hook(__FILE__, 'activate_xcloner');
-register_deactivation_hook(__FILE__, 'deactivate_xcloner');
+if (function_exists('register_activation_hook')) {
+    register_activation_hook(__FILE__, 'activate_xcloner');
+}
+
+if (function_exists('register_deactivation_hook')) {
+    register_deactivation_hook(__FILE__, 'deactivate_xcloner');
+}
 
 if (version_compare(phpversion(), Xcloner_Activator::xcloner_minimum_version, '<')) {
     ?>
@@ -49,70 +54,109 @@ if (version_compare(phpversion(), Xcloner_Activator::xcloner_minimum_version, '<
 // composer library autoload
 require_once(__DIR__.'/vendor/autoload.php');
 
-// detect CLI mode
-  if (php_sapi_name() == "cli" && basename($argv[0]) == "xcloner.php") {
+/**
+ * Execute xcloner in CLI mode
+ *
+ * @param array $args
+ * @param array $opts
+ * @return void
+ */
+function do_cli_execution($args = array(), $opts = array())
+{
+    if (!sizeof($opts)) {
+        $opts = getopt('v::p:h::', array('verbose::','profile:','help:'));
+    }
 
+    if (isset($opts['h']) || isset($opts['help'])) {
+        echo sprintf("-h                Display help\n");
+        echo sprintf("-p <profile name> Specify the backup profile name or ID\n");
+        echo sprintf("-v                Verbose output\n");
+        return;
+    }
+
+    if (isset($opts['v']) || isset($opts['verbose'])) {
+        define('WP_DEBUG', true);
+        define('WP_DEBUG_DISPLAY', true);
+    } else {
+        define('WP_DEBUG', false);
+        define('WP_DEBUG_DISPLAY', false);
+    }
+
+    if (file_exists(__DIR__ . "/../../../wp-load.php")) {
+        require_once(__DIR__ .'/../../../wp-load.php');
+    }
+  
+    $profile = [
+    'id' => 0
+    ];
+
+    $profile_name = "undefined";
+
+    if (isset($opts['p']) && $opts['p']) {
+        $profile_name = $opts['p'];
+    } elseif (isset($opts['profile']) && $opts['profile']) {
+        $profile_name = $opts['profile'];
+    }
+
+    //pass json config to Xcloner_Standalone lib
+    $xcloner_backup = new watchfulli\XClonerCore\Xcloner_Standalone();
+
+    if (isset($profile_name) && $profile_name) {
+        $profile = ($xcloner_backup->get_xcloner_scheduler()->get_schedule_by_id_or_name($profile_name));
+    }
+
+    if ($profile['id']) {
+        $xcloner_backup->start($profile['id']);
+    } else {
+        die("Could not find profile ". $profile_name."\n");
+    }
+
+    return;
+}
+
+$foo = function ($args, $assoc_args) {
+    WP_CLI::success($args[0] . ' ' . $assoc_args['append']);
+};
+
+
+//detect CLI mode
+if (php_sapi_name() == "cli") {
+    if (defined('WP_CLI') && WP_CLI) {
+        WP_CLI::add_command(
+            'xcloner_generate_backup',
+    /**
+     * XCloner Generate backup based on supplied profile Name or ID
+     *
+     * --profile=<profile>
+     * : backup profile name or id
+     *
+     * @when before_wp_load
+     */
+    function ($args, $assoc_args) {
+        return do_cli_execution($args, $assoc_args);
+    }
+        );
+    } elseif (isset($argv) && basename($argv[0]) == "xcloner.php") {
+        return do_cli_execution();
+    }
+}
+
+  
     
-      $opts = getopt('v::p:h::');
-
-      if (isset($opts['h'])) {
-          echo sprintf("-h                Display help\n");
-          echo sprintf("-p <profile name> Specify the backup profile name or ID\n");
-          echo sprintf("-v                Verbose output\n");
-          return;
-      }
-      
-      if (isset($opts['v'])) {
-          define('WP_DEBUG', true);
-          define('WP_DEBUG_DISPLAY', true);
-      } else {
-          define('WP_DEBUG', false);
-          define('WP_DEBUG_DISPLAY', false);
-      }
-     
-      if (file_exists(__DIR__ . "/../../../wp-load.php")) {
-          require_once(__DIR__ .'/../../../wp-load.php');
-      }
-          
-      $profile = [
-         'id' => 0
-     ];
-     
-      $profile_name = "undefined";
-
-      if (isset($opts['p']) && $opts['p']) {
-          $profile_name = $opts['p'];
-      }
-      
-      //pass json config to Xcloner_Standalone lib
-      $xcloner_backup = new watchfulli\XClonerCore\Xcloner_Standalone();
-     
-      if (isset($profile_name) && $profile_name) {
-          $profile = ($xcloner_backup->get_xcloner_scheduler()->get_schedule_by_id_or_name($profile_name));
-      }
-     
-      if ($profile['id']) {
-          $xcloner_backup->start($profile['id']);
-      } else {
-          die("Could not find profile ". $profile_name."\n");
-      }
-
-      return;
-  }
-
 // If this file is called directly, abort.
 if (!defined('WPINC')) {
     die;
 }
 
 //i will not load the plugin outside admin or cron
-if (!is_admin() and !defined('DOING_CRON')) {
+if (!is_admin() && !defined('DOING_CRON')) {
     return;
 }
 
 if (!defined("DS")) {
     define("DS", DIRECTORY_SEPARATOR);
 }
+
 
 /**
  * The code that runs during plugin activation.
@@ -180,10 +224,12 @@ function run_xcloner()
      * side of the site.
      */
     //require_once plugin_dir_path((__FILE__)).'public/class-xcloner-public.php';
-        
+    
     $plugin->init();
     $plugin->extra_define_ajax_hooks();
     $plugin->run();
+
+    
 
     return $plugin;
 }

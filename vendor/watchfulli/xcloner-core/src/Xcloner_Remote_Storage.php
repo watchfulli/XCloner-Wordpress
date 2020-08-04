@@ -30,6 +30,7 @@ namespace watchfulli\XClonerCore;
 
 use League\Flysystem\Config;
 use League\Flysystem\Filesystem;
+use League\Flysystem\Adapter\Local;
 
 use League\Flysystem\Adapter\Ftp as Adapter;
 
@@ -47,8 +48,11 @@ use League\Flysystem\AwsS3v3\AwsS3Adapter;
 use Mhetreramesh\Flysystem\BackblazeAdapter;
 use BackblazeB2\Client as B2Client;
 
-use Sabre\DAV\Client as SabreClient;
-use League\Flysystem\WebDAV\WebDAVAdapter;
+#use Sabre\DAV\Client as SabreClient;
+#use League\Flysystem\WebDAV\WebDAVAdapter;
+
+use Microsoft\Graph\Graph;
+use NicolasBeauvais\FlysystemOneDrive\OneDriveAdapter;
 
 /**
  * Class Xcloner_Remote_Storage
@@ -59,6 +63,16 @@ class Xcloner_Remote_Storage
 
     private $storage_fields = array(
         "option_prefix" => "xcloner_",
+        "local" => array(
+            "text" => "Local",
+            "local_enable" => "int",
+            "store_path" => "string",
+            "start_path" => "string",
+            "cleanup_retention_limit_days" => "float",
+            "cleanup_exclude_days" => "string",
+            "cleanup_retention_limit_archives" => "int",
+            "cleanup_capacity_limit" => "int"
+        ),
         "ftp" => array(
             "text" => "FTP",
             "ftp_enable" => "int",
@@ -103,6 +117,17 @@ class Xcloner_Remote_Storage
             "aws_cleanup_exclude_days" => "string",
             "aws_cleanup_retention_limit_archives" => "int",
             "aws_cleanup_capacity_limit" => "int"
+        ),
+        "onedrive" => array(
+            "text" => "OneDrive",
+            "onedrive_enable" => "int",
+            "onedrive_client_id" => "string",
+            "onedrive_client_secret" => "raw",
+            "onedrive_cleanup_retention_limit_days" => "float",
+            "onedrive_cleanup_exclude_days" => "string",
+            "onedrive_cleanup_retention_limit_archives" => "int",
+            "onedrive_cleanup_capacity_limit" => "int",
+            "onedrive_path" => "path"
         ),
         "dropbox" => array(
             "text" => "Dropbox",
@@ -287,7 +312,7 @@ class Xcloner_Remote_Storage
         }
 
         $storage = $this->xcloner_sanitization->sanitize_input_as_string($action);
-        $this->logger->debug(sprintf("Saving the remote storage %s options", strtoupper($action)));
+        $this->logger->debug(sprintf("Saving the storage %s options", strtoupper($action)));
 
         if (is_array($this->storage_fields[$storage])) {
             foreach ($this->storage_fields[$storage] as $field => $validation) {
@@ -317,6 +342,8 @@ class Xcloner_Remote_Storage
                 $this->storage_fields[$action]['text']
             );
         }
+
+        $this->get_xcloner_container()->check_dependencies();
     }
 
     public function check($action = "ftp")
@@ -524,12 +551,27 @@ class Xcloner_Remote_Storage
         return $this->xcloner_file_system->backup_storage_cleanup($storage, $remote_storage_filesystem);
     }
 
+    public function get_local_filesystem()
+    {
+        $this->get_xcloner_container()->check_dependencies();
+
+        $this->logger->info(sprintf("Creating the Local remote storage connection"), array(""));
+
+        $adapter = new Local($this->xcloner_settings->get_xcloner_option('xcloner_store_path'), LOCK_EX, '0001');
+
+        $filesystem = new Filesystem($adapter, new Config([
+            'disable_asserts' => true,
+        ]));
+
+        return array($adapter, $filesystem);
+    }
+
     public function get_azure_filesystem()
     {
         $this->logger->info(sprintf("Creating the AZURE BLOB remote storage connection"), array(""));
 
-        if (version_compare(phpversion(), '5.6.0', '<')) {
-            throw new \Exception("AZURE BLOB requires PHP 5.6 to be installed!");
+        if (version_compare(phpversion(), '7.1.0', '<')) {
+            throw new \Exception("AZURE BLOB requires PHP 7.1 to be installed!");
         }
 
         if (!class_exists('XmlWriter')) {
@@ -557,8 +599,8 @@ class Xcloner_Remote_Storage
     {
         $this->logger->info(sprintf("Creating the DROPBOX remote storage connection"), array(""));
 
-        if (version_compare(phpversion(), '5.6.0', '<')) {
-            throw new \Exception("DROPBOX requires PHP 5.6 to be installed!");
+        if (version_compare(phpversion(), '7.1.0', '<')) {
+            throw new \Exception("DROPBOX requires PHP 7.1 to be installed!");
         }
 
         $client = new DropboxClient($this->xcloner_settings->get_xcloner_option("xcloner_dropbox_access_token"));
@@ -575,8 +617,8 @@ class Xcloner_Remote_Storage
     {
         $this->logger->info(sprintf("Creating the S3 remote storage connection"), array(""));
 
-        if (version_compare(phpversion(), '5.6.0', '<')) {
-            throw new \Exception("S3 class requires PHP 5.6 to be installed!");
+        if (version_compare(phpversion(), '7.1.0', '<')) {
+            throw new \Exception("S3 class requires PHP 7.1 to be installed!");
         }
 
         if (!class_exists('XmlWriter')) {
@@ -613,8 +655,8 @@ class Xcloner_Remote_Storage
     {
         $this->logger->info(sprintf("Creating the BACKBLAZE remote storage connection"), array(""));
 
-        if (version_compare(phpversion(), '5.6.0', '<')) {
-            throw new \Exception("BACKBLAZE API requires PHP 5.6 to be installed!");
+        if (version_compare(phpversion(), '7.1.0', '<')) {
+            throw new \Exception("BACKBLAZE API requires PHP 7.1 to be installed!");
         }
 
 
@@ -635,8 +677,8 @@ class Xcloner_Remote_Storage
     {
         $this->logger->info(sprintf("Creating the WEBDAV remote storage connection"), array(""));
 
-        if (version_compare(phpversion(), '5.6.0', '<')) {
-            throw new \Exception("WEBDAV API requires PHP 5.6 to be installed!");
+        if (version_compare(phpversion(), '7.1.0', '<')) {
+            throw new \Exception("WEBDAV API requires PHP 7.1 to be installed!");
         }
 
         $settings = array(
@@ -646,8 +688,8 @@ class Xcloner_Remote_Storage
             //'proxy' => 'locahost:8888',
         );
 
-        $client = new SabreClient($settings);
-        $adapter = new WebDAVAdapter($client, $this->xcloner_settings->get_xcloner_option("xcloner_webdav_target_folder"));
+        $client = new \Sabre\DAV\Client($settings);
+        $adapter = new \League\Flysystem\WebDAV\WebDAVAdapter($client, $this->xcloner_settings->get_xcloner_option("xcloner_webdav_target_folder"));
         $filesystem = new Filesystem($adapter, new Config([
             'disable_asserts' => true,
         ]));
@@ -655,16 +697,36 @@ class Xcloner_Remote_Storage
         return array($adapter, $filesystem);
     }
 
+    /**
+     * OneDrive connector
+     * 
+     * https://docs.microsoft.com/en-us/onedrive/developer/rest-api/getting-started/graph-oauth?view=odsp-graph-online#token-flow
+     *
+     * @return void
+     */
+    public function get_onedrive_filesystem()
+    {
+            
+        $accessToken = get_option('xcloner_onedrive_access_token');
+
+        $graph = new Graph();
+        $graph->setAccessToken($accessToken);
+
+        $adapter = new OneDriveAdapter($graph, 'root', 1);
+        $adapter->setPathPrefix('/drive/root:/'.get_option('xcloner_onedrive_path')."/");
+        $filesystem = new Filesystem($adapter);
+
+        //print_r($filesystem->listContents());
+
+        return array($adapter, $filesystem);
+    }
+
 
     public function gdrive_construct()
     {
-
-        //if((function_exists("is_plugin_active") && !is_plugin_active("xcloner-google-drive/xcloner-google-drive.php")) || !file_exists(__DIR__ . "/../../xcloner-google-drive/vendor/autoload.php"))
         if (!class_exists('Google_Client')) {
             return false;
         }
-
-        //require_once(__DIR__ . "/../../xcloner-google-drive/vendor/autoload.php");
 
         $client = new \Google_Client();
         $client->setApplicationName($this->gdrive_app_name);
@@ -722,8 +784,8 @@ class Xcloner_Remote_Storage
      */
     public function get_gdrive_filesystem()
     {
-        if (version_compare(phpversion(), '5.6.0', '<')) {
-            throw new \Exception("Google Drive API requires PHP 5.6 to be installed!");
+        if (version_compare(phpversion(), '7.1.0', '<')) {
+            throw new \Exception("Google Drive API requires PHP 7.1 to be installed!");
         }
 
         $this->logger->info(sprintf("Creating the Google Drive remote storage connection"), array(""));

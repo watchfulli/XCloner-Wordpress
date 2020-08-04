@@ -198,6 +198,8 @@ class Xcloner extends watchfulli\XClonerCore\Xcloner
         }
 
         update_option("xcloner_store_path", $backup_storage_path);
+
+        return $backup_storage_path;
     }
 
     public function trigger_message($message, $status = "error", $message_param1 = "", $message_param2 = "", $message_param3 = "")
@@ -445,9 +447,9 @@ class Xcloner extends watchfulli\XClonerCore\Xcloner
         $logger = new Xcloner_Logger($this, "php_system");
         $error = error_get_last();
 
-        if ($error['type'] and $error['type'] === E_ERROR and $logger) {
+        if (isset($error['type']) && $error['type'] === E_ERROR and $logger) {
             $logger->error($this->friendly_error_type($error['type']).": ".var_export($error, true));
-        } elseif ($error['type'] and $logger) {
+        } elseif (isset($error['type']) && $logger) {
             $logger->debug($this->friendly_error_type($error['type']).": ".var_export($error, true));
         }
     }
@@ -512,12 +514,70 @@ class Xcloner extends watchfulli\XClonerCore\Xcloner
             $this->loader->add_action('wp_ajax_backup_decryption', $xcloner_api, 'backup_decryption');
             $this->loader->add_action('wp_ajax_get_manage_backups_list', $xcloner_api, 'get_manage_backups_list');
             $this->loader->add_action('admin_notices', $this, 'xcloner_error_admin_notices');
+            $this->loader->add_action('admin_init',$this, 'onedrive_auth_token');
         }
 
         //Do a pre-update backup of targeted files
         if ($this->get_xcloner_settings()->get_xcloner_option('xcloner_enable_pre_update_backup')) {
             $this->loader->add_action("pre_auto_update", $this, "pre_auto_update", 1, 3);
         }
+    }
+
+    /**
+     * OneDrive get Access Token from code
+     *
+     * @return void
+     */
+    public function onedrive_auth_token(){
+
+        $onedrive_expire_in  = get_option('xcloner_onedrive_expires_in');
+        $onedrive_refresh_token = get_option('xcloner_onedrive_refresh_token');
+
+        if($onedrive_refresh_token && time()> $onedrive_expire_in)  {
+            $parameters = array(
+                'client_id' => get_option("xcloner_onedrive_client_id"),
+                'client_secret' => get_option("xcloner_onedrive_client_secret"),
+                'redirect_uri'=> get_admin_url(),
+                'refresh_token'=> $onedrive_refresh_token,
+                'grant_type'=> 'refresh_token'
+            );
+        }
+
+        if (isset($_REQUEST['code']) && $_REQUEST['code']) {
+            $parameters = array(
+                'client_id' => get_option("xcloner_onedrive_client_id"),
+                'client_secret' => get_option("xcloner_onedrive_client_secret"),
+                'redirect_uri'=> get_admin_url(),
+                'code'=> $_REQUEST['code'],
+                'grant_type'=> 'authorization_code'
+            );
+        }
+
+        if ($parameters) {
+            $response = wp_remote_post("https://login.microsoftonline.com/common/oauth2/v2.0/token", array('body' => $parameters));
+
+            if (is_wp_error($response)) {
+                $this->trigger_message(__('There was a communication error with the OneDrive API details.'));
+                $this->trigger_message($response->get_error_message());
+            } else {
+                $response = (json_decode($response['body'], true));
+
+                if ($response['access_token'] && $response['refresh_token']) {
+                    update_option('xcloner_onedrive_access_token', $response['access_token']);
+                    update_option('xcloner_onedrive_refresh_token', $response['refresh_token']);
+                    update_option('xcloner_onedrive_expires_in', time()+$response['expires_in']);
+            
+                    $this->trigger_message(
+                        sprintf(__('OneDrive successfully authenticated, please click <a href="%s">here</a> to continue', 'xcloner-backup-and-restore'), get_admin_url()."admin.php?page=xcloner_remote_storage_page#onedrive"),
+                        'success'
+                    );
+                } else {
+                    $this->trigger_message(__('There was a communication error with the OneDrive API details.'));
+                }
+            }
+        }
+
+        return ;
     }
 
     public function add_plugin_action_links($links, $file)
@@ -610,8 +670,8 @@ class Xcloner extends watchfulli\XClonerCore\Xcloner
             );
             add_submenu_page(
                 'xcloner_init_page',
-                __('Remote Storage Settings', 'xcloner-backup-and-restore'),
-                __('Remote Storage', 'xcloner-backup-and-restore'),
+                __('Storage Locations Settings', 'xcloner-backup-and-restore'),
+                __('Storage Locations', 'xcloner-backup-and-restore'),
                 'manage_options',
                 'xcloner_remote_storage_page',
                 array($this, 'xcloner_display')

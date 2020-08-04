@@ -420,12 +420,12 @@ class Xcloner_Settings
         );
 
         //CLEANUP section
-        add_settings_section(
+        /*add_settings_section(
             'xcloner_cleanup_settings_group',
             __(' '),
             array($this, 'xcloner_settings_section_cb'),
             'xcloner_cleanup_settings_page'
-        );
+        );*/
 
 
         //CRON section
@@ -456,7 +456,7 @@ class Xcloner_Settings
             )
         );
 
-        register_setting('xcloner_general_settings_group', 'xcloner_start_path', array(
+        /*register_setting('xcloner_general_settings_group', 'xcloner_start_path', array(
             $this->xcloner_sanitization,
             "sanitize_input_as_absolute_path"
         ));
@@ -491,6 +491,7 @@ class Xcloner_Settings
                 //'disabled'
             )
         );
+        */
 
         register_setting('xcloner_general_settings_group', 'xcloner_encryption_key', array(
             $this->xcloner_sanitization,
@@ -824,7 +825,7 @@ class Xcloner_Settings
         );
 
         //REGISTERING THE 'CLEANUP SECTION' FIELDS
-        register_setting('xcloner_cleanup_settings_group', 'xcloner_cleanup_retention_limit_days', array(
+        /*register_setting('xcloner_cleanup_settings_group', 'xcloner_cleanup_retention_limit_days', array(
             $this->xcloner_sanitization,
             "sanitize_input_as_int"
         ));
@@ -886,7 +887,7 @@ class Xcloner_Settings
                 'xcloner_cleanup_capacity_limit',
                 __('Remove oldest backups if all created backups exceed the configured limit in Megabytes. 0 disables this option', 'xcloner-backup-and-restore')
             )
-        );
+        );*/
 
         /*
         //deprecated setting

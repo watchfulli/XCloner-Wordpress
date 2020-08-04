@@ -62,9 +62,15 @@ class ComposerStaticInit571f9d19802717f7be61d57b40d60b28
             'Psr\\Log\\' => 8,
             'Psr\\Http\\Message\\' => 17,
         ),
+        'N' => 
+        array (
+            'NicolasBeauvais\\FlysystemOneDrive\\' => 34,
+        ),
         'M' => 
         array (
             'Monolog\\' => 8,
+            'Microsoft\\Graph\\Test\\' => 21,
+            'Microsoft\\Graph\\' => 16,
             'MicrosoftAzure\\Storage\\Common\\' => 30,
             'MicrosoftAzure\\Storage\\Blob\\' => 28,
             'Mhetreramesh\\Flysystem\\' => 23,
@@ -178,9 +184,21 @@ class ComposerStaticInit571f9d19802717f7be61d57b40d60b28
         array (
             0 => __DIR__ . '/..' . '/psr/http-message/src',
         ),
+        'NicolasBeauvais\\FlysystemOneDrive\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/nicolasbeauvais/flysystem-onedrive/src',
+        ),
         'Monolog\\' => 
         array (
             0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
+        ),
+        'Microsoft\\Graph\\Test\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/microsoft/microsoft-graph/tests/Functional',
+        ),
+        'Microsoft\\Graph\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/microsoft/microsoft-graph/src',
         ),
         'MicrosoftAzure\\Storage\\Common\\' => 
         array (
