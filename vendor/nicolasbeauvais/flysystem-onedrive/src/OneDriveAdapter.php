@@ -306,16 +306,25 @@ class OneDriveAdapter extends AbstractAdapter
     {
         $path = $this->applyPathPrefix($path);
 
+
+        $filesize  = (fstat($contents)['size']);
+        $response = $this->graph->createRequest('POST', $path.($this->usePath ? ':' : '').'/createUploadSession')->execute();
+        $uploadUrl = ($response->getBody()['uploadUrl']);
+
         try {
             $contents = $stream = \GuzzleHttp\Psr7\stream_for($contents);
 
-            $response = $this->graph->createRequest('PUT', $path.($this->usePath ? ':' : '').'/content')
-                ->attachBody($contents)
+            //$response = $this->graph->createRequest('PUT', $path.($this->usePath ? ':' : '').'/content')
+            $response = $this->graph->createRequest('PUT', $uploadUrl)
+                ->addHeaders(array("Content-Length" => $filesize, "Content-Range" => 'bytes 0-'.($filesize-1)."/".$filesize))
+                ->attachBody(($contents))
                 ->execute();
+                
+
         } catch (\Exception $e) {
             return false;
         }
-
+        
         return $this->normalizeResponse($response->getBody(), $path);
     }
 
