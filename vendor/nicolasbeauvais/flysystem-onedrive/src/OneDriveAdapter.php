@@ -213,7 +213,7 @@ class OneDriveAdapter extends AbstractAdapter
     {
         if ($directory === '' && $this->usePath) {
             $endpoint = str_replace(':/', ':/', $this->getPathPrefix()).':/children';
-            $endpoint = str_replace(':/:/','/', $endpoint);
+            $endpoint = str_replace(':/:/', '/', $endpoint);
         } else {
             $endpoint = $this->applyPathPrefix($directory).($this->usePath ? ':' : '').'/children';
         }
@@ -306,10 +306,13 @@ class OneDriveAdapter extends AbstractAdapter
     {
         $path = $this->applyPathPrefix($path);
 
-
-        $filesize  = (fstat($contents)['size']);
+        if (is_resource($contents)) {
+            $filesize  = (fstat($contents)['size']);
+        } else {
+            $filesize = strlen($contents);
+        }
         $response = $this->graph->createRequest('POST', $path.($this->usePath ? ':' : '').'/createUploadSession')->execute();
-        $uploadUrl = ($response->getBody()['uploadUrl']);
+        $uploadUrl = $response->getBody()['uploadUrl'];
 
         try {
             $contents = $stream = \GuzzleHttp\Psr7\stream_for($contents);
@@ -319,8 +322,6 @@ class OneDriveAdapter extends AbstractAdapter
                 ->addHeaders(array("Content-Length" => $filesize, "Content-Range" => 'bytes 0-'.($filesize-1)."/".$filesize))
                 ->attachBody(($contents))
                 ->execute();
-                
-
         } catch (\Exception $e) {
             return false;
         }
