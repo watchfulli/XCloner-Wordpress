@@ -690,8 +690,7 @@ $common_cleanup_html = ob_get_contents();
                                        jQuery('.onedrive-action').click()"
                                        href="#" 
                                        target_href="https://login.microsoftonline.com/common/oauth2/v2.0/authorize?scope=offline_access files.readwrite.all  files.read files.read.all files.readwrite&response_type=code&redirect_uri=<?=get_admin_url('')?>"><?php echo sprintf(__('Authorize OneDrive', 'xcloner-backup-and-restore')) ?></a>
-                                    <input type="text" name="authentification_code" id="authentification_code"
-                                           placeholder="<?php echo __("Paste Authorization Code Here", "xcloner-backup-and-restore") ?>">
+                                    
                                 </div>
                         </div>
                         
