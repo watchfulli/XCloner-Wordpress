@@ -115,7 +115,7 @@ class Xcloner extends watchfulli\XClonerCore\Xcloner
         $this->log_php_errors();
 
         $this->plugin_name = 'xcloner';
-        $this->version = '4.2.1';
+        $this->version = '4.2.13';
 
         $this->load_dependencies();
         $this->set_locale();
