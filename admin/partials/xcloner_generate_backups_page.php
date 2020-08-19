@@ -311,6 +311,21 @@ $tab                    = 1;
                                 </div>
                             </div>
                         </li>
+                        <li class="remote-storage-transfer">
+                            <div class="collapsible-header">
+                                <i class="material-icons">swap_horiz</i><?php echo __('Transferrring backup to remote storage...', 'xcloner-backup-and-restore') ?>
+
+                                <p class="right"><span class="status"></span></p>
+
+                                <div>
+                                    <p class="right"><span class="last-logged-file"></span></p>
+                                </div>
+
+                                <div class="progress">
+                                    <div class="indeterminate"></div>
+                                </div>
+                            </div>
+                        </li>
                         <li class="backup-done">
                             <div class="collapsible-header">
                                 <i class="material-icons">done</i><?php echo __('Backup Done', 'xcloner-backup-and-restore') ?>

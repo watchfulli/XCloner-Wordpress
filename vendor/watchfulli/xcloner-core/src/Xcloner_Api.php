@@ -1267,10 +1267,15 @@ class Xcloner_Api
 
         $return = array();
 
-        $backup_file = $this->xcloner_sanitization->sanitize_input_as_string($_POST['file']);
-        $storage_type = $this->xcloner_sanitization->sanitize_input_as_string($_POST['storage_type']);
-        $delete_local_copy_after_transfer = $this->xcloner_sanitization->sanitize_input_as_string($_POST['delete_after_transfer']);
-
+        if(isset($_POST['data']) && $data = json_decode(stripslashes($_POST['data']), true)) {
+            $backup_file = $this->xcloner_sanitization->sanitize_input_as_string($data['file']);
+            $storage_type = $this->xcloner_sanitization->sanitize_input_as_string($data['storage_type']);
+            $delete_local_copy_after_transfer = $this->xcloner_sanitization->sanitize_input_as_string($data['delete_after_transfer']);
+        }else{
+            $backup_file = $this->xcloner_sanitization->sanitize_input_as_string($_POST['file']);
+            $storage_type = $this->xcloner_sanitization->sanitize_input_as_string($_POST['storage_type']);
+            $delete_local_copy_after_transfer = $this->xcloner_sanitization->sanitize_input_as_string($_POST['delete_after_transfer']);
+        }
         $xcloner_remote_storage = $this->get_xcloner_container()->get_xcloner_remote_storage();
 
         try {

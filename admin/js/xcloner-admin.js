@@ -98,14 +98,14 @@ function show_ajax_error(title, msg, json) {
     xcloner_backup.cancel_backup();
   }
 
-  if (json.responseText) {
+  if (json && json.responseText !== undefined) {
     msg = msg + ": " + json.responseText;
   }
 
   jQuery("#error_modal .title").text(title);
   jQuery("#error_modal .msg").text(msg);
 
-  if (json.status) {
+  if (json && json.status) {
     jQuery("#error_modal .status").text(json.status + " " + json.statusText);
   }
 
