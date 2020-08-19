@@ -113,8 +113,13 @@ class Xcloner_Api
      */
     public function check_access()
     {
+        //preparing nonce verification
+        /*if(!isset($_POST['_nonce']) || !wp_verify_nonce($_POST['_nonce'], 'xcloner-api-nonce')) {
+            return $this->send_response(json_encode("Invalid nonce, please try again by refreshing the page!"));
+        }*/
+
         if (function_exists('current_user_can') && !current_user_can('manage_options')) {
-            $this->send_response(json_encode("Access not allowed!"));
+            return $this->send_response(json_encode("Access not allowed!"));
         }
     }
 

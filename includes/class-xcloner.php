@@ -178,22 +178,22 @@ class Xcloner extends watchfulli\XClonerCore\Xcloner
             if (!@mkdir($backup_storage_path)) {
                 $status = "error";
                 $message = sprintf(
-                        __("Unable to create the Backup Storage Location Folder %s . Please fix this before starting the backup process."),
+                        __("Unable to create the Backup Storage Location Folder %s . This will automatically be fixed using a default path."),
                         $backup_storage_path
                     );
                 $this->trigger_message($message, $status, $backup_storage_path);
+                update_option("xcloner_store_path","");
                 return;
             }
         }
-            
         if (!is_writable($backup_storage_path)) {
             $status = "error";
             $message = sprintf(
-                    __("Unable to write to the Backup Storage Location Folder %s . Please fix this before starting the backup process."),
+                    __("Unable to write to the Backup Storage Location Folder %s . This will automatically be fixed using a default path."),
                     $backup_storage_path
                 );
             $this->trigger_message($message, $status, $backup_storage_path);
-
+            update_option("xcloner_store_path","");
             return;
         }
 
@@ -281,6 +281,16 @@ class Xcloner extends watchfulli\XClonerCore\Xcloner
         $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts');
 
         $this->loader->add_action('backup_archive_finished', $this, 'do_action_after_backup_finished', 10, 2);
+
+        //xcloner nonce
+        $this->loader->add_action('admin_head', $this, 'xcloner_header_nonce');
+    }
+
+    public function xcloner_header_nonce() {
+        echo "
+        <script type='text/javascript'>
+        const XCLONER_NONCE = '".wp_create_nonce('xcloner-api-nonce')."';
+        </script>\n";
     }
 
     /**

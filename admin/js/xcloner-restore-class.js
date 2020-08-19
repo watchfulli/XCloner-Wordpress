@@ -762,6 +762,7 @@ class Xcloner_Restore{
 		params.xcloner_action 	= action
 		params.hash 	= this.hash
 		params.API_ID 	= ID()
+		params._nonce   = XCLONER_NONCE;
 		
 		if(this.cancel == true)
 		{
