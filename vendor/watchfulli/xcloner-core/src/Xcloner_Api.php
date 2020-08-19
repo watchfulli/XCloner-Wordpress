@@ -1008,7 +1008,7 @@ class Xcloner_Api
                         <?php if (!$file_exists_on_local_storage): ?>
                             <a href="#"
                                title="<?php echo __(
-            "File does not exists on local storage",
+            "This backup archive does not exist on your local server. If you wish to retain local copies of your backup archives as well as remote copies, please disable local clean-up in the main XCloner settings and/or your scheduled backup profile settings.",
             "xcloner-backup-and-restore"
         ) ?>"><i
                                         class="material-icons backup_warning">warning</i></a>
@@ -1033,7 +1033,7 @@ class Xcloner_Api
                                         <?php if (!$child_exists_on_local_storage): ?>
                                             <a href="#"
                                                title="<?php echo __(
-            "File does not exists on local storage",
+            "This backup archive does not exist on your local server. If you wish to retain local copies of your backup archives as well as remote copies, please disable local clean-up in the main XCloner settings and/or your scheduled backup profile settings.",
             "xcloner-backup-and-restore"
         ) ?>"><i
                                                         class="material-icons backup_warning">warning</i></a>
