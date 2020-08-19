@@ -117,7 +117,7 @@ $tab                    = 1;
 
                 <div class="row">
                     <div class="input-field col s12 m10 l6">
-                        <i class="material-icons prefix">cloud_upload</i>
+                        <i class="material-icons prefix">swap_horiz</i>
                         <select name="schedule_storage" id="schedule_storage" class="schedule_storage validate" >
                                 <option value="" selected><?php echo __('none', 'xcloner-backup-and-restore') ?></option>
                                 <?php foreach ($available_storages as $storage => $text): ?>
@@ -319,7 +319,7 @@ $tab                    = 1;
 									<?php if (sizeof($available_storages)): ?>
                                         <a href="#" class="cloud-upload"
                                            title="<?php echo __("Send Backup To Remote Storage", 'xcloner-backup-and-restore') ?>"><i
-                                                    class="material-icons">cloud_upload</i></a>
+                                                    class="material-icons">swap_horiz</i></a>
 									<?php endif ?>
                                     <a href="#" class="download"
                                        title="<?php echo __("Download Backup", 'xcloner-backup-and-restore') ?>"><i

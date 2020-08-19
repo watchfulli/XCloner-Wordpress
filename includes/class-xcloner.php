@@ -771,7 +771,7 @@ class Xcloner extends watchfulli\XClonerCore\Xcloner
      */
     public function restore_backup()
     {
-        $this->check_access();
+        $this->xcloner_api->check_access();
 
         define("XCLONER_PLUGIN_ACCESS", 1);
         include_once(dirname(__DIR__).DS."restore".DS."xcloner_restore.php");

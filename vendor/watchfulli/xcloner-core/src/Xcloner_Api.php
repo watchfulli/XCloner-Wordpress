@@ -111,10 +111,10 @@ class Xcloner_Api
     /**
      * Checks API access
      */
-    private function check_access()
+    public function check_access()
     {
         if (function_exists('current_user_can') && !current_user_can('manage_options')) {
-            $this->send_response(json_encode("Not allowed access here!"));
+            $this->send_response(json_encode("Access not allowed!"));
         }
     }
 
@@ -1097,7 +1097,7 @@ class Xcloner_Api
             'Send Backup To Remote Storage',
             'xcloner-backup-and-restore'
         ) ?>"><i
-                                            class="material-icons">cloud_upload</i></a>
+                                            class="material-icons">swap_horiz</i></a>
                             <?php endif ?>
                             <?php
                             $basename = $file_info['basename'];
@@ -1127,7 +1127,7 @@ class Xcloner_Api
                         </a>
                         <?php if ($storage_selection and !$file_exists_on_local_storage): ?>
                             <a href="#<?php echo $file_info['basename']; ?>" class="copy-remote-to-local"
-                               title="<?php echo __('Push Backup To Local Storage', 'xcloner-backup-and-restore') ?>"><i
+                               title="<?php echo __('Transfer a copy of the remote backup to local storage.', 'xcloner-backup-and-restore') ?>"><i
                                         class="material-icons">file_upload</i></a>
                         <?php endif ?>
 
