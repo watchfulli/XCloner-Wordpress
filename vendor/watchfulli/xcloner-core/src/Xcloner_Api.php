@@ -165,7 +165,7 @@ class Xcloner_Api
             $this->form_params['backup_params']['start_at'] = strtotime($_POST['schedule_start_date']);
             $this->form_params['backup_params']['schedule_frequency'] = $this->xcloner_sanitization->sanitize_input_as_string($_POST['schedule_frequency']);
             $this->form_params['backup_params']['schedule_storage'] = $this->xcloner_sanitization->sanitize_input_as_string($_POST['schedule_storage']);
-            if(!isset($_POST['backup_delete_after_remote_transfer'])) {
+            if (!isset($_POST['backup_delete_after_remote_transfer'])) {
                 $_POST['backup_delete_after_remote_transfer'] = 0;
             }
             $this->form_params['backup_params']['backup_delete_after_remote_transfer'] = $this->xcloner_sanitization->sanitize_input_as_int($_POST['backup_delete_after_remote_transfer']);
@@ -971,7 +971,7 @@ class Xcloner_Api
 
         try {
             $backup_list = $this->xcloner_file_system->get_backup_archives_list($storage_selection);
-        }catch(Exception $e){
+        } catch (Exception $e) {
             $this->send_response($return, 0);
             return;
         }
@@ -1091,11 +1091,11 @@ class Xcloner_Api
         ob_end_clean(); ?>
 
                     <?php ob_start(); ?>
-                        <?php if (!$storage_selection): ?>
+                        
                             <a href="#<?php echo $file_info['basename']; ?>" class="download"
                                title="<?php echo __('Download Backup', 'xcloner-backup-and-restore') ?>"><i
                                         class="material-icons">file_download</i></a>
-
+                        <?php if (!$storage_selection): ?>
                             <?php if (sizeof($available_storages)): ?>
                                 <a href="#<?php echo $file_info['basename'] ?>" class="cloud-upload"
                                    title="<?php echo __(
@@ -1133,7 +1133,7 @@ class Xcloner_Api
                         <?php if ($storage_selection and !$file_exists_on_local_storage): ?>
                             <a href="#<?php echo $file_info['basename']; ?>" class="copy-remote-to-local"
                                title="<?php echo __('Transfer a copy of the remote backup to local storage.', 'xcloner-backup-and-restore') ?>"><i
-                                        class="material-icons">file_upload</i></a>
+                                        class="material-icons">swap_horiz</i></a>
                         <?php endif ?>
 
                     <?php
@@ -1393,18 +1393,29 @@ class Xcloner_Api
         ob_end_clean();
 
         $backup_name = $this->xcloner_sanitization->sanitize_input_as_string($_GET['name']);
+        $storage_selection = $this->xcloner_sanitization->sanitize_input_as_string($_GET['storage_selection']);
 
+        if (!$this->xcloner_file_system->get_storage_filesystem($storage_selection)->has($backup_name)) {
+            die();
+        }
 
-        $metadata = $this->xcloner_file_system->get_storage_filesystem()->getMetadata($backup_name);
-        $read_stream = $this->xcloner_file_system->get_storage_filesystem()->readStream($backup_name);
+        $metadata = $this->xcloner_file_system->get_storage_filesystem($storage_selection)->getMetadata($backup_name);
+        $read_stream = $this->xcloner_file_system->get_storage_filesystem($storage_selection)->readStream($backup_name);
 
+        $backup_name_export = $backup_name;
+
+        if ($metadata['name']) {
+            $backup_name_export = $metadata['name'];
+        }elseif ($metadata['path']) {
+            $backup_name_export = $metadata['path'];
+        }
 
         header('Pragma: public');
         header('Expires: 0');
         header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
         header('Cache-Control: private', false);
         header('Content-Transfer-Encoding: binary');
-        header('Content-Disposition: attachment; filename="'.$metadata['path'].'";');
+        header('Content-Disposition: attachment; filename="'.$backup_name_export.'";');
         header('Content-Type: application/octet-stream');
         header('Content-Length: '.$metadata['size']);
 

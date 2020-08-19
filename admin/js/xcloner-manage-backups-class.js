@@ -35,7 +35,7 @@ class Xcloner_Manage_Backups {
   }
 
   download_backup_by_name(id) {
-    window.open(ajaxurl + "?action=download_backup_by_name&name=" + id);
+    window.open(ajaxurl + "?action=download_backup_by_name&name=" + id+"&storage_selection="+this.storage_selection);
     return false;
   }
 
