@@ -2,10 +2,19 @@
 /** global: Materialize */
 /** global: dataTable */
 
+var edit_schedule_modal_instance;
+
+document.addEventListener('DOMContentLoaded', function() {
+    var Modalelem = document.querySelector('#edit_schedule');
+    edit_schedule_modal_instance = M.Modal.init(Modalelem);
+});
+
 jQuery(document).ready(function () {
+  
   class Xcloner_Scheduler {
     constructor() {
-      this.edit_modal = jQuery(".modal").modal();
+     this.edit_modal = jQuery("#edit_schedule");
+     
     }
 
     get_form_params() {}
@@ -118,7 +127,7 @@ jQuery(document).ready(function () {
 
       M.updateTextFields();
 
-      this.edit_modal.modal("open");
+      edit_schedule_modal_instance.open();
     }
 
     save_schedule(form, dataTable) {
@@ -143,7 +152,7 @@ jQuery(document).ready(function () {
             return;
           }
 
-          $this.edit_modal.modal("close");
+          edit_schedule_modal_instance.close();
           //location.reload();
           dataTable.ajax.reload();
         });

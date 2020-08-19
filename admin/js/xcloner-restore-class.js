@@ -729,7 +729,7 @@ class Xcloner_Restore{
 		this.file_counter = 0
 		jQuery("#backup_cotent_modal .modal-content .files-list").text("").removeClass("error");
 		jQuery("#backup_cotent_modal .modal-content .backup-name").text(backup_file);
-		jQuery("#backup_cotent_modal").modal('open');
+		backup_cotent_modal.open();
 		jQuery("#backup_cotent_modal .progress > div").removeClass('determinate').addClass("indeterminate");
 		
 		//this.list_backup_content_callback(backup_file)
