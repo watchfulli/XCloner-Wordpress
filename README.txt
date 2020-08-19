@@ -116,7 +116,14 @@ Of course, schedules can be adjusted accordingly to how often you update your si
 
 == Changelog ==
 
++ 4.2.13 =
+
+* conflict fix bootstrap modal display
+* exploit fix on restore API
+* WP 5.5 compatibility check and update 
+
 = 4.2.12 =
+
 * Google Drive authorization fix
 
 = 4.2.11 = 
