@@ -483,15 +483,27 @@ $common_cleanup_html = ob_get_contents();
                                 </select>
                             </div>
                         </div>
-
-                        <div class="row">
-                            <div class="col s12 m3 label">
-                                <label for="aws_endpoint"><?php echo __("S3 EndPoint", 'xcloner-backup-and-restore') ?></label>
+                        
+                        <div id="custom_aws_endpoint">
+                            <div class="row">
+                                <div class="col s12 m3 label">
+                                    <label for="aws_endpoint"><?php echo __("S3 EndPoint", 'xcloner-backup-and-restore') ?></label>
+                                </div>
+                                <div class=" col s12 m6">
+                                    <input placeholder="<?php echo __("S3 EndPoint, leave blank if you want to use the default Amazon AWS Service", 'xcloner-backup-and-restore') ?>"
+                                        id="aws_endpoint" type="text" name="xcloner_aws_endpoint" class="validate"
+                                        value="<?php echo get_option("xcloner_aws_endpoint") ?>" autocomplete="off">
+                                </div>
                             </div>
-                            <div class=" col s12 m6">
-                                <input placeholder="<?php echo __("S3 EndPoint, leave blank if you want to use the default Amazon AWS Service", 'xcloner-backup-and-restore') ?>"
-                                       id="aws_endpoint" type="text" name="xcloner_aws_endpoint" class="validate"
-                                       value="<?php echo get_option("xcloner_aws_endpoint") ?>" autocomplete="off">
+                            <div class="row">
+                                <div class="col s12 m3 label">
+                                    <label for="aws_region"><?php echo __("S3 Region", 'xcloner-backup-and-restore') ?></label>
+                                </div>
+                                <div class=" col s12 m6">
+                                    <input placeholder="<?php echo __("Custom S3 Region", 'xcloner-backup-and-restore') ?>"
+                                        id="aws_region" type="text" name="xcloner_aws_region" class="validate"
+                                        value="<?php echo get_option("xcloner_aws_region") ?>" autocomplete="off">
+                                </div>
                             </div>
                         </div>
 
@@ -1187,9 +1199,11 @@ $common_cleanup_html = ob_get_contents();
 
     function checkEndpoint() {
         if (jQuery("#aws_region").val() != "") {
-            jQuery('#aws_endpoint').parent().parent().hide();
+            jQuery('#custom_aws_endpoint').hide();
+            jQuery('#custom_aws_endpoint input').attr('disabled','disabled')
         } else {
-            jQuery('#aws_endpoint').parent().parent().show();
+            jQuery('#custom_aws_endpoint').show();
+            jQuery('#custom_aws_endpoint input').removeAttr('disabled')
         }
     }
 
