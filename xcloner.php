@@ -64,14 +64,19 @@ require_once(__DIR__.'/vendor/autoload.php');
 function do_cli_execution($args = array(), $opts = array())
 {
     if (!sizeof($opts)) {
-        $opts = getopt('v::p:h::', array('verbose::','profile:','help:'));
+        $opts = getopt('v::p:h::q::', array('verbose::','profile:','help::', 'quiet::'));
     }
 
     if (isset($opts['h']) || isset($opts['help'])) {
         echo sprintf("-h                Display help\n");
         echo sprintf("-p <profile name> Specify the backup profile name or ID\n");
         echo sprintf("-v                Verbose output\n");
+        echo sprintf("-q                Disable output\n");
         return;
+    }
+
+    if(isset($opts['q']) || isset($opts['quiet'])){
+        define('XCLONER_DISABLE_OUTPUT', true);
     }
 
     if (isset($opts['v']) || isset($opts['verbose'])) {
@@ -85,7 +90,7 @@ function do_cli_execution($args = array(), $opts = array())
     if (file_exists(__DIR__ . "/../../../wp-load.php")) {
         require_once(__DIR__ .'/../../../wp-load.php');
     }
-  
+
     $profile = [
     'id' => 0
     ];
@@ -133,6 +138,9 @@ if (php_sapi_name() == "cli") {
      * @when before_wp_load
      */
     function ($args, $assoc_args) {
+        if(WP_CLI::get_config('quiet')) {
+            $assoc_args['quiet'] = true;
+        }
         return do_cli_execution($args, $assoc_args);
     }
         );

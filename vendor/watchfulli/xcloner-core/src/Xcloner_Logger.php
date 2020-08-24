@@ -131,7 +131,7 @@ class Xcloner_Logger extends Logger
      */
     public function print_info($message, $context = array())
     {
-        if (php_sapi_name() == "cli" && !WP_DEBUG) {
+        if (php_sapi_name() == "cli" && !WP_DEBUG && !defined('XCLONER_DISABLE_OUTPUT')) {
             echo sprintf("[%s] %s \n", date("Y-m-d H:i:s"), $message);
         }
         return parent::info($message, $context);
