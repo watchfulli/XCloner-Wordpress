@@ -2,9 +2,13 @@ parameters:
 
   level: 0
 
+  parallel:
+    processTimeout: 300.0
+
   excludes_analyse:
     # Guzzle V5 classes & interfaces changed in V6
     - %rootDir%/../../../src/Handler/GuzzleV5/*
+    - %rootDir%/../../../src/Crypto/Polyfill/*
 
   ignoreErrors:
     # Intentional
@@ -19,5 +23,9 @@ parameters:
 
     # Guzzle V5 classes & interfaces changed in V6
     - '#Call to an undefined static method GuzzleHttp\\Client::getDefaultUserAgent\(\)\.#'
+
+    # There is a check for availability of constant that phpstan does not detect. https://github.com/phpstan/phpstan/issues/2971
+    - '#Access to undefined constant GuzzleHttp\\ClientInterface::MAJOR_VERSION#'
+    - '#Access to undefined constant GuzzleHttp\\ClientInterface::VERSION\.#'
 
   reportUnmatchedIgnoredErrors: false

@@ -394,7 +394,7 @@ class RetryMiddlewareV2Test extends TestCase
         $assertFunction = function() use (&$time, &$attempt, &$errors, $expectedTimes) {
             try {
                 $this->assertLessThanOrEqual(
-                    0.1,
+                    0.5,
                     abs($expectedTimes[$attempt] - (microtime(true) - $time))
                 );
             } catch (\Exception $e) {
@@ -1043,6 +1043,95 @@ class RetryMiddlewareV2Test extends TestCase
             ['baz' => 'quux'],
             ['fizz' => 'buzz'],
         ], $httpStats);
+    }
+
+    public function testReportsHttpStatsForEachException()
+    {
+        $command = new Command('TestCommand');
+        $response = new Response(500);
+
+        $handler = new MockHandler([
+            new AwsException(
+                'Test Exception',
+                $command,
+                [
+                    'response' => $response,
+                    'transfer_stats' => [
+                        'starttransfer_time' => 5,
+                        'appconnect_time' => 4
+                    ]
+                ]
+            ),
+            new AwsException(
+                'Test Exception',
+                $command,
+                [
+                    'response' => $response,
+                    'transfer_stats' => [
+                        'starttransfer_time' => 10,
+                        'appconnect_time' => 8
+                    ]
+                ]
+            ),
+            new AwsException(
+                'Test Exception',
+                $command,
+                [
+                    'response' => $response,
+                    'transfer_stats' => [
+                        'starttransfer_time' => 15,
+                        'appconnect_time' => 12
+                    ]
+                ]
+            ),
+            new AwsException(
+                'Test Exception',
+                $command,
+                [
+                    'response' => $response,
+                    'transfer_stats' => [
+                        'starttransfer_time' => 20,
+                        'appconnect_time' => 16
+                    ]
+                ]
+            )
+        ]);
+
+        $config = new Configuration('standard', 4);
+        $retryMW = new RetryMiddlewareV2(
+            $config,
+            $handler,
+            ['collect_stats' => true]
+        );
+
+        try {
+            $retryMW(new Command('SomeCommand'), new Request('GET', ''))
+                ->wait();
+            $this->fail('This command should have produced an AwsException.');
+        } catch (AwsException $e) {
+            $stats= $e->getTransferInfo();
+            $this->assertEquals(
+                [
+                    [
+                        'starttransfer_time' => 5,
+                        'appconnect_time' => 4
+                    ],
+                    [
+                        'starttransfer_time' => 10,
+                        'appconnect_time' => 8
+                    ],
+                    [
+                        'starttransfer_time' => 15,
+                        'appconnect_time' => 12
+                    ],
+                    [
+                        'starttransfer_time' => 20,
+                        'appconnect_time' => 16
+                    ],
+                ],
+                $stats['http']
+            );
+        }
     }
 
     public function testReportsHttpStatsForEachRequestEvenIfRetryStatsDisabled()
