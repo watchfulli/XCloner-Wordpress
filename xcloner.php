@@ -237,8 +237,6 @@ function run_xcloner()
     $plugin->extra_define_ajax_hooks();
     $plugin->run();
 
-    
-
     return $plugin;
 }
 

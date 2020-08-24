@@ -34,6 +34,15 @@ class Xcloner_Settings
         }
     }
 
+    /** 
+     * Restore default XCloner settings by deleting all existing values
+     */
+    public function restore_defaults() {    
+        global $wpdb;
+
+        return $wpdb->query( "DELETE FROM {$wpdb->prefix}options WHERE option_name LIKE 'xcloner_%'" );
+    }
+
     /**
      * XCloner options prefix
      *
@@ -821,6 +830,19 @@ class Xcloner_Settings
             array(
                 'xcloner_disable_email_notification',
                 sprintf(__('Enable this option if you want the XCloner to NOT send email notifications on successful backups', 'xcloner-backup-and-restore'), $this->get_table_prefix())
+            )
+        );
+
+        register_setting('xcloner_system_settings_group', 'xcloner_restore_defaults');
+        add_settings_field(
+            'xcloner_restore_defaults',
+            __('Restore Default Settings', 'xcloner-backup-and-restore'),
+            array($this, 'do_form_switch_field'),
+            'xcloner_system_settings_page',
+            'xcloner_system_settings_group',
+            array(
+                'xcloner_restore_defaults',
+                sprintf(__('This option will completelly remove all existing XCloner options and set them back to a default state.', 'xcloner-backup-and-restore'), $this->get_table_prefix())
             )
         );
 

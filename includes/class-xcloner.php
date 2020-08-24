@@ -311,6 +311,11 @@ class Xcloner extends watchfulli\XClonerCore\Xcloner
          */
         $this->xcloner_settings = new Xcloner_Settings($this);
 
+        if(isset($_POST['xcloner_restore_defaults']) && $_POST['xcloner_restore_defaults']) {
+            update_option('xcloner_restore_defaults', 0);
+            $this->xcloner_settings->restore_defaults();
+        }
+
         if (defined('DOING_CRON') || isset($_POST['hash'])) {
             if (defined('DOING_CRON') || $_POST['hash'] == "generate_hash") {
                 $this->xcloner_settings->generate_new_hash();
@@ -595,6 +600,7 @@ class Xcloner extends watchfulli\XClonerCore\Xcloner
         if ($file == plugin_basename(dirname(dirname(__FILE__)).'/xcloner.php')) {
             $links[] = '<a href="admin.php?page=xcloner_settings_page">'.__('Settings', 'xcloner-backup-and-restore').'</a>';
             $links[] = '<a href="admin.php?page=xcloner_generate_backups_page">'.__('Generate Backup', 'xcloner-backup-and-restore').'</a>';
+            //$links[] = '<a href="admin.php?page=xcloner_restore_defaults">'.__('Restore Defaults', 'xcloner-backup-and-restore').'</a>';
         }
 
         return $links;
