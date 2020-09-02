@@ -1125,7 +1125,7 @@ class Xcloner_Restore {
     params.xcloner_action = action;
     params.hash = this.hash;
     params.API_ID = ID();
-    if (XCLONER_WPNONCE !== undefined) {
+    if (typeof XCLONER_WPNONCE !== undefined) {
       params._wpnonce = XCLONER_WPNONCE;
     }
 
