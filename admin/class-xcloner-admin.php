@@ -130,13 +130,13 @@ class Xcloner_Admin {
 		wp_enqueue_script($this->plugin_name."_jquery.datatables.respnsive", plugin_dir_url(__FILE__).'js/dataTables.responsive.js', array('jquery'), $this->version, false);
 		wp_enqueue_script($this->plugin_name."_vakata", dirname(plugin_dir_url(__FILE__)).'/vendor/vakata/jstree/dist/jstree.min.js', array('jquery'), '3.3', false);
 		
-		wp_enqueue_script($this->plugin_name, dirname(plugin_dir_url(__FILE__)).'/dist/admin/js/xcloner_admin.js', array('jquery'), $this->version, false);
+		wp_enqueue_script($this->plugin_name, dirname(plugin_dir_url(__FILE__)).'/dist/admin/js/xcloner_admin.min.js', array('jquery'), $this->version, false);
 
-		wp_enqueue_script($this->plugin_name."_backup-class", dirname(plugin_dir_url(__FILE__)).'/dist/admin/js/xcloner_backup_class.js', array('jquery'), $this->version, false);
-		wp_enqueue_script($this->plugin_name."_scheduler-class", dirname(plugin_dir_url(__FILE__)).'/dist/admin/js/xcloner_scheduler_class.js', array('jquery'), $this->version, false);
-		wp_enqueue_script($this->plugin_name."_restore-class", dirname(plugin_dir_url(__FILE__)).'/dist/admin/js/xcloner_restore_class.js', array('jquery'), $this->version, false);
-		wp_enqueue_script($this->plugin_name."_manage-backups-class", dirname(plugin_dir_url(__FILE__)).'/dist/admin/js/xcloner_manage_backups_class.js', array('jquery'), $this->version, false);
-		wp_enqueue_script($this->plugin_name."_remote-storage-class", dirname(plugin_dir_url(__FILE__)).'/dist/admin/js/xcloner_remote_storage_class.js', array('jquery'), $this->version, false);
+		wp_enqueue_script($this->plugin_name."_backup-class", dirname(plugin_dir_url(__FILE__)).'/dist/admin/js/xcloner_backup_class.min.js', array('jquery'), $this->version, false);
+		wp_enqueue_script($this->plugin_name."_scheduler-class", dirname(plugin_dir_url(__FILE__)).'/dist/admin/js/xcloner_scheduler_class.min.js', array('jquery'), $this->version, false);
+		wp_enqueue_script($this->plugin_name."_restore-class", dirname(plugin_dir_url(__FILE__)).'/dist/admin/js/xcloner_restore_class.min.js', array('jquery'), $this->version, false);
+		wp_enqueue_script($this->plugin_name."_manage-backups-class", dirname(plugin_dir_url(__FILE__)).'/dist/admin/js/xcloner_manage_backups_class.min.js', array('jquery'), $this->version, false);
+		wp_enqueue_script($this->plugin_name."_remote-storage-class", dirname(plugin_dir_url(__FILE__)).'/dist/admin/js/xcloner_remote_storage_class.min.js', array('jquery'), $this->version, false);
 
 
 	}

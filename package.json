@@ -8,8 +8,8 @@
     "lib": "lib"
   },
   "scripts": {
-    "build": "webpack --config webpack.config.js",
-    "watch": "webpack --config webpack.config.js --watch --info-verbosity verbose",
+    "build": "webpack --config webpack.prod.js",
+    "start": "webpack --config webpack.dev.js --watch --info-verbosity verbose",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -26,7 +26,11 @@
   },
   "homepage": "https://github.com/ovidiul/XCloner-Wordpress#readme",
   "devDependencies": {
+    "terser-webpack-plugin": "^4.1.0",
+    "uglify-js": "^3.10.3",
     "webpack": "^4.44.1",
-    "webpack-cli": "^3.3.12"
+    "webpack-cli": "^3.3.12",
+    "webpack-merge": "^5.1.3",
+    "webpack-merge-and-include-globally": "^2.1.25"
   }
 }
