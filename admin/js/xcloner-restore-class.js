@@ -1,6 +1,8 @@
 /** global: CustomEvent */
 /** global: Event */
 
+import {ID} from './xcloner-admin';
+
 class Xcloner_Restore {
   constructor(hash) {
     this.steps = [
@@ -154,7 +156,7 @@ class Xcloner_Restore {
       function (e) {
         if (e.detail.$this !== undefined) {
           var $this = e.detail.$this;
-          console.log($this.steps[$this.set_current_step]);
+          //console.log($this.steps[$this.set_current_step]);
           jQuery(".xcloner-restore li." + $this.steps[$this.set_current_step])
             .show()
             .find(".collapsible-header")
@@ -1075,7 +1077,11 @@ class Xcloner_Restore {
     jQuery("#backup_cotent_modal .modal-content .backup-name").text(
       backup_file
     );
+    
+    var Modalelem = document.querySelector("#backup_cotent_modal");
+    let backup_cotent_modal = M.Modal.init(Modalelem);
     backup_cotent_modal.open();
+
     jQuery("#backup_cotent_modal .progress > div")
       .removeClass("determinate")
       .addClass("indeterminate");
@@ -1230,9 +1236,10 @@ class Xcloner_Restore {
   }
 }
 
-var xcloner_auth_key = "";
+//var xcloner_auth_key = "";
 
 jQuery(document).ready(function () {
+  
   var xcloner_restore = new Xcloner_Restore(xcloner_auth_key);
 
   xcloner_restore.set_current_step(0);

@@ -1,4 +1,5 @@
-class Xcloner_Backup {
+
+export class Xcloner_Backup {
   constructor() {
     this.cancel = 0;
     this.params;
@@ -422,7 +423,7 @@ class Xcloner_Backup {
     jQuery(elem + " .status-body").show();
     jQuery(elem).find(".collapsible-header").trigger("click");
 
-    jQuery(elem).find(".progress .determinate").css("width", "0%");
+    jQuery(elem).find(".progress .determinate").removeClass('determinate').addClass('indeterminate');
 
     this.do_ajax(elem, "backup_encryption", 1);
 
@@ -464,7 +465,7 @@ class Xcloner_Backup {
     jQuery(elem + " .status-body").show();
     jQuery(elem).find(".collapsible-header").trigger("click");
 
-    jQuery(elem).find(".progress .indeterminate");
+    jQuery(elem).find(".progress .determinate").removeClass('determinate').addClass('indeterminate');
 
     this.params.file =backup_name;
     this.params.storage_type= remote_storage;

@@ -2,6 +2,8 @@
 /** global: Materialize */
 /** global: dataTable */
 
+import {doShortText} from './xcloner-admin';
+
 var edit_schedule_modal_instance;
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -180,7 +182,7 @@ jQuery(document).ready(function () {
     position: "absolute",
   });
 
-  dataTable = jQuery("#scheduled_backups").DataTable({
+  let dataTable = jQuery("#scheduled_backups").DataTable({
     responsive: true,
     bFilter: false,
     order: [[3, "desc"]],

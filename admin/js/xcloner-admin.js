@@ -1,4 +1,4 @@
-var error_modal;
+export let error_modal;
 
 document.addEventListener("DOMContentLoaded", function () {
   var Modalelem = document.querySelector("#error_modal");
@@ -70,14 +70,14 @@ document.addEventListener("DOMContentLoaded", function () {
 //show_ajax_error("dd", "dd12", request)
 //});
 
-function next_tab(hash) {
+export const next_tab = function (hash) {
   jQuery(".nav-tab-wrapper")
     .find("li a[href='" + hash + "']")
     .trigger("click");
   location.hash = hash;
-}
+};
 
-function doShortText(elem) {
+export const doShortText = function (elem) {
   if (elem.hasClass("full")) {
     elem.text(elem.attr("data-text"));
     return;
@@ -88,10 +88,10 @@ function doShortText(elem) {
   var last = text.substr(text_lenght - 20, text_lenght);
 
   elem.attr("data-text", text).text(first + "..." + last);
-}
+};
 
 /** global: xcloner_backup */
-function show_ajax_error(title, msg, json) {
+export const show_ajax_error = function (title, msg, json) {
   //var json = jQuery.parseJSON( body )
 
   if (typeof xcloner_backup !== "undefined") {
@@ -112,15 +112,33 @@ function show_ajax_error(title, msg, json) {
   jQuery("#error_modal .body").text(JSON.stringify(json));
   //var error_modal = jQuery("#error_modal").modal();
   error_modal.open();
-}
+};
 
-var ID = function () {
+export const ID = function () {
   // Math.random should be unique because of its seeding algorithm.
   // Convert it to base 36 (numbers + letters), and grab the first 9 characters
   // after the decimal.
   return "_" + Math.random().toString(36).substr(2, 9);
 };
 
-var getUrlParam = function (name) {
+export const getUrlParam = function (name) {
   return (location.search.split(name + "=")[1] || "").split("&")[0];
 };
+
+import { Xcloner_Remote_Storage } from "./xcloner-remote-storage-class";
+import { Xcloner_Backup } from "./xcloner-backup-class";
+import { Xcloner_Manage_Backups } from "./xcloner-manage-backups-class";
+
+jQuery(document).ready(function () {
+  // define global variables
+  window.remote_storage = new Xcloner_Remote_Storage();
+  window.xcloner_backup = new Xcloner_Backup();
+  window.xcloner_manage_backups = new Xcloner_Manage_Backups();
+
+  window.ID = ID;
+  window.getUrlParam = getUrlParam;
+  window.show_ajax_error = show_ajax_error;
+  window.doShortText = doShortText;
+  window.dataTable              = null;
+  window.next_tab               = next_tab;
+});

@@ -14,7 +14,7 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 <h1><?= esc_html(get_admin_page_title()); ?></h1>
 
 <script>
-    var xcloner_auth_key = '<?php echo md5(AUTH_KEY)?>';
+    let xcloner_auth_key = '<?php echo md5(AUTH_KEY)?>';
 </script>
 
 <div class="row xcloner-restore">

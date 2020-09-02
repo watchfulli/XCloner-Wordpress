@@ -1196,7 +1196,6 @@ $common_cleanup_html = ob_get_contents();
 </form>
 
 <script>
-
     function checkEndpoint() {
         if (jQuery("#aws_region").val() != "") {
             jQuery('#custom_aws_endpoint').hide();
@@ -1209,7 +1208,7 @@ $common_cleanup_html = ob_get_contents();
 
     jQuery(document).ready(function () {
 
-        var remote_storage = new Xcloner_Remote_Storage();
+        //var remote_storage = new Xcloner_Remote_Storage();
 
         checkEndpoint()
         jQuery("#aws_region").on("change", function () {
@@ -1236,7 +1235,6 @@ $common_cleanup_html = ob_get_contents();
 
         });
 
-        console.log(location.hash)
         if (location.hash) {
             jQuery(location.hash).addClass("active");
         }
