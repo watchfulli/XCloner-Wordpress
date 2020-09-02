@@ -283,7 +283,7 @@ class Xcloner_Restore {
           ) {
             jQuery(
               ".xcloner-restore .restore-remote-backup-step .files-list"
-            ).prepend(files_text.reverse().join("\n"));
+            ).html(files_text.reverse().join("\n"));
           }
         } else if (!jQuery.isArray(e.detail.files)) {
           jQuery(

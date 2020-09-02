@@ -22,7 +22,7 @@ module.exports = {
   // Webpack will bundle all JavaScript into this file
   output: {
     path: path.resolve(__dirname, "dist"),
-    filename: "./admin/js/[name].js",
+    filename: "./admin/js/[name].min.js",
   },
 
   optimization: {
