@@ -1,4 +1,4 @@
-/** global: ajaxurl */
+/** global: XCLONER_AJAXURL */
 /** global: Materialize */
 var dataTable = "";
 
@@ -35,7 +35,7 @@ class Xcloner_Manage_Backups {
   }
 
   download_backup_by_name(id) {
-    window.open(ajaxurl + "?action=download_backup_by_name&name=" + id+"&storage_selection="+this.storage_selection);
+    window.open(XCLONER_AJAXURL + "&action=download_backup_by_name&name=" + id+"&storage_selection="+this.storage_selection);
     return false;
   }
 
@@ -44,7 +44,7 @@ class Xcloner_Manage_Backups {
 
     if (id) {
       jQuery.ajax({
-        url: ajaxurl,
+        url: XCLONER_AJAXURL,
         method: "post",
         data: {
           action: "delete_backup_by_name",
@@ -68,7 +68,7 @@ class Xcloner_Manage_Backups {
 
     if (backup_file) {
       jQuery.ajax({
-        url: ajaxurl,
+        url: XCLONER_AJAXURL,
         method: "post",
         data: {
           action: "list_backup_files",
@@ -163,7 +163,7 @@ class Xcloner_Manage_Backups {
 
     if (backup_file) {
       jQuery.ajax({
-        url: ajaxurl,
+        url: XCLONER_AJAXURL,
         method: "post",
         data: {
           action: "backup_encryption",
@@ -270,7 +270,7 @@ class Xcloner_Manage_Backups {
 
     if (backup_file) {
       jQuery.ajax({
-        url: ajaxurl,
+        url: XCLONER_AJAXURL,
         method: "post",
         data: {
           action: "backup_decryption",
@@ -397,7 +397,7 @@ class Xcloner_Manage_Backups {
 
         if (backup_file) {
           jQuery.ajax({
-            url: ajaxurl,
+            url: XCLONER_AJAXURL,
             method: "post",
             data: {
               action: "upload_backup_to_remote",
@@ -447,7 +447,7 @@ class Xcloner_Manage_Backups {
 
     if (backup_file) {
       jQuery.ajax({
-        url: ajaxurl,
+        url: XCLONER_AJAXURL,
         method: "post",
         data: {
           action: "copy_backup_remote_to_local",
@@ -513,8 +513,8 @@ jQuery(document).ready(function () {
     },
     ajax: {
       url:
-        ajaxurl +
-        "?action=get_manage_backups_list&storage_selection=" +
+      XCLONER_AJAXURL +
+        "&action=get_manage_backups_list&storage_selection=" +
         xcloner_manage_backups.storage_selection,
     },
     fnDrawCallback: function (oSettings) {

@@ -584,7 +584,7 @@ $tab                    = 1;
                 'data': {
                     'method': 'POST',
                     'dataType': 'json',
-                    'url': ajaxurl,
+                    'url': XCLONER_AJAXURL,
                     'data': function (node) {
                         var data = {
                             'action': 'get_database_tables_action',
@@ -627,7 +627,7 @@ $tab                    = 1;
                 'data': {
                     'method': 'POST',
                     'dataType': 'json',
-                    'url': ajaxurl,
+                    'url': XCLONER_AJAXURL,
                     'data': function (node) {
                         var data = {
                             'action': 'get_file_system_action',

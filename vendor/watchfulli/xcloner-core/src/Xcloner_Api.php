@@ -114,12 +114,14 @@ class Xcloner_Api
     public function check_access()
     {
         //preparing nonce verification
-        /*if(!isset($_POST['_nonce']) || !wp_verify_nonce($_POST['_nonce'], 'xcloner-api-nonce')) {
-            return $this->send_response(json_encode("Invalid nonce, please try again by refreshing the page!"));
-        }*/
+        if (function_exists('wp_verify_nonce')) {
+            if (!isset($_REQUEST['_wpnonce']) || !wp_verify_nonce($_REQUEST['_wpnonce'], 'xcloner-api-nonce')) {
+                throw new \Error(json_encode("Invalid nonce, please try again by refreshing the page!"));
+            }
+        }
 
         if (function_exists('current_user_can') && !current_user_can('manage_options')) {
-            return $this->send_response(json_encode("Access not allowed!"));
+            throw new \Error(json_encode("Access not allowed!"));
         }
     }
 
@@ -1267,11 +1269,11 @@ class Xcloner_Api
 
         $return = array();
 
-        if(isset($_POST['data']) && $data = json_decode(stripslashes($_POST['data']), true)) {
+        if (isset($_POST['data']) && $data = json_decode(stripslashes($_POST['data']), true)) {
             $backup_file = $this->xcloner_sanitization->sanitize_input_as_string($data['file']);
             $storage_type = $this->xcloner_sanitization->sanitize_input_as_string($data['storage_type']);
             $delete_local_copy_after_transfer = $this->xcloner_sanitization->sanitize_input_as_string($data['delete_after_transfer']);
-        }else{
+        } else {
             $backup_file = $this->xcloner_sanitization->sanitize_input_as_string($_POST['file']);
             $storage_type = $this->xcloner_sanitization->sanitize_input_as_string($_POST['storage_type']);
             $delete_local_copy_after_transfer = $this->xcloner_sanitization->sanitize_input_as_string($_POST['delete_after_transfer']);
@@ -1349,8 +1351,14 @@ class Xcloner_Api
 
         $tar = $this->archive_system;
         $tar->create($tmp_file);
+        
+        $vendor_phar_file = __DIR__."/../../../../restore/vendor.build.txt";
+        if (!file_exists($vendor_phar_file)) {
+            $vendor_phar_file = __DIR__."/../../restore/vendor.build.txt";
+        }
 
-        $tar->addFile(__DIR__."/../../../../restore/vendor.build.txt", "vendor.phar");
+        $tar->addFile($vendor_phar_file, "vendor.phar");
+        
         //$tar->addFile(dirname(__DIR__)."/restore/vendor.tgz", "vendor.tgz");
 
         $files = $xcloner_plugin_filesystem->listContents("vendor/", true);
@@ -1358,8 +1366,12 @@ class Xcloner_Api
             $tar->addFile(dirname(__DIR__).DS.$file['path'], $file['path']);
         }
 
-        $content = file_get_contents(__DIR__."/../../../../restore/xcloner_restore.php");
-        //$content = file_get_contents(dirname(__DIR__)."/restore/xcloner_restore.php");
+        $xcloner_restore_file = (__DIR__."/../../../../restore/xcloner_restore.php");
+        if (!file_exists($xcloner_restore_file)) {
+            $xcloner_restore_file = (__DIR__."/../../restore/xcloner_restore.php");
+        }
+
+        $content = file_get_contents($xcloner_restore_file);
         $content = str_replace("define('AUTH_KEY', '');", "define('AUTH_KEY', '".md5(AUTH_KEY)."');", $content);
 
         $tar->addData("xcloner_restore.php", $content);
@@ -1411,7 +1423,7 @@ class Xcloner_Api
 
         if ($metadata['name']) {
             $backup_name_export = $metadata['name'];
-        }elseif ($metadata['path']) {
+        } elseif ($metadata['path']) {
             $backup_name_export = $metadata['path'];
         }
 
@@ -1524,6 +1536,11 @@ class Xcloner_Api
         if ($attach_hash and null !== $this->xcloner_settings->get_hash()) {
             $data['hash'] = $this->xcloner_settings->get_hash();
         }
+
+        /*
+        if(!isset($data['_wpnonce']) && function_exists('wp_create_nonce')) {
+            $data['_wpnonce'] = wp_create_nonce('xcloner-api-nonce');
+        }*/
 
         if (ob_get_length()) {
             //ob_clean();

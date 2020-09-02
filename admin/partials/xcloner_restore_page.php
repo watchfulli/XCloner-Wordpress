@@ -32,7 +32,7 @@ $backup_list = $xcloner_file_system->get_latest_backups();
                         <li><?php echo __("If you want to do a <strong>Remote Target System Restore</strong>, please ", 'xcloner-backup-and-restore') ?>
                             
                         <button class="btn waves-effect waves-light" type="submit" 
-                               onclick="window.location=ajaxurl+'?action=download_restore_script&phar=true'">
+                               onclick="window.location=XCLONER_AJAXURL+'&action=download_restore_script&phar=true'">
                                <?php echo __("download the restore script", 'xcloner-backup-and-restore') ?>
                         </button>       
 

@@ -6,7 +6,7 @@ class Xcloner_Remote_Storage
 		
 	}
 	
-	/** global: ajaxurl */
+	/** global: XCLONER_AJAXURL */
 	toggle_status(elem)
 	{
 		var field = jQuery(elem).attr("name")
@@ -18,7 +18,7 @@ class Xcloner_Remote_Storage
 			
 		if(field){
 			jQuery.ajax({
-			  url: ajaxurl,
+			  url: XCLONER_AJAXURL,
 			  method: 'post',
 			  data: { action : 'remote_storage_save_status', id: field, value: value},
 			  success: function(response){

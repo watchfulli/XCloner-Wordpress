@@ -569,7 +569,7 @@ class Xcloner_Backup {
     this.resume.init = init;
   }
 
-  /** global: ajaxurl */
+  /** global: XCLONER_AJAXURL */
   do_ajax(elem, action, init = 0) {
     
     let hash = "";
@@ -588,7 +588,7 @@ class Xcloner_Backup {
 
     jQuery
       .ajax({
-        url: ajaxurl,
+        url: XCLONER_AJAXURL,
         dataType: "json",
         type: "POST",
         data: {
