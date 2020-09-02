@@ -10,12 +10,12 @@ module.exports = {
   //entry: './admin/js/index.js',
   entry: {
     index: "./admin/js/index.js",
-    xcloner_admin: "./admin/js/xcloner-admin.js",
+    /*xcloner_admin: "./admin/js/xcloner-admin.js",
     xcloner_backup_class: "./admin/js/xcloner-backup-class.js",
     xcloner_manage_backups_class: "./admin/js/xcloner-manage-backups-class.js",
     xcloner_remote_storage_class: "./admin/js/xcloner-remote-storage-class.js",
     xcloner_restore_class: "./admin/js/xcloner-restore-class.js",
-    xcloner_scheduler_class: "./admin/js/xcloner-scheduler-class.js",
+    xcloner_scheduler_class: "./admin/js/xcloner-scheduler-class.js",*/
   },
 
   // Path and filename of your result bundle.

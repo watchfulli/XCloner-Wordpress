@@ -36,5 +36,5 @@ module.exports = {
   // minifying and other thing so let's set mode to development
   //mode: 'development'
   mode: "production",
-  devtool: 'inline-source-map',
+  devtool: 'source-map',
 };
