@@ -201,12 +201,17 @@ class Xcloner_Remote_Storage
         'eu-west-1' => 'EU (Ireland)',
         'eu-central-1' => 'EU (Frankfurt)',
         'eu-west-2' => 'EU (London)',
+        'eu-west-2' => 'EU (Paris)',
+        'eu-south-1' => 'EU (Milan)',
+        'eu-north-1' => 'EU (Stockholm)',
         'ap-northeast-1' => 'Asia Pacific (Tokyo)',
         'ap-northeast-2' => 'Asia Pacific (Seoul)',
         'ap-southeast-1' => 'Asia Pacific (Singapore)',
         'ap-southeast-2' => 'Asia Pacific (Sydney)',
         'ap-south-1' => 'Asia Pacific (Mumbai)',
-        'sa-east-1' => 'South America (São Paulo)'
+        'sa-east-1' => 'South America (São Paulo)',
+        'af-south-1' => 'Africa (Cape Town)',
+        'me-south-1' => 'Middle East (Bahrain)'
     );
 
     private $xcloner_sanitization;
