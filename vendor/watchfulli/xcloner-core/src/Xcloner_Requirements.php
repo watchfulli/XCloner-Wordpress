@@ -3,7 +3,7 @@ namespace watchfulli\XClonerCore;
 
 class Xcloner_Requirements {
 
-	var $min_php_version = "5.6.0";
+	var $min_php_version = "7.1.0";
 	var $safe_mode = "Off";
 
 	private $xcloner_settings;

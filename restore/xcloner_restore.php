@@ -80,7 +80,7 @@ class Xcloner_Restore
     const 	xcloner_minimum_version = "5.4.0";
     
     private $backup_archive_extensions = array("zip", "tar", "tgz", "tar.gz", "gz", "csv");
-    private $process_files_limit = 150;
+    private $process_files_limit = 1500;
     private $process_files_limit_list = 350;
     private $process_mysql_records_limit = 250;
     private $adapter;

@@ -46,6 +46,8 @@ namespace Aws;
  * @method \Aws\MultiRegionClient createMultiRegionBackup(array $args = [])
  * @method \Aws\Batch\BatchClient createBatch(array $args = [])
  * @method \Aws\MultiRegionClient createMultiRegionBatch(array $args = [])
+ * @method \Aws\Braket\BraketClient createBraket(array $args = [])
+ * @method \Aws\MultiRegionClient createMultiRegionBraket(array $args = [])
  * @method \Aws\Budgets\BudgetsClient createBudgets(array $args = [])
  * @method \Aws\MultiRegionClient createMultiRegionBudgets(array $args = [])
  * @method \Aws\Chime\ChimeClient createChime(array $args = [])
@@ -74,6 +76,8 @@ namespace Aws;
  * @method \Aws\MultiRegionClient createMultiRegionCloudWatchEvents(array $args = [])
  * @method \Aws\CloudWatchLogs\CloudWatchLogsClient createCloudWatchLogs(array $args = [])
  * @method \Aws\MultiRegionClient createMultiRegionCloudWatchLogs(array $args = [])
+ * @method \Aws\CodeArtifact\CodeArtifactClient createCodeArtifact(array $args = [])
+ * @method \Aws\MultiRegionClient createMultiRegionCodeArtifact(array $args = [])
  * @method \Aws\CodeBuild\CodeBuildClient createCodeBuild(array $args = [])
  * @method \Aws\MultiRegionClient createMultiRegionCodeBuild(array $args = [])
  * @method \Aws\CodeCommit\CodeCommitClient createCodeCommit(array $args = [])
@@ -200,8 +204,14 @@ namespace Aws;
  * @method \Aws\MultiRegionClient createMultiRegionGuardDuty(array $args = [])
  * @method \Aws\Health\HealthClient createHealth(array $args = [])
  * @method \Aws\MultiRegionClient createMultiRegionHealth(array $args = [])
+ * @method \Aws\Honeycode\HoneycodeClient createHoneycode(array $args = [])
+ * @method \Aws\MultiRegionClient createMultiRegionHoneycode(array $args = [])
+ * @method \Aws\IVS\IVSClient createIVS(array $args = [])
+ * @method \Aws\MultiRegionClient createMultiRegionIVS(array $args = [])
  * @method \Aws\Iam\IamClient createIam(array $args = [])
  * @method \Aws\MultiRegionClient createMultiRegionIam(array $args = [])
+ * @method \Aws\IdentityStore\IdentityStoreClient createIdentityStore(array $args = [])
+ * @method \Aws\MultiRegionClient createMultiRegionIdentityStore(array $args = [])
  * @method \Aws\ImportExport\ImportExportClient createImportExport(array $args = [])
  * @method \Aws\MultiRegionClient createMultiRegionImportExport(array $args = [])
  * @method \Aws\Inspector\InspectorClient createInspector(array $args = [])
@@ -449,7 +459,7 @@ namespace Aws;
  */
 class Sdk
 {
-    const VERSION = '3.140.3';
+    const VERSION = '3.150.2';
 
     /** @var array Arguments for creating clients */
     private $args;

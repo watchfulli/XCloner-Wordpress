@@ -113,8 +113,15 @@ class Xcloner_Api
      */
     public function check_access()
     {
+        //preparing nonce verification
+        if (function_exists('wp_verify_nonce')) {
+            if (!isset($_REQUEST['_wpnonce']) || !wp_verify_nonce($_REQUEST['_wpnonce'], 'xcloner-api-nonce')) {
+                throw new \Error(json_encode("Invalid nonce, please try again by refreshing the page!"));
+            }
+        }
+
         if (function_exists('current_user_can') && !current_user_can('manage_options')) {
-            $this->send_response(json_encode("Access not allowed!"));
+            throw new \Error(json_encode("Access not allowed!"));
         }
     }
 
@@ -160,7 +167,7 @@ class Xcloner_Api
             $this->form_params['backup_params']['start_at'] = strtotime($_POST['schedule_start_date']);
             $this->form_params['backup_params']['schedule_frequency'] = $this->xcloner_sanitization->sanitize_input_as_string($_POST['schedule_frequency']);
             $this->form_params['backup_params']['schedule_storage'] = $this->xcloner_sanitization->sanitize_input_as_string($_POST['schedule_storage']);
-            if(!isset($_POST['backup_delete_after_remote_transfer'])) {
+            if (!isset($_POST['backup_delete_after_remote_transfer'])) {
                 $_POST['backup_delete_after_remote_transfer'] = 0;
             }
             $this->form_params['backup_params']['backup_delete_after_remote_transfer'] = $this->xcloner_sanitization->sanitize_input_as_int($_POST['backup_delete_after_remote_transfer']);
@@ -966,7 +973,7 @@ class Xcloner_Api
 
         try {
             $backup_list = $this->xcloner_file_system->get_backup_archives_list($storage_selection);
-        }catch(Exception $e){
+        } catch (Exception $e) {
             $this->send_response($return, 0);
             return;
         }
@@ -1003,7 +1010,7 @@ class Xcloner_Api
                         <?php if (!$file_exists_on_local_storage): ?>
                             <a href="#"
                                title="<?php echo __(
-            "File does not exists on local storage",
+            "This backup archive does not exist on your local server. If you wish to retain local copies of your backup archives as well as remote copies, please disable local clean-up in the main XCloner settings and/or your scheduled backup profile settings.",
             "xcloner-backup-and-restore"
         ) ?>"><i
                                         class="material-icons backup_warning">warning</i></a>
@@ -1028,7 +1035,7 @@ class Xcloner_Api
                                         <?php if (!$child_exists_on_local_storage): ?>
                                             <a href="#"
                                                title="<?php echo __(
-            "File does not exists on local storage",
+            "This backup archive does not exist on your local server. If you wish to retain local copies of your backup archives as well as remote copies, please disable local clean-up in the main XCloner settings and/or your scheduled backup profile settings.",
             "xcloner-backup-and-restore"
         ) ?>"><i
                                                         class="material-icons backup_warning">warning</i></a>
@@ -1086,11 +1093,11 @@ class Xcloner_Api
         ob_end_clean(); ?>
 
                     <?php ob_start(); ?>
-                        <?php if (!$storage_selection): ?>
+                        
                             <a href="#<?php echo $file_info['basename']; ?>" class="download"
                                title="<?php echo __('Download Backup', 'xcloner-backup-and-restore') ?>"><i
                                         class="material-icons">file_download</i></a>
-
+                        <?php if (!$storage_selection): ?>
                             <?php if (sizeof($available_storages)): ?>
                                 <a href="#<?php echo $file_info['basename'] ?>" class="cloud-upload"
                                    title="<?php echo __(
@@ -1128,7 +1135,7 @@ class Xcloner_Api
                         <?php if ($storage_selection and !$file_exists_on_local_storage): ?>
                             <a href="#<?php echo $file_info['basename']; ?>" class="copy-remote-to-local"
                                title="<?php echo __('Transfer a copy of the remote backup to local storage.', 'xcloner-backup-and-restore') ?>"><i
-                                        class="material-icons">file_upload</i></a>
+                                        class="material-icons">swap_horiz</i></a>
                         <?php endif ?>
 
                     <?php
@@ -1262,10 +1269,15 @@ class Xcloner_Api
 
         $return = array();
 
-        $backup_file = $this->xcloner_sanitization->sanitize_input_as_string($_POST['file']);
-        $storage_type = $this->xcloner_sanitization->sanitize_input_as_string($_POST['storage_type']);
-        $delete_local_copy_after_transfer = $this->xcloner_sanitization->sanitize_input_as_string($_POST['delete_after_transfer']);
-
+        if (isset($_POST['data']) && $data = json_decode(stripslashes($_POST['data']), true)) {
+            $backup_file = $this->xcloner_sanitization->sanitize_input_as_string($data['file']);
+            $storage_type = $this->xcloner_sanitization->sanitize_input_as_string($data['storage_type']);
+            $delete_local_copy_after_transfer = $this->xcloner_sanitization->sanitize_input_as_string($data['delete_after_transfer']);
+        } else {
+            $backup_file = $this->xcloner_sanitization->sanitize_input_as_string($_POST['file']);
+            $storage_type = $this->xcloner_sanitization->sanitize_input_as_string($_POST['storage_type']);
+            $delete_local_copy_after_transfer = $this->xcloner_sanitization->sanitize_input_as_string($_POST['delete_after_transfer']);
+        }
         $xcloner_remote_storage = $this->get_xcloner_container()->get_xcloner_remote_storage();
 
         try {
@@ -1339,8 +1351,14 @@ class Xcloner_Api
 
         $tar = $this->archive_system;
         $tar->create($tmp_file);
+        
+        $vendor_phar_file = __DIR__."/../../../../restore/vendor.build.txt";
+        if (!file_exists($vendor_phar_file)) {
+            $vendor_phar_file = __DIR__."/../../restore/vendor.build.txt";
+        }
 
-        $tar->addFile(__DIR__."/../../../../restore/vendor.build.txt", "vendor.phar");
+        $tar->addFile($vendor_phar_file, "vendor.phar");
+        
         //$tar->addFile(dirname(__DIR__)."/restore/vendor.tgz", "vendor.tgz");
 
         $files = $xcloner_plugin_filesystem->listContents("vendor/", true);
@@ -1348,8 +1366,12 @@ class Xcloner_Api
             $tar->addFile(dirname(__DIR__).DS.$file['path'], $file['path']);
         }
 
-        $content = file_get_contents(__DIR__."/../../../../restore/xcloner_restore.php");
-        //$content = file_get_contents(dirname(__DIR__)."/restore/xcloner_restore.php");
+        $xcloner_restore_file = (__DIR__."/../../../../restore/xcloner_restore.php");
+        if (!file_exists($xcloner_restore_file)) {
+            $xcloner_restore_file = (__DIR__."/../../restore/xcloner_restore.php");
+        }
+
+        $content = file_get_contents($xcloner_restore_file);
         $content = str_replace("define('AUTH_KEY', '');", "define('AUTH_KEY', '".md5(AUTH_KEY)."');", $content);
 
         $tar->addData("xcloner_restore.php", $content);
@@ -1388,18 +1410,29 @@ class Xcloner_Api
         ob_end_clean();
 
         $backup_name = $this->xcloner_sanitization->sanitize_input_as_string($_GET['name']);
+        $storage_selection = $this->xcloner_sanitization->sanitize_input_as_string($_GET['storage_selection']);
 
+        if (!$this->xcloner_file_system->get_storage_filesystem($storage_selection)->has($backup_name)) {
+            die();
+        }
 
-        $metadata = $this->xcloner_file_system->get_storage_filesystem()->getMetadata($backup_name);
-        $read_stream = $this->xcloner_file_system->get_storage_filesystem()->readStream($backup_name);
+        $metadata = $this->xcloner_file_system->get_storage_filesystem($storage_selection)->getMetadata($backup_name);
+        $read_stream = $this->xcloner_file_system->get_storage_filesystem($storage_selection)->readStream($backup_name);
 
+        $backup_name_export = $backup_name;
+
+        if ($metadata['name']) {
+            $backup_name_export = $metadata['name'];
+        } elseif ($metadata['path']) {
+            $backup_name_export = $metadata['path'];
+        }
 
         header('Pragma: public');
         header('Expires: 0');
         header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
         header('Cache-Control: private', false);
         header('Content-Transfer-Encoding: binary');
-        header('Content-Disposition: attachment; filename="'.$metadata['path'].'";');
+        header('Content-Disposition: attachment; filename="'.$backup_name_export.'";');
         header('Content-Type: application/octet-stream');
         header('Content-Length: '.$metadata['size']);
 
@@ -1503,6 +1536,11 @@ class Xcloner_Api
         if ($attach_hash and null !== $this->xcloner_settings->get_hash()) {
             $data['hash'] = $this->xcloner_settings->get_hash();
         }
+
+        /*
+        if(!isset($data['_wpnonce']) && function_exists('wp_create_nonce')) {
+            $data['_wpnonce'] = wp_create_nonce('xcloner-api-nonce');
+        }*/
 
         if (ob_get_length()) {
             //ob_clean();

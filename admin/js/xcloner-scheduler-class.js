@@ -1,6 +1,8 @@
-/** global: ajaxurl */
+/** global: XCLONER_AJAXURL */
 /** global: Materialize */
 /** global: dataTable */
+
+import {doShortText} from './xcloner-admin';
 
 var edit_schedule_modal_instance;
 
@@ -24,8 +26,8 @@ jQuery(document).ready(function () {
 
       if (id) {
         jQuery.ajax({
-          url: ajaxurl,
-          data: { action: "get_schedule_by_id", id: id },
+          url: XCLONER_AJAXURL,
+          data: { action: "get_schedule_by_id", id: id},
           success: function (response) {
             if (response.id == id) {
               $this.create_modal(response);
@@ -41,7 +43,7 @@ jQuery(document).ready(function () {
 
       if (id) {
         jQuery.ajax({
-          url: ajaxurl,
+          url: XCLONER_AJAXURL,
           data: { action: "delete_schedule_by_id", id: id },
           success: function (response) {
             //window.location = "";
@@ -136,7 +138,7 @@ jQuery(document).ready(function () {
 
       jQuery
         .ajax({
-          url: ajaxurl,
+          url: XCLONER_AJAXURL,
           dataType: "json",
           type: "POST",
           data: data,
@@ -180,7 +182,7 @@ jQuery(document).ready(function () {
     position: "absolute",
   });
 
-  dataTable = jQuery("#scheduled_backups").DataTable({
+  let dataTable = jQuery("#scheduled_backups").DataTable({
     responsive: true,
     bFilter: false,
     order: [[3, "desc"]],
@@ -196,7 +198,7 @@ jQuery(document).ready(function () {
       { targets: "no-sort", orderable: false },
       { className: "hide-on-med-and-down", targets: [3, 5] },
     ],
-    ajax: ajaxurl + "?action=get_scheduler_list",
+    ajax: XCLONER_AJAXURL + "&action=get_scheduler_list",
     fnDrawCallback: function (oSettings) {
       jQuery(this)
         .off("click", ".edit")

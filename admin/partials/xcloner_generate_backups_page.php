@@ -6,7 +6,7 @@ $xcloner_scheduler      = $this->get_xcloner_container()->get_xcloner_scheduler(
 $tab                    = 1;
 ?>
 
-<script>var xcloner_backup = new Xcloner_Backup();</script>
+<script>//var xcloner_backup = new Xcloner_Backup();</script>
 
 <h1><?= esc_html(get_admin_page_title()); ?></h1>
 
@@ -310,6 +310,23 @@ $tab                    = 1;
                                     <div class="determinate" style="width:0%"></div>
                                 </div>
                             </div>
+                            <div class="collapsible-body status-body"></div>
+                        </li>
+                        <li class="remote-storage-transfer">
+                            <div class="collapsible-header">
+                                <i class="material-icons">swap_horiz</i><?php echo __('Transferrring backup to remote storage...', 'xcloner-backup-and-restore') ?>
+
+                                <p class="right"><span class="status"></span></p>
+
+                                <div>
+                                    <p class="right"><span class="last-logged-file"></span></p>
+                                </div>
+
+                                <div class="progress">
+                                    <div class="indeterminate"></div>
+                                </div>
+                            </div>
+                            <div class="collapsible-body status-body"></div>
                         </li>
                         <li class="backup-done">
                             <div class="collapsible-header">
@@ -488,7 +505,7 @@ $tab                    = 1;
         jQuery('.col select').formSelect();
         jQuery("select[required]").css({display: "block", height: 0, padding: 0, width: 0, position: 'absolute'});
         jQuery(".backup-done .cloud-upload").on("click", function (e) {
-            var xcloner_manage_backups = new Xcloner_Manage_Backups();
+            //var xcloner_manage_backups = new Xcloner_Manage_Backups();
             var hash = jQuery(this).attr('href');
             var id = hash.substr(1)
 
@@ -515,7 +532,7 @@ $tab                    = 1;
         })
 
         jQuery(".backup-done .download").on("click", function (e) {
-            var xcloner_manage_backups = new Xcloner_Manage_Backups();
+            //var xcloner_manage_backups = new Xcloner_Manage_Backups();
             var hash = jQuery(this).attr('href');
             var id = hash.substr(1)
 
@@ -524,7 +541,7 @@ $tab                    = 1;
         })
 
         jQuery(".backup-done .list-backup-content").on("click", function (e) {
-            var xcloner_manage_backups = new Xcloner_Manage_Backups();
+            //var xcloner_manage_backups = new Xcloner_Manage_Backups();
             var hash = jQuery(this).attr('href');
             var id = hash.substr(1)
 
@@ -569,7 +586,7 @@ $tab                    = 1;
                 'data': {
                     'method': 'POST',
                     'dataType': 'json',
-                    'url': ajaxurl,
+                    'url': XCLONER_AJAXURL,
                     'data': function (node) {
                         var data = {
                             'action': 'get_database_tables_action',
@@ -612,7 +629,7 @@ $tab                    = 1;
                 'data': {
                     'method': 'POST',
                     'dataType': 'json',
-                    'url': ajaxurl,
+                    'url': XCLONER_AJAXURL,
                     'data': function (node) {
                         var data = {
                             'action': 'get_file_system_action',

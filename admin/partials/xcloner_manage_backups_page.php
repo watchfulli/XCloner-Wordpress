@@ -202,3 +202,160 @@ $available_storages = $xcloner_remote_storage->get_available_storages();
             </div>
         </form>
     </div>
+
+<script>
+    jQuery(document).ready(function () {
+
+    xcloner_manage_backups.storage_selection = getUrlParam("storage_selection");
+
+    dataTable = jQuery("#manage_backups").DataTable({
+        responsive: true,
+        bFilter: true,
+        order: [[2, "desc"]],
+        buttons: ["selectAll", "selectNone"],
+        language: {
+        emptyTable: "No backups available",
+        buttons: {
+            selectAll: "Select all items",
+            selectNone: "Select none",
+        },
+        },
+        columnDefs: [{ targets: "no-sort", orderable: false }],
+        columns: [
+        { width: "1%" },
+        { width: "25%" },
+        { width: "5%" },
+        { width: "5%" },
+        { width: "9%" },
+        ],
+        oLanguage: {
+        sSearch: "",
+        sSearchPlaceholder: "Search Backups",
+        },
+        ajax: {
+        url:
+        XCLONER_AJAXURL +
+            "&action=get_manage_backups_list&storage_selection=" +
+            xcloner_manage_backups.storage_selection,
+        },
+        fnDrawCallback: function (oSettings) {
+        jQuery("a.expand-multipart").on("click", function () {
+            jQuery(this).parent().find("ul.multipart").toggle();
+            jQuery(this).parent().find("a.expand-multipart.remove").toggle();
+            jQuery(this).parent().find("a.expand-multipart.add").toggle();
+        });
+
+        jQuery(this)
+            .off("click", ".delete")
+            .on("click", ".delete", function (e) {
+            var hash = jQuery(this).attr("href");
+            var id = hash.substr(1);
+            var data = "";
+
+            if (show_delete_alert) {
+                if (confirm("Are you sure you want to delete it?")) {
+                xcloner_manage_backups.delete_backup_by_name(id, this, dataTable);
+                }
+            } else {
+                xcloner_manage_backups.delete_backup_by_name(id, this, dataTable);
+            }
+
+            e.preventDefault();
+            });
+
+        jQuery(this)
+            .off("click", ".download")
+            .on("click", ".download", function (e) {
+            var hash = jQuery(this).attr("href");
+            var id = hash.substr(1);
+            xcloner_manage_backups.download_backup_by_name(id);
+            e.preventDefault();
+            });
+
+        jQuery(this)
+            .off("click", ".cloud-upload")
+            .on("click", ".cloud-upload", function (e) {
+            var hash = jQuery(this).attr("href");
+            var id = hash.substr(1);
+            xcloner_manage_backups.cloud_upload(id);
+            e.preventDefault();
+            });
+
+        jQuery(this)
+            .off("click", ".copy-remote-to-local")
+            .on("click", ".copy-remote-to-local", function (e) {
+            var hash = jQuery(this).attr("href");
+            var id = hash.substr(1);
+            xcloner_manage_backups.copy_remote_to_local(id);
+            e.preventDefault();
+            });
+
+        jQuery(this)
+            .off("click", ".list-backup-content")
+            .on("click", ".list-backup-content", function (e) {
+            var hash = jQuery(this).attr("href");
+            var id = hash.substr(1);
+            xcloner_manage_backups.list_backup_content(id);
+            e.preventDefault();
+            });
+
+        jQuery(this)
+            .off("click", ".backup-encryption")
+            .on("click", ".backup-encryption", function (e) {
+            var hash = jQuery(this).attr("href");
+            var id = hash.substr(1);
+            xcloner_manage_backups.backup_encryption(id);
+            e.preventDefault();
+            });
+
+        jQuery(this)
+            .off("click", ".backup-decryption")
+            .on("click", ".backup-decryption", function (e) {
+            var hash = jQuery(this).attr("href");
+            var id = hash.substr(1);
+            xcloner_manage_backups.backup_decryption(id);
+            e.preventDefault();
+            });
+        },
+    });
+
+    jQuery("#select_all").click(function () {
+        jQuery("input:checkbox").prop("checked", this.checked);
+    });
+
+    jQuery(".delete-all").click(function () {
+        if (confirm("Are you sure you want to delete selected items?")) {
+        show_delete_alert = 0;
+        jQuery("input:checkbox").each(function () {
+            if (jQuery(this).is(":checked")) {
+            jQuery(this)
+                .parent()
+                .parent()
+                .parent()
+                .parent()
+                .find(".delete")
+                .trigger("click");
+            }
+        });
+        show_delete_alert = 1;
+        }
+    });
+
+    //jQuery("#remote_storage_modal").modal();
+    //jQuery("#local_storage_upload_modal").modal();
+
+    jQuery("#storage_selection").on("change", function () {
+        window.location =
+        window.location.href.split("&storage_selection")[0] +
+        "&storage_selection=" +
+        jQuery(this).val();
+    });
+
+    jQuery(".modal").on("hide", function () {
+        alert("ok");
+    });
+
+    var show_delete_alert = 1;
+    });
+
+</script>

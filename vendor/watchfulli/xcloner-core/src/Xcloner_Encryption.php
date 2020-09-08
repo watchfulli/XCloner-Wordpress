@@ -115,7 +115,11 @@ class Xcloner_Encryption
     public function encrypt_file($source, $dest = "", $key = "", $start = 0, $iv = 0, $verification = true, $recursive = false)
     {
         if (is_object($this->logger)) {
-            $this->logger->info(sprintf('Encrypting file %s at position %d IV %s', $source, $start, base64_encode($iv)));
+            if ($recursive && !$start) {
+                $this->logger->print_info(sprintf('Encrypting file %s at position %d IV %s', $source, $start, base64_encode($iv)));
+            }else{
+                $this->logger->info(sprintf('Encrypting file %s at position %d IV %s', $source, $start, base64_encode($iv)));
+            }
         }
 
         //$key = substr(sha1($key, true), 0, 16);
@@ -125,7 +129,7 @@ class Xcloner_Encryption
         $key_digest = openssl_digest($key, "md5", true);
 
         $keep_local = 1;
-        if (!$dest) {
+        if (!$dest || $dest == $this->get_encrypted_target_backup_file_name($source)) {
             $dest = $this->get_encrypted_target_backup_file_name($source);
             $keep_local = 0;
         }
@@ -174,7 +178,7 @@ class Xcloner_Encryption
                         //echo "\n NEW:".$key.md5($iv);
                         //self::encryptFile($source, $dest, $key, $start, $iv);
                         if ($recursive) {
-                            $this->encrypt_file($source, $dest, $key, $start, ($iv), $verification, $recursive);
+                            return $this->encrypt_file($source, $dest, $key, $start, ($iv), $verification, $recursive);
                         } else {
                             if (($iv) != base64_decode(base64_encode($iv))) {
                                 throw new \Exception('Could not encode IV for transport');
@@ -203,7 +207,7 @@ class Xcloner_Encryption
         }
 
         if ($verification) {
-            $this->verify_encrypted_file($dest);
+            $this->verify_encrypted_file($dest, $key);
         }
 
         //we replace the original backup with the encrypted one
@@ -221,14 +225,14 @@ class Xcloner_Encryption
     /**
      * @param string $file
      */
-    public function verify_encrypted_file($file)
+    public function verify_encrypted_file($file, $key = "")
     {
         if (is_object($this->logger)) {
-            $this->logger->info(sprintf('Verifying encrypted file %s', $file));
+            $this->logger->print_info(sprintf('Verifying encrypted file %s', $file));
         }
 
         $this->verification = true;
-        $this->decrypt_file($file);
+        $this->decrypt_file($file, $file, $key);
         $this->verification = false;
     }
 
@@ -247,7 +251,11 @@ class Xcloner_Encryption
     public function decrypt_file($source, $dest = "", $key = "", $start = 0, $iv = 0, $recursive = false)
     {
         if (is_object($this->logger)) {
-            $this->logger->info(sprintf('Decrypting file %s at position %d with IV %s', $source, $start, base64_encode($iv)));
+            if ($recursive && !$start) {
+                $this->logger->print_info(sprintf('Decrypting file %s at position %d with IV %s', $source, $start, base64_encode($iv)));
+            }else{
+                $this->logger->info(sprintf('Decrypting file %s at position %d with IV %s', $source, $start, base64_encode($iv)));
+            }
         }
 
         //$key = substr(sha1($key, true), 0, 16);

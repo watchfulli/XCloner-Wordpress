@@ -274,6 +274,14 @@ class Xcloner_Scheduler
         $return = array();
         $additional = array();
 
+        if(!isset($schedule['id'])) {
+            $schedule['id'] = 0;
+        }
+
+        if(!isset($schedule['name'])) {
+            $schedule['name'] = 'standalone';
+        }
+
         #$hash = $this->xcloner_settings->get_hash();
         #$this->get_xcloner_container()->get_xcloner_settings()->set_hash($hash);
 

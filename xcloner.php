@@ -15,7 +15,7 @@
  * Plugin Name:       XCloner - Site Backup and Restore
  * Plugin URI:        https://xcloner.com/
  * Description:       XCloner is a tool that will help you manage your website backups, generate/restore/move so your website will be always secured! With XCloner you will be able to clone your site to any other location with just a few clicks, as well as transfer the backup archives to remote FTP, SFTP, DropBox, Amazon S3, Google Drive, WebDAV, Backblaze, Azure accounts.
- * Version:           4.2.13
+ * Version:           4.2.15
  * Author:            watchful
  * Author URI:        https://watchful.net/
  * License:           GPL-2.0+
@@ -64,14 +64,26 @@ require_once(__DIR__.'/vendor/autoload.php');
 function do_cli_execution($args = array(), $opts = array())
 {
     if (!sizeof($opts)) {
-        $opts = getopt('v::p:h::', array('verbose::','profile:','help:'));
+        $opts = getopt('v::p:h::q::e:d:k:', array('verbose::','profile:','help::', 'quiet::', 'encrypt:', 'decrypt:', 'key:'));
+    }
+
+    if (!sizeof($opts)) {
+        $opts['h'] = true;
     }
 
     if (isset($opts['h']) || isset($opts['help'])) {
-        echo sprintf("-h                Display help\n");
-        echo sprintf("-p <profile name> Specify the backup profile name or ID\n");
-        echo sprintf("-v                Verbose output\n");
+        echo sprintf("-h                        Display help\n");
+        echo sprintf("-p <profile name>         Specify the backup profile name or ID\n");
+        echo sprintf("-e <backup name>          Encrypt backup file\n");
+        echo sprintf("-d <backup name>          Decrypt backup file\n");
+        echo sprintf("-k <encryption key>       Encryption/Decryption Key\n");
+        echo sprintf("-v                        Verbose output\n");
+        echo sprintf("-q                        Disable output\n");
         return;
+    }
+
+    if (isset($opts['q']) || isset($opts['quiet'])) {
+        define('XCLONER_DISABLE_OUTPUT', true);
     }
 
     if (isset($opts['v']) || isset($opts['verbose'])) {
@@ -85,12 +97,12 @@ function do_cli_execution($args = array(), $opts = array())
     if (file_exists(__DIR__ . "/../../../wp-load.php")) {
         require_once(__DIR__ .'/../../../wp-load.php');
     }
-  
+
     $profile = [
     'id' => 0
     ];
 
-    $profile_name = "undefined";
+    $profile_name = "";
 
     if (isset($opts['p']) && $opts['p']) {
         $profile_name = $opts['p'];
@@ -101,14 +113,37 @@ function do_cli_execution($args = array(), $opts = array())
     //pass json config to Xcloner_Standalone lib
     $xcloner_backup = new watchfulli\XClonerCore\Xcloner_Standalone();
 
-    if (isset($profile_name) && $profile_name) {
-        $profile = ($xcloner_backup->get_xcloner_scheduler()->get_schedule_by_id_or_name($profile_name));
+    $encryption_key = "";
+    if (isset($opts['k']) || isset($opts['key'])) {
+        $encryption_key = $opts['key'].$opts['k'];
     }
 
-    if ($profile['id']) {
-        $xcloner_backup->start($profile['id']);
-    } else {
-        die("Could not find profile ". $profile_name."\n");
+    if (isset($opts['e']) || isset($opts['encrypt'])) {
+        $backup_name = $opts['encrypt'].$opts['e'];
+        if (!$xcloner_backup->get_xcloner_encryption()->is_encrypted_file($backup_name)) {
+            $xcloner_backup->get_xcloner_encryption()->encrypt_file($backup_name, "", $encryption_key, 0, 0 , true, true);
+        } else {
+            die(sprintf('File %s is already encrypted\n', $backup_name));
+        }
+    }
+
+    if (isset($opts['d']) || isset($opts['decrypt'])) {
+        $backup_name = $opts['decrypt'].$opts['d'];
+        if ($xcloner_backup->get_xcloner_encryption()->is_encrypted_file($backup_name)) {
+            $xcloner_backup->get_xcloner_encryption()->decrypt_file($backup_name, "", $encryption_key, 0, 0, true);
+        } else {
+            die(sprintf('File %s is already decrypted\n', $backup_name));
+        }
+    }
+
+    if (isset($profile_name) && $profile_name) {
+        $profile = ($xcloner_backup->get_xcloner_scheduler()->get_schedule_by_id_or_name($profile_name));
+
+        if ($profile['id']) {
+            $xcloner_backup->start($profile['id']);
+        } else {
+            die(sprintf('Could not find profile %s', $profile_name));
+        }
     }
 
     return;
@@ -127,12 +162,24 @@ if (php_sapi_name() == "cli") {
     /**
      * XCloner Generate backup based on supplied profile Name or ID
      *
-     * --profile=<profile>
+     * [--profile=<profile>]
      * : backup profile name or id
      * 
+     * [--encrypt=<backup_name>]
+     * : encrypt backup archive
+     * 
+     * [--decrypt=<backup_name>]
+     * : decrypt backup archive
+     * 
+     * [--key=<encryption_key>]
+     * : custom encryption/decryption key
+     *
      * @when before_wp_load
      */
     function ($args, $assoc_args) {
+        if (WP_CLI::get_config('quiet')) {
+            $assoc_args['quiet'] = true;
+        }
         return do_cli_execution($args, $assoc_args);
     }
         );
@@ -228,8 +275,6 @@ function run_xcloner()
     $plugin->init();
     $plugin->extra_define_ajax_hooks();
     $plugin->run();
-
-    
 
     return $plugin;
 }

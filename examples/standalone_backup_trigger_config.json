@@ -47,7 +47,8 @@
   },
   "excluded_files": [
     "wp-content",
-    "wp-includes"
+    "wp-includes",
+    "tmp"
   ]
 }}
 ]

@@ -13,6 +13,7 @@ use watchfulli\XClonerCore\Xcloner_Requirements;
 use watchfulli\XClonerCore\Xcloner_Logger;
 use watchfulli\XClonerCore\Xcloner_Archive;
 use watchfulli\XClonerCore\Xcloner_Api;
+
 /**
  * XCloner - Backup and Restore backup plugin for Wordpress
  *
@@ -115,7 +116,7 @@ class Xcloner extends watchfulli\XClonerCore\Xcloner
         $this->log_php_errors();
 
         $this->plugin_name = 'xcloner';
-        $this->version = '4.2.13';
+        $this->version = '4.2.14';
 
         $this->load_dependencies();
         $this->set_locale();
@@ -129,7 +130,8 @@ class Xcloner extends watchfulli\XClonerCore\Xcloner
         $this->define_cron_hooks();
     }
 
-    public function log_php_errors(){
+    public function log_php_errors()
+    {
         register_shutdown_function(array($this, 'exception_handler'));
     }
 
@@ -178,22 +180,22 @@ class Xcloner extends watchfulli\XClonerCore\Xcloner
             if (!@mkdir($backup_storage_path)) {
                 $status = "error";
                 $message = sprintf(
-                        __("Unable to create the Backup Storage Location Folder %s . Please fix this before starting the backup process."),
-                        $backup_storage_path
-                    );
+                    __("Unable to create the Backup Storage Location Folder %s . This will automatically be fixed using a default path."),
+                    $backup_storage_path
+                );
                 $this->trigger_message($message, $status, $backup_storage_path);
+                update_option("xcloner_store_path", "");
                 return;
             }
         }
-            
         if (!is_writable($backup_storage_path)) {
             $status = "error";
             $message = sprintf(
-                    __("Unable to write to the Backup Storage Location Folder %s . Please fix this before starting the backup process."),
-                    $backup_storage_path
-                );
+                __("Unable to write to the Backup Storage Location Folder %s . This will automatically be fixed using a default path."),
+                $backup_storage_path
+            );
             $this->trigger_message($message, $status, $backup_storage_path);
-
+            update_option("xcloner_store_path", "");
             return;
         }
 
@@ -203,7 +205,7 @@ class Xcloner extends watchfulli\XClonerCore\Xcloner
     }
 
     public function trigger_message($message, $status = "error", $message_param1 = "", $message_param2 = "", $message_param3 = "")
-    {        
+    {
         $message = sprintf(__($message), $message_param1, $message_param2, $message_param3);
         add_action('xcloner_admin_notices', array($this, "trigger_message_notice"), 10, 2);
         do_action('xcloner_admin_notices', $message, $status);
@@ -239,8 +241,7 @@ class Xcloner extends watchfulli\XClonerCore\Xcloner
      * @access   private
      */
     public function load_dependencies()
-    {   
-
+    {
         $this->loader = new Xcloner_Loader($this);
 
         return;
@@ -281,6 +282,25 @@ class Xcloner extends watchfulli\XClonerCore\Xcloner
         $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts');
 
         $this->loader->add_action('backup_archive_finished', $this, 'do_action_after_backup_finished', 10, 2);
+
+        //xcloner nonce
+        $this->loader->add_action('admin_head', $this, 'xcloner_header_nonce', 0);
+    }
+
+    public function xcloner_header_nonce()
+    {
+        ?>
+        <script type='text/javascript'>
+        <?php
+        if (function_exists('wp_create_nonce')) {
+            echo "const XCLONER_WPNONCE = '".wp_create_nonce('xcloner-api-nonce')."';";
+        }else{
+            echo "const XCLONER_WPNONCE = null;";
+        } ?>
+
+        const XCLONER_AJAXURL = ajaxurl+"?_wpnonce="+XCLONER_WPNONCE;
+        </script>
+        <?php
     }
 
     /**
@@ -300,6 +320,11 @@ class Xcloner extends watchfulli\XClonerCore\Xcloner
          * register wporg_settings_init to the admin_init action hook
          */
         $this->xcloner_settings = new Xcloner_Settings($this);
+
+        if (isset($_POST['xcloner_restore_defaults']) && $_POST['xcloner_restore_defaults']) {
+            update_option('xcloner_restore_defaults', 0);
+            $this->xcloner_settings->restore_defaults();
+        }
 
         if (defined('DOING_CRON') || isset($_POST['hash'])) {
             if (defined('DOING_CRON') || $_POST['hash'] == "generate_hash") {
@@ -514,7 +539,7 @@ class Xcloner extends watchfulli\XClonerCore\Xcloner
             $this->loader->add_action('wp_ajax_backup_decryption', $xcloner_api, 'backup_decryption');
             $this->loader->add_action('wp_ajax_get_manage_backups_list', $xcloner_api, 'get_manage_backups_list');
             $this->loader->add_action('admin_notices', $this, 'xcloner_error_admin_notices');
-            $this->loader->add_action('admin_init',$this, 'onedrive_auth_token');
+            $this->loader->add_action('admin_init', $this, 'onedrive_auth_token');
         }
 
         //Do a pre-update backup of targeted files
@@ -528,12 +553,12 @@ class Xcloner extends watchfulli\XClonerCore\Xcloner
      *
      * @return void
      */
-    public function onedrive_auth_token(){
-
+    public function onedrive_auth_token()
+    {
         $onedrive_expire_in  = get_option('xcloner_onedrive_expires_in');
         $onedrive_refresh_token = get_option('xcloner_onedrive_refresh_token');
 
-        if($onedrive_refresh_token && time()> $onedrive_expire_in)  {
+        if ($onedrive_refresh_token && time()> $onedrive_expire_in) {
             $parameters = array(
                 'client_id' => get_option("xcloner_onedrive_client_id"),
                 'client_secret' => get_option("xcloner_onedrive_client_secret"),
@@ -585,6 +610,7 @@ class Xcloner extends watchfulli\XClonerCore\Xcloner
         if ($file == plugin_basename(dirname(dirname(__FILE__)).'/xcloner.php')) {
             $links[] = '<a href="admin.php?page=xcloner_settings_page">'.__('Settings', 'xcloner-backup-and-restore').'</a>';
             $links[] = '<a href="admin.php?page=xcloner_generate_backups_page">'.__('Generate Backup', 'xcloner-backup-and-restore').'</a>';
+            //$links[] = '<a href="admin.php?page=xcloner_restore_defaults">'.__('Restore Defaults', 'xcloner-backup-and-restore').'</a>';
         }
 
         return $links;
