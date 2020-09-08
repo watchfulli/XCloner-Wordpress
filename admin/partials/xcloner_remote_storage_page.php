@@ -497,10 +497,10 @@ $common_cleanup_html = ob_get_contents();
                             </div>
                             <div class="row">
                                 <div class="col s12 m3 label">
-                                    <label for="aws_region"><?php echo __("S3 Availability Zone ", 'xcloner-backup-and-restore') ?></label>
+                                    <label for="aws_region"><?php echo __("S3 Custom Region", 'xcloner-backup-and-restore') ?></label>
                                 </div>
                                 <div class=" col s12 m6">
-                                    <input placeholder="<?php echo __("S3 Custom Availability Zone, ex: af-south-1", 'xcloner-backup-and-restore') ?>"
+                                    <input placeholder="<?php echo __("S3 Custom Region, ex: af-south-1", 'xcloner-backup-and-restore') ?>"
                                         id="aws_region" type="text" name="xcloner_aws_region" class="validate"
                                         value="<?php echo get_option("xcloner_aws_region") ?>" autocomplete="off">
                                 </div>
