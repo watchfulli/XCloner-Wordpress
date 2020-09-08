@@ -55,7 +55,7 @@ XCloner has a variety of restoration options including: All Files, Only Plugins 
 
 UPGRADE:
 
-XLCloner can be updated from the plugins list in the WordPress backend.
+XCloner can be updated from the plugins list in the WordPress backend.
 
 == Frequently Asked Questions ==
 
@@ -115,6 +115,20 @@ Of course, schedules can be adjusted accordingly to how often you update your si
 11. Generate Backup Screen
 
 == Changelog ==
+
+= 4.2.15 =
+
+* frontend popup display conflict fix
+* design changes
+* remote storage direct download option addon
+* replace modal from generate backup screen with a new follow up tab
+* S3 uplaod fix
+* WP-CLI --quiet flag addon, --encrypt/--decrypt addon
+* CSRF nonces implementation API
+
+= 4.2.14 = 
+
+* CSRF restore vulnerability fix
 
 = 4.2.13 =
 
