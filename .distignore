@@ -1,4 +1,8 @@
 docs/
 package.json
 .distignore
+.gitignore
+
 node_modules/
+.github/
+.git/
