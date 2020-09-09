@@ -8,7 +8,8 @@
     "lib": "lib"
   },
   "scripts": {
-    "build": "webpack --config webpack.prod.js",
+    "build": "echo \"Error: no build specified\"",
+    "build-prod": "webpack --config webpack.prod.js",
     "start": "webpack --config webpack.dev.js --watch --info-verbosity verbose",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
