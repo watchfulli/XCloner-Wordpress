@@ -1,4 +1,10 @@
-docs/
-package.json
-.distignore
+/docs
+node_modules/
+.github/
+.git/
 
+package.json
+package-lock.json
+
+.distignore
+.gitignore
