@@ -245,7 +245,7 @@ class Xcloner_Admin {
 		}
 
 		?>
-        <h1><?= esc_html(get_admin_page_title()); ?></h1>
+        <?php include_once(__DIR__ . "/partials/xcloner_header.php")?>
 
         <ul class="nav-tab-wrapper row">
             <li><a href="?page=xcloner_settings_page&tab=general_options"

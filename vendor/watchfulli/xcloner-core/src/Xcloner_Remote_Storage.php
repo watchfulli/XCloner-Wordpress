@@ -643,11 +643,7 @@ class Xcloner_Remote_Storage
         if ($this->xcloner_settings->get_xcloner_option('xcloner_aws_endpoint')  
         /*&& !$this->xcloner_settings->get_xcloner_option("xcloner_aws_region")*/) {
             $credentials['endpoint'] = $this->xcloner_settings->get_xcloner_option('xcloner_aws_endpoint');
-            #$credentials['use_path_style_endpoint'] = true;
-            #$credentials['bucket_endpoint'] = false;
         }
-        //echo $this->xcloner_settings->get_xcloner_option('xcloner_aws_endpoint');
-        //print_r($credentials);exit;
         $client = new S3Client($credentials);
 
         $adapter = new AwsS3Adapter($client, $this->xcloner_settings->get_xcloner_option("xcloner_aws_bucket_name"), $this->xcloner_settings->get_xcloner_option("xcloner_aws_prefix"));
@@ -665,7 +661,6 @@ class Xcloner_Remote_Storage
         if (version_compare(phpversion(), '7.1.0', '<')) {
             throw new \Exception("BACKBLAZE API requires PHP 7.1 to be installed!");
         }
-
 
         $client = new B2Client(
             $this->xcloner_settings->get_xcloner_option("xcloner_backblaze_account_id"),

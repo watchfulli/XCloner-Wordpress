@@ -680,7 +680,7 @@ class Xcloner extends watchfulli\XClonerCore\Xcloner
         if (function_exists('add_submenu_page')) {
             add_submenu_page(
                 'xcloner_init_page',
-                __('XCloner Dashboard', 'xcloner-backup-and-restore'),
+                __('Dashboard', 'xcloner-backup-and-restore'),
                 __('Dashboard', 'xcloner-backup-and-restore'),
                 'manage_options',
                 'xcloner_init_page',
@@ -688,7 +688,7 @@ class Xcloner extends watchfulli\XClonerCore\Xcloner
             );
             add_submenu_page(
                 'xcloner_init_page',
-                __('XCloner Backup Settings', 'xcloner-backup-and-restore'),
+                __('Backup Settings', 'xcloner-backup-and-restore'),
                 __('Settings', 'xcloner-backup-and-restore'),
                 'manage_options',
                 'xcloner_settings_page',
@@ -696,7 +696,7 @@ class Xcloner extends watchfulli\XClonerCore\Xcloner
             );
             add_submenu_page(
                 'xcloner_init_page',
-                __('Storage Locations Settings', 'xcloner-backup-and-restore'),
+                __('Storage Locations', 'xcloner-backup-and-restore'),
                 __('Storage Locations', 'xcloner-backup-and-restore'),
                 'manage_options',
                 'xcloner_remote_storage_page',

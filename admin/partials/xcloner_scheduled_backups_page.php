@@ -15,9 +15,10 @@ $available_storages     = $xcloner_remote_storage->get_available_storages();
     </div>
 <?php endif ?>
 
-<h1><?= esc_html(get_admin_page_title()); ?></h1>
-
 <div class="row">
+    <div class="col s12 m6 l9">
+        <?php include_once(__DIR__ . "/xcloner_header.php")?>
+    </div>
     <table id="scheduled_backups" class="col s12" cellspacing="0" width="100%">
         <thead>
         <tr class="grey lighten-2">

@@ -15,7 +15,7 @@ function common_cleanup_html($type)
 {
     if ($type == "local") {
         $type = "";
-    }else{
+    } else {
         $type .= "_";
     }
     ob_start(); ?>
@@ -76,14 +76,15 @@ $common_cleanup_html = ob_get_contents();
     return str_replace("{type}", $type, $common_cleanup_html);
 }
 
-?>                        
-<h1><?= esc_html(get_admin_page_title()); ?></h1>
-
+?>              
 <form class="remote-storage-form" method="POST">
 
     <input type="hidden" id="connection_check" name="connection_check" value="">
 
     <div class="row remote-storage">
+        <div class="col s12 m6 l9">
+            <?php include_once(__DIR__ . "/xcloner_header.php")?>
+        </div>
         <div class="col s12 m12 l10">
             <ul class="collapsible popout" data-collapsible="accordion">
 

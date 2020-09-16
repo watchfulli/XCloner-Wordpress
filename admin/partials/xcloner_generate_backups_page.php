@@ -6,9 +6,7 @@ $xcloner_scheduler      = $this->get_xcloner_container()->get_xcloner_scheduler(
 $tab                    = 1;
 ?>
 
-<script>//var xcloner_backup = new Xcloner_Backup();</script>
-
-<h1><?= esc_html(get_admin_page_title()); ?></h1>
+<?php include_once(__DIR__ . "/xcloner_header.php")?>
 
 <ul class="nav-tab-wrapper content row">
     <li><a href="#backup_options"
@@ -34,6 +32,14 @@ $tab                    = 1;
     <div class="nav-tab-wrapper-content">
         <!-- Backup Options Content Tab-->
         <div id="backup_options" class="tab-content active">
+            
+            <div class="row">
+                <div class="input-field col s12 m10 l6 left-align">
+                    <a class="waves-effect waves-light btn" onclick="next_tab('#database_options');"><i
+                                class="material-icons right">skip_next</i>Next</a>
+                </div>
+            </div>
+
             <div class="row">
                 <div class="input-field inline col s12 m10 l6">
                     <i class="material-icons prefix">input</i>
@@ -158,16 +164,18 @@ $tab                    = 1;
                 </div>
 			<?php endif ?>
 
-            <div class="row">
-                <div class="input-field col s12 m10 l6 right-align">
-                    <a class="waves-effect waves-light btn" onclick="next_tab('#database_options');"><i
-                                class="material-icons right">skip_next</i>Next</a>
-                </div>
-            </div>
+            
         </div>
 
 		<?php if ($xcloner_settings->get_enable_mysql_backup()): ?>
             <div id="database_options" class="tab-content">
+                <div class="row">
+                    <div class="input-field col s12 m10 l6 left-align">
+                        <a class="waves-effect waves-light btn" onclick="next_tab('#files_options');"><i
+                                    class="material-icons right">skip_next</i>Next</a>
+                    </div>
+                </div>
+
                 <h2><?php echo __('Select database data to include in the backup', 'xcloner-backup-and-restore') ?>:
                     <a class="btn-floating tooltipped btn-small" data-position="right" data-delay="50"
                        data-tooltip="<?php echo __('Enable the \'Backup only WP tables\' setting if you don\'t want to show all other databases and tables not related to this Wordpress install', 'xcloner-backup-and-restore'); ?>"
@@ -181,17 +189,17 @@ $tab                    = 1;
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="input-field col s12 m10 l6 right-align">
-                        <a class="waves-effect waves-light btn" onclick="next_tab('#files_options');"><i
-                                    class="material-icons right">skip_next</i>Next</a>
-                    </div>
-                </div>
-
             </div>
 		<?php endif ?>
 
         <div id="files_options" class="tab-content">
+            <div class="row">
+                <div class="input-field col s12 m10 l6 left-align">
+                    <a class="waves-effect waves-light btn" onclick="next_tab('#generate_backup');"><i
+                                class="material-icons right">skip_next</i>Next</a>
+                </div>
+            </div>
+
             <h2><?php echo __('Select from below the files/folders you want to exclude from your Backup Archive', 'xcloner-backup-and-restore') ?>
                 :
                 <a class="btn-floating tooltipped btn-small" data-position="bottom" data-delay="50" data-html="true"
@@ -206,17 +214,10 @@ $tab                    = 1;
                 </div>
             </div>
 
-            <div class="row">
-                <div class="input-field col s12 m10 l6 right-align">
-                    <a class="waves-effect waves-light btn" onclick="next_tab('#generate_backup');"><i
-                                class="material-icons right">skip_next</i>Next</a>
-                </div>
-            </div>
-
         </div>
         <div id="generate_backup" class="tab-content">
             <div class="row ">
-                <div class="col s12 l10 center action-buttons">
+                <div class="col s12 l10 action-buttons">
                     <a class="waves-effect waves-light btn-large teal darken-1 start"
                        onclick="xcloner_backup.start_backup()">Start Backup<i
                                 class="material-icons left">forward</i></a>
@@ -406,14 +407,14 @@ $tab                    = 1;
                         <option value="" disabled
                                 selected><?php echo __('please select', 'xcloner-backup-and-restore') ?></option>
 						<?php
-						$schedules = $xcloner_scheduler->get_available_intervals();
+                        $schedules = $xcloner_scheduler->get_available_intervals();
 
-						foreach ($schedules as $key => $schedule) {
-							?>
+                        foreach ($schedules as $key => $schedule) {
+                            ?>
                             <option value="<?php echo $key ?>"><?php echo $schedule['display'] ?></option>
 							<?php
-						}
-						?>
+                        }
+                        ?>
                     </select>
                     <label><?php echo __('Schedule Frequency', 'xcloner-backup-and-restore') ?></label>
                 </div>

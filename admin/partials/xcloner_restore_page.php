@@ -8,16 +8,18 @@ $xcloner_file_transfer = $this->get_xcloner_container()->get_xcloner_file_transf
 $start = 0;
 
 $backup_list = $xcloner_file_system->get_latest_backups();
-
 ?>
-
-<h1><?= esc_html(get_admin_page_title()); ?></h1>
 
 <script>
     let xcloner_auth_key = '<?php echo md5(AUTH_KEY)?>';
 </script>
 
 <div class="row xcloner-restore">
+
+    <div class="col s12 m6 l9">
+        <?php include_once(__DIR__ . "/xcloner_header.php")?>
+    </div>
+    
     <div class="col s12">
         <ul class="collapsible xcloner-restore collapsible-accordion" data-collapsible="accordion">
             <li data-step="1" class="restore-script-upload-step steps active show">

@@ -31,13 +31,7 @@ if ($requirements->check_backup_ready_status()) {
 }
 ?>
 
-<div class="row">
-    <div class="col s12">
-        <h5 class="left-align">
-			<?php echo __('Backup Dashboard', 'xcloner-backup-and-restore') ?>
-        </h5>
-    </div>
-</div>
+<?php include_once( __DIR__ . "/xcloner_header.php")?>
 
 <?php if (isset($latest_backup['timestamp']) and $latest_backup['timestamp'] < strtotime("-1 day")): ?>
     <div id="setting-error-" class="error settings-error notice is-dismissible">
@@ -78,7 +72,7 @@ if ($requirements->check_backup_ready_status()) {
 <div class="row dashboard">
     <div class="col s12 m12 l7">
 
-        <div class="row">
+        <div class="">
 
             <ul class="collapsible xcloner-debugger" data-collapsible="accordion">
 
@@ -176,7 +170,7 @@ if ($requirements->check_backup_ready_status()) {
                         </div>
                         <div class="collapsible-body">
                             <div class="console" id="xcloner-console"><?php if ($logger_content) {
-									echo implode("<br />\n", array_reverse($logger_content));
+									echo strip_tags(implode("<br />\n", array_reverse($logger_content)), "<br><a>");
 								} ?></div>
                         </div>
                     </li>

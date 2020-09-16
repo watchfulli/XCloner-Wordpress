@@ -443,6 +443,26 @@ i.backup_warning {
     max-width: initial;
 }
 
+.xcloner-menu.dropdown-trigger i.material-icons{
+    vertical-align: middle;
+}
+
+.xcloner-menu.dropdown-content {
+    min-width: 250px;
+}
+
+h1.xcloner-menu {
+    margin: 1.68rem 0 1.68rem 0;
+}
+
+.row.remote-storage .collapsible.popout>li {
+    margin: 0px;
+}
+
+.row .col {
+    padding-left: 0px;
+}
+
 @media only screen and (min-width: 993px) {
     .dashboard .backup-ready {
         float: right;

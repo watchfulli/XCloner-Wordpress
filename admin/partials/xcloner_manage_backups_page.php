@@ -22,7 +22,7 @@ $available_storages = $xcloner_remote_storage->get_available_storages();
 
 <div class="row">
     <div class="col s12 m6 l9">
-        <h1><?= esc_html(get_admin_page_title()); ?></h1>
+        <?php include_once(__DIR__ . "/xcloner_header.php")?>
     </div>
     <?php if (sizeof($available_storages)): ?>
     <div class="input-field  col s12 m6 l3 remote-storage-selection">
