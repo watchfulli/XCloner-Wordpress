@@ -64,7 +64,7 @@ require_once(__DIR__.'/vendor/autoload.php');
 function do_cli_execution($args = array(), $opts = array())
 {
     if (!sizeof($opts)) {
-        $opts = getopt('v::p:h::q::e:d:k:', array('verbose::','profile:','help::', 'quiet::', 'encrypt:', 'decrypt:', 'key:'));
+        $opts = getopt('v::p:h::q::e:d:k:l:', array('verbose::','profile:','help::', 'quiet::', 'encrypt:', 'decrypt:', 'key:', 'list:'));
     }
 
     if (!sizeof($opts)) {
@@ -77,6 +77,7 @@ function do_cli_execution($args = array(), $opts = array())
         echo sprintf("-e <backup name>          Encrypt backup file\n");
         echo sprintf("-d <backup name>          Decrypt backup file\n");
         echo sprintf("-k <encryption key>       Encryption/Decryption Key\n");
+        echo sprintf("-l <backup name>          List files inside backup\n");
         echo sprintf("-v                        Verbose output\n");
         echo sprintf("-q                        Disable output\n");
         return;
@@ -104,29 +105,76 @@ function do_cli_execution($args = array(), $opts = array())
 
     $profile_name = "";
 
+    // --profile|p profile name
     if (isset($opts['p']) && $opts['p']) {
         $profile_name = $opts['p'];
     } elseif (isset($opts['profile']) && $opts['profile']) {
         $profile_name = $opts['profile'];
     }
 
-    //pass json config to Xcloner_Standalone lib
-    $xcloner_backup = new watchfulli\XClonerCore\Xcloner_Standalone();
+    // --list|l list backup archive
+    if (isset($opts['l']) || isset($opts['list'])) {
+        $backup_file_path= $opts['list'].$opts['l'];
 
+        // function to list backup content recursively
+        $list_backup_archive_contents = function ($backup_name, $start=0)
+        {
+            $xcloner_backup = new watchfulli\XClonerCore\Xcloner_Standalone();
+            $xcloner_settings = $xcloner_backup->get_xcloner_settings();
+            $xcloner_file_system = $xcloner_backup->get_xcloner_filesystem();
+            
+            if( $xcloner_backup->get_xcloner_encryption()->is_encrypted_file($backup_name) ) {
+                die(sprintf("%s file is encrypted, please decrypt it first! \n", $backup_name));
+            }
+
+            $tar = $xcloner_backup->get_archive_system();
+
+            $backup_parts = [$backup_name];
+
+            if ($xcloner_file_system->is_multipart($backup_name)) {
+                $backup_parts = $xcloner_file_system->get_multipart_files($backup_name);
+            }
+            
+            foreach ($backup_parts as $backup_name) {
+                if ( !$start) {
+                    echo sprintf("Processing %s \n", $backup_name);
+                }
+                $tar->open($xcloner_settings->get_xcloner_store_path().DS.$backup_name, $start);
+
+                $data = $tar->contents($xcloner_settings->get_xcloner_option('xcloner_files_to_process_per_request')) ;
+
+                foreach ($data['extracted_files'] as $key=>$file) {
+                    echo sprintf("%s (%s) \n", $file->getPath(), size_format($file->getSize()));
+                }
+
+                if (isset($data['start'])) {
+                    call_user_func(__FUNCTION__, $backup_name, $data['start']);
+                }
+            }
+        };
+
+        $list_backup_archive_contents($backup_file_path);
+        
+        exit;
+    }
+
+    // --key|k encryption key
     $encryption_key = "";
     if (isset($opts['k']) || isset($opts['key'])) {
         $encryption_key = $opts['key'].$opts['k'];
     }
 
+    // --encrypt|e encrypt backup archive
     if (isset($opts['e']) || isset($opts['encrypt'])) {
         $backup_name = $opts['encrypt'].$opts['e'];
         if (!$xcloner_backup->get_xcloner_encryption()->is_encrypted_file($backup_name)) {
-            $xcloner_backup->get_xcloner_encryption()->encrypt_file($backup_name, "", $encryption_key, 0, 0 , true, true);
+            $xcloner_backup->get_xcloner_encryption()->encrypt_file($backup_name, "", $encryption_key, 0, 0, true, true);
         } else {
             die(sprintf('File %s is already encrypted\n', $backup_name));
         }
     }
 
+    // --decrypt|d decrypt backup archive
     if (isset($opts['d']) || isset($opts['decrypt'])) {
         $backup_name = $opts['decrypt'].$opts['d'];
         if ($xcloner_backup->get_xcloner_encryption()->is_encrypted_file($backup_name)) {
@@ -136,6 +184,7 @@ function do_cli_execution($args = array(), $opts = array())
         }
     }
 
+    // start schedule based on profile name
     if (isset($profile_name) && $profile_name) {
         $profile = ($xcloner_backup->get_xcloner_scheduler()->get_schedule_by_id_or_name($profile_name));
 
@@ -164,15 +213,18 @@ if (php_sapi_name() == "cli") {
      *
      * [--profile=<profile>]
      * : backup profile name or id
-     * 
+     *
      * [--encrypt=<backup_name>]
      * : encrypt backup archive
-     * 
+     *
      * [--decrypt=<backup_name>]
      * : decrypt backup archive
-     * 
+     *
      * [--key=<encryption_key>]
      * : custom encryption/decryption key
+     * 
+     * [--list=<backup_name>]
+     * : list backup archive contents
      *
      * @when before_wp_load
      */

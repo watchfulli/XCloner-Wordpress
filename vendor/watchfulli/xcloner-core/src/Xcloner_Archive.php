@@ -31,6 +31,7 @@ namespace watchfulli\XClonerCore;
 use splitbrain\PHPArchive\Tar;
 use splitbrain\PHPArchive\Archive;
 use splitbrain\PHPArchive\FileInfo;
+use splitbrain\PHPArchive\ArchiveIOException;
 
 /**
  * Class responsible for adding files to Tar
