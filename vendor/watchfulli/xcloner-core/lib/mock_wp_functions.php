@@ -75,6 +75,13 @@ if (!function_exists('get_site_url')) {
     }
 }
 
+if (!function_exists('get_home_url')) {
+    function get_home_url()
+    {
+        return __DIR__;
+    }
+}
+
 if (!function_exists('admin_url')) {
     function admin_url()
     {
