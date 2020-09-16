@@ -313,7 +313,7 @@ class Xcloner_Archive extends Tar
         $body .= "<br />";
 
         $body .= sprintf(__("Backup Site Url: %s"), get_site_url());
-        echo $body .= "<br />";exit;
+        $body .= "<br />";
 
         if (isset($params['backup_params']->backup_comments)) {
             $body .= __("Backup Comments: ").$params['backup_params']->backup_comments;
