@@ -1,5 +1,5 @@
 
-  <img src="<?=plugin_dir_url((__DIR__))?>/images/xcloner-logo.svg" class="xcloner-logo" />
+  <img src="<?=plugin_dir_url((__DIR__))?>/images/xcloner-logo.svg" class="xcloner-logo" alt="XCloner backup and restore plugin" />
   <!-- Dropdown Trigger -->
   <h1 class='xcloner-menu dropdown-trigger btn' href='#' data-target='dropdown1'>
     <?= esc_html(get_admin_page_title()); ?><i class="material-icons">expand_more</i>

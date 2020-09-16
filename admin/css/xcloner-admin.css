@@ -458,7 +458,7 @@ h1.xcloner-menu {
 
 .xcloner-logo {
     max-height: 75px;
-    max-width: 300px;
+    max-width: 225px;
     float: right;
 }
 
@@ -466,8 +466,12 @@ h1.xcloner-menu {
     margin: 0px;
 }
 
-.row.remote-storage > .col {
-    padding-left: 0px;
+#generate_backup_form .nav-tab-wrapper-content {
+    margin-top: 15px;
+}
+
+.row .nav-tab-wrapper{
+    border-bottom: 0px;
 }
 
 @media only screen and (min-width: 993px) {

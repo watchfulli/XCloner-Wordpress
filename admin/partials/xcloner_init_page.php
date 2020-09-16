@@ -31,41 +31,47 @@ if ($requirements->check_backup_ready_status()) {
 }
 ?>
 
-<?php include_once( __DIR__ . "/xcloner_header.php")?>
-
-<?php if (isset($latest_backup['timestamp']) and $latest_backup['timestamp'] < strtotime("-1 day")): ?>
-    <div id="setting-error-" class="error settings-error notice is-dismissible">
-        <p><strong>
-				<?php echo __('Your latest backup is older than 24 hours, please create a new backup to keep your site protected.', 'xcloner-backup-and-restore') ?>
-            </strong>
-        </p>
-        <button type="button" class="notice-dismiss"><span class="screen-reader-text">Dismiss this notice.</span>
-        </button>
+<div class="row">
+    <div class="col s12">
+        <?php include_once( __DIR__ . "/xcloner_header.php")?>
     </div>
-<?php endif ?>
+    <div class="col s12">
+        <?php if (isset($latest_backup['timestamp']) and $latest_backup['timestamp'] < strtotime("-1 day")): ?>
+            <div id="setting-error-" class="error settings-error notice is-dismissible">
+                <p><strong>
+                        <?php echo __('Your latest backup is older than 24 hours, please create a new backup to keep your site protected.', 'xcloner-backup-and-restore') ?>
+                    </strong>
+                </p>
+                <button type="button" class="notice-dismiss"><span class="screen-reader-text">Dismiss this notice.</span>
+                </button>
+            </div>
+        <?php endif ?>
 
-<?php if (!isset($latest_backup['timestamp'])): ?>
-    <div id="setting-error-" class="error settings-error notice is-dismissible">
-        <p><strong>
-				<?php echo __('You have no backup that I could find, please generate a new backup to keep your site protected.', 'xcloner-backup-and-restore') ?>
-            </strong>
-        </p>
-        <button type="button" class="notice-dismiss"><span class="screen-reader-text">Dismiss this notice.</span>
-        </button>
+        <?php if (!isset($latest_backup['timestamp'])): ?>
+            <div id="setting-error-" class="error settings-error notice is-dismissible">
+                <p><strong>
+                        <?php echo __('You have no backup that I could find, please generate a new backup to keep your site protected.', 'xcloner-backup-and-restore') ?>
+                    </strong>
+                </p>
+                <button type="button" class="notice-dismiss"><span class="screen-reader-text">Dismiss this notice.</span>
+                </button>
+            </div>
+        <?php endif ?>
+
+        <?php if (!$requirements->check_backup_ready_status()): ?>
+            <div id="setting-error-" class="error settings-error notice is-dismissible">
+                <p><strong>
+                        <?php echo __('Backup system not ready, please check and fix the issues marked in red', 'xcloner-backup-and-restore') ?>
+                    </strong>
+                </p>
+                <button type="button" class="notice-dismiss"><span class="screen-reader-text">Dismiss this notice.</span>
+                </button>
+            </div>
+
+        <?php endif ?>
     </div>
-<?php endif ?>
-
-<?php if (!$requirements->check_backup_ready_status()): ?>
-    <div id="setting-error-" class="error settings-error notice is-dismissible">
-        <p><strong>
-				<?php echo __('Backup system not ready, please check and fix the issues marked in red', 'xcloner-backup-and-restore') ?>
-            </strong>
-        </p>
-        <button type="button" class="notice-dismiss"><span class="screen-reader-text">Dismiss this notice.</span>
-        </button>
-    </div>
-
-<?php endif ?>
+</div>
+    
 
 
 <!-- This file should primarily consist of HTML with a little bit of PHP. -->
