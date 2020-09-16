@@ -230,7 +230,7 @@ class Xcloner_Archive extends Tar
     public function send_notification_error($to, $from, $subject, $backup_name, $params, $error_message)
     {
         $body = "";
-        $body .= sprintf(__("Backup Site Url: %s"), get_site_url());
+        $body .= sprintf(__("Backup Site Url: %s"), get_home_url());
         $body .= "<br /><>";
 
         $body .= sprintf(__("Error Message: %s"), $error_message);
@@ -312,7 +312,7 @@ class Xcloner_Archive extends Tar
 
         $body .= "<br />";
 
-        $body .= sprintf(__("Backup Site Url: %s"), get_site_url());
+        $body .= sprintf(__("Backup Site Url: %s"), get_home_url());
         $body .= "<br />";
 
         if (isset($params['backup_params']->backup_comments)) {
