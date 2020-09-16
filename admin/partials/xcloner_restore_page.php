@@ -16,7 +16,7 @@ $backup_list = $xcloner_file_system->get_latest_backups();
 
 <div class="row xcloner-restore">
 
-    <div class="col s12 m6 l9">
+    <div class="col s12">
         <?php include_once(__DIR__ . "/xcloner_header.php")?>
     </div>
     

@@ -34,7 +34,7 @@ $tab                    = 1;
         <div id="backup_options" class="tab-content active">
             
             <div class="row">
-                <div class="input-field col s12 m10 l6 left-align">
+                <div class="input-field col s12 m10 l10 right-align">
                     <a class="waves-effect waves-light btn" onclick="next_tab('#database_options');"><i
                                 class="material-icons right">skip_next</i>Next</a>
                 </div>
@@ -170,7 +170,7 @@ $tab                    = 1;
 		<?php if ($xcloner_settings->get_enable_mysql_backup()): ?>
             <div id="database_options" class="tab-content">
                 <div class="row">
-                    <div class="input-field col s12 m10 l6 left-align">
+                    <div class="input-field col s12 m10 l10 right-align">
                         <a class="waves-effect waves-light btn" onclick="next_tab('#files_options');"><i
                                     class="material-icons right">skip_next</i>Next</a>
                     </div>
@@ -194,7 +194,7 @@ $tab                    = 1;
 
         <div id="files_options" class="tab-content">
             <div class="row">
-                <div class="input-field col s12 m10 l6 left-align">
+                <div class="input-field col s12 m10 l10 right-align">
                     <a class="waves-effect waves-light btn" onclick="next_tab('#generate_backup');"><i
                                 class="material-icons right">skip_next</i>Next</a>
                 </div>
@@ -217,7 +217,7 @@ $tab                    = 1;
         </div>
         <div id="generate_backup" class="tab-content">
             <div class="row ">
-                <div class="col s12 l10 action-buttons">
+                <div class="col s12 l10 action-buttons right-align">
                     <a class="waves-effect waves-light btn-large teal darken-1 start"
                        onclick="xcloner_backup.start_backup()">Start Backup<i
                                 class="material-icons left">forward</i></a>

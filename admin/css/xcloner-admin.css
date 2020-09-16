@@ -391,7 +391,7 @@ ul.files-list.error{
 }
 
 #manage_backups_wrapper #manage_backups_filter {
-    min-width: 250px;
+    min-width: 277px;
 }
 
 #generate_backup_form .progress, .xcloner-restore .progress {
@@ -404,7 +404,8 @@ i.backup_warning {
 }
 
 .col.remote-storage-selection {
-    padding-top: 20px;
+    padding-top: 0px;
+    margin-bottom: -54px;
 }
 
 .remote-storage #authentification_code {
@@ -455,16 +456,34 @@ h1.xcloner-menu {
     margin: 1.68rem 0 1.68rem 0;
 }
 
+.xcloner-logo {
+    max-height: 75px;
+    max-width: 300px;
+    float: right;
+}
+
 .row.remote-storage .collapsible.popout>li {
     margin: 0px;
 }
 
-.row .col {
+.row.remote-storage > .col {
     padding-left: 0px;
 }
 
 @media only screen and (min-width: 993px) {
     .dashboard .backup-ready {
         float: right;
+    }
+}
+
+
+@media only screen and (max-width: 993px) {
+    .xcloner-logo {
+        display: none
+    }
+
+    .col.remote-storage-selection {
+        padding-top: 0px;
+        margin-bottom: 0px;
     }
 }

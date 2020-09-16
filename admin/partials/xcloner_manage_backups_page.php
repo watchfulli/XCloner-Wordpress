@@ -21,28 +21,30 @@ $available_storages = $xcloner_remote_storage->get_available_storages();
 </script>
 
 <div class="row">
-    <div class="col s12 m6 l9">
+    <div class="col s12">
         <?php include_once(__DIR__ . "/xcloner_header.php")?>
     </div>
+
     <?php if (sizeof($available_storages)): ?>
-    <div class="input-field  col s12 m6 l3 remote-storage-selection">
-        <select name="storage_selection" id="storage_selection" class="validate" required>
+        <div class="input-field  col s12 l4 left remote-storage-selection">
+            <select name="storage_selection" id="storage_selection" class="validate" required>
 
-            <?php if ($storage_selection): ?>
-                <option value=""
-                        selected><?php echo __('Change To Local Storage...', 'xcloner-backup-and-restore') ?></option>
-            <?php else: ?>
-                <option value=""
-                        selected><?php echo __('Change To Remote Storage...', 'xcloner-backup-and-restore') ?></option>
-            <?php endif; ?>
+                <?php if ($storage_selection): ?>
+                    <option value=""
+                            selected><?php echo __('Change To Local Storage...', 'xcloner-backup-and-restore') ?></option>
+                <?php else: ?>
+                    <option value=""
+                            selected><?php echo __('Change To Remote Storage...', 'xcloner-backup-and-restore') ?></option>
+                <?php endif; ?>
 
-            <?php foreach ($available_storages as $storage => $text): ?>
-                <option value="<?php echo $storage ?>"<?php if ($storage == $storage_selection) {
-    echo "selected";
-} ?>><?php echo $text ?></option>
-            <?php endforeach ?>
-        </select>
-        <?php endif ?>
+                <?php foreach ($available_storages as $storage => $text): ?>
+                    <option value="<?php echo $storage ?>"<?php if ($storage == $storage_selection) {
+                        echo "selected";
+                    } ?>><?php echo $text ?>
+                    </option>
+                <?php endforeach ?>
+            </select>
+            <?php endif ?>
     </div>
     
     <div class="col s12">
