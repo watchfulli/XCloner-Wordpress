@@ -82,7 +82,7 @@ $common_cleanup_html = ob_get_contents();
     <input type="hidden" id="connection_check" name="connection_check" value="">
 
     <div class="row remote-storage">
-        <div class="col s12">
+        <div class="col s12 m12 l10">
             <?php include_once(__DIR__ . "/xcloner_header.php")?>
         </div>
         <div class="col s12 m12 l10">

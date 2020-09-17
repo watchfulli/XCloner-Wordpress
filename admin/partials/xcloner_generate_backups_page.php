@@ -7,7 +7,7 @@ $tab                    = 1;
 ?>
 
 <div class="row">
-    <div class="col s12">
+    <div class="col s12 l10">
         <?php include_once(__DIR__ . "/xcloner_header.php")?>
     </div>
     <div class="col s12">

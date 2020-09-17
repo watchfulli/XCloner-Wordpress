@@ -247,7 +247,7 @@ class Xcloner_Admin {
 		?>
 
 		<div class="row">
-			<div class="col s12">
+			<div class="col s12 l9">
         		<?php include_once(__DIR__ . "/partials/xcloner_header.php")?>
 			</div>
 			
