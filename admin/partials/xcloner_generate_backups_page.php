@@ -624,9 +624,7 @@ $tab                    = 1;
             }
         });
 
-        <
-        ? php
-        if ($xcloner_settings - > get_enable_mysql_backup()): ? >
+        <?php if ($xcloner_settings->get_enable_mysql_backup()): ?>
             jQuery('#jstree_database_container').jstree({
                 'core': {
                     'check_callback': true,
@@ -669,8 +667,8 @@ $tab                    = 1;
                     "unique",
                     "wholerow"
                 ]
-            }); <
-        ? php endif ? >
+            }); 
+            <?php endif ?>
 
             jQuery('#jstree_files_container').jstree({
                 'core': {
