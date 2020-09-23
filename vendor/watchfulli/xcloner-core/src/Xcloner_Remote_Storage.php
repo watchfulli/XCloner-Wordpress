@@ -834,27 +834,29 @@ class Xcloner_Remote_Storage
         update_option("xcloner_gdrive_access_token", $token);
         update_option("xcloner_gdrive_refresh_token", $token['refresh_token']);
 
-        $redirect_url = ('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . "?page=xcloner_remote_storage_page#gdrive"); ?>
-        <script>
-            window.location = '<?php echo $redirect_url?>';
-        </script>
-        <?php
+        return $token;
     }
 
     public function gdrive_refresh_token($client){
 
         $auth_token = $this->xcloner_settings->get_xcloner_option("xcloner_gdrive_access_token");
+        $refresh_token = $this->xcloner_settings->get_xcloner_option("xcloner_gdrive_refresh_token");
+
+        if(!$refresh_token) {
+            $refresh_token = $auth_token['refreh_token'];
+        }
 
         if (!$this->xcloner_settings->get_xcloner_option("xcloner_gdrive_client_id")) {
             $auth_token =$this->gdrive_app_fetch_access_token($auth_token, 'gdrive_auth_refresh');
         }else{
-            $auth_token = $client->refreshToken($auth_token['refresh_token']);
+            $auth_token = $client->refreshToken($refresh_token);
 
             if ($auth_token['access_token']) {
                 update_option("xcloner_gdrive_access_token", $auth_token);
+                update_option("xcloner_gdrive_refresh_token", $auth_token['refresh_token']);
             }else{
                 $this->xcloner->trigger_message(
-                    "%s connection error: Failed to REFRESH the AUTH code",
+                    "%s connection error: Failed to REFRESH the AUTH code - ".$auth_token['error_description'],
                     "error"
                 );
             }
