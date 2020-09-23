@@ -63,7 +63,7 @@ class Xcloner_Remote_Storage
 {
     const GDRIVE_APP_NAME = "XCloner Backup and Restore";
     const GDRIVE_REDIRECT_URL = "urn:ietf:wg:oauth:2.0:oob";
-    const GDRIVE_REDIRECT_URL_WATCHFUL = "https://thinkovi.com/tmp/auth.php";
+    const GDRIVE_REDIRECT_URL_WATCHFUL = "https://oauth.xcloner.com/google-drive/";
     const GDRIVE_AUTH_WATCHFUL = "349634029491-b9il1na8s2uki7ij8m166uj8fahqdrpu.apps.googleusercontent.com";
 
     private $storage_fields = array(

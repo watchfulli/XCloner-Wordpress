@@ -1041,7 +1041,7 @@ $common_cleanup_html = ob_get_contents();
                                 </div>
                                 <div class=" col s12 m9">
                                     <p>
-										<?php echo sprintf(__('If you would like to create your custom app, please visit %s to create a new application and get your Client ID and Client Secret. Otherwise, you can use the default Watchful Google Drive app by leaving them blank.', 'xcloner-backup-and-restore'), '<a href="https://console.developers.google.com" target="_blank">https://console.developers.google.com</a>') ?>
+										<?php echo sprintf(__('If you would like to create your custom app, please visit %s to create a new application and get your Client ID and Client Secret. Otherwise, you can use the default XCloner.com Google Drive app by leaving them blank.', 'xcloner-backup-and-restore'), '<a href="https://console.developers.google.com" target="_blank">https://console.developers.google.com</a>') ?>
                                         <a href="https://youtu.be/kBxf-39F4Nw" target="_blank"
                                            class="btn-floating tooltipped btn-small" data-position="right"
                                            data-delay="50" data-html="true"
