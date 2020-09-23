@@ -1057,7 +1057,7 @@ $common_cleanup_html = ob_get_contents();
                                     <label for="gdrive_client_id"><?php echo __("Client ID", 'xcloner-backup-and-restore') ?></label>
                                 </div>
                                 <div class=" col s12 m6">
-                                    <input placeholder="<?php echo __("Google Client ID. Leave blank for Watchful default app", 'xcloner-backup-and-restore') ?>"
+                                    <input placeholder="<?php echo __("Google Client ID. Leave blank for XCloner.com default app", 'xcloner-backup-and-restore') ?>"
                                            id="gdrive_client_id" type="text" name="xcloner_gdrive_client_id"
                                            class="validate"
                                            value="<?php echo get_option("xcloner_gdrive_client_id") ?>"
