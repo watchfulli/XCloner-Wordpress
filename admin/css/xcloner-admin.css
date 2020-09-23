@@ -479,6 +479,10 @@ h1.xcloner-menu {
     border-bottom: 0px;
 }
 
+#gdrive input#authentification_code::placeholder {
+    color: red;
+}
+
 @media only screen and (min-width: 993px) {
     .dashboard .backup-ready {
         float: right;

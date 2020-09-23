@@ -1041,7 +1041,7 @@ $common_cleanup_html = ob_get_contents();
                                 </div>
                                 <div class=" col s12 m9">
                                     <p>
-										<?php echo sprintf(__('Visit %s to create a new application and get your Client ID and Client Secret.', 'xcloner-backup-and-restore'), '<a href="https://console.developers.google.com" target="_blank">https://console.developers.google.com</a>') ?>
+										<?php echo sprintf(__('If you would like to create your custom app, please visit %s to create a new application and get your Client ID and Client Secret. Otherwise, you can use the default Watchful Google Drive app by leaving them blank.', 'xcloner-backup-and-restore'), '<a href="https://console.developers.google.com" target="_blank">https://console.developers.google.com</a>') ?>
                                         <a href="https://youtu.be/kBxf-39F4Nw" target="_blank"
                                            class="btn-floating tooltipped btn-small" data-position="right"
                                            data-delay="50" data-html="true"
@@ -1057,14 +1057,16 @@ $common_cleanup_html = ob_get_contents();
                                     <label for="gdrive_client_id"><?php echo __("Client ID", 'xcloner-backup-and-restore') ?></label>
                                 </div>
                                 <div class=" col s12 m6">
-                                    <input placeholder="<?php echo __("Google Client ID", 'xcloner-backup-and-restore') ?>"
+                                    <input placeholder="<?php echo __("Google Client ID. Leave blank for Watchful default app", 'xcloner-backup-and-restore') ?>"
                                            id="gdrive_client_id" type="text" name="xcloner_gdrive_client_id"
                                            class="validate"
-                                           value="<?php echo get_option("xcloner_gdrive_client_id") ?>">
+                                           value="<?php echo get_option("xcloner_gdrive_client_id") ?>"
+                                           default-client-id=<?=$remote_storage::GDRIVE_AUTH_WATCHFUL?>
+                                           >
                                 </div>
                             </div>
 
-                            <div class="row">
+                            <div class="row" id="gdrive_client_secret_wrapper">
                                 <div class="col s12 m3 label">
                                     <label for="gdrive_client_secret"><?php echo __("Client Secret", 'xcloner-backup-and-restore') ?></label>
                                 </div>
@@ -1211,6 +1213,9 @@ $common_cleanup_html = ob_get_contents();
 
         //var remote_storage = new Xcloner_Remote_Storage();
 
+        var watchful_gdrive_redirect_uri = "<?=$remote_storage::GDRIVE_REDIRECT_URL_WATCHFUL?>";
+        var default_gdrive_redirect_uri = "<?=$remote_storage::GDRIVE_REDIRECT_URL?>";
+
         checkEndpoint()
         jQuery("#aws_region").on("change", function () {
             checkEndpoint();
@@ -1226,12 +1231,37 @@ $common_cleanup_html = ob_get_contents();
             window.location.hash = "#" + tag;
         })
 
+        if (!jQuery("#gdrive_client_id").val()) {
+            jQuery("#gdrive_client_secret_wrapper").hide();
+        }
+
+        jQuery("#gdrive_client_id").on('keyup', function() {
+
+            if(jQuery("#gdrive_client_id").val()) {
+                jQuery("#gdrive_client_secret_wrapper").show();
+            }else{
+                jQuery("#gdrive_client_secret_wrapper").hide();
+            }
+
+        })
+
         jQuery("#gdrive_authorization_click").on("click", function (e) {
 
             var href = (jQuery(this).attr("href"))
 
-            var new_href = href.replace(/(client_id=).*?(&)/, '$1' + jQuery("#gdrive_client_id").val() + '$2');
+            var client_id = jQuery("#gdrive_client_id").val() || jQuery("#gdrive_client_id").attr('default-client-id')
+            
+            var redirect_uri = default_gdrive_redirect_uri;
 
+            if(client_id === jQuery("#gdrive_client_id").attr('default-client-id')) {
+                redirect_uri = watchful_gdrive_redirect_uri
+            }
+
+            var new_href = href.
+                            replace(/(client_id=).*?(&)/, '$1' + client_id + '$2').
+                            replace(/(redirect_uri=).*?(&)/, '$1' + redirect_uri + '$2');
+            
+            console.log(new_href)
             jQuery(this).attr("href", new_href)
 
         });
