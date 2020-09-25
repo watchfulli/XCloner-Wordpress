@@ -25,7 +25,7 @@ if (!defined('WPINC')) {
         </div>
         <div class=" col s12 m6">
             <p>
-                <?php echo sprintf(__('Visit %s and get your Account Id and  Application Key.', 'xcloner-backup-and-restore'), '<a href="https://secure.backblaze.com/b2_buckets.htm" target="_blank">https://secure.backblaze.com/b2_buckets.htm</a>') ?>
+                <?php echo sprintf(__('Visit %s and get your KeyID and  applicationKey.', 'xcloner-backup-and-restore'), '<a href="https://secure.backblaze.com/b2_buckets.htm" target="_blank">https://secure.backblaze.com/b2_buckets.htm</a>') ?>
             </p>
         </div>
     </div>
@@ -33,10 +33,10 @@ if (!defined('WPINC')) {
     <div class="row">
         <div class="col s12 m3 label">
             <label
-                for="backblaze_account_id"><?php echo __("Backblaze Account Id", 'xcloner-backup-and-restore') ?></label>
+                for="backblaze_account_id"><?php echo __("Backblaze KeyID", 'xcloner-backup-and-restore') ?></label>
         </div>
         <div class=" col s12 m6">
-            <input placeholder="<?php echo __("Backblaze Account Id", 'xcloner-backup-and-restore') ?>"
+            <input placeholder="<?php echo __("Backblaze KeyID", 'xcloner-backup-and-restore') ?>"
                 id="backblaze_account_id" type="text" name="xcloner_backblaze_account_id" class="validate"
                 value="<?php echo get_option("xcloner_backblaze_account_id") ?>" autocomplete="off">
         </div>
@@ -46,10 +46,10 @@ if (!defined('WPINC')) {
     <div class="row">
         <div class="col s12 m3 label">
             <label
-                for="backblaze_application_key"><?php echo __("Backblaze Application Key", 'xcloner-backup-and-restore') ?></label>
+                for="backblaze_application_key"><?php echo __("Backblaze applicationKey", 'xcloner-backup-and-restore') ?></label>
         </div>
         <div class=" col s12 m6">
-            <input placeholder="<?php echo __("Backblaze Application Key", 'xcloner-backup-and-restore') ?>"
+            <input placeholder="<?php echo __("Backblaze applicationKey", 'xcloner-backup-and-restore') ?>"
                 id="backblaze_application_key" type="text" name="xcloner_backblaze_application_key" class="validate"
                 value="<?php echo str_repeat('*', strlen(get_option("xcloner_backblaze_application_key"))) ?>"
                 autocomplete="off">
