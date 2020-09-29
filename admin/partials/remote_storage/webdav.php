@@ -36,7 +36,7 @@ if (!defined('WPINC')) {
                                 <label for="webdav_url"><?php echo __("WebDAV Base Url", 'xcloner-backup-and-restore') ?></label>
                             </div>
                             <div class=" col s12 m6">
-                                <input placeholder="<?php echo __("WebDAV Base Url", 'xcloner-backup-and-restore') ?>"
+                                <input placeholder="<?php echo __("WebDAV Service Url like https://webdav.yandex.com", 'xcloner-backup-and-restore') ?>"
                                        id="webdav_url" type="text" name="xcloner_webdav_url" class="validate"
                                        value="<?php echo get_option("xcloner_webdav_url") ?>" autocomplete="off">
                             </div>
@@ -68,10 +68,10 @@ if (!defined('WPINC')) {
 
                         <div class="row">
                             <div class="col s12 m3 label">
-                                <label for="webdav_target_folder"><?php echo __("WebDAV Target Folder", 'xcloner-backup-and-restore') ?></label>
+                                <label for="webdav_target_folder"><?php echo __("WebDAV Target Path", 'xcloner-backup-and-restore') ?></label>
                             </div>
                             <div class=" col s12 m6">
-                                <input placeholder="<?php echo __("WebDAV Target Folder", 'xcloner-backup-and-restore') ?>"
+                                <input placeholder="<?php echo __("WebDAV Target Path", 'xcloner-backup-and-restore') ?>"
                                        id="webdav_target_folder" type="text" name="xcloner_webdav_target_folder"
                                        class="validate"
                                        value="<?php echo get_option("xcloner_webdav_target_folder") ?>"
