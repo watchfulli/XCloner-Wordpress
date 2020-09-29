@@ -47,7 +47,7 @@ use League\Flysystem\AwsS3v3\AwsS3Adapter;
 
 use Mhetreramesh\Flysystem\BackblazeAdapter;
 use BackblazeB2\Client as B2Client;
-
+use Exception;
 #use Sabre\DAV\Client as SabreClient;
 #use League\Flysystem\WebDAV\WebDAVAdapter;
 
@@ -692,9 +692,10 @@ class Xcloner_Remote_Storage
             'baseUri' => $this->xcloner_settings->get_xcloner_option("xcloner_webdav_url"),
             'userName' => $this->xcloner_settings->get_xcloner_option("xcloner_webdav_username"),
             'password' => $this->xcloner_settings->get_xcloner_option("xcloner_webdav_password"),
+            'authType' => \Sabre\DAV\Client::AUTH_BASIC,
             //'proxy' => 'locahost:8888',
         );
-
+    
         $client = new \Sabre\DAV\Client($settings);
         $adapter = new \League\Flysystem\WebDAV\WebDAVAdapter($client, $this->xcloner_settings->get_xcloner_option("xcloner_webdav_target_folder"));
         $filesystem = new Filesystem($adapter, new Config([

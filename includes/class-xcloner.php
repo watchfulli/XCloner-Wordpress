@@ -582,7 +582,7 @@ class Xcloner extends watchfulli\XClonerCore\Xcloner
             );
         }
 
-        if ($parameters) {
+        if (isset($parameters) && $parameters) {
             $response = wp_remote_post("https://login.microsoftonline.com/common/oauth2/v2.0/token", array('body' => $parameters));
 
             if (is_wp_error($response)) {

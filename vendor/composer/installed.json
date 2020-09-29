@@ -1437,17 +1437,17 @@
     },
     {
         "name": "sabre/dav",
-        "version": "4.1.0",
-        "version_normalized": "4.1.0.0",
+        "version": "4.1.1",
+        "version_normalized": "4.1.1.0",
         "source": {
             "type": "git",
             "url": "https://github.com/sabre-io/dav.git",
-            "reference": "8f6f4d272504ee8424e1d0a47d6efc7772de2270"
+            "reference": "5736f943c90d8d73d04cd8944d8c913811dc7360"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/sabre-io/dav/zipball/8f6f4d272504ee8424e1d0a47d6efc7772de2270",
-            "reference": "8f6f4d272504ee8424e1d0a47d6efc7772de2270",
+            "url": "https://api.github.com/repos/sabre-io/dav/zipball/5736f943c90d8d73d04cd8944d8c913811dc7360",
+            "reference": "5736f943c90d8d73d04cd8944d8c913811dc7360",
             "shasum": ""
         },
         "require": {
@@ -1471,7 +1471,7 @@
         },
         "require-dev": {
             "evert/phpdoc-md": "~0.1.0",
-            "friendsofphp/php-cs-fixer": "~2.16.1",
+            "friendsofphp/php-cs-fixer": "^2.16.3",
             "monolog/monolog": "^1.18",
             "phpstan/phpstan": "^0.12",
             "phpunit/phpunit": "^7.5 || ^8.5 || ^9.0"
@@ -1481,7 +1481,7 @@
             "ext-imap": "*",
             "ext-pdo": "*"
         },
-        "time": "2020-03-20T08:55:46+00:00",
+        "time": "2020-07-13T13:38:16+00:00",
         "bin": [
             "bin/sabredav",
             "bin/naturalselection"
@@ -1520,27 +1520,28 @@
     },
     {
         "name": "sabre/event",
-        "version": "5.1.0",
-        "version_normalized": "5.1.0.0",
+        "version": "5.1.1",
+        "version_normalized": "5.1.1.0",
         "source": {
             "type": "git",
             "url": "https://github.com/sabre-io/event.git",
-            "reference": "d00a17507af0e7544cfe17096372f5d733e3b276"
+            "reference": "a37c73e535ddab02bd892f4bdab4867f9778cbea"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/sabre-io/event/zipball/d00a17507af0e7544cfe17096372f5d733e3b276",
-            "reference": "d00a17507af0e7544cfe17096372f5d733e3b276",
+            "url": "https://api.github.com/repos/sabre-io/event/zipball/a37c73e535ddab02bd892f4bdab4867f9778cbea",
+            "reference": "a37c73e535ddab02bd892f4bdab4867f9778cbea",
             "shasum": ""
         },
         "require": {
-            "php": "^7.1"
+            "php": "^7.1|^8.0"
         },
         "require-dev": {
             "friendsofphp/php-cs-fixer": "~2.16.1",
-            "phpunit/phpunit": "^7 || ^8"
+            "phpstan/phpstan": "^0.12",
+            "phpunit/phpunit": "^7.5 || ^8.5 || ^9.0"
         },
-        "time": "2020-01-31T18:52:29+00:00",
+        "time": "2020-09-19T20:29:54+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -1694,17 +1695,17 @@
     },
     {
         "name": "sabre/vobject",
-        "version": "4.3.0",
-        "version_normalized": "4.3.0.0",
+        "version": "4.3.1",
+        "version_normalized": "4.3.1.0",
         "source": {
             "type": "git",
             "url": "https://github.com/sabre-io/vobject.git",
-            "reference": "5b2248d965160f93053f3a24704794a13a22a1bb"
+            "reference": "a7feca8311462e5da16952454e420b92c20d3586"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/sabre-io/vobject/zipball/5b2248d965160f93053f3a24704794a13a22a1bb",
-            "reference": "5b2248d965160f93053f3a24704794a13a22a1bb",
+            "url": "https://api.github.com/repos/sabre-io/vobject/zipball/a7feca8311462e5da16952454e420b92c20d3586",
+            "reference": "a7feca8311462e5da16952454e420b92c20d3586",
             "shasum": ""
         },
         "require": {
@@ -1714,12 +1715,13 @@
         },
         "require-dev": {
             "friendsofphp/php-cs-fixer": "~2.16.1",
-            "phpunit/phpunit": "^7 || ^8"
+            "phpstan/phpstan": "^0.12",
+            "phpunit/phpunit": "^7.5 || ^8.5 || ^9.0"
         },
         "suggest": {
             "hoa/bench": "If you would like to run the benchmark scripts"
         },
-        "time": "2020-01-31T18:50:58+00:00",
+        "time": "2020-07-13T11:23:30+00:00",
         "bin": [
             "bin/vobject",
             "bin/generate_vcards"
