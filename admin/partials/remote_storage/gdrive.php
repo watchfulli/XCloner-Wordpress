@@ -29,7 +29,7 @@ if (!defined('WPINC')) {
         </div>
         <div class=" col s12 m9">
             <p>
-                <?php echo sprintf(__('Click the Authenticate button below to complete the 1-time integration. If you would like to create your own custom app, please visit %s to create a new application and get your Client ID and Client Secret and enter it below. ', 'xcloner-backup-and-restore'), '<a href="https://console.developers.google.com" target="_blank">https://console.developers.google.com</a>') ?>
+                <?php echo sprintf(__('Click the Google Sign-in button below to complete the 1-time integration. If you would like to create your own custom app, please visit %s to create a new application and get your Client ID and Client Secret and enter it below. ', 'xcloner-backup-and-restore'), '<a href="https://console.developers.google.com" target="_blank">https://console.developers.google.com</a>') ?>
                 <a href="https://youtu.be/kBxf-39F4Nw" target="_blank" class="btn-floating tooltipped btn-small"
                     data-position="right" data-delay="50" data-html="true"
                     data-tooltip="<?php echo sprintf(__('Click here to view a short video explaining how to create the Client ID and Client Secret as well as connecting XCloner with the Google Drive API %s', 'xcloner-backup-and-restore'), "<br />https://youtu.be/kBxf-39F4Nw") ?>"
@@ -44,9 +44,12 @@ if (!defined('WPINC')) {
             &nbsp;
         </div>
         <div class=" col s12 m6">
-            <a class="btn" target="_blank" id="gdrive_authorization_click"
+            <a class="" target="_blank" id="gdrive_authorization_click"
                 onclick="jQuery('#authentification_code').show()"
-                href="<?php echo $gdrive_auth_url ?>"><?php echo sprintf(__('Authorize Google Drive', 'xcloner-backup-and-restore')) ?></a>
+                href="<?php echo $gdrive_auth_url ?>">
+                <img src="<?=plugin_dir_url(__DIR__)?>/../../assets/btn_google_signin_dark_pressed_web.png" 
+                alt="<?php echo sprintf(__('Authorize Google Drive', 'xcloner-backup-and-restore')) ?>"/>
+                </a>
             <input type="text" name="authentification_code" id="authentification_code"
                 placeholder="<?php echo __("Paste Authorization Code Here", "xcloner-backup-and-restore") ?>">
         </div>

@@ -178,8 +178,7 @@ $available_storages = $xcloner_remote_storage->get_available_storages();
                         </div>
                         <div class="input-field col s8 m10">
                             <select name="transfer_storage" id="transfer_storage" class="validate" required>
-                                <option value="" selected>
-                                    <?php echo __('please select...', 'xcloner-backup-and-restore') ?></option>
+                                <option value="" selected><?php echo __('please select...', 'xcloner-backup-and-restore') ?></option>
                                 <?php foreach ($available_storages as $storage => $text): ?>
                                 <option value="<?php echo $storage ?>"><?php echo $text ?></option>
                                 <?php endforeach ?>

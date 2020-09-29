@@ -483,6 +483,10 @@ h1.xcloner-menu {
     color: red;
 }
 
+a:focus {
+    box-shadow: none;
+}
+
 @media only screen and (min-width: 993px) {
     .dashboard .backup-ready {
         float: right;
