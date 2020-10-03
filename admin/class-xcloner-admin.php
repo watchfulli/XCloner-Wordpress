@@ -153,7 +153,6 @@ class Xcloner_Admin {
 		$xcloner_sanitization = $this->get_xcloner_container()->get_xcloner_sanitization();
 		$remote_storage       = $this->get_xcloner_container()->get_xcloner_remote_storage();
 
-
 		if (isset($_POST['action'])) {
 			$_POST['action'] = $xcloner_sanitization->sanitize_input_as_string($_POST['action']);
 			$remote_storage->save($_POST['action']);
@@ -245,53 +244,55 @@ class Xcloner_Admin {
 		}
 
 		?>
-        <h1><?= esc_html(get_admin_page_title()); ?></h1>
 
-        <ul class="nav-tab-wrapper row">
-            <li><a href="?page=xcloner_settings_page&tab=general_options"
-                   class="nav-tab col s12 m3 l2 <?php echo $active_tab == 'general_options' ? 'nav-tab-active' : ''; ?>"><?php echo __('General Options', 'xcloner-backup-and-restore') ?></a>
-            </li>
-            <li><a href="?page=xcloner_settings_page&tab=mysql_options"
-                   class="nav-tab col s12 m3 l2 <?php echo $active_tab == 'mysql_options' ? 'nav-tab-active' : ''; ?>"><?php echo __('Mysql Options', 'xcloner-backup-and-restore') ?></a>
-            </li>
-            <li><a href="?page=xcloner_settings_page&tab=system_options"
-                   class="nav-tab col s12 m3 l2 <?php echo $active_tab == 'system_options' ? 'nav-tab-active' : ''; ?>"><?php echo __('System Options', 'xcloner-backup-and-restore') ?></a>
-            </li>
-            <!--<li><a href="?page=xcloner_settings_page&tab=cleanup_options"
-                   class="nav-tab col s12 m3 l2 <?php echo $active_tab == 'cleanup_options' ? 'nav-tab-active' : ''; ?>"><?php echo __('Cleanup Options', 'xcloner-backup-and-restore') ?></a>
-            </li>-->
-        </ul>
+		<div class="row">
+			<div class="col s12 l9">
+        		<?php include_once(__DIR__ . "/partials/xcloner_header.php")?>
+			</div>
+			
+			<ul class="nav-tab-wrapper col s12 ">
+				<li><a href="?page=xcloner_settings_page&tab=general_options"
+					class="nav-tab col s12 m3 l3 <?php echo $active_tab == 'general_options' ? 'nav-tab-active' : ''; ?>"><?php echo __('General Options', 'xcloner-backup-and-restore') ?></a>
+				</li>
+				<li><a href="?page=xcloner_settings_page&tab=mysql_options"
+					class="nav-tab col s12 m3 l3 <?php echo $active_tab == 'mysql_options' ? 'nav-tab-active' : ''; ?>"><?php echo __('Mysql Options', 'xcloner-backup-and-restore') ?></a>
+				</li>
+				<li><a href="?page=xcloner_settings_page&tab=system_options"
+					class="nav-tab col s12 m3 l3 <?php echo $active_tab == 'system_options' ? 'nav-tab-active' : ''; ?>"><?php echo __('System Options', 'xcloner-backup-and-restore') ?></a>
+				</li>
+			</ul>
 
-        <div class="wrap">
+			<div class="wrap col s12">
 
-            <form action="options.php" method="post">
-				<?php
+				<form action="options.php" method="post">
+					<?php
 
-				if ($active_tab == 'general_options') {
+					if ($active_tab == 'general_options') {
 
-					settings_fields('xcloner_general_settings_group');
-					do_settings_sections('xcloner_settings_page');
+						settings_fields('xcloner_general_settings_group');
+						do_settings_sections('xcloner_settings_page');
 
-				} elseif ($active_tab == 'mysql_options') {
+					} elseif ($active_tab == 'mysql_options') {
 
-					settings_fields('xcloner_mysql_settings_group');
-					do_settings_sections('xcloner_mysql_settings_page');
-				} elseif ($active_tab == 'system_options') {
+						settings_fields('xcloner_mysql_settings_group');
+						do_settings_sections('xcloner_mysql_settings_page');
+					} elseif ($active_tab == 'system_options') {
 
-					settings_fields('xcloner_system_settings_group');
-					do_settings_sections('xcloner_system_settings_page');
-				} elseif ($active_tab == 'cleanup_options') {
+						settings_fields('xcloner_system_settings_group');
+						do_settings_sections('xcloner_system_settings_page');
+					} elseif ($active_tab == 'cleanup_options') {
 
-					settings_fields('xcloner_cleanup_settings_group');
-					do_settings_sections('xcloner_cleanup_settings_page');
-				}
+						settings_fields('xcloner_cleanup_settings_group');
+						do_settings_sections('xcloner_cleanup_settings_page');
+					}
 
-				// output save settings button
-				submit_button('Save Settings');
-				?>
-            </form>
+					// output save settings button
+					submit_button('Save Settings');
+					?>
+				</form>
 
-        </div>
+			</div>
+		</div>
 		<?php
 
 	}

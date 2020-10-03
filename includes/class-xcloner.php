@@ -558,6 +558,8 @@ class Xcloner extends watchfulli\XClonerCore\Xcloner
         $onedrive_expire_in  = get_option('xcloner_onedrive_expires_in');
         $onedrive_refresh_token = get_option('xcloner_onedrive_refresh_token');
 
+        $is_refresh = false;
+
         if ($onedrive_refresh_token && time()> $onedrive_expire_in) {
             $parameters = array(
                 'client_id' => get_option("xcloner_onedrive_client_id"),
@@ -566,6 +568,8 @@ class Xcloner extends watchfulli\XClonerCore\Xcloner
                 'refresh_token'=> $onedrive_refresh_token,
                 'grant_type'=> 'refresh_token'
             );
+
+            $is_refresh = true;
         }
 
         if (isset($_REQUEST['code']) && $_REQUEST['code']) {
@@ -578,7 +582,7 @@ class Xcloner extends watchfulli\XClonerCore\Xcloner
             );
         }
 
-        if ($parameters) {
+        if (isset($parameters) && $parameters) {
             $response = wp_remote_post("https://login.microsoftonline.com/common/oauth2/v2.0/token", array('body' => $parameters));
 
             if (is_wp_error($response)) {
@@ -591,11 +595,13 @@ class Xcloner extends watchfulli\XClonerCore\Xcloner
                     update_option('xcloner_onedrive_access_token', $response['access_token']);
                     update_option('xcloner_onedrive_refresh_token', $response['refresh_token']);
                     update_option('xcloner_onedrive_expires_in', time()+$response['expires_in']);
-            
-                    $this->trigger_message(
-                        sprintf(__('OneDrive successfully authenticated, please click <a href="%s">here</a> to continue', 'xcloner-backup-and-restore'), get_admin_url()."admin.php?page=xcloner_remote_storage_page#onedrive"),
-                        'success'
-                    );
+                    
+                    if (!$is_refresh) {
+                        $this->trigger_message(
+                            sprintf(__('OneDrive successfully authenticated, please click <a href="%s">here</a> to continue', 'xcloner-backup-and-restore'), get_admin_url()."admin.php?page=xcloner_remote_storage_page#onedrive"),
+                            'success'
+                        );
+                    }
                 } else {
                     $this->trigger_message(__('There was a communication error with the OneDrive API details.'));
                 }
@@ -680,7 +686,7 @@ class Xcloner extends watchfulli\XClonerCore\Xcloner
         if (function_exists('add_submenu_page')) {
             add_submenu_page(
                 'xcloner_init_page',
-                __('XCloner Dashboard', 'xcloner-backup-and-restore'),
+                __('Dashboard', 'xcloner-backup-and-restore'),
                 __('Dashboard', 'xcloner-backup-and-restore'),
                 'manage_options',
                 'xcloner_init_page',
@@ -688,7 +694,7 @@ class Xcloner extends watchfulli\XClonerCore\Xcloner
             );
             add_submenu_page(
                 'xcloner_init_page',
-                __('XCloner Backup Settings', 'xcloner-backup-and-restore'),
+                __('Backup Settings', 'xcloner-backup-and-restore'),
                 __('Settings', 'xcloner-backup-and-restore'),
                 'manage_options',
                 'xcloner_settings_page',
@@ -696,7 +702,7 @@ class Xcloner extends watchfulli\XClonerCore\Xcloner
             );
             add_submenu_page(
                 'xcloner_init_page',
-                __('Storage Locations Settings', 'xcloner-backup-and-restore'),
+                __('Storage Locations', 'xcloner-backup-and-restore'),
                 __('Storage Locations', 'xcloner-backup-and-restore'),
                 'manage_options',
                 'xcloner_remote_storage_page',

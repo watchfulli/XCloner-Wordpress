@@ -391,7 +391,7 @@ ul.files-list.error{
 }
 
 #manage_backups_wrapper #manage_backups_filter {
-    min-width: 250px;
+    min-width: 277px;
 }
 
 #generate_backup_form .progress, .xcloner-restore .progress {
@@ -404,7 +404,8 @@ i.backup_warning {
 }
 
 .col.remote-storage-selection {
-    padding-top: 20px;
+    padding-top: 0px;
+    margin-bottom: -54px;
 }
 
 .remote-storage #authentification_code {
@@ -443,8 +444,63 @@ i.backup_warning {
     max-width: initial;
 }
 
+.xcloner-menu.dropdown-trigger i.material-icons{
+    vertical-align: middle;
+}
+
+.xcloner-menu.dropdown-content {
+    min-width: 250px;
+}
+
+h1.xcloner-menu {
+    margin: 1.68rem 0 1.68rem 0;
+}
+
+.xcloner-logo {
+    max-height: 75px;
+    max-width: 225px;
+    float: right;
+    margin-top: 15px;
+}
+
+.row.remote-storage .collapsible.popout>li {
+    margin: 0px;
+}
+
+#generate_backup_form .nav-tab-wrapper-content {
+    margin-top: 15px;
+}
+
+.row .nav-tab-wrapper{
+    border-bottom: 0px;
+}
+
+.form-table tr{
+    border-bottom: 0px;
+}
+
+#gdrive input#authentification_code::placeholder {
+    color: red;
+}
+
+a:focus {
+    box-shadow: none;
+}
+
 @media only screen and (min-width: 993px) {
     .dashboard .backup-ready {
         float: right;
+    }
+}
+
+
+@media only screen and (max-width: 993px) {
+    .xcloner-logo {
+        display: none
+    }
+
+    .col.remote-storage-selection {
+        padding-top: 0px;
+        margin-bottom: 0px;
     }
 }

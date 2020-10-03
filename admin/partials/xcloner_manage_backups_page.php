@@ -21,59 +21,61 @@ $available_storages = $xcloner_remote_storage->get_available_storages();
 </script>
 
 <div class="row">
-    <div class="col s12 m6 l9">
-        <h1><?= esc_html(get_admin_page_title()); ?></h1>
+    <div class="col s12">
+        <?php include_once(__DIR__ . "/xcloner_header.php")?>
     </div>
+
     <?php if (sizeof($available_storages)): ?>
-    <div class="input-field  col s12 m6 l3 remote-storage-selection">
+    <div class="input-field  col s12 l4 left remote-storage-selection">
         <select name="storage_selection" id="storage_selection" class="validate" required>
 
             <?php if ($storage_selection): ?>
-                <option value=""
-                        selected><?php echo __('Change To Local Storage...', 'xcloner-backup-and-restore') ?></option>
+            <option value="" selected><?php echo __('Change To Local Storage...', 'xcloner-backup-and-restore') ?>
+            </option>
             <?php else: ?>
-                <option value=""
-                        selected><?php echo __('Change To Remote Storage...', 'xcloner-backup-and-restore') ?></option>
+            <option value="" selected><?php echo __('Change To Remote Storage...', 'xcloner-backup-and-restore') ?>
+            </option>
             <?php endif; ?>
 
             <?php foreach ($available_storages as $storage => $text): ?>
-                <option value="<?php echo $storage ?>"<?php if ($storage == $storage_selection) {
-    echo "selected";
-} ?>><?php echo $text ?></option>
+            <option value="<?php echo $storage ?>" <?php if ($storage == $storage_selection) {
+                        echo "selected";
+                    } ?>><?php echo $text ?>
+            </option>
             <?php endforeach ?>
         </select>
         <?php endif ?>
     </div>
-    
+
     <div class="col s12">
         <table id="manage_backups" style="width:100%">
             <thead>
-            <tr class="grey lighten-2">
-                <th class="no-sort">
-                    <p>
-                    <label for="select_all">
-                        <input name="select_all" class="" id="select_all" value="1" type="checkbox">
-                        <span>&nbsp;</span>
-                    </label>
+                <tr class="grey lighten-2">
+                    <th class="no-sort">
+                        <p>
+                            <label for="select_all">
+                                <input name="select_all" class="" id="select_all" value="1" type="checkbox">
+                                <span>&nbsp;</span>
+                            </label>
 
-                    </p>
-                </th>
-                <th data-field="id"><?php echo __("Backup Name", 'xcloner-backup-and-restore') ?></th>
-                <th data-field="name"><?php echo __("Created Time", 'xcloner-backup-and-restore') ?></th>
-                <th data-field="name"><?php echo __("Size", 'xcloner-backup-and-restore') ?></th>
-                <th class="no-sort" data-field="price"><?php echo __("Action", 'xcloner-backup-and-restore') ?></th>
+                        </p>
+                    </th>
+                    <th data-field="id"><?php echo __("Backup Name", 'xcloner-backup-and-restore') ?></th>
+                    <th data-field="name"><?php echo __("Created Time", 'xcloner-backup-and-restore') ?></th>
+                    <th data-field="name"><?php echo __("Size", 'xcloner-backup-and-restore') ?></th>
+                    <th class="no-sort" data-field="price"><?php echo __("Action", 'xcloner-backup-and-restore') ?></th>
 
-            </tr>
+                </tr>
             </thead>
 
             <tbody>
 
             </tbody>
         </table>
-        
+
         <a class="waves-effect waves-light btn delete-all"><i
                 class="material-icons left">delete</i><?php echo __("Delete", 'xcloner-backup-and-restore') ?></a>
-    </div>        
+    </div>
 
 
     <!-- List Backup Content Modal-->
@@ -103,7 +105,8 @@ $available_storages = $xcloner_remote_storage->get_available_storages();
                     <?php echo __("This option will encrypt your backup archive with your current XCloner Encryption Key.", 'xcloner-backup-and-restore') ?>
                 </p>
                 <p class="center-align">
-                    <a class="waves-effect waves-light btn"><?php echo __("START ENCRYPTION", 'xcloner-backup-and-restore') ?></a>
+                    <a
+                        class="waves-effect waves-light btn"><?php echo __("START ENCRYPTION", 'xcloner-backup-and-restore') ?></a>
                 </p>
             </div>
             <ul class="files-list">
@@ -126,13 +129,12 @@ $available_storages = $xcloner_remote_storage->get_available_storages();
                 </p>
                 <p>
                     <?=__('Provide Alternative Decryption Key:')?>
-                    <input type="text"
-                           name="decryption_key"
-                           id="decryption_key"
-                           placeholder="<?=__('Decryption Key', 'xcloner-backup-and-restore')?>" />
+                    <input type="text" name="decryption_key" id="decryption_key"
+                        placeholder="<?=__('Decryption Key', 'xcloner-backup-and-restore')?>" />
                 </p>
                 <p class="center-align">
-                    <a class="waves-effect waves-light btn"><?php echo __("START DECRYPTION", 'xcloner-backup-and-restore') ?></a>
+                    <a
+                        class="waves-effect waves-light btn"><?php echo __("START DECRYPTION", 'xcloner-backup-and-restore') ?></a>
                 </p>
             </div>
             <ul class="files-list">
@@ -167,195 +169,208 @@ $available_storages = $xcloner_remote_storage->get_available_storages();
                 <h4><?php echo __("Remote Storage Transfer", 'xcloner-backup-and-restore') ?></h4>
                 <p>
                     <?php if (sizeof($available_storages)): ?>
-                <div class="row">
-                    <div class="col s12 label">
-                        <label><?php echo sprintf(
+                    <div class="row">
+                        <div class="col s12 label">
+                            <label><?php echo sprintf(
     __('Send %s to remote storage', 'xcloner-backup-and-restore'),
     "<span class='backup_name'></span>"
 ) ?></label>
-                    </div>
-                    <div class="input-field col s8 m10">
-                        <select name="transfer_storage" id="transfer_storage" class="validate" required>
-                            <option value=""
-                                    selected><?php echo __('please select...', 'xcloner-backup-and-restore') ?></option>
-                            <?php foreach ($available_storages as $storage => $text): ?>
+                        </div>
+                        <div class="input-field col s8 m10">
+                            <select name="transfer_storage" id="transfer_storage" class="validate" required>
+                                <option value="" selected><?php echo __('please select...', 'xcloner-backup-and-restore') ?></option>
+                                <?php foreach ($available_storages as $storage => $text): ?>
                                 <option value="<?php echo $storage ?>"><?php echo $text ?></option>
-                            <?php endforeach ?>
-                        </select>
+                                <?php endforeach ?>
+                            </select>
 
-                    </div>
-                    <div class="s4 m2 right">
-                        <button type="submit"
+                        </div>
+                        <div class="s4 m2 right">
+                            <button type="submit"
                                 class="upload-submit btn-floating btn-large waves-effect waves-light teal"><i
                                     class="material-icons">file_upload</i></submit>
+                        </div>
                     </div>
-                </div>
-                <div class="row status">
-                    <?php echo __("Uploading backup to the selected remote storage...", 'xcloner-backup-and-restore') ?>
-                    <span class="status-text"></span>
-                    <div class="progress">
-                        <div class="indeterminate"></div>
+                    <div class="row status">
+                        <?php echo __("Uploading backup to the selected remote storage...", 'xcloner-backup-and-restore') ?>
+                        <span class="status-text"></span>
+                        <div class="progress">
+                            <div class="indeterminate"></div>
+                        </div>
                     </div>
-                </div>
-                <?php endif ?>
+                    <?php endif ?>
                 </p>
             </div>
         </form>
     </div>
 
-<script>
-    jQuery(document).ready(function () {
+    <script>
+        jQuery(document).ready(function () {
 
-    xcloner_manage_backups.storage_selection = getUrlParam("storage_selection");
+            xcloner_manage_backups.storage_selection = getUrlParam("storage_selection");
 
-    dataTable = jQuery("#manage_backups").DataTable({
-        responsive: true,
-        bFilter: true,
-        order: [[2, "desc"]],
-        buttons: ["selectAll", "selectNone"],
-        language: {
-        emptyTable: "No backups available",
-        buttons: {
-            selectAll: "Select all items",
-            selectNone: "Select none",
-        },
-        },
-        columnDefs: [{ targets: "no-sort", orderable: false }],
-        columns: [
-        { width: "1%" },
-        { width: "25%" },
-        { width: "5%" },
-        { width: "5%" },
-        { width: "9%" },
-        ],
-        oLanguage: {
-        sSearch: "",
-        sSearchPlaceholder: "Search Backups",
-        },
-        ajax: {
-        url:
-        XCLONER_AJAXURL +
-            "&action=get_manage_backups_list&storage_selection=" +
-            xcloner_manage_backups.storage_selection,
-        },
-        fnDrawCallback: function (oSettings) {
-        jQuery("a.expand-multipart").on("click", function () {
-            jQuery(this).parent().find("ul.multipart").toggle();
-            jQuery(this).parent().find("a.expand-multipart.remove").toggle();
-            jQuery(this).parent().find("a.expand-multipart.add").toggle();
-        });
+            dataTable = jQuery("#manage_backups").DataTable({
+                responsive: true,
+                bFilter: true,
+                order: [
+                    [2, "desc"]
+                ],
+                buttons: ["selectAll", "selectNone"],
+                language: {
+                    emptyTable: "No backups available",
+                    buttons: {
+                        selectAll: "Select all items",
+                        selectNone: "Select none",
+                    },
+                },
+                columnDefs: [{
+                    targets: "no-sort",
+                    orderable: false
+                }],
+                columns: [{
+                        width: "1%"
+                    },
+                    {
+                        width: "25%"
+                    },
+                    {
+                        width: "5%"
+                    },
+                    {
+                        width: "5%"
+                    },
+                    {
+                        width: "9%"
+                    },
+                ],
+                oLanguage: {
+                    sSearch: "",
+                    sSearchPlaceholder: "Search Backups",
+                },
+                ajax: {
+                    url: XCLONER_AJAXURL +
+                        "&action=get_manage_backups_list&storage_selection=" +
+                        xcloner_manage_backups.storage_selection,
+                },
+                fnDrawCallback: function (oSettings) {
+                    jQuery("a.expand-multipart").on("click", function () {
+                        jQuery(this).parent().find("ul.multipart").toggle();
+                        jQuery(this).parent().find("a.expand-multipart.remove").toggle();
+                        jQuery(this).parent().find("a.expand-multipart.add").toggle();
+                    });
 
-        jQuery(this)
-            .off("click", ".delete")
-            .on("click", ".delete", function (e) {
-            var hash = jQuery(this).attr("href");
-            var id = hash.substr(1);
-            var data = "";
+                    jQuery(this)
+                        .off("click", ".delete")
+                        .on("click", ".delete", function (e) {
+                            var hash = jQuery(this).attr("href");
+                            var id = hash.substr(1);
+                            var data = "";
 
-            if (show_delete_alert) {
-                if (confirm("Are you sure you want to delete it?")) {
-                xcloner_manage_backups.delete_backup_by_name(id, this, dataTable);
+                            if (show_delete_alert) {
+                                if (confirm("Are you sure you want to delete it?")) {
+                                    xcloner_manage_backups.delete_backup_by_name(id, this,
+                                        dataTable);
+                                }
+                            } else {
+                                xcloner_manage_backups.delete_backup_by_name(id, this,
+                                    dataTable);
+                            }
+
+                            e.preventDefault();
+                        });
+
+                    jQuery(this)
+                        .off("click", ".download")
+                        .on("click", ".download", function (e) {
+                            var hash = jQuery(this).attr("href");
+                            var id = hash.substr(1);
+                            xcloner_manage_backups.download_backup_by_name(id);
+                            e.preventDefault();
+                        });
+
+                    jQuery(this)
+                        .off("click", ".cloud-upload")
+                        .on("click", ".cloud-upload", function (e) {
+                            var hash = jQuery(this).attr("href");
+                            var id = hash.substr(1);
+                            xcloner_manage_backups.cloud_upload(id);
+                            e.preventDefault();
+                        });
+
+                    jQuery(this)
+                        .off("click", ".copy-remote-to-local")
+                        .on("click", ".copy-remote-to-local", function (e) {
+                            var hash = jQuery(this).attr("href");
+                            var id = hash.substr(1);
+                            xcloner_manage_backups.copy_remote_to_local(id);
+                            e.preventDefault();
+                        });
+
+                    jQuery(this)
+                        .off("click", ".list-backup-content")
+                        .on("click", ".list-backup-content", function (e) {
+                            var hash = jQuery(this).attr("href");
+                            var id = hash.substr(1);
+                            xcloner_manage_backups.list_backup_content(id);
+                            e.preventDefault();
+                        });
+
+                    jQuery(this)
+                        .off("click", ".backup-encryption")
+                        .on("click", ".backup-encryption", function (e) {
+                            var hash = jQuery(this).attr("href");
+                            var id = hash.substr(1);
+                            xcloner_manage_backups.backup_encryption(id);
+                            e.preventDefault();
+                        });
+
+                    jQuery(this)
+                        .off("click", ".backup-decryption")
+                        .on("click", ".backup-decryption", function (e) {
+                            var hash = jQuery(this).attr("href");
+                            var id = hash.substr(1);
+                            xcloner_manage_backups.backup_decryption(id);
+                            e.preventDefault();
+                        });
+                },
+            });
+
+            jQuery("#select_all").click(function () {
+                jQuery("input:checkbox").prop("checked", this.checked);
+            });
+
+            jQuery(".delete-all").click(function () {
+                if (confirm("Are you sure you want to delete selected items?")) {
+                    show_delete_alert = 0;
+                    jQuery("input:checkbox").each(function () {
+                        if (jQuery(this).is(":checked")) {
+                            jQuery(this)
+                                .parent()
+                                .parent()
+                                .parent()
+                                .parent()
+                                .find(".delete")
+                                .trigger("click");
+                        }
+                    });
+                    show_delete_alert = 1;
                 }
-            } else {
-                xcloner_manage_backups.delete_backup_by_name(id, this, dataTable);
-            }
-
-            e.preventDefault();
             });
 
-        jQuery(this)
-            .off("click", ".download")
-            .on("click", ".download", function (e) {
-            var hash = jQuery(this).attr("href");
-            var id = hash.substr(1);
-            xcloner_manage_backups.download_backup_by_name(id);
-            e.preventDefault();
+            //jQuery("#remote_storage_modal").modal();
+            //jQuery("#local_storage_upload_modal").modal();
+
+            jQuery("#storage_selection").on("change", function () {
+                window.location =
+                    window.location.href.split("&storage_selection")[0] +
+                    "&storage_selection=" +
+                    jQuery(this).val();
             });
 
-        jQuery(this)
-            .off("click", ".cloud-upload")
-            .on("click", ".cloud-upload", function (e) {
-            var hash = jQuery(this).attr("href");
-            var id = hash.substr(1);
-            xcloner_manage_backups.cloud_upload(id);
-            e.preventDefault();
+            jQuery(".modal").on("hide", function () {
+                alert("ok");
             });
 
-        jQuery(this)
-            .off("click", ".copy-remote-to-local")
-            .on("click", ".copy-remote-to-local", function (e) {
-            var hash = jQuery(this).attr("href");
-            var id = hash.substr(1);
-            xcloner_manage_backups.copy_remote_to_local(id);
-            e.preventDefault();
-            });
-
-        jQuery(this)
-            .off("click", ".list-backup-content")
-            .on("click", ".list-backup-content", function (e) {
-            var hash = jQuery(this).attr("href");
-            var id = hash.substr(1);
-            xcloner_manage_backups.list_backup_content(id);
-            e.preventDefault();
-            });
-
-        jQuery(this)
-            .off("click", ".backup-encryption")
-            .on("click", ".backup-encryption", function (e) {
-            var hash = jQuery(this).attr("href");
-            var id = hash.substr(1);
-            xcloner_manage_backups.backup_encryption(id);
-            e.preventDefault();
-            });
-
-        jQuery(this)
-            .off("click", ".backup-decryption")
-            .on("click", ".backup-decryption", function (e) {
-            var hash = jQuery(this).attr("href");
-            var id = hash.substr(1);
-            xcloner_manage_backups.backup_decryption(id);
-            e.preventDefault();
-            });
-        },
-    });
-
-    jQuery("#select_all").click(function () {
-        jQuery("input:checkbox").prop("checked", this.checked);
-    });
-
-    jQuery(".delete-all").click(function () {
-        if (confirm("Are you sure you want to delete selected items?")) {
-        show_delete_alert = 0;
-        jQuery("input:checkbox").each(function () {
-            if (jQuery(this).is(":checked")) {
-            jQuery(this)
-                .parent()
-                .parent()
-                .parent()
-                .parent()
-                .find(".delete")
-                .trigger("click");
-            }
+            var show_delete_alert = 1;
         });
-        show_delete_alert = 1;
-        }
-    });
-
-    //jQuery("#remote_storage_modal").modal();
-    //jQuery("#local_storage_upload_modal").modal();
-
-    jQuery("#storage_selection").on("change", function () {
-        window.location =
-        window.location.href.split("&storage_selection")[0] +
-        "&storage_selection=" +
-        jQuery(this).val();
-    });
-
-    jQuery(".modal").on("hide", function () {
-        alert("ok");
-    });
-
-    var show_delete_alert = 1;
-    });
-
-</script>
+    </script>

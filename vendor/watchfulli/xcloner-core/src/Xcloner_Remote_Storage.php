@@ -47,19 +47,24 @@ use League\Flysystem\AwsS3v3\AwsS3Adapter;
 
 use Mhetreramesh\Flysystem\BackblazeAdapter;
 use BackblazeB2\Client as B2Client;
-
+use Exception;
 #use Sabre\DAV\Client as SabreClient;
 #use League\Flysystem\WebDAV\WebDAVAdapter;
 
 use Microsoft\Graph\Graph;
 use NicolasBeauvais\FlysystemOneDrive\OneDriveAdapter;
 
+use GuzzleHttp\Client;
+
 /**
  * Class Xcloner_Remote_Storage
  */
 class Xcloner_Remote_Storage
 {
-    private $gdrive_app_name = "XCloner Backup and Restore";
+    const GDRIVE_APP_NAME = "XCloner Backup and Restore";
+    const GDRIVE_REDIRECT_URL = "urn:ietf:wg:oauth:2.0:oob";
+    const GDRIVE_REDIRECT_URL_WATCHFUL = "https://oauth.xcloner.com/google-drive/";
+    const GDRIVE_AUTH_WATCHFUL = "899538417626-5v4t611i8m99315nrslhu061cm1va0e6.apps.googleusercontent.com";
 
     private $storage_fields = array(
         "option_prefix" => "xcloner_",
@@ -640,14 +645,10 @@ class Xcloner_Remote_Storage
             'version' => 'latest',
         );
 
-        if ($this->xcloner_settings->get_xcloner_option('xcloner_aws_endpoint')  
+        if ($this->xcloner_settings->get_xcloner_option('xcloner_aws_endpoint')
         /*&& !$this->xcloner_settings->get_xcloner_option("xcloner_aws_region")*/) {
             $credentials['endpoint'] = $this->xcloner_settings->get_xcloner_option('xcloner_aws_endpoint');
-            #$credentials['use_path_style_endpoint'] = true;
-            #$credentials['bucket_endpoint'] = false;
         }
-        //echo $this->xcloner_settings->get_xcloner_option('xcloner_aws_endpoint');
-        //print_r($credentials);exit;
         $client = new S3Client($credentials);
 
         $adapter = new AwsS3Adapter($client, $this->xcloner_settings->get_xcloner_option("xcloner_aws_bucket_name"), $this->xcloner_settings->get_xcloner_option("xcloner_aws_prefix"));
@@ -665,7 +666,6 @@ class Xcloner_Remote_Storage
         if (version_compare(phpversion(), '7.1.0', '<')) {
             throw new \Exception("BACKBLAZE API requires PHP 7.1 to be installed!");
         }
-
 
         $client = new B2Client(
             $this->xcloner_settings->get_xcloner_option("xcloner_backblaze_account_id"),
@@ -692,9 +692,10 @@ class Xcloner_Remote_Storage
             'baseUri' => $this->xcloner_settings->get_xcloner_option("xcloner_webdav_url"),
             'userName' => $this->xcloner_settings->get_xcloner_option("xcloner_webdav_username"),
             'password' => $this->xcloner_settings->get_xcloner_option("xcloner_webdav_password"),
+            'authType' => \Sabre\DAV\Client::AUTH_BASIC,
             //'proxy' => 'locahost:8888',
         );
-
+    
         $client = new \Sabre\DAV\Client($settings);
         $adapter = new \League\Flysystem\WebDAV\WebDAVAdapter($client, $this->xcloner_settings->get_xcloner_option("xcloner_webdav_target_folder"));
         $filesystem = new Filesystem($adapter, new Config([
@@ -706,14 +707,13 @@ class Xcloner_Remote_Storage
 
     /**
      * OneDrive connector
-     * 
+     *
      * https://docs.microsoft.com/en-us/onedrive/developer/rest-api/getting-started/graph-oauth?view=odsp-graph-online#token-flow
      *
      * @return void
      */
     public function get_onedrive_filesystem()
     {
-            
         $accessToken = get_option('xcloner_onedrive_access_token');
 
         $graph = new Graph();
@@ -736,16 +736,21 @@ class Xcloner_Remote_Storage
         }
 
         $client = new \Google_Client();
-        $client->setApplicationName($this->gdrive_app_name);
+        $client->setApplicationName($this::GDRIVE_APP_NAME);
         $client->setClientId($this->xcloner_settings->get_xcloner_option("xcloner_gdrive_client_id"));
         $client->setClientSecret($this->xcloner_settings->get_xcloner_option("xcloner_gdrive_client_secret"));
 
         //$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF']."?page=xcloner_remote_storage_page&action=set_gdrive_code";
-        $redirect_uri = "urn:ietf:wg:oauth:2.0:oob";
 
-        $client->setRedirectUri($redirect_uri); //urn:ietf:wg:oauth:2.0:oob
+        $gdrive_redirect_url = $this::GDRIVE_REDIRECT_URL;
+        if(!$this->xcloner_settings->get_xcloner_option("xcloner_gdrive_client_id") ) {
+            $gdrive_redirect_url = $this::GDRIVE_REDIRECT_URL_WATCHFUL;
+        }
+
+        $client->setRedirectUri($gdrive_redirect_url);
         $client->addScope("https://www.googleapis.com/auth/drive");
         $client->setAccessType('offline');
+        $client->setApprovalPrompt("force");
 
         return $client;
     }
@@ -761,9 +766,60 @@ class Xcloner_Remote_Storage
         return $authUrl = $client->createAuthUrl();
     }
 
+    public function gdrive_app_fetch_access_token($code, $param = "gdrive_auth_code")
+    {
+        $client = new Client([
+            // Base URI is used with relative requests
+            //'base_uri' => $this->gdrive_redirect_url,
+            // You can set any number of default request options.
+            'timeout'  => 2.0,
+            //'headers' => [ 'Content-Type' => 'application/json' ],
+            //'debug' => true
+        ]);
+        
+        $response = $client->request(
+            'POST',
+            $this::GDRIVE_REDIRECT_URL_WATCHFUL,
+            [
+            'form_params' => [
+                $param => $code
+               ]
+            ]
+        );
+
+        $token = json_decode($response->getBody()->getContents(), true);
+        
+        if ($response->getStatusCode() == 200 && $token['access_token']) {
+            update_option("xcloner_gdrive_access_token", json_encode($token));
+        } else {
+            $this->xcloner->trigger_message(
+                "%s connection error: Failed to get the AUTH code (".$token['error'].")",
+                "error"
+            );
+        }
+
+        return $token;
+    }
+
     public function set_access_token($code)
     {
         $client = $this->gdrive_construct();
+
+        $client->setApplicationName($this::GDRIVE_APP_NAME);
+        
+        $client_id = $this->xcloner_settings->get_xcloner_option("xcloner_gdrive_client_id");
+        if(!$client_id) {
+            $client_id = $this::GDRIVE_AUTH_WATCHFUL;
+
+            return $this->gdrive_app_fetch_access_token($code);
+        }
+        $client->setClientId($client_id);
+
+        $client->setClientSecret($this->xcloner_settings->get_xcloner_option("xcloner_gdrive_client_secret"));
+        $client->addScope("https://www.googleapis.com/auth/drive");
+
+        $client->setRedirectUri($this::GDRIVE_REDIRECT_URL);
+        $client->setAccessType('offline');
 
         if (!$client) {
             $error_msg = "Could not initialize the Google Drive Class, please check that the xcloner-google-drive plugin is enabled...";
@@ -773,16 +829,41 @@ class Xcloner_Remote_Storage
         }
 
         $token = $client->fetchAccessTokenWithAuthCode($code);
+   
         $client->setAccessToken($token);
 
-        update_option("xcloner_gdrive_access_token", $token['access_token']);
+        update_option("xcloner_gdrive_access_token", $token);
         update_option("xcloner_gdrive_refresh_token", $token['refresh_token']);
 
-        $redirect_url = ('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . "?page=xcloner_remote_storage_page#gdrive"); ?>
-        <script>
-            window.location = '<?php echo $redirect_url?>';
-        </script>
-        <?php
+        return $token;
+    }
+
+    public function gdrive_refresh_token($client){
+
+        $auth_token = $this->xcloner_settings->get_xcloner_option("xcloner_gdrive_access_token");
+        $refresh_token = $this->xcloner_settings->get_xcloner_option("xcloner_gdrive_refresh_token");
+
+        if(!$refresh_token) {
+            $refresh_token = $auth_token['refreh_token'];
+        }
+
+        if (!$this->xcloner_settings->get_xcloner_option("xcloner_gdrive_client_id")) {
+            $auth_token =$this->gdrive_app_fetch_access_token($auth_token, 'gdrive_auth_refresh');
+        }else{
+            $auth_token = $client->refreshToken($refresh_token);
+
+            if ($auth_token['access_token']) {
+                update_option("xcloner_gdrive_access_token", $auth_token);
+                update_option("xcloner_gdrive_refresh_token", $auth_token['refresh_token']);
+            }else{
+                $this->xcloner->trigger_message(
+                    "%s connection error: Failed to REFRESH the AUTH code - ".$auth_token['error_description'],
+                    "error"
+                );
+            }
+        }
+
+        return $auth_token;
     }
 
     /*
@@ -805,7 +886,17 @@ class Xcloner_Remote_Storage
             throw new \Exception($error_msg);
         }
 
-        $client->refreshToken($this->xcloner_settings->get_xcloner_option("xcloner_gdrive_refresh_token"));
+        $auth_token = $this->xcloner_settings->get_xcloner_option("xcloner_gdrive_access_token");
+        $client->setAccessToken($auth_token);
+
+        //refresh token if expired
+        if ($client->isAccessTokenExpired()) {
+            $auth_token = $this->gdrive_refresh_token($client);
+            
+            if ($auth_token) {
+                $client->setAccessToken($auth_token);
+            }
+        }
 
         $service = new \Google_Service_Drive($client);
 
