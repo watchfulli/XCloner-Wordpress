@@ -36,3 +36,5 @@ assignees: jimiero
 - [ ] Enable/Disable logs - check if enabling/disabling logs in XCloner works
 - [ ] Site connects/validates in Watchful (test `Refresh data` success)
 - [ ] XCloner backup works as expected in Watchful
+- [ ] Check if XCloner version has been incremented from previous release
+- [ ] Check if release has changelog notes
