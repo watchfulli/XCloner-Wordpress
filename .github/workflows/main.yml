@@ -11,7 +11,7 @@ jobs:
     - uses: actions/checkout@master
     - name: Build
       run: |
-        npm install
+        npm install --only=prod
         npm run build
     - name: WordPress Plugin Deploy
       uses: 10up/action-wordpress-plugin-deploy@master
