@@ -312,7 +312,9 @@ class Xcloner_File_System
         if ($this->is_multipart($backup_name)) {
             $backup_parts = $this->get_multipart_files($backup_name);
             foreach ($backup_parts as $part_file) {
-                $backup_size += $this->get_storage_filesystem()->getSize($part_file);
+                if ($this->get_storage_filesystem()->has($part_file)) {
+                    $backup_size += $this->get_storage_filesystem()->getSize($part_file);
+                }
             }
         }
 
