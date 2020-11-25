@@ -294,7 +294,7 @@ class Xcloner extends watchfulli\XClonerCore\Xcloner
         <?php
         if (function_exists('wp_create_nonce')) {
             echo "const XCLONER_WPNONCE = '".wp_create_nonce('xcloner-api-nonce')."';";
-        }else{
+        } else {
             echo "const XCLONER_WPNONCE = null;";
         } ?>
 
@@ -555,6 +555,10 @@ class Xcloner extends watchfulli\XClonerCore\Xcloner
      */
     public function onedrive_auth_token()
     {
+        if (!get_option('xcloner_onedrive_enable', 0)) {
+            return false;
+        }
+        
         $onedrive_expire_in  = get_option('xcloner_onedrive_expires_in');
         $onedrive_refresh_token = get_option('xcloner_onedrive_refresh_token');
 
