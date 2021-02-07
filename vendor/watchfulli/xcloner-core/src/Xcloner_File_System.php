@@ -1,4 +1,5 @@
 <?php
+
 namespace watchfulli\XClonerCore;
 
 /**
@@ -105,8 +106,8 @@ class Xcloner_File_System
             $this->storage_filesystem_append = new Filesystem($this->storage_adapter, new Config([
                 'disable_asserts' => true,
             ]));
-        } catch (Exception $e) {
-            $this->logger->error("Filesystem Initialization Error: ".$e->getMessage());
+        } catch (\Exception $e) {
+            $this->logger->error("Filesystem Initialization Error: " . $e->getMessage());
         }
 
 
@@ -163,7 +164,7 @@ class Xcloner_File_System
     {
         if ($remote_storage_selection != "") {
             $remote_storage = $this->get_xcloner_container()->get_xcloner_remote_storage();
-            $method = "get_".$remote_storage_selection."_filesystem";
+            $method = "get_" . $remote_storage_selection . "_filesystem";
 
             if (!method_exists($remote_storage, $method)) {
                 return false;
@@ -312,9 +313,7 @@ class Xcloner_File_System
         if ($this->is_multipart($backup_name)) {
             $backup_parts = $this->get_multipart_files($backup_name);
             foreach ($backup_parts as $part_file) {
-                if ($this->get_storage_filesystem()->has($part_file)) {
-                    $backup_size += $this->get_storage_filesystem()->getSize($part_file);
-                }
+                $backup_size += $this->get_storage_filesystem()->getSize($part_file);
             }
         }
 
@@ -440,7 +439,7 @@ class Xcloner_File_System
                     $this->build_files_list($file);
                     $counter++;
                 } else {
-                    $this->tmp_filesystem_append->write($this->get_temp_dir_handler(), $file."\n");
+                    $this->tmp_filesystem_append->write($this->get_temp_dir_handler(), $file . "\n");
                 }
             }
         } else {
@@ -481,15 +480,15 @@ class Xcloner_File_System
     {
         $return = array();
 
-        $files_list_file = $this->xcloner_settings->get_xcloner_tmp_path().DS.$this->get_included_files_handler();
+        $files_list_file = $this->xcloner_settings->get_xcloner_tmp_path() . DS . $this->get_included_files_handler();
         if (file_exists($files_list_file)) {
             $return[] = $files_list_file;
         }
 
         if ($this->xcloner_settings->get_xcloner_option('xcloner_enable_log')) {
-            $log_file = $this->xcloner_settings->get_xcloner_tmp_path().DS.$this->xcloner_settings->get_logger_filename(1);
+            $log_file = $this->xcloner_settings->get_xcloner_tmp_path() . DS . $this->xcloner_settings->get_logger_filename(1);
             if (!file_exists($log_file)) {
-                $log_file = $this->xcloner_settings->get_xcloner_store_path().DS.$this->xcloner_settings->get_logger_filename();
+                $log_file = $this->xcloner_settings->get_xcloner_store_path() . DS . $this->xcloner_settings->get_logger_filename();
             }
 
             if (file_exists($log_file)) {
@@ -502,10 +501,12 @@ class Xcloner_File_System
 
     public function remove_tmp_filesystem()
     {
+        $tmp_path = $this->xcloner_settings->get_xcloner_tmp_path();
+
         //delete the temporary folder
         $this->logger->debug(sprintf(
             "Deleting the temporary storage folder %s",
-            $this->xcloner_settings->get_xcloner_tmp_path()
+            $tmp_path
         ));
 
         $contents = $this->get_tmp_filesystem()->listContents();
@@ -517,8 +518,10 @@ class Xcloner_File_System
         }
 
         try {
-            rmdir($this->xcloner_settings->get_xcloner_tmp_path());
-        } catch (Exception $e) {
+            if (is_dir($tmp_path)) {
+                rmdir($tmp_path);
+            }
+        } catch (\Exception $e) {
             //silent continue
         }
 
@@ -627,7 +630,7 @@ class Xcloner_File_System
         try {
             $files = $this->start_filesystem->listContents($folder);
             foreach ($files as $file) {
-                if (!is_readable($this->xcloner_settings->get_xcloner_start_path().DS.$file['path'])) {
+                if (!is_readable($this->xcloner_settings->get_xcloner_start_path() . DS . $file['path'])) {
                     $this->logger->info(sprintf(
                         __("Excluding %s from the filesystem list, file not readable"),
                         $file['path']
@@ -658,14 +661,14 @@ class Xcloner_File_System
                     ));
                 }
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
         }
     }
 
     public function estimate_read_write_time()
     {
-        $tmp_file = ".xcloner".substr(md5(time()), 0, 5);
+        $tmp_file = ".xcloner" . substr(md5(time()), 0, 5);
 
         $start_time = microtime(true);
 
@@ -681,7 +684,7 @@ class Xcloner_File_System
             $return['reading_time'] = $this->estimate_reading_time($tmp_file);
 
             $this->tmp_filesystem->delete($tmp_file);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
         }
 
@@ -703,11 +706,11 @@ class Xcloner_File_System
         $_storage_size = 0;
         $_backup_files_list = array();
 
-        $options_prefix = $this->xcloner_settings->get_options_prefix()."_".($storage_name == "LOCAL"?"":strtolower( $storage_name)."_");
-        
+        $options_prefix = $this->xcloner_settings->get_options_prefix() . "_" . ($storage_name == "LOCAL" ? "" : strtolower($storage_name) . "_");
+
         //rule date limit
         $xcloner_cleanup_retention_limit_days = $options_prefix . "cleanup_retention_limit_days";
-        $current_timestamp = strtotime("-".$this->xcloner_settings->get_xcloner_option($xcloner_cleanup_retention_limit_days)." days");
+        $current_timestamp = strtotime("-" . $this->xcloner_settings->get_xcloner_option($xcloner_cleanup_retention_limit_days) . " days");
 
         $files = $storage_filesystem->listContents();
 
@@ -734,24 +737,29 @@ class Xcloner_File_System
 
                 $backup_day_of_month =  date('j', $file['timestamp']);
                 if (in_array($backup_day_of_month, $exclude_days)) {
-                    $this->logger->info(sprintf("Excluding %s from storage %s cleanup trashing as it was taken on month day %s ", 
-                                                    $file['path'], 
-                                                    $storage_name,
-                                                    $backup_day_of_month)
-                                                );
+                    $this->logger->info(
+                        sprintf(
+                            "Excluding %s from storage %s cleanup trashing as it was taken on month day %s ",
+                            $file['path'],
+                            $storage_name,
+                            $backup_day_of_month
+                        )
+                    );
                     continue;
                 }
             }
 
             //processing rule folder capacity
-            $xcloner_cleanup_capacity_limit = $options_prefix."cleanup_capacity_limit";
-            if ($this->xcloner_settings->get_xcloner_option($xcloner_cleanup_capacity_limit) &&
-                ($_storage_size >= ($set_storage_limit = 1024 * 1024 * $this->xcloner_settings->get_xcloner_option($xcloner_cleanup_capacity_limit)))) {    //bytes
+            $xcloner_cleanup_capacity_limit = $options_prefix . "cleanup_capacity_limit";
+            if (
+                $this->xcloner_settings->get_xcloner_option($xcloner_cleanup_capacity_limit) &&
+                ($_storage_size >= ($set_storage_limit = 1024 * 1024 * $this->xcloner_settings->get_xcloner_option($xcloner_cleanup_capacity_limit)))
+            ) {    //bytes
                 $storage_filesystem->delete($file['path']);
                 $_storage_size -= $file['size'];
-                $this->logger->info("Deleting backup ".$file['path']." from storage system ".$storage_name." matching rule", array(
+                $this->logger->info("Deleting backup " . $file['path'] . " from storage system " . $storage_name . " matching rule", array(
                     "STORAGE SIZE LIMIT",
-                    $_storage_size." >= ".$set_storage_limit
+                    $_storage_size . " >= " . $set_storage_limit
                 ));
             }
 
@@ -759,9 +767,9 @@ class Xcloner_File_System
             $xcloner_cleanup_retention_limit_days = $options_prefix . "cleanup_retention_limit_days";
             if ($this->xcloner_settings->get_xcloner_option($xcloner_cleanup_retention_limit_days) && ($current_timestamp >= $file['timestamp'])) {
                 $storage_filesystem->delete($file['path']);
-                $this->logger->info("Deleting backup ".$file['path']." from storage system ".$storage_name." matching rule", array(
+                $this->logger->info("Deleting backup " . $file['path'] . " from storage system " . $storage_name . " matching rule", array(
                     "RETENTION LIMIT TIMESTAMP",
-                    $file['timestamp']." =< ".$this->xcloner_settings->get_xcloner_option($xcloner_cleanup_retention_limit_days)
+                    $file['timestamp'] . " =< " . $this->xcloner_settings->get_xcloner_option($xcloner_cleanup_retention_limit_days)
                 ));
             }
 
@@ -770,9 +778,9 @@ class Xcloner_File_System
             if ($this->xcloner_settings->get_xcloner_option($xcloner_cleanup_retention_limit_archives) && ($_backups_counter > $this->xcloner_settings->get_xcloner_option($xcloner_cleanup_retention_limit_archives))) {
                 $storage_filesystem->delete($file['path']);
                 $_backups_counter--;
-                $this->logger->info("Deleting backup ".$file['path']." from storage system ".$storage_name." matching rule", array(
-                    "BACKUP QUANTITY LIMIT ".$xcloner_cleanup_retention_limit_archives,
-                    $_backups_counter." >= ".$this->xcloner_settings->get_xcloner_option($xcloner_cleanup_retention_limit_archives)
+                $this->logger->info("Deleting backup " . $file['path'] . " from storage system " . $storage_name . " matching rule", array(
+                    "BACKUP QUANTITY LIMIT " . $xcloner_cleanup_retention_limit_archives,
+                    $_backups_counter . " >= " . $this->xcloner_settings->get_xcloner_option($xcloner_cleanup_retention_limit_archives)
                 ));
             }
         }
@@ -873,7 +881,7 @@ class Xcloner_File_System
             }
 
             if ($timestamp <= $this->get_diff_timestamp_start()) {
-                return " file DIFF timestamp ".$timestamp." < ".$this->diff_timestamp_start;
+                return " file DIFF timestamp " . $timestamp . " < " . $this->diff_timestamp_start;
             }
         }
 
@@ -886,7 +894,7 @@ class Xcloner_File_System
 
         if ($xcloner_exclude_files_larger_than_mb = $this->xcloner_settings->get_xcloner_option('xcloner_exclude_files_larger_than_mb')) {
             if (isset($file['size']) && $file['size'] > $this->calc_to_bytes($xcloner_exclude_files_larger_than_mb)) {
-                return "> ".$xcloner_exclude_files_larger_than_mb."MB";
+                return "> " . $xcloner_exclude_files_larger_than_mb . "MB";
             }
         }
 
@@ -899,10 +907,10 @@ class Xcloner_File_System
                 if ($excluded_file_pattern == "/") {
                     $needle = "$";
                 } else {
-                    $needle = "$".$excluded_file_pattern;
+                    $needle = "$" . $excluded_file_pattern;
                 }
 
-                if (strstr("$".$file['path'], $needle)) {
+                if (strstr("$" . $file['path'], $needle)) {
                     return $excluded_file_pattern;
                 }
             }
@@ -983,11 +991,11 @@ class Xcloner_File_System
                 if ($file['path'] == "/") {
                     $needle = "/";
                 } else {
-                    $needle = "/".$file['path'];
+                    $needle = "/" . $file['path'];
                 }
                 //echo $needle."---".$excluded_file_pattern."---\n";
 
-                if (@preg_match("/(^|^\/)".$excluded_file_pattern."/i", $needle)) {
+                if (@preg_match("/(^|^\/)" . $excluded_file_pattern . "/i", $needle)) {
                     return $excluded_file_pattern;
                 }
             }
@@ -1009,14 +1017,14 @@ class Xcloner_File_System
 
         $csv_filename = str_replace('"', '""', $file['path']);
 
-        $line = '"'.($csv_filename).'","'.$file['timestamp'].'","'.$file['size'].'","'.$file['visibility'].'","'.$storage.'"'.PHP_EOL;
+        $line = '"' . ($csv_filename) . '","' . $file['timestamp'] . '","' . $file['size'] . '","' . $file['visibility'] . '","' . $storage . '"' . PHP_EOL;
 
         $this->last_logged_file = $file['path'];
 
         if ($file['type'] == "dir") {
             try {
-                $this->tmp_filesystem_append->write($this->get_temp_dir_handler(), $file['path']."\n");
-            } catch (Exception $e) {
+                $this->tmp_filesystem_append->write($this->get_temp_dir_handler(), $file['path'] . "\n");
+            } catch (\Exception $e) {
                 $this->logger->error($e->getMessage());
             }
         }
@@ -1039,12 +1047,12 @@ class Xcloner_File_System
         try {
             if (!$this->tmp_filesystem_append->has($this->get_included_files_handler())) {
                 //adding fix for UTF-8 CSV preview
-                $start_line = "\xEF\xBB\xBF".'"Filename","Timestamp","Size","Visibility","Storage"'.PHP_EOL;
+                $start_line = "\xEF\xBB\xBF" . '"Filename","Timestamp","Size","Visibility","Storage"' . PHP_EOL;
                 $this->tmp_filesystem_append->write($this->get_included_files_handler(), $start_line);
             }
 
             $this->tmp_filesystem_append->write($this->get_included_files_handler(), $line);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
         }
 
@@ -1090,8 +1098,10 @@ class Xcloner_File_System
      */
     private function scan_finished()
     {
-        if ($this->tmp_filesystem_append->has($this->get_temp_dir_handler()) &&
-            $this->tmp_filesystem_append->getSize($this->get_temp_dir_handler())) {
+        if (
+            $this->tmp_filesystem_append->has($this->get_temp_dir_handler()) &&
+            $this->tmp_filesystem_append->getSize($this->get_temp_dir_handler())
+        ) {
             return false;
         }
 

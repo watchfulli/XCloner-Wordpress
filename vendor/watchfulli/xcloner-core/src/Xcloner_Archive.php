@@ -287,9 +287,8 @@ class Xcloner_Archive extends Tar
         if (!$subject) {
             $subject = sprintf(__("New backup generated %s"), $backup_name);
         }
-        if (!isset($additional['backup_size'])) {
-            $additional['backup_size'] = size_format($this->filesystem->get_backup_size($backup_name));
-        }
+
+        //$body = sprintf(__("Generated Backup Size: %s"), size_format($this->filesystem->get_backup_size($backup_name)));
         $body = sprintf(__("Generated Backup Size: %s"), $additional['backup_size']);
         $body .= "<br /><br />";
 
@@ -866,7 +865,7 @@ class Xcloner_Archive extends Tar
 
     public function open($file, $start_byte = 0)
     {
-        parent::open($file);
+       parent::open($file);
 
         if ($start_byte) {
             fseek($this->fh, $start_byte);
@@ -926,7 +925,7 @@ class Xcloner_Archive extends Tar
             throw new ArchiveIOException('Can not read from a closed archive');
         }
 
-        $files_counter = 0;
+		$files_counter = 0;
         $result = array();
 
         while ($read = $this->readbytes(512)) {
@@ -935,23 +934,24 @@ class Xcloner_Archive extends Tar
                 continue;
             }
 
-            if ($files_limit) {
-                if (++$files_counter > $files_limit) {
-                    $return['extracted_files'] = $result;
-                    $return['start'] = ftell($this->fh)-512;
-                    return $return;
-                }
-            }
+            if($files_limit)
+            {
+				if(++$files_counter > $files_limit)
+				{
+					$return['extracted_files'] = $result;
+					$return['start'] = ftell($this->fh)-512;
+					return $return;
+				}
+			}
 
-            if ($header['typeflag'] == 5) {
-                $header['size'] = 0;
-            }
+			if($header['typeflag'] == 5)
+				$header['size'] = 0;
 
             $this->skipbytes(ceil($header['size'] / 512) * 512);
             $result[] = $this->header2fileinfo($header);
         }
 
-        $return['extracted_files'] = $result;
+		$return['extracted_files'] = $result;
 
         $this->close();
         return $return;
@@ -969,16 +969,16 @@ class Xcloner_Archive extends Tar
      */
     public function extract($outdir, $strip = '', $exclude = '', $include = '', $files_limit = 0)
     {
+
         if ($this->closed || !$this->file) {
             throw new ArchiveIOException('Can not read from a closed archive');
         }
 
         $outdir = rtrim($outdir, '/');
-        if (!is_dir($outdir)) {
-            @mkdir($outdir, 0755, true);
-        } else {
-            @chmod($outdir, 0777);
-        }
+        if(!is_dir($outdir))
+				@mkdir($outdir, 0755, true);
+			else
+				@chmod($outdir, 0777);
 
         //@mkdir($outdir, 0777, true);
 
@@ -986,8 +986,8 @@ class Xcloner_Archive extends Tar
             throw new ArchiveIOException("Could not create directory '$outdir'");
         }
 
-        $files_counter = 0;
-        $return = array();
+		$files_counter = 0;
+		$return = array();
 
         $extracted = array();
         while ($dat = $this->readbytes(512)) {
@@ -997,13 +997,15 @@ class Xcloner_Archive extends Tar
                 continue;
             }
 
-            if ($files_limit) {
-                if (++$files_counter > $files_limit) {
-                    $return['extracted_files'] = $extracted;
-                    $return['start'] = ftell($this->fh)-512;
-                    return $return;
-                }
-            }
+            if($files_limit)
+            {
+				if(++$files_counter > $files_limit)
+				{
+					$return['extracted_files'] = $extracted;
+					$return['start'] = ftell($this->fh)-512;
+					return $return;
+				}
+			}
 
             $fileinfo = $this->header2fileinfo($header);
 
@@ -1019,17 +1021,15 @@ class Xcloner_Archive extends Tar
             // create output directory
             $output    = $outdir.'/'.$fileinfo->getPath();
             $directory = ($fileinfo->getIsdir()) ? $output : dirname($output);
-            if (!is_dir($directory)) {
-                @mkdir($directory, 0755, true);
-            } else {
-                @chmod($directory, 0755);
-            }
+            if(!is_dir($directory))
+				@mkdir($directory, 0755, true);
+			else
+				@chmod($directory, 0755);
 
             // extract data
             if (!$fileinfo->getIsdir()) {
-                if (file_exists($output)) {
-                    unlink($output);
-                }
+				if(file_exists($output))
+					unlink($output);
 
                 $fp = fopen($output, "wb");
                 if (!$fp) {

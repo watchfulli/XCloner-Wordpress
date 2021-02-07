@@ -443,7 +443,7 @@ class Xcloner_Api
      */
     private function process_params($params)
     {
-        if ($params && property_exists($params, 'processed') && $params->processed) {
+        if ($params && $params->processed) {
             $this->form_params = json_decode(json_encode((array)$params), true);
             return;
         }
