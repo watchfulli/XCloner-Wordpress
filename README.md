@@ -38,6 +38,18 @@ XCloner Backup tool uses Open Source standards like TAR, Mysql and CSV formats s
 
 You can do it easily from the Wordpress backend.
 
+## Development
+
+
+Install npm packages:
+`npm install`
+
+Build Webpack assets for production:
+`npm run build-prod`
+
+Watch for JS/CSS changes and automatically build them: 
+`npm run start`
+
 ## Frequently Asked Questions
 
 <b>Where does XCloner keep it's database backups?</b>
