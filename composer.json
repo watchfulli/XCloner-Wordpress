@@ -13,7 +13,5 @@
         "league/flysystem-azure-blob-storage": "^0.1.6",
         "nicolasbeauvais/flysystem-onedrive": "^1.0"
     },
-    "prefer-stable": true,
-    "require-dev": {
-    }
+    "prefer-stable": true
 }
