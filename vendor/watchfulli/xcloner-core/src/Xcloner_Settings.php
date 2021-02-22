@@ -649,7 +649,7 @@ class Xcloner_Settings
             array(
                 'xcloner_mysql_password',
                 __('Wordpress mysql password', 'xcloner-backup-and-restore'),
-                $this->get_db_username(),
+                $this->get_db_password(),
                 //'disabled'
             )
         );
