@@ -516,14 +516,9 @@ class Xcloner_File_System
                 $this->get_tmp_filesystem()->delete($file_info['path']);
             }
         }
-
-        try {
-            if (is_dir($tmp_path)) {
-                rmdir($tmp_path);
-            }
-        } catch (\Exception $e) {
-            //silent continue
-        }
+        
+        if (is_dir($tmp_path)) {
+            rmdir($tmp_path);
 
         return;
     }
