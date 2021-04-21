@@ -371,7 +371,7 @@ $backup_list = $xcloner_file_system->get_latest_backups();
                         <div class="toggler">
                             <button class="btn waves-effect waves-light restore_remote_mysqldump normal " type="submit"
                                 id="" name="action"><?php echo __("Restore", 'xcloner-backup-and-restore') ?>
-                                <i class="material-icons left">navigate_before</i>
+                                <i class="material-icons left">download</i>
                             </button>
                             <button class="btn waves-effect waves-light red restore_remote_mysqldump cancel"
                                 type="submit" id=""
