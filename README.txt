@@ -121,6 +121,7 @@ Of course, schedules can be adjusted accordingly to how often you update your si
 * Improved Google Drive integration
 * http(s) url email backup fix
 * design changes 
+* security fixes
 
 = 4.2.15 =
 
