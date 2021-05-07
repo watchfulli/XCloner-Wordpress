@@ -153,7 +153,9 @@ class Xcloner_Api
 
         $this->process_params($params);
 
-        if (isset($_POST['id'])) {
+        if ( isset( $_POST['id'] ) ) {
+		
+	    $_POST['id'] = $this->xcloner_sanitization->sanitize_input_as_int( $_POST['id'] );
             $this->form_params['backup_params']['backup_name'] = $this->xcloner_sanitization->sanitize_input_as_string($_POST['backup_name']);
             $this->form_params['backup_params']['email_notification'] = $this->xcloner_sanitization->sanitize_input_as_string($_POST['email_notification']);
             if ($_POST['diff_start_date']) {
