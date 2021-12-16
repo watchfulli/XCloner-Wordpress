@@ -1,6 +1,7 @@
 {
     "name": "watchfulli/xcloner-wordpress",
     "license": "GPL-2.0-or-later",
+    "description" : "WordPress backup plugin for XCloner",
     "require": {
         "watchfulli/xcloner-core": "dev-master",
         "splitbrain/php-archive": "^1.0",
