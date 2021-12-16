@@ -7,8 +7,9 @@ env:
   WP_CORE_DIR: /github/home/wp-tests/wordpress
 
 jobs:
-  ## Check PHP Compat
-  php_compat:
+
+  ## Validate composer file
+  composer_valid:
     runs-on: ${{ matrix.operating-system }}
     strategy:
       matrix:
@@ -24,6 +25,23 @@ jobs:
 
     - name: Validate composer.json and composer.lock
       run: composer validate --strict
+
+
+  ## Check PHP Compat
+  php_compat:
+    needs: composer_valid
+    runs-on: ${{ matrix.operating-system }}
+    strategy:
+      matrix:
+        operating-system: ['ubuntu-latest']
+        php-versions: ['7.4']
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php-versions }}
 
     - name: Cache Composer packages
       id: composer-cache
