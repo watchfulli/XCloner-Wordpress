@@ -9,9 +9,7 @@ env:
 jobs:
   ## Check PHP Compat
   php_compat:
-    php_compat:
     runs-on: ${{ matrix.operating-system }}
-    needs: test
     strategy:
       matrix:
         operating-system: ['ubuntu-latest']
