@@ -15,5 +15,6 @@
     },
     "prefer-stable": true,
     "require-dev": {
+        "squizlabs/php_codesniffer": "3.*"
     }
 }
