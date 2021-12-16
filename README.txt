@@ -2,18 +2,19 @@
 Contributors: watchful,ovidiul
 Donate link: http://www.xcloner.com
 Tags: backup, database backup, cloud backup, WordPress backup, WordPress migration
-Requires at least: 3.0.1
+Requires at least: 5.1
 Requires PHP: 7.1
 Tested up to: 5.5
 Stable tag: 4.2.163
 
-XCloner is a backup plugin that allows you to safely back up and restore your WordPress sites. You can send site backups to SFTP, Dropbox, Amazon, Google Drive, Backblaze and other locations. 
+
+XCloner is a backup plugin that allows you to safely back up and restore your WordPress sites. You can send site backups to SFTP, Dropbox, Amazon, Google Drive, Backblaze and other locations.
 
 == Description ==
 
 [XCloner](https://www.xcloner.com) is a backup plugin that allows you to safely back up and restore your WordPress sites. You can send your site backups to SFTP, Dropbox, Amazon, Google Drive, Backblaze and other locations. You can create backups manually or automatically with XCloner’s built-in scheduler.
 
-XCloner enables you to automatically generate backups with the built-in cron script. These cron jobs can run daily, weekly, monthly or even hourly. 
+XCloner enables you to automatically generate backups with the built-in cron script. These cron jobs can run daily, weekly, monthly or even hourly.
 
 XCloner allows you to generate custom backups of any WordPress site, and then restore the backup on any other location with the help of the automatic restore script we provide!
 
@@ -50,7 +51,7 @@ XCloner has a variety of restoration options including: All Files, Only Plugins 
 
 1. In the WordPress backend, select Plugins > Add New.
 2. In the search bar enter `xcloner`.
-3. When the XCLoner listing is shown, click the 'Install` button. 
+3. When the XCLoner listing is shown, click the 'Install` button.
 4. Following installation, click the `Activate` button.
 
 UPGRADE:
@@ -85,19 +86,19 @@ Yes, if XCloner Logger option is enabled, it will store a log file inside the xc
 = What are Differentials Backups? =
 
 Differential Backups contain files modified after a certian period of time. So each time backup runs, modified files after that period of time are added to a new Backup archive.
-Compared to Incremental Backups, which contain only modified files from the previous run, they use more space but are more reliable for files restore. 
+Compared to Incremental Backups, which contain only modified files from the previous run, they use more space but are more reliable for files restore.
 They will use considerably less space than a full backup however.
 
 = Why Differential Backups and will you support Incremental Backups? =
 
-The main difference comes from how reliable a backup set it. For instance, if something happens to one backup archive from the Incremental Backup set, then it is possible you will lose 
-the files changes in that period of time, however if the same case happens to a Differential Backup, then the files can easily be recovered from any of the other Differential Backups. The 
-storage difference between Incremental Backups and Differential Backups is not significant and considering the reliability of the Differential Set so we have decided, for now, to not implement 
+The main difference comes from how reliable a backup set it. For instance, if something happens to one backup archive from the Incremental Backup set, then it is possible you will lose
+the files changes in that period of time, however if the same case happens to a Differential Backup, then the files can easily be recovered from any of the other Differential Backups. The
+storage difference between Incremental Backups and Differential Backups is not significant and considering the reliability of the Differential Set so we have decided, for now, to not implement
 further Incremental Backups.
 
 = What would a good Backup Procedure be with Differential Backups? =
 
-As a general rule, I would recommend setting a weekly full site backup schedule and then a daily schedule for a differential backup. You can also include a daily backup of the database in the same Differential Backup. 
+As a general rule, I would recommend setting a weekly full site backup schedule and then a daily schedule for a differential backup. You can also include a daily backup of the database in the same Differential Backup.
 Of course, schedules can be adjusted accordingly to how often you update your site, the size of it and the storage space available.
 
 == Screenshots ==
@@ -120,7 +121,7 @@ Of course, schedules can be adjusted accordingly to how often you update your si
 * Backblaze remote storage UI text changes
 * Improved Google Drive integration
 * http(s) url email backup fix
-* design changes 
+* design changes
 * security fixes
 
 = 4.2.15 =
@@ -133,29 +134,29 @@ Of course, schedules can be adjusted accordingly to how often you update your si
 * WP-CLI --quiet flag addon, --encrypt/--decrypt addon
 * CSRF nonces implementation API
 
-= 4.2.14 = 
+= 4.2.14 =
 
 * CSRF restore vulnerability fix
 
 = 4.2.13 =
 
 * conflict fix bootstrap modal display
-* WP 5.5 compatibility check and update 
+* WP 5.5 compatibility check and update
 
 = 4.2.12 =
 
 * Google Drive authorization fix
 
-= 4.2.11 = 
+= 4.2.11 =
 
 * OneDrive file upload size limit fix
 
 = 4.2.10 =
 
 * Add `Local Storage` to the `Remote Storage` area
-* Cleanup uploaded archive after restore 
+* Cleanup uploaded archive after restore
 * Add WP-CLI support
-* Add Microsoft OneDrive support to remote storage 
+* Add Microsoft OneDrive support to remote storage
 * BUG: Load webdav vendor lib only if webdav is activated
 * Add support for Backblaze application keys
 * BUG: Google Drive upload issue
@@ -180,23 +181,23 @@ Of course, schedules can be adjusted accordingly to how often you update your si
 
 ** Implemented enhancements: **
 
-* Improve error when connecting to remote site using restore script from another site  
-* Improve error message when accessing restore script directly 
-* Encrypt database password during restore 
-* Update default regex exclusions 
-* Replace youtube links 
-* Add additional cleanup & quota options for backup storage 
-* Add standalone CLI for making backups 
-* Move `send to remote destination` option to the `Backup Options` tab 
+* Improve error when connecting to remote site using restore script from another site
+* Improve error message when accessing restore script directly
+* Encrypt database password during restore
+* Update default regex exclusions
+* Replace youtube links
+* Add additional cleanup & quota options for backup storage
+* Add standalone CLI for making backups
+* Move `send to remote destination` option to the `Backup Options` tab
 
 ** Fixed bugs: **
 
-* Select All Backups delete does not work 
-* JS Error during restoration 
-* Ajax error when viewing empty storage area 
+* Select All Backups delete does not work
+* JS Error during restoration
+* Ajax error when viewing empty storage area
 * Javascript error when running a backup, and clicking "Send Backup to remote storage"
-* SFTP bug 
-* Live DB restore replaces WP Options table 
+* SFTP bug
+* Live DB restore replaces WP Options table
 
 = 4.1.5 =
 * SFTP upoad fix
@@ -210,15 +211,15 @@ Of course, schedules can be adjusted accordingly to how often you update your si
 = 4.1.3 =
 * database include tables fix
 
-= 4.1.2 = 
+= 4.1.2 =
 * improved default backup storage path security
 * improved remote storage security
 
-= 4.1.2 = 
+= 4.1.2 =
 * vendor lib updates
 * flysystem azure storage Upgrade
 
-= 4.1.1 = 
+= 4.1.1 =
 * log tmp directories fix, tracking only ERROR reports from php
 * security improvement backup log name
 * database restore resume fix
@@ -240,7 +241,7 @@ Of course, schedules can be adjusted accordingly to how often you update your si
 * microtime float div fix
 * manage backups data order fix
 
-= 4.0.8 = 
+= 4.0.8 =
 * updated vendor library dependencies, AWS, phpseclib
 * TAR compression fix
 * 7.2 compatibility checks and fixes
@@ -293,10 +294,10 @@ Of course, schedules can be adjusted accordingly to how often you update your si
 * Code rewritten from ground up to make use of latest code standards
 * Added support for Dropbox, Amazon S3, Azure Blob and SFTP storage
 * Added a new restore script
-* Added an improved backup and system logger 
+* Added an improved backup and system logger
 * New Setting Panel
 * New Manage Backups Panel with the options to Delete, Transfer to Remote Storage, Download and List Backup archive contents
-* Added mail notifications for scheduled backups 
+* Added mail notifications for scheduled backups
 * Added a new Cron Scheduler to make use of Wordpress System Cron option
 * Improved user input sanitization
 * Improved recursive file scanning and archiving
@@ -310,13 +311,13 @@ Of course, schedules can be adjusted accordingly to how often you update your si
 = 3.1.4 =
 * DropPHP DropBox library update, upload fixes for files larger than 150MB
 
-= 3.1.3 = 
+= 3.1.3 =
 * XSS fix
 
 = 3.1.2 =
 * vulnerability fix
 
-= 3.1.1 = 
+= 3.1.1 =
 * added CSRF protection
 
 = 3.1.0 =
@@ -372,7 +373,7 @@ Please check changelog!
 
 1. In the WordPress backend, select Plugins > Add New.
 2. In the search bar enter `xcloner`.
-3. When the XCLoner listing is shown, click the 'Install` button. 
+3. When the XCLoner listing is shown, click the 'Install` button.
 4. Following installation, click the `Activate` button.
 
 UPGRADE:
@@ -407,19 +408,19 @@ Yes, if XCloner Logger option is enabled, it will store a log file inside the xc
 = What are Differentials Backups? =
 
 Differential Backups contain files modified after a certian period of time. So each time backup runs, modified files after that period of time are added to a new Backup archive.
-Compared to Incremental Backups, which contain only modified files from the previous run, they use more space but are more reliable for files restore. 
+Compared to Incremental Backups, which contain only modified files from the previous run, they use more space but are more reliable for files restore.
 They will use considerably less space than a full backup however.
 
 = Why Differential Backups and will you support Incremental Backups? =
 
-The main difference comes from how reliable a backup set it. For instance, if something happens to one backup archive from the Incremental Backup set, then it is possible you will lose 
-the files changes in that period of time, however if the same case happens to a Differential Backup, then the files can easily be recovered from any of the other Differential Backups. The 
-storage difference between Incremental Backups and Differential Backups is not significant and considering the reliability of the Differential Set so we have decided, for now, to not implement 
+The main difference comes from how reliable a backup set it. For instance, if something happens to one backup archive from the Incremental Backup set, then it is possible you will lose
+the files changes in that period of time, however if the same case happens to a Differential Backup, then the files can easily be recovered from any of the other Differential Backups. The
+storage difference between Incremental Backups and Differential Backups is not significant and considering the reliability of the Differential Set so we have decided, for now, to not implement
 further Incremental Backups.
 
 = What would a good Backup Procedure be with Differential Backups? =
 
-As a general rule, I would recommend setting a weekly full site backup schedule and then a daily schedule for a differential backup. You can also include a daily backup of the database in the same Differential Backup. 
+As a general rule, I would recommend setting a weekly full site backup schedule and then a daily schedule for a differential backup. You can also include a daily backup of the database in the same Differential Backup.
 Of course, schedules can be adjusted accordingly to how often you update your site, the size of it and the storage space available.
 
 == Screenshots ==
@@ -435,4 +436,3 @@ Of course, schedules can be adjusted accordingly to how often you update your si
 9. Restore Backup Panel
 10. Generate Backup Process
 11. Generate Backup Screen
-
