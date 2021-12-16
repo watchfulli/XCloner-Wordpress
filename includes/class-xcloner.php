@@ -55,6 +55,18 @@ use watchfulli\XClonerCore\Xcloner_Api;
  * @subpackage Xcloner/includes
  * @author     Liuta Ovidiu <info@thinkovi.com>
  * @link       https://watchful.net
+ *
+ *
+ * @method Xcloner_Api get_xcloner_api();
+* @method Xcloner_Logger get_xcloner_logger();
+* @method Xcloner_Remote_Storage get_xcloner_remote_storage();
+* @method Xcloner_Sanitization get_xcloner_sanitization();
+* @method Xcloner_Requirements get_xcloner_requirements();
+* @method Xcloner_Archive get_archive_system();
+* @method Xcloner_Database get_xcloner_database();
+* @method Xcloner_Remote_Storage get_xcloner_remote_storage();
+* @method Xcloner_Encryption get_xcloner_remote_encryption();
+* @method int|string get_version();
  */
 class Xcloner extends watchfulli\XClonerCore\Xcloner
 {
@@ -513,7 +525,7 @@ class Xcloner extends watchfulli\XClonerCore\Xcloner
             $this->xcloner_remote_storage = new Xcloner_Remote_Storage($this);
             $this->xcloner_file_transfer 	= new Xcloner_File_Transfer($this);
             $this->xcloner_encryption    	= new Xcloner_Encryption($this);
-                
+
             $xcloner_api = new Xcloner_Api($this);
             $this->xcloner_api   = $xcloner_api;
 
@@ -558,7 +570,7 @@ class Xcloner extends watchfulli\XClonerCore\Xcloner
         if (!get_option('xcloner_onedrive_enable', 0)) {
             return false;
         }
-        
+
         $onedrive_expire_in  = get_option('xcloner_onedrive_expires_in');
         $onedrive_refresh_token = get_option('xcloner_onedrive_refresh_token');
 
@@ -599,7 +611,7 @@ class Xcloner extends watchfulli\XClonerCore\Xcloner
                     update_option('xcloner_onedrive_access_token', $response['access_token']);
                     update_option('xcloner_onedrive_refresh_token', $response['refresh_token']);
                     update_option('xcloner_onedrive_expires_in', time()+$response['expires_in']);
-                    
+
                     if (!$is_refresh) {
                         $this->trigger_message(
                             sprintf(__('OneDrive successfully authenticated, please click <a href="%s">here</a> to continue', 'xcloner-backup-and-restore'), get_admin_url()."admin.php?page=xcloner_remote_storage_page#onedrive"),
