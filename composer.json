@@ -1,4 +1,6 @@
 {
+    "name": "watchfulli/xcloner-wordpress",
+    "license": "GPL-2.0-or-later",
     "require": {
         "watchfulli/xcloner-core": "dev-master",
         "splitbrain/php-archive": "^1.0",
