@@ -53,6 +53,11 @@ if (version_compare(phpversion(), Xcloner_Activator::xcloner_minimum_version, '<
 
 // composer library autoload
 require_once(__DIR__.'/vendor/autoload.php');
+//Register WP Cli testing commands
+if( class_exists( 'WP_CLI' ) && file_exists(__DIR__.'/tests/is-stable-tag-latest-tag/command.php') ) {
+
+    require_once(__DIR__.'/tests/is-stable-tag-latest-tag/command.php');
+}
 
 /**
  * Execute xcloner in CLI mode
@@ -123,7 +128,7 @@ function do_cli_execution($args = array(), $opts = array())
         {
             $xcloner_settings = $xcloner_backup->get_xcloner_settings();
             $xcloner_file_system = $xcloner_backup->get_xcloner_filesystem();
-            
+
             if( $xcloner_backup->get_xcloner_encryption()->is_encrypted_file($backup_name) ) {
                 die(sprintf("%s file is encrypted, please decrypt it first! \n", $backup_name));
             }
@@ -135,7 +140,7 @@ function do_cli_execution($args = array(), $opts = array())
             if ($xcloner_file_system->is_multipart($backup_name)) {
                 $backup_parts = $xcloner_file_system->get_multipart_files($backup_name);
             }
-            
+
             foreach ($backup_parts as $backup_name) {
                 if ( !$start) {
                     echo sprintf("Processing %s \n", $backup_name);
@@ -155,7 +160,7 @@ function do_cli_execution($args = array(), $opts = array())
         };
 
         $list_backup_archive_contents($backup_file_path);
-        
+
         exit;
     }
 
@@ -223,7 +228,7 @@ if (php_sapi_name() == "cli") {
      *
      * [--key=<encryption_key>]
      * : custom encryption/decryption key
-     * 
+     *
      * [--list=<backup_name>]
      * : list backup archive contents
      *
@@ -241,8 +246,8 @@ if (php_sapi_name() == "cli") {
     }
 }
 
-  
-    
+
+
 // If this file is called directly, abort.
 if (!defined('WPINC')) {
     die;
@@ -324,7 +329,7 @@ function run_xcloner()
      * side of the site.
      */
     //require_once plugin_dir_path((__FILE__)).'public/class-xcloner-public.php';
-    
+
     $plugin->init();
     $plugin->extra_define_ajax_hooks();
     $plugin->run();

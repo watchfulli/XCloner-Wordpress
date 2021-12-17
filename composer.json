@@ -34,5 +34,12 @@
 		"preferred-install": "dist",
 		"sort-packages": true,
 		"optimize-autoloader": true
+	},
+    "extra": {
+		"custom-commands": {
+			"commands": [
+				"ImaginaryMachines\\IsStableTagLatestTag"
+			]
+		}
 	}
 }

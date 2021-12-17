@@ -2,9 +2,14 @@
 /node_modules
 /.github
 /.git
+/tests
 
 package.json
 package-lock.json
 
 .distignore
 .gitignore
+docker-compose.yml
+
+phpstan.neon
+phpstan-baseline.neon

@@ -1,0 +1,66 @@
+version: "3.9"
+services:
+  wordpress:
+    depends_on:
+      - wpdb
+    image: wordpress:latest
+    volumes:
+      - wordpress_data:/var/www/html
+      - ./:/var/www/html/wp-content/plugins/xcloner
+    ports:
+      - "6123:80"
+    restart: always
+    environment:
+      WORDPRESS_DB_HOST: wpdb:3306
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_DB_NAME: wordpress
+
+  wpdb:
+    image: mariadb:10.5.8
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: wordpress
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
+
+  wpcli:
+    image: wordpress:cli
+    depends_on:
+      - wpdb
+    volumes:
+      - wordpress_data:/var/www/html
+      - ./:/var/www/html/wp-content/plugins/xcloner
+      - ./db:/var/www/html/db
+    environment:
+      WORDPRESS_DB_HOST: wpdb:3306
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_DB_NAME: wordpress
+      ABSPATH: /usr/src/wordpress/
+
+  phpunit:
+    command:
+      - bash
+    depends_on:
+      - testwpdb
+    environment:
+      DATABASE_PASSWORD: examplepass
+      DATABASE_HOST: testwpdb
+    image: futureys/phpunit-wordpress-plugin
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./:/plugin
+
+  testwpdb:
+      environment:
+        MYSQL_ROOT_PASSWORD: examplepass
+      image: mariadb:10.5.8
+
+volumes:
+  db_data: {}
+  wordpress_data: {}
