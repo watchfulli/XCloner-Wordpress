@@ -28,7 +28,7 @@
         "szepeviktor/phpstan-wordpress": "^1.0"
     },
     "scripts": {
-        "test": "phpunit --config=phpunit-integration.xml"
+        "test": "vendor/bin/phpunit --config=phpunit-integration.xml"
     },
     "config": {
 		"preferred-install": "dist",
