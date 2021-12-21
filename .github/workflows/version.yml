@@ -1,5 +1,6 @@
-name: WordPress Tests
+name: Check WordPress Version
 
+# Should be cron
 on: [push]
 
 env:
@@ -26,36 +27,11 @@ jobs:
       - name: Start docker-compose
         run: docker-compose up -d
 
+      - name: Install WordPress
+        run: docker-compose run wpcli wp core install --url=example.com --title=Example --admin_user=admin --admin_password=pass --admin_email=info@example.com
+
+      - name: Activate xCloner
+        run: docker-compose run wpcli wp plugin activate xcloner
+
       - name: Check version
-        run: wp is-tested-up-to
-
-  test:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        php-version: [ 7.3,7.4 ]
-        wordpress-version: [ latest ]
-    container:
-      image: junaidbhura/wp-tests:php-${{ matrix.php-version }}
-    services:
-      mysql:
-        image: mysql:5.7.27
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
-        env:
-          MYSQL_ROOT_PASSWORD: root
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v1
-
-      ## Install
-      - name: Install Composer dependencies
-        run: composer install
-
-      ## Install test suite
-      - name: Install WordPress test suite
-        run: bash bin/install-wp-tests.sh wordpress_test root root mysql ${{ matrix.wordpress-version }}
-
-      ## Run integration tests
-      - name: Tests
-        run: composer test
+        run: docker-compose run wpcli is-tested-up-to

@@ -56,7 +56,6 @@ require_once(__DIR__.'/vendor/autoload.php');
 //Register WP Cli testing commands
 if( class_exists( 'WP_CLI' ) && file_exists(__DIR__.'/tests/') ) {
     require_once(__DIR__.'/tests/is-tested-up-to/command.php');
-    require_once(__DIR__.'/tests/composer/command.php');
 
 }
 
