@@ -29,6 +29,12 @@ jobs:
     - name: Install dependencies
       run: composer install
 
+    - name: Install WordPress
+      run: wp core install --url=example.com --title=Example --admin_user=admin --admin_password=pass --admin_email=info@example.com
+
+    - name: Activate xcloner
+      run: wp plugin activate xcloner-wordpress/xcloner.php
+
     - name: Check "Supported Up To" Value
       run: wp is-tested-up-to
 
