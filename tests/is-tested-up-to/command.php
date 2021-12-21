@@ -3,7 +3,6 @@
 #
 # $ wp is-plugin-stable-tag-latest-tag
 # Success: True
-
 /**
  * Command to check if a plugin's stable tag is the latest version of WordPress or later.
  *

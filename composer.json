@@ -3,18 +3,18 @@
     "license": "GPL-2.0-or-later",
     "description" : "WordPress backup plugin for XCloner",
     "require": {
-        "watchfulli/xcloner-core": "dev-master",
-        "splitbrain/php-archive": "^1.0",
-        "vakata/jstree": "^3.3",
         "league/flysystem": "^1.0",
-        "monolog/monolog": "^1.22",
-        "league/flysystem-sftp": "^1.0",
         "league/flysystem-aws-s3-v3": "^1.0",
-        "mhetreramesh/flysystem-backblaze": "^1.0",
-        "league/flysystem-webdav": "^1.0",
-        "srmklive/flysystem-dropbox-v2": "^1.0",
         "league/flysystem-azure-blob-storage": "^0.1.6",
-        "nicolasbeauvais/flysystem-onedrive": "^1.0"
+        "league/flysystem-sftp": "^1.0",
+        "league/flysystem-webdav": "^1.0",
+        "mhetreramesh/flysystem-backblaze": "^1.0",
+        "monolog/monolog": "^1.22",
+        "nicolasbeauvais/flysystem-onedrive": "^1.0",
+        "splitbrain/php-archive": "^1.0",
+        "srmklive/flysystem-dropbox-v2": "^1.0",
+        "vakata/jstree": "^3.3",
+        "watchfulli/xcloner-core": "dev-master"
     },
     "prefer-stable": true,
     "require-dev": {
@@ -25,7 +25,8 @@
         "phpstan/extension-installer": "^1.1",
         "phpstan/phpstan": "^1.0",
         "squizlabs/php_codesniffer": "3.*",
-        "szepeviktor/phpstan-wordpress": "^1.0"
+        "szepeviktor/phpstan-wordpress": "^1.0",
+        "symfony/process": "^5.4"
     },
     "scripts": {
         "test": "vendor/bin/phpunit --config=phpunit-integration.xml"
