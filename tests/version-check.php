@@ -1,13 +1,19 @@
 <?php
 
-$api = json_decode(file_get_contents('https://api.wordpress.org/core/version-check/1.7/'), true);
-$latestVersion = $api['offers'][0]['current'];
 
-include_once(__DIR__ . '/WPReadmeParser.php');
-include_once(__DIR__ . '/CheckPlugin.php');
+<?php
+# Register a custom 'check' command
+#
+# $ wp check
+# Success: True
+/**
+ * Command to check if a plugin's stable tag is the latest version of WordPress or later.
+ *
 
-$plugin = new WPReadmeParser([
-    'path' => dirname(__FILE__, 2).'/README.txt',
-]);
-$check = new CheckPlugin($plugin);
-var_dump($check->isStableTagLatestVersion($latestVersion));
+ * @when before_wp_load
+ */
+$command = function( $args, $assoc_args ) {
+
+
+};
+WP_CLI::add_command( 'check', $command );

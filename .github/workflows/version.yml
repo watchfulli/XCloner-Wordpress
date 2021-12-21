@@ -1,0 +1,61 @@
+name: WordPress Tests
+
+on: [push]
+
+env:
+  WP_TESTS_DIR: /github/home/wp-tests/wordpress-tests-lib
+  WP_CORE_DIR: /github/home/wp-tests/wordpress
+
+jobs:
+  check_version:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v1
+
+      - name: Installing PHP
+        uses: shivammathur/setup-php@master
+        with:
+          php-version: 7.3
+
+      ## Install
+      - name: Install Composer dependencies
+        run: composer install
+
+      - name: Start docker-compose
+        run: docker-compose up -d
+
+      - name: Check version
+        run: wp is-tested-up-to
+
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-version: [ 7.3,7.4 ]
+        wordpress-version: [ latest ]
+    container:
+      image: junaidbhura/wp-tests:php-${{ matrix.php-version }}
+    services:
+      mysql:
+        image: mysql:5.7.27
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+        env:
+          MYSQL_ROOT_PASSWORD: root
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v1
+
+      ## Install
+      - name: Install Composer dependencies
+        run: composer install
+
+      ## Install test suite
+      - name: Install WordPress test suite
+        run: bash bin/install-wp-tests.sh wordpress_test root root mysql ${{ matrix.wordpress-version }}
+
+      ## Run integration tests
+      - name: Tests
+        run: composer test
