@@ -49,4 +49,4 @@ $command = function( $args, $assoc_args ) {
     }
 
 };
-WP_CLI::add_command( 'is-plugin-stable-tag-latest-tag', $command );
+WP_CLI::add_command( 'is-tested-up-to', $command );
