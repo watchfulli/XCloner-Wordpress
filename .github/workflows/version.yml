@@ -76,7 +76,7 @@ jobs:
       ### If last step failed, update version
       - name: Update version
         id: update-version
-        if: always() && steps.job1.test-up-to-check == 'failure'
+        if: always() && steps.test-up-to-check.outcome == 'failure'
         run: |
           chmod 777 xcloner.php
           chmod 777 README.txt
