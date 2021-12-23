@@ -82,19 +82,22 @@ jobs:
           chmod 777 README.txt
           docker-compose run wpcli wp update-version
           WPV=$(cat wpv.txt)
-          echo $WPV
+          git commit -m "update tested to $WPV"
+          echo "::set-output name=WPV::$(echo $WPV)"
+
 
       - name: Create Pull Request
         if: always() && steps.update-version.outcome == 'success' && steps.test-up-to-check.outcome == 'failure'
         uses: peter-evans/create-pull-request@v3
         with:
-          commit-message: "update tested to $WPV"
+          commit-message: "update tested to ${{steps.update-version.outputs.WPV}}"
           committer: JoshBot <josh@joshpress.net>
           author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
           signoff: false
-          branch: "update-$WPV"
+          base: master
+          branch: "update-for-wp-${{steps.update-version.outputs.WPV}}"
           delete-branch: true
-          title: '[UPDATE] For WordPess $WPV'
+          title: '[UPDATE] For WordPess ${{steps.update-version.outputs.WPV}}'
           body: |
             This PR was automatically generated.
 
