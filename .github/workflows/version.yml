@@ -82,13 +82,12 @@ jobs:
           chmod 777 README.txt
           docker-compose run wpcli wp update-version
           WPV=$(cat wpv.txt)
+          NEW_BRANCH="${WPV//./_}"
           git config --global user.email "${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>"
           git config --global user.name "JoshBot"
-          git checkout -B update-for-wp-$WPV
-          git add .
-          git commit -m "update tested to $WPV"
-          git push -u origin update-for-wp-$WPV
+          git checkout -B update-for-wp-$NEW_BRANCH
           echo "::set-output name=WPV::$(echo $WPV)"
+          echo "::set-output name=NEW_BRANCH::$(echo $NEW_BRANCH)"
 
 
       - name: Create Pull Request
@@ -100,7 +99,7 @@ jobs:
           author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
           signoff: false
           base: master
-          branch: "update-for-wp-${{steps.update-version.outputs.WPV}}"
+          branch: "update-for-wp-${{steps.update-version.outputs.NEW_BRANCH}}"
           delete-branch: true
           title: 'UPDATE For WordPess ${{steps.update-version.outputs.WPV}}'
           body: |
