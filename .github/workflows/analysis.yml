@@ -1,6 +1,14 @@
 name: Analysis
 
-on: [push]
+on:
+  push:
+    paths:
+    - 'tests/**'
+    - 'includes/**'
+    - 'restore/**'
+    - 'composer.json'
+    - 'composer.lock'
+    - 'xloner.php'
 
 env:
   WP_TESTS_DIR: /github/home/wp-tests/wordpress-tests-lib
