@@ -26,14 +26,14 @@ class CheckPlugin {
      * Get the version of WordPress plugin is tested up to.
      */
     public function getTestedUpTo(): string {
-        return $this->parser->metadata['Tested up to'];
+        return $this->parser->metadata[WPReadmeParser::TESTED_UP_TO];
     }
 
     /**
      * Get the current version "stable tag" of the plugin.
      */
     public function getStableTag(): string{
-        return $this->parser->metadata['Stable tag'];
+        return $this->parser->metadata[WPReadmeParser::STABLE_TAG];
     }
 
 }

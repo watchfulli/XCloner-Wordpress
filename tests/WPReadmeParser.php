@@ -14,6 +14,11 @@ class WPReadmeParser {
 	public $metadata = [];
 	public $sections = [];
 
+	//Key of $this->metadata with stable tag
+	const STABLE_TAG = 'Stable tag';
+	//Key of $this->metadata with tested up to
+	const TESTED_UP_TO = 'Tested up to';
+
 	public function __construct( $args = [] ) {
 		$args = array_merge( get_object_vars( $this ), $args );
 		foreach ( $args as $key => $value ) {
@@ -34,7 +39,7 @@ class WPReadmeParser {
 		$this->title = $matches[1];
 		$this->short_description = $matches[3];
 		$readme_txt_rest = $matches[4];
-		$this->metadata = array_fill_keys( array( 'Contributors', 'Tags', 'Requires at least', 'Tested up to', 'Stable tag', 'License', 'License URI' ), null );
+		$this->metadata = array_fill_keys( array( 'Contributors', 'Tags', 'Requires at least', self::TESTED_UP_TO, self::STABLE_TAG, 'License', 'License URI' ), null );
 		foreach ( explode( "\n", $matches[2] ) as $metadatum ) {
 			if ( ! preg_match( '/^(.+?):\s+(.+)$/', $metadatum, $metadataum_matches ) ) {
 				throw new Exception( "Parse error in $metadatum" );
@@ -163,8 +168,8 @@ class WPReadmeParser {
 			$formatted_metadata['License'] = sprintf( '[%s](%s)', $formatted_metadata['License'], $formatted_metadata['License URI'] );
 		}
 		unset( $formatted_metadata['License URI'] );
-		if ( 'trunk' === $this->metadata['Stable tag'] ) {
-			$formatted_metadata['Stable tag'] .= ' (master)';
+		if ( 'trunk' === $this->metadata[self::STABLE_TAG] ) {
+			$formatted_metadata[self::STABLE_TAG] .= ' (master)';
 		}
 
 		// Render metadata
