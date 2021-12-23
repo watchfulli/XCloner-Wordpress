@@ -68,4 +68,7 @@ jobs:
       ### If last step failed,
       - name: Update version
         if: ${{ failure() }}
-        run: docker-compose run wpcli wp update-version
+        run: |
+          chmod 777 xcloner.php
+          chmod 777 README.txt
+          docker-compose run wpcli wp update-version
