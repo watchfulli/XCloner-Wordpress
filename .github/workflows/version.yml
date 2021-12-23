@@ -82,6 +82,8 @@ jobs:
           chmod 777 README.txt
           docker-compose run wpcli wp update-version
           WPV=$(cat wpv.txt)
+          git config --global user.email "${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>"
+          git config --global user.name "JoshBot"
           git commit -m "update tested to $WPV"
           echo "::set-output name=WPV::$(echo $WPV)"
 
