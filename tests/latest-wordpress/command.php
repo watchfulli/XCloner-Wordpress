@@ -14,6 +14,7 @@ $command = function( $args, $assoc_args ) {
     //Try to get latest version of WordPress
     try {
         $latestWordPressVersion = isset($assoc_args['version']) ? $assoc_args['version'] : WPPluginApi::getLatestWordPressVersion();
+        file_put_contents(dirname(__FILE__ ,3 ) . '/wpv.txt', $latestWordPressVersion);
         WP_CLI::success($latestWordPressVersion);
     } catch (\Throwable $th) {
         //Failed? Bummer. Make error

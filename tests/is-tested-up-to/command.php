@@ -9,8 +9,6 @@
  * [--readme]
  * : Path to readme.txt file.
  *
- * [--version]
- * : Latest version of WordPress.
  *
  * @when before_wp_load
  */
@@ -27,7 +25,7 @@ $command = function( $args, $assoc_args ) {
     ]);
     //Try to get latest version of WordPress
     try {
-        $latestVersion = isset($assoc_args['version']) ? $assoc_args['version'] : WPPluginApi::getLatestWordPressVersion();
+        $latestVersion = file_exists(dirname(__FILE__,3).'/wpv.txt') ? file_get_contents(dirname(__FILE__,3).'/wpv.txt') : WPPluginApi::getLatestWordPressVersion();
         //Worked? Cool, check if our plugin is out of date.
         $check = new CheckPlugin($plugin);
         if( $check->isStableTagLatestVersion($latestVersion) ){

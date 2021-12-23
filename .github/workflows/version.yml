@@ -61,13 +61,20 @@ jobs:
         run: docker-compose run wpcli wp plugin activate xcloner
 
       ## Check if we're tested up to latest version of WordPress
-      - name: Get latest version
+      - name: Get latest version of WordPRess
         run: |
-          echo "::set-output name=wpv::$(docker-compose run wpcli wp latest-wordpress)\n"
-        id: latest
+          touch wpv.txt
+          chmod 777 wpv.txt
+          $(docker-compose run wpcli wp latest-wordpress)
+          echo "::set-output name=wpv::$(>wpv.txt)\n"
+        id: wpv
 
       - name: Echo latest.stdout
-        run: echo ${{ steps.latest.wpv }}
+        run: |
+          cat wpv.txt
+          echo ${{ steps.latest.wpv }}
+          echo ${{ steps.latest }}
+
 
       - name: Tested Up To Check
         run: docker-compose run wpcli wp is-tested-up-to
