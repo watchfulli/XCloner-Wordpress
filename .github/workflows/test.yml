@@ -9,6 +9,7 @@ on:
     - 'composer.json'
     - 'composer.lock'
     - 'xloner.php'
+    - 'REAMDE.txt'
 
 env:
   WP_TESTS_DIR: /github/home/wp-tests/wordpress-tests-lib

@@ -62,27 +62,26 @@ jobs:
 
       ## Check if we're tested up to latest version of WordPress
       - name: Get latest version of WordPRess
+        id: wpv
+
         run: |
           touch wpv.txt
           chmod 777 wpv.txt
           docker-compose run wpcli wp latest-wordpress
-          echo "::set-output name=wpv::$(>wpv.txt)\n"
-        id: wpv
-
-      - name: Echo latest.stdout
-        run: |
-          cat wpv.txt
-          echo ${{ steps.latest.wpv }}
-          echo ${{ steps.latest }}
-
 
       - name: Tested Up To Check
+        id: test-up-to-check
         run: docker-compose run wpcli wp is-tested-up-to
 
-      ### If last step failed,
+      ### If last step failed, update version
       - name: Update version
-        if: ${{ failure() }}
+        id: update-version
+        if: always() && steps.job1.test-up-to-check == 'failure'
         run: |
           chmod 777 xcloner.php
           chmod 777 README.txt
           docker-compose run wpcli wp update-version
+          WPV=$(cat wpv.txt)
+          echo $WPV
+      ### And open PR, which will
+      #git commit -m "update tested to $WPV"
