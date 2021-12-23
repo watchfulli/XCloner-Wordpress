@@ -83,5 +83,27 @@ jobs:
           docker-compose run wpcli wp update-version
           WPV=$(cat wpv.txt)
           echo $WPV
+
+      - name: Create Pull Request
+        if: always() && steps.update-version.outcome == 'success' && steps.test-up-to-check.outcome == 'failure'
+        uses: peter-evans/create-pull-request@v3
+        with:
+          commit-message: "update tested to $WPV"
+          committer: JoshBot <josh@joshpress.net>
+          author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
+          signoff: false
+          branch: "update-$WPV"
+          delete-branch: true
+          title: '[UPDATE] For WordPess $WPV'
+          body: |
+            This PR was automatically generated.
+
+            If the pipelines on this PR pass, the plugin is likely safe to update.
+
+            To update:
+              - Merge this PR
+              - Create a new release
+                - This will cause the main workflow to ship an update to WordPress.org/plugins
+          draft: false
       ### And open PR, which will
       #git commit -m "update tested to $WPV"
