@@ -102,7 +102,7 @@ jobs:
           base: master
           branch: "update-for-wp-${{steps.update-version.outputs.WPV}}"
           delete-branch: true
-          title: '[UPDATE] For WordPess ${{steps.update-version.outputs.WPV}}'
+          title: 'UPDATE For WordPess ${{steps.update-version.outputs.WPV}}'
           body: |
             This PR was automatically generated.
 
