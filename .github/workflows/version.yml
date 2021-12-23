@@ -66,7 +66,7 @@ jobs:
         id: latest
 
       - name: Echo latest.stdout
-        run: echo ${{ steps.tests.latest.stdout }}
+        run: echo ${{ steps.latest.stdout }}
 
       - name: Tested Up To Check
         run: docker-compose run wpcli wp is-tested-up-to
