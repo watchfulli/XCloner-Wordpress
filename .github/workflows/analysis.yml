@@ -62,7 +62,7 @@ jobs:
       run: composer install --prefer-dist --no-progress
 
     - name: Test compat for PHP 7.1 or later
-      run: ./vendor/bin/phpcs -p . --standard=PHPCompatibilityWP --extensions=php --runtime-set testVersion 7.1-  --ignore=*/vendor/*
+      run: ./vendor/bin/phpcs -p . --standard=PHPCompatibilityWP --extensions=php --runtime-set testVersion 7.1-  --ignore=*/vendor/*,*/tests/*
 
   ## Run phpstan analysis
   phpstan:
