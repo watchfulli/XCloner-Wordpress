@@ -87,6 +87,7 @@ jobs:
           git checkout -B update-for-wp-$WPV
           git add .
           git commit -m "update tested to $WPV"
+          git push -u origin update-for-wp-$WPV
           echo "::set-output name=WPV::$(echo $WPV)"
 
 
