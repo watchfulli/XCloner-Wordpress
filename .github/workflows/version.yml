@@ -65,7 +65,7 @@ jobs:
         run: |
           touch wpv.txt
           chmod 777 wpv.txt
-          $(docker-compose run wpcli wp latest-wordpress)
+          docker-compose run wpcli wp latest-wordpress
           echo "::set-output name=wpv::$(>wpv.txt)\n"
         id: wpv
 
