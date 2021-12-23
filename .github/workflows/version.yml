@@ -62,6 +62,13 @@ jobs:
         run: docker-compose run wpcli wp plugin activate xcloner
 
       ## Check if we're tested up to latest version of WordPress
+      - name: Get latest version
+        run: docker-compose run wpcli wp latest-wordpress
+        id: latest
+
+      - name: Echo latest.stdout
+        run: echo ${{ steps.tests.latest.stdout }
+
       - name: Tested Up To Check
         run: docker-compose run wpcli wp is-tested-up-to
 

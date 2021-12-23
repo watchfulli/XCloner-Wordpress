@@ -9,6 +9,9 @@
  * [--readme]
  * : Path to readme.txt file.
  *
+ * [--version]
+ * : Latest version of WordPress.
+ *
  * @when before_wp_load
  */
 $command = function( $args, $assoc_args ) {
@@ -23,7 +26,7 @@ $command = function( $args, $assoc_args ) {
     ]);
     //Try to get latest version of WordPress
     try {
-        $latestWordPressVersion = WPPluginApi::getLatestWordPressVersion();
+        $latestWordPressVersion = isset($assoc_args['version']) ? $assoc_args['version'] : WPPluginApi::getLatestWordPressVersion();
         //Find Current Values
         $testedUpTo = $plugin->metadata[WPReadmeParser::TESTED_UP_TO];
         $currentVersion = $plugin->metadata[WPReadmeParser::STABLE_TAG];
