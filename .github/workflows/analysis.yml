@@ -43,6 +43,11 @@ jobs:
       with:
         php-version: ${{ matrix.php-versions }}
 
+    - name: Get Composer Cache Directory
+      id: get-composer-cache-dir # Instead of composer-cache
+      run: |
+        echo "::set-output name=dir::$(composer config cache-files-dir)"
+
     - name: Cache Composer packages
       id: composer-cache
       uses: actions/cache@v2
@@ -53,6 +58,7 @@ jobs:
           ${{ runner.os }}-php-
 
     - name: Install dependencies
+      if: steps.composer-cache.outputs.cache-hit != 'true'
       run: composer install --prefer-dist --no-progress
 
     - name: Test compat for PHP 7.1 or later
@@ -74,6 +80,11 @@ jobs:
       with:
         php-version: ${{ matrix.php-versions }}
 
+    - name: Get Composer Cache Directory
+      id: get-composer-cache-dir # Instead of composer-cache
+      run: |
+        echo "::set-output name=dir::$(composer config cache-files-dir)"
+
     - name: Cache Composer packages
       id: composer-cache
       uses: actions/cache@v2
@@ -84,6 +95,7 @@ jobs:
           ${{ runner.os }}-php-
 
     - name: Install dependencies
+      if: steps.composer-cache.outputs.cache-hit != 'true'
       run: composer install --prefer-dist --no-progress
 
     - name: Run phpstan
