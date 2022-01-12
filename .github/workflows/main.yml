@@ -9,10 +9,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
-    - name: Build
+    - name: Build npm dependencies
       run: |
         npm install --only=prod
         npm run build
+    - name: Setup PHP with composer
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '7.3'
+        tools: composer
+    - name: Build composer dependencies
+      run: |
+        composer update --no-dev --prefer-dist -o
+    tools: php-cs-fixer, phpunit
     - name: WordPress Plugin Deploy
       uses: 10up/action-wordpress-plugin-deploy@master
       env:
