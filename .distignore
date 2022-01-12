@@ -4,12 +4,27 @@
 /.git
 /tests
 
+
+docs
+node_modules
+.github
+.git
+tests
+bin
+
 package.json
 package-lock.json
 
 .distignore
 .gitignore
 docker-compose.yml
-
 phpstan.neon
 phpstan-baseline.neon
+makeZip.js
+phpunit-integration.xml
+wpv.txt
+xcloner-backup-and-restore.zip
+webpack.dev.js
+webpack.prod.js
+README.md
+db

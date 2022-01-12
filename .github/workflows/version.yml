@@ -1,7 +1,10 @@
 name: Check WordPress Version
 
-# Should be cron
-on: [push]
+# Run every day at 1AM
+## https://docs.github.com/en/actions/learn-github-actions/events-that-trigger-workflows#schedule
+on:
+  schedule:
+    - cron:  '0 1 * * *'
 
 jobs:
   job1:
