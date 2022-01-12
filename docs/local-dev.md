@@ -1,5 +1,14 @@
-## Local Development Environment
+# Local Development
 
+## Install For Development
+
+- `git clone git@github.com:watchfulli/XCloner-Wordpress.git`
+- `npm install`
+- `npm run build`
+- `composer install`
+
+
+## Local Development Environment
 A [docker-compose](https://docs.docker.com/samples/wordpress/)-based local development environment is provided.
 
 - Start server
@@ -12,6 +21,7 @@ A [docker-compose](https://docs.docker.com/samples/wordpress/)-based local devel
 - Run WP CLI command:
     - `docker-compose run wpcli wp user create admin admin@example.com --role=admin user_pass=pass`
 
+## WordPress Tests
 
 There is a special phpunit container for running WordPress tests, with WordPress and MySQL configured.
 

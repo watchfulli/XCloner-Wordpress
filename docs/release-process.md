@@ -25,7 +25,7 @@ To test the pull request for the new version:
 - Build plugin the same way as in "main.yml".
     - `npm install --only=prod`
     - `npm run build`
-    - `composer update --no-dev --prefer-dist -o`
+    - `composer install --no-dev --prefer-dist -o`
 
 ## Trigger Release To WordPress.org/plugins
 
