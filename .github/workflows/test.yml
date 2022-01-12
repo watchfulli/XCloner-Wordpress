@@ -1,15 +1,6 @@
 name: WordPress Tests
 
-on:
-  push:
-    paths:
-    - 'tests/**'
-    - 'includes/**'
-    - 'restore/**'
-    - 'composer.json'
-    - 'composer.lock'
-    - 'xloner.php'
-    - 'REAMDE.txt'
+on: [push, pull_request]
 
 env:
   WP_TESTS_DIR: /github/home/wp-tests/wordpress-tests-lib
