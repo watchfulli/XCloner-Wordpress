@@ -14,5 +14,5 @@ There are several Github actions:
     - This runs when a new tag is added.
 1. version.yml
     - This checks if the "Tested up to" value is older than latest version of WordPress.
-    - See [relase process docs](./release-process.md)
+    - See [release process docs](./release-process.md)
     - This runs once a day.
