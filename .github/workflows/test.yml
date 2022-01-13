@@ -1,6 +1,6 @@
 name: WordPress Tests
 
-on: [push]
+on: [push, pull_request]
 
 env:
   WP_TESTS_DIR: /github/home/wp-tests/wordpress-tests-lib
