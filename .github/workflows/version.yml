@@ -1,0 +1,120 @@
+name: Check WordPress Version
+
+# Run every day at 1AM
+## https://docs.github.com/en/actions/learn-github-actions/events-that-trigger-workflows#schedule
+on:
+  schedule:
+    - cron:  '0 1 * * *'
+
+jobs:
+  job1:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Not fail
+        run: |
+          exit 0
+  run-if-failed:
+    runs-on: ubuntu-latest
+    needs: [job1]
+    if: always() && needs.job1.result == 'failure'
+    steps:
+      - name: Needs context
+        env:
+          NEEDS_CONTEXT: ${{ toJSON(needs) }}
+        run: |
+          echo "$NEEDS_CONTEXT"
+
+  check_version:
+    runs-on: ubuntu-latest
+    steps:
+      ## Set up plugin
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Install PHP
+        uses: shivammathur/setup-php@master
+        with:
+          php-version: 7.3
+
+      - name: Get Composer Cache Directory
+        id: get-composer-cache-dir # Instead of composer-cache
+        run: |
+          echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+      - name: Cache Composer packages
+        id: composer-cache
+        uses: actions/cache@v2
+        with:
+          path: vendor
+          key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-php-
+
+      - name: Install dependencies
+        if: steps.composer-cache.outputs.cache-hit != 'true'
+        run: composer install --prefer-dist --no-progress
+
+      ## Set up server
+      - name: Start sever
+        run: docker-compose up -d
+
+      - name: Install WordPress
+        run: docker-compose run wpcli wp core install --url=example.com --title=Example --admin_user=supervisor --admin_password=strongpassword --admin_email=info@example.com
+
+      - name: Activate xCloner
+        run: docker-compose run wpcli wp plugin activate xcloner
+
+      ## Check if we're tested up to latest version of WordPress
+      - name: Get latest version of WordPRess
+        id: wpv
+
+        run: |
+          touch wpv.txt
+          chmod 777 wpv.txt
+          docker-compose run wpcli wp latest-wordpress
+
+      - name: Tested Up To Check
+        id: test-up-to-check
+        run: docker-compose run wpcli wp is-tested-up-to
+
+      ### If last step failed, update version
+      - name: Update version
+        id: update-version
+        if: always() && steps.test-up-to-check.outcome == 'failure'
+        run: |
+          chmod 777 xcloner.php
+          chmod 777 README.txt
+          docker-compose run wpcli wp update-version
+          WPV=$(cat wpv.txt)
+          NEW_BRANCH="${WPV//./_}"
+          git config --global user.email "${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>"
+          git config --global user.name "JoshBot"
+
+          echo "::set-output name=WPV::$(echo $WPV)"
+          echo "::set-output name=NEW_BRANCH::$(echo $NEW_BRANCH)"
+
+
+      - name: Create Pull Request
+        if: always() && steps.update-version.outcome == 'success' && steps.test-up-to-check.outcome == 'failure'
+        uses: peter-evans/create-pull-request@v3
+        with:
+          commit-message: "update tested to ${{steps.update-version.outputs.WPV}}"
+          committer: JoshBot <josh@joshpress.net>
+          author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
+          signoff: false
+          base: master
+          branch: "update-for-wp-${{steps.update-version.outputs.NEW_BRANCH}}"
+          delete-branch: true
+          title: 'UPDATE For WordPress ${{steps.update-version.outputs.WPV}}'
+          body: |
+            This PR was automatically generated.
+
+            If the pipelines on this PR pass, the plugin is likely safe to update.
+
+            To update:
+              - Merge this PR
+              - Create a new release
+                - This will cause the main workflow to ship an update to WordPress.org/plugins
+          draft: false
+      ### And open PR, which will
+      #git commit -m "update tested to $WPV"
