@@ -11,7 +11,7 @@ jobs:
     - uses: actions/checkout@master
     - name: Build npm dependencies
       run: |
-        npm install --only=prod
+        npm install
         npm run build-prod
 
     - name: Setup PHP with composer
