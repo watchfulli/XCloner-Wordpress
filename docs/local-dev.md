@@ -4,7 +4,10 @@
 
 - `git clone git@github.com:watchfulli/XCloner-Wordpress.git`
 - `npm install`
-- `npm run build`
+- `npm run start`
+    - Start command starts development server.
+    - `npm run build-prod` will build for production.
+    - `npm run build` does not do anything. 
 - `composer install`
 
 
