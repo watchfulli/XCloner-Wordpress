@@ -256,7 +256,10 @@ if (!defined('WPINC')) {
 
 //i will not load the plugin outside admin or cron
 if (!is_admin() && !defined('DOING_CRON')) {
-    return;
+    //Check if we are running tests before leaving
+    if( ! defined( 'XCLONER_TESTING')){
+        return;
+    }
 }
 
 if (!defined("DS")) {
@@ -339,7 +342,6 @@ function run_xcloner()
 }
 
 require plugin_dir_path(__FILE__).'includes/class-xcloner.php';
-
 try {
     $xcloner_plugin = run_xcloner();
 } catch (Exception $e) {

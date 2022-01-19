@@ -2836,12 +2836,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/watchfulli/xcloner-core.git",
-                "reference": "af7237e70e0a577356ae57e8e8c4cf0275009cc5"
+                "reference": "9a0657e6c2d48e336ef030584ff34df2ab6c03d6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/watchfulli/xcloner-core/zipball/af7237e70e0a577356ae57e8e8c4cf0275009cc5",
-                "reference": "af7237e70e0a577356ae57e8e8c4cf0275009cc5",
+                "url": "https://api.github.com/repos/watchfulli/xcloner-core/zipball/9a0657e6c2d48e336ef030584ff34df2ab6c03d6",
+                "reference": "9a0657e6c2d48e336ef030584ff34df2ab6c03d6",
                 "shasum": ""
             },
             "require": {
@@ -2877,7 +2877,7 @@
                 "issues": "https://github.com/watchfulli/xcloner-core/issues",
                 "source": "https://github.com/watchfulli/xcloner-core/tree/uppercase-namespace"
             },
-            "time": "2022-01-19T17:01:07+00:00"
+            "time": "2022-01-19T17:25:19+00:00"
         }
     ],
     "packages-dev": [

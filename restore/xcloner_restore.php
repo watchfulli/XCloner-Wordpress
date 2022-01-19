@@ -13,12 +13,12 @@ if (!defined('XCLONER_PLUGIN_ACCESS') || XCLONER_PLUGIN_ACCESS != 1) {
         Xcloner_Restore::send_response("404", "Could not run restore script, AUTH_KEY not set! Your should not access this script directly, it's url should go inside the XCloner Restore area from where you downloaded this script.");
         exit;
     }
-    
+
     if (!isset($_REQUEST['hash'])) {
         Xcloner_Restore::send_response("404", "Could not run restore script directly. Enter the URL above in the `Restore Backup` area of XCloner and click `Check Connection`.");
         exit;
     }
-    
+
     if ($_REQUEST['hash'] != AUTH_KEY) {
         Xcloner_Restore::send_response("404", "Could not run restore script, AUTH_KEY doesn't match the sent HASH. Please replace the restore script on the remote/target host with a new copy downloaded from the local site and try again.");
         exit;
@@ -64,7 +64,7 @@ use splitbrain\PHPArchive\FileInfo;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 
-use watchfulli\XClonerCore\Xcloner_Archive;
+use Watchfulli\XClonerCore\Xcloner_Archive;
 
 //do not modify below
 $that = "";
@@ -78,7 +78,7 @@ if (defined('XCLONER_PLUGIN_ACCESS') && XCLONER_PLUGIN_ACCESS) {
 class Xcloner_Restore
 {
     const 	xcloner_minimum_version = "5.4.0";
-    
+
     private $backup_archive_extensions = array("zip", "tar", "tgz", "tar.gz", "gz", "csv");
     private $process_files_limit = 1500;
     private $process_files_limit_list = 350;
@@ -102,33 +102,33 @@ class Xcloner_Restore
         register_shutdown_function(array($this, 'exception_handler'));
 
         if (defined('XCLONER_PLUGIN_ACCESS') && XCLONER_PLUGIN_ACCESS) {
-            $xcloner_settings =  new watchfulli\XClonerCore\XCloner_Settings($parent_api);
+            $xcloner_settings =  new Watchfulli\XClonerCore\XCloner_Settings($parent_api);
             $dir = $xcloner_settings->get_xcloner_store_path();
         }
-        
+
         if (!isset($dir) || !$dir) {
             $dir = dirname(__FILE__);
         }
-        
+
         $this->parent_api = $parent_api;
-        
+
         $this->backup_storage_dir = $dir;
-        
+
         $this->adapter = new Local($dir, LOCK_EX, 'SKIP_LINKS');
         $this->filesystem = new Filesystem($this->adapter, new Config([
                 'disable_asserts' => true,
             ]));
-            
+
         $this->logger = new Logger('xcloner_restore');
-        
+
         $logger_path = $this->get_logger_filename();
-        
+
         if (!is_writeable($logger_path) and !touch($logger_path)) {
             $logger_path = "php://stderr";
         }
-        
+
         $this->logger->pushHandler(new StreamHandler($logger_path, Logger::DEBUG));
-        
+
         if (isset($_POST['API_ID'])) {
             $this->logger->info("Processing ajax request ID ".substr(filter_input(INPUT_POST, 'API_ID', FILTER_SANITIZE_STRING), 0, 15));
         }
@@ -140,7 +140,7 @@ class Xcloner_Restore
     public function exception_handler()
     {
         $error = error_get_last();
-        
+
         if ($error['type'] and $this->logger) {
             $this->logger->info($this->friendly_error_type($error['type']).": ".var_export($error, true));
         }
@@ -164,11 +164,11 @@ class Xcloner_Restore
         }
         return (isset($levels[$type]) ? $levels[$type] : "Error #{$type}");
     }
-    
+
     public function get_logger_filename()
     {
         $filename = $this->backup_storage_dir.DS."xcloner_restore.log";
-        
+
         return $filename;
     }
 
@@ -182,11 +182,11 @@ class Xcloner_Restore
     {
         if (isset($_POST['xcloner_action']) and $_POST['xcloner_action']) {
             $method = filter_input(INPUT_POST, 'xcloner_action', FILTER_SANITIZE_STRING);
-            
+
             //$method = "list_backup_archives";
-            
+
             $method .= "_action";
-            
+
             if (method_exists($this, $method)) {
                 $this->logger->debug(sprintf('Starting action %s', $method));
                 return call_user_func(array($this, $method));
@@ -194,7 +194,7 @@ class Xcloner_Restore
                 throw new Exception($method." does not exists");
             }
         }
-        
+
         return $this->check_system();
     }
 
@@ -208,24 +208,24 @@ class Xcloner_Restore
     {
         if (isset($_POST['file'])) {
             $target_file = filter_input(INPUT_POST, 'file', FILTER_SANITIZE_STRING);
-            
+
             if (!$_POST['start']) {
                 $fp = fopen($target_file, "wb+");
             } else {
                 $fp = fopen($target_file, "ab+");
             }
-            
+
             if (!$fp) {
                 throw new Exception("Unable to open $target_file file for writing");
             }
-            
+
             fseek($fp, $_POST['start']);
-            
+
             if (isset($_FILES['blob'])) {
                 $this->logger->debug(sprintf('Writing %s bytes to file %s starting position %s using FILES blob', filesize($_FILES['blob']['tmp_name']), $target_file, $_POST['start']));
-                
+
                 $blob = file_get_contents($_FILES['blob']['tmp_name']);
-                
+
                 if (!$bytes_written = fwrite($fp, $blob)) {
                     throw new Exception("Unable to write data to file $target_file");
                 }
@@ -237,7 +237,7 @@ class Xcloner_Restore
                 }
             } elseif (isset($_POST['blob'])) {
                 $this->logger->debug(sprintf('Writing %s bytes to file %s starting position %s using POST blob', strlen($_POST['blob']), $target_file, $_POST['start']));
-                
+
                 $blob = $_POST['blob'];
 
                 if (!$bytes_written = fwrite($fp, $blob)) {
@@ -246,10 +246,10 @@ class Xcloner_Restore
             } else {
                 throw new Exception("Upload failed, did not receive any binary data");
             }
-            
+
             fclose($fp);
         }
-        
+
         return $bytes_written;
     }
 
@@ -273,7 +273,7 @@ class Xcloner_Restore
             throw new Exception('Connect Error ('.$mysqli->connect_errno.') '
                 . $mysqli->connect_error);
         }
-        
+
         $mysqli->query("SET sql_mode='';");
         $mysqli->query("SET foreign_key_checks = 0;");
         if (isset($_REQUEST['charset_of_file']) and $_REQUEST['charset_of_file']) {
@@ -281,7 +281,7 @@ class Xcloner_Restore
         } else {
             $mysqli->query("SET NAMES utf8;");
         }
-            
+
         return $mysqli;
     }
 
@@ -301,20 +301,20 @@ class Xcloner_Restore
         $execute_query = trim(stripslashes($_POST['query']));
         $error_line = filter_input(INPUT_POST, 'error_line', FILTER_SANITIZE_NUMBER_INT);
         $start = filter_input(INPUT_POST, 'start', FILTER_SANITIZE_NUMBER_INT);
-        
+
         $wp_home_url 		= filter_input(INPUT_POST, 'wp_home_url', FILTER_SANITIZE_STRING);
         $remote_restore_url = filter_input(INPUT_POST, 'remote_restore_url', FILTER_SANITIZE_STRING);
-        
+
         $wp_site_url 		= filter_input(INPUT_POST, 'wp_site_url', FILTER_SANITIZE_STRING);
         $restore_site_url 	= filter_input(INPUT_POST, 'restore_site_url', FILTER_SANITIZE_STRING);
-        
+
         $mysql_backup_file = $remote_path.DS.$mysqldump_file;
-        
+
         if (!file_exists($mysql_backup_file)) {
             throw new Exception(sprintf("Mysql backup file %s does not exists", $mysql_backup_file));
         }
-        
-        
+
+
         /*if(defined('XCLONER_PLUGIN_ACCESS') && XCLONER_PLUGIN_ACCESS)
         {
             global $wpdb;
@@ -327,31 +327,31 @@ class Xcloner_Restore
         {
             $mysqli = $this->mysql_connect($remote_mysql_host, $remote_mysql_user, $remote_mysql_pass, $remote_mysql_db);
         }
-        
+
         $line_count = 0;
         $query = "";
         $return = array();
         $return['finished'] = 1;
         $return['backup_file']	= $mysqldump_file;
         $return['backup_size']	= filesize($mysql_backup_file);
-        
+
         $fp = fopen($mysql_backup_file, "r");
         if ($fp) {
             $this->logger->info(sprintf("Opening mysql dump file %s at position %s.", $mysql_backup_file, $start));
             fseek($fp, $start);
             while ($line_count <= $this->process_mysql_records_limit and ($line = fgets($fp)) !== false) {
                 // process the line read.
-                                    
+
                 //check if line is comment
                 if (substr($line, 0, 1) == "#") {
                     continue;
                 }
-                
+
                 //check if line is empty
                 if ($line == "\n" or trim($line) == "") {
                     continue;
                 }
-                
+
                 //exclude usermeta info for local restores to fix potential session logout
                 if (defined('XCLONER_PLUGIN_ACCESS') && XCLONER_PLUGIN_ACCESS) {
                     if (strpos($line, "_usermeta`") !== false) {
@@ -365,41 +365,41 @@ class Xcloner_Restore
                     $query .= $line;
                     continue;
                 }
-                
+
                 if ($execute_query) {
                     $query = (($execute_query));
                     $execute_query = "";
                 }
-                
+
                 //Doing serialized url replace here
-                
+
                 if ($wp_site_url and $wp_home_url and strlen($wp_home_url) < strlen($wp_site_url)) {
                     list($wp_home_url, $wp_site_url) = array($wp_site_url, $wp_home_url);
                     list($remote_restore_url, $restore_site_url) = array($restore_site_url, $remote_restore_url);
                 }
-                
+
                 if ($wp_home_url and $remote_restore_url and strpos($query, $wp_home_url) !== false) {
                     $query = $this->url_replace($wp_home_url, $remote_restore_url, $query);
                 }
-                
+
                 if ($wp_site_url and $restore_site_url and strpos($query, $wp_site_url) !== false) {
                     $query = $this->url_replace($wp_site_url, $restore_site_url, $query);
                 }
-                
+
                 if (!$mysqli->query($query) && !stristr($mysqli->error, "Duplicate entry")) {
                     //$return['error_line'] = $line_count;
                     $return['start'] = ftell($fp) - strlen($line);
                     $return['query_error'] = true;
                     $return['query'] = $query;
                     $return['message'] = sprintf("Mysql Error: %s\n", $mysqli->error);
-                    
+
                     $this->logger->error($return['message']);
-                    
+
                     $this->send_response(418, $return);
                     //throw new Exception(sprintf("Mysql Error: %s\n Mysql Query: %s", $mysqli->error, $query));
                 }
                 //else echo $line;
-                    
+
                 $query = "";
 
                 $line_count++;
@@ -417,7 +417,7 @@ class Xcloner_Restore
 
             fclose($fp);
         }
-        
+
         $this->send_response(200, $return);
     }
 
@@ -434,18 +434,18 @@ class Xcloner_Restore
         $this->logger->info(sprintf("Doing url replace on query with length %s", strlen($query)), array("QUERY_REPLACE"));
         $query = str_replace($search, $replace, $query);
         $original_query = $query;
-        
+
         if ($this->has_serialized($query)) {
             $this->logger->info(sprintf("Query contains serialized data, doing serialized size fix"), array("QUERY_REPLACE"));
             $query = $this->do_serialized_fix($query);
-            
+
             if (!$query) {
                 $this->logger->info(sprintf("Serialization probably failed here..."), array("QUERY_REPLACE"));
                 $query = $original_query;
             }
         }
         $this->logger->info(sprintf("New query length is %s", strlen($query)), array("QUERY_REPLACE"));
-        
+
         return $query;
     }
 
@@ -457,13 +457,13 @@ class Xcloner_Restore
     public function list_backup_files_action()
     {
         $backup_parts = array();
-        
+
         $source_backup_file = filter_input(INPUT_POST, 'file', FILTER_SANITIZE_STRING);
         $start = (int)filter_input(INPUT_POST, 'start', FILTER_SANITIZE_STRING);
         $return['part'] = (int)filter_input(INPUT_POST, 'part', FILTER_SANITIZE_STRING);
-        
+
         $backup_file = $source_backup_file;
-        
+
         if ($this->is_multipart($backup_file)) {
             $backup_parts = $this->get_multipart_files($backup_file);
             $backup_file = $backup_parts[$return['part']];
@@ -474,48 +474,48 @@ class Xcloner_Restore
             $return['message'] = "Backup archive is encrypted, please decrypt it first before you can list it's content.";
             $this->send_response(200, $return);
         }
-        
+
         try {
             $tar = new Xcloner_Archive_Restore();
             $tar->open($this->backup_storage_dir.DS.$backup_file, $start);
-        
+
             $data = $tar->contents($this->process_files_limit_list);
         } catch (Exception $e) {
             $return['error'] = true;
             $return['message'] = $e->getMessage();
             $this->send_response(200, $return);
         }
-        
+
         $return['files'] = array();
         $return['finished'] = 1;
         $return['total_size'] = filesize($this->backup_storage_dir.DS.$backup_file);
         $i = 0;
-        
+
         if (isset($data['extracted_files']) and is_array($data['extracted_files'])) {
             foreach ($data['extracted_files'] as $file) {
                 $return['files'][$i]['path'] = $file->getPath();
                 $return['files'][$i]['size'] = $file->getSize();
                 $return['files'][$i]['mtime'] = date("d M,Y H:i", $file->getMtime());
-                
+
                 $i++;
             }
         }
-        
+
         if (isset($data['start'])) {
             $return['start'] = $data['start'];
             $return['finished'] = 0;
         } else {
             if ($this->is_multipart($source_backup_file)) {
                 $return['start'] = 0;
-                
+
                 ++$return['part'];
-            
+
                 if ($return['part'] < sizeof($backup_parts)) {
                     $return['finished'] = 0;
                 }
             }
         }
-        
+
         $this->send_response(200, $return);
     }
 
@@ -528,26 +528,26 @@ class Xcloner_Restore
     {
         $remote_path 		    = filter_input(INPUT_POST, 'remote_path', FILTER_SANITIZE_STRING);
         $backup_archive 		= filter_input(INPUT_POST, 'backup_archive', FILTER_SANITIZE_STRING);
-        
+
         $wp_home_url 		    = filter_input(INPUT_POST, 'wp_home_url', FILTER_SANITIZE_STRING);
         $remote_restore_url     = filter_input(INPUT_POST, 'remote_restore_url', FILTER_SANITIZE_STRING);
-        
+
         $remote_mysql_user 	    = filter_input(INPUT_POST, 'remote_mysql_user', FILTER_SANITIZE_STRING);
         $remote_mysql_pass 	    = filter_input(INPUT_POST, 'remote_mysql_pass', FILTER_SANITIZE_STRING);
         $remote_mysql_db        = filter_input(INPUT_POST, 'remote_mysql_db', FILTER_SANITIZE_STRING);
         $remote_mysql_host 	    = filter_input(INPUT_POST, 'remote_mysql_host', FILTER_SANITIZE_STRING);
-        
+
         $update_remote_site_url = filter_input(INPUT_POST, 'update_remote_site_url', FILTER_SANITIZE_NUMBER_INT);
         $delete_restore_script  = filter_input(INPUT_POST, 'delete_restore_script', FILTER_SANITIZE_NUMBER_INT);
         $delete_backup_archive  = filter_input(INPUT_POST, 'delete_backup_archive', FILTER_SANITIZE_NUMBER_INT);
         $delete_backup_temporary_folder = filter_input(INPUT_POST, 'delete_backup_temporary_folder', FILTER_SANITIZE_NUMBER_INT);
-                
+
         if ($update_remote_site_url) {
             $mysqli = $this->mysql_connect($remote_mysql_host, $remote_mysql_user, $remote_mysql_pass, $remote_mysql_db);
             $this->update_wp_config($remote_path, $remote_mysql_host, $remote_mysql_user, $remote_mysql_pass, $remote_mysql_db);
             $this->update_wp_url($remote_path, $remote_restore_url, $mysqli);
         }
-        
+
         if ($delete_backup_temporary_folder) {
             $this->delete_backup_temporary_folder($remote_path);
         }
@@ -555,11 +555,11 @@ class Xcloner_Restore
         if ($delete_backup_archive) {
             $this->filesystem->delete($backup_archive);
         }
-        
+
         if (defined('XCLONER_PLUGIN_ACCESS') && XCLONER_PLUGIN_ACCESS) {
             //fixing usermeta table for local restores
 			global $wpdb;
-			
+
 			$wpdb->select($remote_mysql_db, $mysqli);
 
 			$wpdb->hide_errors();
@@ -577,7 +577,7 @@ class Xcloner_Restore
                 $this->delete_self();
             }
         }
-        
+
         $return = "Restore Process Finished.";
         $this->send_response(200, $return);
     }
@@ -594,13 +594,13 @@ class Xcloner_Restore
         $this->target_filesystem = new Filesystem($this->target_adapter, new Config([
                 'disable_asserts' => true,
             ]));
-            
+
         $mysqldump_list = array();
         $list = $this->target_filesystem->listContents();
-        
+
         foreach ($list as $file) {
             $matches = array();
-            
+
             if ($file['type'] == "dir") {
                 if (preg_match("/xcloner-(\w*)/", $file['basename'], $matches)) {
                     $this->logger->info(sprintf('Deleting temporary folder %s', $file['path']));
@@ -608,7 +608,7 @@ class Xcloner_Restore
                 }
             }
         }
-        
+
         return true;
     }
 
@@ -631,12 +631,12 @@ class Xcloner_Restore
             $this->logger->info(sprintf('Deleting xcloner_restore.php'));
             $this->filesystem->delete("xcloner_restore.php");
         }
-        
+
         if ($this->filesystem->has("xcloner_restore.log")) {
             $this->logger->info(sprintf('Deleting xcloner_restore.log'));
             $this->filesystem->delete("xcloner_restore.log");
         }
-        
+
         if ($this->filesystem->has($this->get_logger_filename())) {
             $this->logger->info(sprintf('Deleting logger file %s', $this->get_logger_filename()));
             $this->filesystem->delete($this->get_logger_filename());
@@ -654,9 +654,9 @@ class Xcloner_Restore
     private function update_wp_url($wp_path, $url, $mysqli)
     {
         $wp_config = $wp_path.DS."wp-config.php";
-        
+
         $this->logger->info(sprintf('Updating site url to %s', $url));
-        
+
         if (file_exists($wp_config)) {
             $config = file_get_contents($wp_config);
             preg_match("/.*table_prefix.*=.*'(.*)'/i", $config, $matches);
@@ -668,15 +668,15 @@ class Xcloner_Restore
         } else {
             throw new Exception("Could not update the SITEURL and HOME, wp-config.php file not found");
         }
-            
+
         if (!$mysqli->query("update ".$table_prefix."options set option_value='".($url)."' where option_name='home'")) {
             throw new Exception(sprintf("Could not update the HOME option, error: %s\n", $mysqli->error));
         }
-        
+
         if (!$mysqli->query("update ".$table_prefix."options set option_value='".($url)."' where option_name='siteurl'")) {
             throw new Exception(sprintf("Could not update the SITEURL option, error: %s\n", $mysqli->error));
         }
-        
+
         return true;
     }
 
@@ -694,30 +694,30 @@ class Xcloner_Restore
     private function update_wp_config($remote_path, $remote_mysql_host, $remote_mysql_user, $remote_mysql_pass, $remote_mysql_db)
     {
         $wp_config = $remote_path.DS."wp-config.php";
-        
+
         if (!file_exists($wp_config)) {
             throw new Exception("Could not find the wp-config.php in ".$remote_path);
         }
-        
+
         $content = file_get_contents($wp_config);
-        
+
         $content = preg_replace("/(?<=DB_NAME', ')(.*?)(?='\);)/", $remote_mysql_db, $content);
         $content = preg_replace("/(?<=DB_USER', ')(.*?)(?='\);)/", $remote_mysql_user, $content);
         $content = preg_replace("/(?<=DB_PASSWORD', ')(.*?)(?='\);)/", $remote_mysql_pass, $content);
         $content = preg_replace("/(?<=DB_HOST', ')(.*?)(?='\);)/", $remote_mysql_host, $content);
-        
+
         $file_perms = fileperms($wp_config);
-        
+
         chmod($wp_config, 0777);
-        
+
         $this->logger->info(sprintf('Updating wp-config.php file with the new mysql details'));
-        
+
         if (!file_put_contents($wp_config, $content)) {
             throw new Exception("Could not write updated config data to ".$wp_config);
         }
-        
+
         chmod($wp_config, $file_perms);
-        
+
         return $wp_config;
     }
 
@@ -729,20 +729,20 @@ class Xcloner_Restore
     {
         $source_backup_file = filter_input(INPUT_POST, 'backup_file', FILTER_SANITIZE_STRING);
         $remote_path = filter_input(INPUT_POST, 'remote_path', FILTER_SANITIZE_STRING);
-    
+
         $hash = $this->get_hash_from_backup($source_backup_file);
-        
+
         $this->target_adapter = new Local($remote_path, LOCK_EX, 'SKIP_LINKS');
         $this->target_filesystem = new Filesystem($this->target_adapter, new Config([
                 'disable_asserts' => true,
             ]));
-            
+
         $mysqldump_list = array();
         $list = $this->target_filesystem->listContents();
-        
+
         foreach ($list as $file) {
             $matches = array();
-            
+
             if ($file['type'] == "dir") {
                 if (preg_match("/xcloner-(\w*)/", $file['basename'], $matches)) {
                     $files = $this->target_filesystem->listContents($file['basename']);
@@ -752,7 +752,7 @@ class Xcloner_Restore
                             $mysqldump_list[$file['path']]['path'] = $file['path'];
                             $mysqldump_list[$file['path']]['size'] = $file['size'];
                             $mysqldump_list[$file['path']]['timestamp'] = date("d M,Y H:i", $file['timestamp']);
-                            
+
                             if ($hash and $hash == $matches[1]) {
                                 $mysqldump_list[$file['path']]['selected'] = "selected";
                             } else {
@@ -763,10 +763,10 @@ class Xcloner_Restore
                 }
             }
         }
-        
+
         $this->sort_by($mysqldump_list, 'timestamp', 'desc');
         $return['files'] = $mysqldump_list;
-        
+
         $this->send_response(200, $return);
     }
 
@@ -781,13 +781,13 @@ class Xcloner_Restore
         if (!$backup_file) {
             return false;
         }
-            
+
         $result = preg_match("/-(\w*)./", substr($backup_file, strlen($backup_file) - 10, strlen($backup_file)), $matches);
-        
+
         if ($result and isset($matches[1])) {
             return ($matches[1]);
         }
-        
+
         return false;
     }
 
@@ -800,13 +800,13 @@ class Xcloner_Restore
     {
         $local_backup_file = filter_input(INPUT_POST, 'local_backup_file', FILTER_SANITIZE_STRING);
         $list = $this->filesystem->listContents();
-        
+
         $backup_files = array();
         $parents = array();
-        
+
         foreach ($list as $file_info) {
             $data = array();
-            
+
             if (isset($file_info['extension']) and $file_info['extension'] == "csv") {
                 $lines = explode(PHP_EOL, $this->filesystem->read($file_info['path']));
                 foreach ($lines as $line) {
@@ -820,14 +820,14 @@ class Xcloner_Restore
                     }
                 }
             }
-            
+
             if ($file_info['type'] == 'file' and isset($file_info['extension']) and in_array($file_info['extension'], $this->backup_archive_extensions)) {
                 $backup_files[$file_info['path']] = $file_info;
             }
         }
-        
+
         $new_list = array();
-        
+
         foreach ($backup_files as $key=>$file_info) {
             if (isset($parents[$file_info['path']])) {
                 $backup_files[$key]['parent'] = $parents[$file_info['path']];
@@ -835,17 +835,17 @@ class Xcloner_Restore
                 if ($local_backup_file and ($file_info['basename'] == $local_backup_file)) {
                     $file_info['selected'] = 'selected';
                 }
-                
+
                 $this->logger->info(sprintf('Found %s backup file', $file_info['path']));
-                    
+
                 $new_list[$key] = $file_info;
             }
         }
-        
+
         $this->sort_by($new_list, "timestamp", "desc");
-        
+
         $return['files'] = $new_list;
-        
+
         $this->send_response(200, $return);
     }
 
@@ -864,24 +864,24 @@ class Xcloner_Restore
         $start = filter_input(INPUT_POST, 'start', FILTER_SANITIZE_NUMBER_INT);
         $return['part'] = (int)filter_input(INPUT_POST, 'part', FILTER_SANITIZE_NUMBER_INT);
         $return['processed'] 	= (int)filter_input(INPUT_POST, 'processed', FILTER_SANITIZE_NUMBER_INT);
-                
+
         $this->target_adapter = new Local($remote_path, LOCK_EX, 'SKIP_LINKS');
         $this->target_filesystem = new Filesystem($this->target_adapter, new Config([
                 'disable_asserts' => true,
             ]));
-        
+
         $backup_file = $source_backup_file;
-        
+
         $return['finished'] = 1;
         $return['extracted_files'] = array();
         $return['total_size'] = $this->get_backup_size($backup_file);
-        
+
         $backup_archive = new Xcloner_Archive_Restore();
         if ($this->is_multipart($backup_file)) {
             if (!$return['part']) {
                 $return['processed'] += $this->filesystem->getSize($backup_file);
             }
-                
+
             $backup_parts = $this->get_multipart_files($backup_file);
             $backup_file = $backup_parts[$return['part']];
         }
@@ -892,43 +892,43 @@ class Xcloner_Restore
             $this->send_response(500, $message);
             return;
         }
-        
+
         $this->logger->info(sprintf('Opening backup archive %s at position %s', $backup_file, $start));
         $backup_archive->open($this->backup_storage_dir.DS.$backup_file, $start);
 
         $data = $backup_archive->extract($remote_path, '', $exclude_filter_files, $include_filter_files, $this->process_files_limit);
-        
+
         if (isset($data['extracted_files'])) {
             foreach ($data['extracted_files'] as $spl_fileinfo) {
                 $this->logger->info(sprintf('Extracted %s file', $spl_fileinfo->getPath()));
                 $return['extracted_files'][] = $spl_fileinfo->getPath()." (".$spl_fileinfo->getSize()." bytes)";
             }
         }
-        
+
         if (isset($data['start'])) {
             //if(isset($data['start']) and $data['start'] <= $this->filesystem->getSize($backup_file))
             $return['finished'] = 0;
             $return['start'] = $data['start'];
         } else {
             $return['processed'] += $start;
-            
+
             if ($this->is_multipart($source_backup_file)) {
                 $return['start'] = 0;
-                
+
                 ++$return['part'];
-            
+
                 if ($return['part'] < sizeof($backup_parts)) {
                     $return['finished'] = 0;
                 }
             }
         }
-        
+
         if ($return['finished']) {
             $this->logger->info(sprintf('Done extracting %s', $source_backup_file));
         }
-        
+
         $return['backup_file'] = $backup_file;
-        
+
         $this->send_response(200, $return);
     }
 
@@ -958,17 +958,17 @@ class Xcloner_Restore
     public function get_current_directory_action()
     {
         global $wpdb;
-        
+
         $restore_script_url = filter_input(INPUT_POST, 'restore_script_url', FILTER_SANITIZE_STRING);
-        
+
         $pathinfo = pathinfo(__FILE__);
-        
+
         $suffix = "";
         $return['remote_mysql_host'] 	= "localhost";
         $return['remote_mysql_user'] 	= "";
         $return['remote_mysql_pass'] 	= "";
         $return['remote_mysql_db'] = "";
-        
+
         if (defined('XCLONER_PLUGIN_ACCESS') && XCLONER_PLUGIN_ACCESS) {
             $return['dir'] = realpath(get_home_path().DS.$suffix);
             $return['restore_script_url'] = get_site_url();
@@ -980,9 +980,9 @@ class Xcloner_Restore
             $return['dir'] = ($pathinfo['dirname']).DS.$suffix;
             $return['restore_script_url'] = str_replace($pathinfo['basename'], "", $restore_script_url).$suffix;
         }
-        
+
         $this->logger->info(sprintf('Determining current url as %s and path as %s', $return['dir'], $return['restore_script_url']));
-        
+
         $this->send_response(200, $return);
     }
 
@@ -998,19 +998,19 @@ class Xcloner_Restore
         if (!file_put_contents($tmp_file, "++")) {
             throw new Exception("Could not write to new host");
         }
-        
+
         if (!unlink($tmp_file)) {
             throw new Exception("Could not delete temporary file from new host");
         }
-        
+
         $max_upload      = $this->return_bytes((ini_get('upload_max_filesize')));
         $max_post        = $this->return_bytes((ini_get('post_max_size')));
 
         $return['max_upload_size'] = min($max_upload, $max_post); // bytes
         $return['status'] = true;
-        
+
         $this->logger->info(sprintf('Current filesystem max upload size is %s bytes', $return['max_upload_size']));
-        
+
         $this->send_response(200, $return);
     }
 
@@ -1054,7 +1054,7 @@ class Xcloner_Restore
         if (stristr($backup_name, "-multipart")) {
             return true;
         }
-        
+
         return false;
     }
 
@@ -1074,7 +1074,7 @@ class Xcloner_Restore
                 $backup_size += $this->filesystem->getSize($part_file);
             }
         }
-        
+
         return $backup_size;
     }
 
@@ -1087,7 +1087,7 @@ class Xcloner_Restore
     public function get_multipart_files($backup_name)
     {
         $files = array();
-        
+
         if ($this->is_multipart($backup_name)) {
             $lines = explode(PHP_EOL, $this->filesystem->read($backup_name));
             foreach ($lines as $line) {
@@ -1097,7 +1097,7 @@ class Xcloner_Restore
                 }
             }
         }
-        
+
         return $files;
     }
 
@@ -1161,7 +1161,7 @@ class Xcloner_Restore
         header('Content-Type: application/json');
         $return['status'] = $status;
         $return['statusText'] = $response;
-        
+
         if (isset($response['error']) && $response['error']) {
             $return['statusText'] = $response['message'];
             $return['error'] = true;
@@ -1169,7 +1169,7 @@ class Xcloner_Restore
             $return['error'] = true;
             $return['message'] = $response;
         }
-        
+
         die(json_encode($return));
     }
 
@@ -1179,21 +1179,21 @@ class Xcloner_Restore
      * @param $query
      * @return string
      */
-     
+
     public function do_serialized_fix($query)
     {
         $query = str_replace(array("\\n", "\\r", "\\'"), array("", "", "\""), ($query));
-        
+
         return preg_replace_callback('!s:(\d+):([\\\\]?"[\\\\]?"|[\\\\]?"((.*?)[^\\\\])[\\\\]?");!', function ($m) {
             $data = "";
-                    
+
             if (!isset($m[3])) {
                 $m[3] = "";
             }
-                    
+
             $data = 's:'.strlen(($m[3])).':\"'.($m[3]).'\";';
             //return $this->unescape_quotes($data);
-                  
+
             return $data;
         }, $query);
     }
@@ -1249,13 +1249,13 @@ class Xcloner_Restore
 * Xcloner_Archive_Restore Class
 */
 class Xcloner_Archive_Restore extends Xcloner_Archive
-{       
+{
     public function __construct($archive_name = "") {
         if (isset($archive_name) && $archive_name) {
             $this->set_archive_name($archive_name);
         }
     }
-    
+
 }
 
 

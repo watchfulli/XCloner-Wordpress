@@ -32,7 +32,7 @@ services:
       # test: "/usr/local/mysql/bin/mysql --user=wordpress --password=wordpress --execute \"SHOW DATABASES;\""
       interval: 3s
       timeout: 1s
-      retries: 5
+      retries: 10
 
   wpcli:
     image: wordpress:cli
@@ -49,6 +49,25 @@ services:
       WORDPRESS_DB_PASSWORD: wordpress
       WORDPRESS_DB_NAME: wordpress
       ABSPATH: /usr/src/wordpress/
+
+  phpunit:
+    command:
+      - bash
+    depends_on:
+      - testwpdb
+    environment:
+      DATABASE_PASSWORD: examplepass
+      DATABASE_HOST: testwpdb
+    image: futureys/phpunit-wordpress-plugin
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./:/plugin
+
+  testwpdb:
+      environment:
+        MYSQL_ROOT_PASSWORD: examplepass
+      image: mariadb:10.5.8
 
 volumes:
   db_data: {}
