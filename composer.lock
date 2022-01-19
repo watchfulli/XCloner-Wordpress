@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "37c76821a37ec1539a3a3f846501ebaf",
+    "content-hash": "87add0f3376a48faef716ebfa1537df6",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -58,16 +58,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.209.3",
+            "version": "3.209.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "1c351046d8fd46961f4d020d38624d46065134cf"
+                "reference": "22bbcc0b25578d4c496756d9f46fcd4c27cffd5d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/1c351046d8fd46961f4d020d38624d46065134cf",
-                "reference": "1c351046d8fd46961f4d020d38624d46065134cf",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/22bbcc0b25578d4c496756d9f46fcd4c27cffd5d",
+                "reference": "22bbcc0b25578d4c496756d9f46fcd4c27cffd5d",
                 "shasum": ""
             },
             "require": {
@@ -143,9 +143,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.209.3"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.209.7"
             },
-            "time": "2022-01-11T19:13:42+00:00"
+            "time": "2022-01-18T19:16:05+00:00"
         },
         {
             "name": "components/jquery",
@@ -1088,16 +1088,16 @@
         },
         {
             "name": "microsoft/microsoft-graph",
-            "version": "1.48.0",
+            "version": "1.50.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/microsoftgraph/msgraph-sdk-php.git",
-                "reference": "ceb9980367afdbdf556dbd72b2b2738b49bff97c"
+                "reference": "9bb5fe59278c7c3d67443710891bd5eae8a8e8b5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/microsoftgraph/msgraph-sdk-php/zipball/ceb9980367afdbdf556dbd72b2b2738b49bff97c",
-                "reference": "ceb9980367afdbdf556dbd72b2b2738b49bff97c",
+                "url": "https://api.github.com/repos/microsoftgraph/msgraph-sdk-php/zipball/9bb5fe59278c7c3d67443710891bd5eae8a8e8b5",
+                "reference": "9bb5fe59278c7c3d67443710891bd5eae8a8e8b5",
                 "shasum": ""
             },
             "require": {
@@ -1133,9 +1133,9 @@
             "homepage": "https://developer.microsoft.com/en-us/graph",
             "support": {
                 "issues": "https://github.com/microsoftgraph/msgraph-sdk-php/issues",
-                "source": "https://github.com/microsoftgraph/msgraph-sdk-php/tree/1.48.0"
+                "source": "https://github.com/microsoftgraph/msgraph-sdk-php/tree/1.50.0"
             },
-            "time": "2022-01-06T12:34:31+00:00"
+            "time": "2022-01-19T13:11:12+00:00"
         },
         {
             "name": "mikey179/vfsstream",
@@ -2832,16 +2832,16 @@
         },
         {
             "name": "watchfulli/xcloner-core",
-            "version": "dev-master",
+            "version": "dev-uppercase-namespace",
             "source": {
                 "type": "git",
                 "url": "https://github.com/watchfulli/xcloner-core.git",
-                "reference": "0d4a20e8713e1a7052568f03418922e052dd885b"
+                "reference": "af7237e70e0a577356ae57e8e8c4cf0275009cc5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/watchfulli/xcloner-core/zipball/0d4a20e8713e1a7052568f03418922e052dd885b",
-                "reference": "0d4a20e8713e1a7052568f03418922e052dd885b",
+                "url": "https://api.github.com/repos/watchfulli/xcloner-core/zipball/af7237e70e0a577356ae57e8e8c4cf0275009cc5",
+                "reference": "af7237e70e0a577356ae57e8e8c4cf0275009cc5",
                 "shasum": ""
             },
             "require": {
@@ -2852,14 +2852,14 @@
                 "league/flysystem-webdav": "^1.0",
                 "mhetreramesh/flysystem-backblaze": "^1.0",
                 "monolog/monolog": "^1.22",
+                "php": ">=7.1.0",
                 "splitbrain/php-archive": "^1.0",
                 "srmklive/flysystem-dropbox-v2": "^1.0"
             },
-            "default-branch": true,
             "type": "package",
             "autoload": {
                 "psr-4": {
-                    "watchfulli\\XClonerCore\\": "src/"
+                    "Watchfulli\\XClonerCore\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -2875,9 +2875,9 @@
             "description": "XCloner Core Library for Backup and Restore",
             "support": {
                 "issues": "https://github.com/watchfulli/xcloner-core/issues",
-                "source": "https://github.com/watchfulli/xcloner-core/tree/master"
+                "source": "https://github.com/watchfulli/xcloner-core/tree/uppercase-namespace"
             },
-            "time": "2021-05-07T06:13:05+00:00"
+            "time": "2022-01-19T17:01:07+00:00"
         }
     ],
     "packages-dev": [
@@ -3678,16 +3678,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.3.3",
+            "version": "1.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "151a51f6149855785fbd883e79768c0abc96b75f"
+                "reference": "1dd8f3e40bf7aa30031a75c65cece99220a161b8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/151a51f6149855785fbd883e79768c0abc96b75f",
-                "reference": "151a51f6149855785fbd883e79768c0abc96b75f",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/1dd8f3e40bf7aa30031a75c65cece99220a161b8",
+                "reference": "1dd8f3e40bf7aa30031a75c65cece99220a161b8",
                 "shasum": ""
             },
             "require": {
@@ -3703,7 +3703,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.3-dev"
+                    "dev-master": "1.4-dev"
                 }
             },
             "autoload": {
@@ -3718,7 +3718,7 @@
             "description": "PHPStan - PHP Static Analysis Tool",
             "support": {
                 "issues": "https://github.com/phpstan/phpstan/issues",
-                "source": "https://github.com/phpstan/phpstan/tree/1.3.3"
+                "source": "https://github.com/phpstan/phpstan/tree/1.4.2"
             },
             "funding": [
                 {
@@ -3738,7 +3738,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-01-07T09:49:03+00:00"
+            "time": "2022-01-18T16:09:11+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
