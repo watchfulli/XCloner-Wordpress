@@ -514,7 +514,12 @@ class Xcloner extends Watchfulli\XClonerCore\Xcloner
     {
         //adding the pre-update hook
 
-        if (is_admin() || defined('DOING_CRON')) {
+        if ((
+            //Load in admin or on cron
+            is_admin() || defined('DOING_CRON'))
+            //OR when testing
+            || defined( 'XCLONER_TESTING')
+        ) {
             $this->xcloner_logger = new Xcloner_Logger($this, "xcloner_api");
             $this->xcloner_filesystem = new Xcloner_File_System($this);
 
