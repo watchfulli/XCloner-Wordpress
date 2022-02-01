@@ -7,7 +7,7 @@
 - `npm run start`
     - Start command starts development server.
     - `npm run build-prod` will build for production.
-    - `npm run build` does not do anything. 
+    - `npm run build` does not do anything.
 - `composer install`
 
 
@@ -34,3 +34,15 @@ There is a special phpunit container for running WordPress tests, with WordPress
     - `composer install`
 - Test
     - `composer test:wordpress`
+
+## Debug Logging
+
+Beacuse most of what xCloner does happens via asynchronous requests, logging PHP errors is important for identifying bugs.
+
+By default, xCloner registers its own error handlers. This will prevent WordPress default error logging with WP_DEBUG_LOG from working as expected.
+
+You can use that log, or you can disable it in in xCloner's "Settings" screen.
+
+- @todo find or create documentation about the PHP logging feature in xCloner.
+- [Recent post about WordPress debug logging from Delicious Brains](https://deliciousbrains.com/why-use-wp-debug-log-wordpress-development/)
+- [Post about WordPress debug logging I wrote for Elegant Themes awhile ago](https://www.elegantthemes.com/blog/tips-tricks/using-the-wordpress-debug-log)

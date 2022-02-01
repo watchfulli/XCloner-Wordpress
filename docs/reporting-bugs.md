@@ -16,4 +16,6 @@ Please do not write "latest" version, use a version number always. If you are te
 
 ### Error Logging.
 
-Please  always include what PHP errors happened with WP_DEBUG enabled and what JavaScript console errors happened. If they didn't, or you don't know, include that.
+Please  always include what PHP errors happened with WP_DEBUG enabled and what JavaScript console errors happened. If they didn't, or you don't know, include that. The [local dev](./local-dev.md) documentation includes notes about setting up debug logging, which is probably neccasary for testing.
+
+For JavaScript console errors, please provide __the text of any errors__. Please do not include a screenshot of the terminal or all of the text in the JavaScript console. Please do not include warnings, or other text in the JavaScript console, unless you belive it is relevant.
