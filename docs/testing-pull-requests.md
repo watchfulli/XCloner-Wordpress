@@ -15,10 +15,19 @@ When testing, you must install the plugin using the process documented in [the l
 1. Switch to that branch
     - `git fetch origin name-of-branch`
     - `git checkout name-of-branch`
-1. Run the installation steps documented in [the local development documentation](./local-dev.md).
-1. In your test WordPress site, activate the plugin.
-1. Attempt to reproduce the bug, using the steps listed in the original issue that the [bug was reported in](./reporting-bugs.md)
-1. If the bug is no longer present, comment on the issue explaining how you tested.
+    - Please not activate the plugin yet
+1. Run the installation steps documented in [the local development documentation](./local-dev.md) to simulate a production build:
+    - `npm install`
+       - Ensure you have the latest JavaScript dependecies install.
+   - `npm run build-prod`
+       - Ensure the JavaScript and CSS assets are built.
+    - `composer install --no-dev`
+       - Ensures the PHP dependencies are installed correctly
+    - `docker-compose up -d`
+       - Starts or restarts the server
+3. In your test WordPress site, activate the plugin.
+4. Attempt to reproduce the bug, using the steps listed in the original issue that the [bug was reported in](./reporting-bugs.md)
+5. If the bug is no longer present, comment on the issue explaining how you tested.
     - Make sure to include your version of PHP and WordPress.
-1. If the bug is still present, comment on the issue explaining how you tested and what PHP and JavaScript errors you encountered.
+6. If the bug is still present, comment on the issue explaining how you tested and what PHP and JavaScript errors you encountered.
     - Make sure to include your version of PHP and WordPress.
