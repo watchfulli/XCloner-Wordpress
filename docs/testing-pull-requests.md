@@ -21,8 +21,9 @@ When testing, you must install the plugin using the process documented in [the l
        - Ensure you have the latest JavaScript dependecies install.
    - `npm run build-prod`
        - Ensure the JavaScript and CSS assets are built.
-    - `composer install --no-dev`
+    - `docker run --rm -it --volume $(pwd):/app prooph/composer:7.3 install --no-dev`
        - Ensures the PHP dependencies are installed correctly
+       - Installation uses a Docker container so that we use a consistent PHP version (7.3) to install.
     - `docker-compose up -d`
        - Starts or restarts the server
 3. In your test WordPress site, activate the plugin.
