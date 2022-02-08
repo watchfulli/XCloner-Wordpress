@@ -12,9 +12,9 @@
         - `npm run start` Starts watcher
 - Install Composer Dependencies
     - If installing for testing:
-        - `docker run --rm -it --volume $(pwd):/app prooph/composer:7.3 install --no-dev`
+        - `docker run --rm -it --volume "$(pwd)":/app prooph/composer:7.3 install --no-dev`
     - If installing for development:
-        - `docker run --rm -it --volume $(pwd):/app prooph/composer:7.3 install`
+        - `docker run --rm -it --volume "$(pwd)":/app prooph/composer:7.3 install`
 
 ## Local Development Environment
 A [docker-compose](https://docs.docker.com/samples/wordpress/)-based local development environment is provided.
