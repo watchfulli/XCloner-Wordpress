@@ -17,7 +17,7 @@ The test and analysis pipelines will run on the pull request. If they pass, adva
 
 If a release is being done for other reasons, a pull request to update the - branch should be made. The rest of this workflow.
 
-## Manual Testing
+## Manual Testing The Plugin
 
 To test the pull request for the new version:
 
