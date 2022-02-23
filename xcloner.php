@@ -118,7 +118,7 @@ function do_cli_execution($args = array(), $opts = array())
         $profile_name = $opts['profile'];
     }
 
-    $xcloner_backup = new watchfulli\XClonerCore\Xcloner_Standalone();
+    $xcloner_backup = new Watchfulli\XClonerCore\Xcloner_Standalone();
 
     // --list|l list backup archive
     if (isset($opts['l']) || isset($opts['list'])) {
@@ -256,7 +256,10 @@ if (!defined('WPINC')) {
 
 //i will not load the plugin outside admin or cron
 if (!is_admin() && !defined('DOING_CRON')) {
-    return;
+    //Check if we are running tests before leaving
+    if( ! defined( 'XCLONER_TESTING')){
+        return;
+    }
 }
 
 if (!defined("DS")) {
@@ -339,7 +342,6 @@ function run_xcloner()
 }
 
 require plugin_dir_path(__FILE__).'includes/class-xcloner.php';
-
 try {
     $xcloner_plugin = run_xcloner();
 } catch (Exception $e) {
