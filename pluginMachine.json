@@ -1,0 +1,29 @@
+{
+    "slug": "xcloner",
+    "pluginId": 223,
+    "buildId": 247,
+    "entryPoints": {
+        "adminPages": [],
+        "blocks": []
+    },
+    "buildIncludes": [
+        "xcloner.php",
+        "readme.txt",
+        "examples",
+        "vendor",
+        "build",
+        "includes",
+        "dist",
+        "admin",
+        "restore",
+        "index.php"
+    ],
+    "buildSteps": {
+        "dev": [],
+        "prod": [
+            "npm install",
+            "npm run build-prod",
+            "composer install --no-dev -o"
+        ]
+    }
+}
