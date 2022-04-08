@@ -8,10 +8,10 @@
     },
     "buildIncludes": [
         "xcloner.php",
-        "readme.txt",
+        "README.md",
+        "README.txt",
         "examples",
         "vendor",
-        "build",
         "includes",
         "dist",
         "admin",

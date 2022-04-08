@@ -1,36 +1,41 @@
 name: Attatch Zip to Pull Request
-on: pull_request
+on: push
 
 jobs:
-  example:
-    name: example
+
+  plugin-machine:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - run: mkdir -p output/
-      - run: echo "This is fancy a comment" > output/results.txt
-      - uses: actions/upload-artifact@v1
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
         with:
-          name: results
-          path: output
-      - uses: actions/download-artifact@v1
-        with:
-          name: results
-      - name: comment PR
-        uses: machine-learning-apps/pr-comment@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          path: results/results.txt
-  welcome:
-    runs-on: ubuntu-latest
-    steps:
+          node-version: 16
+      # Build plugin for prod, zip and upload
+      - name: Zip
+        id: pluginmachine
+        run: |
+          # Install Plugin Machine CLI
+          npm i plugin-machine -g
+          # Login
+          plugin-machine login --token="${{ secrets.PLUGIN_MACHINE_TOKEN }}" --ci
+          # Build plugin with npm/composer as set in pluginMachine.json's build.prod key.
+          plugin-machine plugin build --buildDir=output --pluginDir="${{ github.workspace }}"
+          # Create a zip with files/ paths set in pluginMachine.json's buildIncludes key
+          plugin-machine plugin zip --buildDir=output --pluginDir="${{ github.workspace }}"
+          # Upload zip to Plugin Machine API
+          OUTPUT=`plugin-machine upload --fileName=xcloner-backup-and-restore.zip --quiet`
+          echo $OUTPUT
+          echo "::set-output name=url::$OUTPUT"
+      # Get PR number
+      - uses: jwalton/gh-find-current-pr@v1
+        id: finder
+      # Comment on PR
       - uses: actions/github-script@v6
         with:
           script: |
             await github.rest.issues.createComment({
-              issue_number: context.issue.number,
+              issue_number: ${{ steps.finder.outputs.pr }},
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: 'A comment'
+              body: "Link: ${{steps.pluginmachine.outputs.url}}"
             })
