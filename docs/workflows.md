@@ -9,7 +9,7 @@ There are several Github actions:
     - This runs [phpunit](https://phpunit.de/) tests.
     - These tests can run locally. See [WordPress Tests section of local dev docs](./local-dev.md)
     - This runs on all pull requests.
-3. main.yml
+3. deploy.yml
     - This [releases updates to WordPress.org](https://github.com/10up/action-wordpress-plugin-deploy).
     - This runs when a new tag is added.
 4. version.yml

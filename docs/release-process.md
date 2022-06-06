@@ -22,7 +22,7 @@ If a release is being done for other reasons, a pull request to update the - bra
 To test the pull request for the new version:
 
 - Checkout the repo locally, at the same branch as the pull request.
-- Build plugin the same way as in "main.yml".
+- Build plugin the same way as in "deploy.yml".
     - `npm install`
     - `npm run build-prod`
     - `composer install --no-dev --prefer-dist -o`
@@ -35,5 +35,5 @@ When the release is ready:
 - Apply and push a tag to the latest commit of master branch
     - Tag must be the same as the value of "Stable tag".
     - `git tag 1.0.0 && git push --tags`
-- This will trigger the "main.yml" workflow.
+- This will trigger the "deploy.yml" workflow.
     - This should create a new release in [WordPress plugin repo](https://wordpress.org/plugins/xcloner-backup-and-restore/).
