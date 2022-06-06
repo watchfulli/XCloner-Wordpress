@@ -188,7 +188,8 @@ $available_storages = $xcloner_remote_storage->get_available_storages();
                         <div class="s4 m2 right">
                             <button type="submit"
                                 class="upload-submit btn-floating btn-large waves-effect waves-light teal"><i
-                                    class="material-icons">file_upload</i></submit>
+                                        class="material-icons">file_upload</i>
+                            </button>
                         </div>
                     </div>
                     <div class="row status">
