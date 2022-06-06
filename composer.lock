@@ -2835,12 +2835,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/watchfulli/xcloner-core.git",
-                "reference": "2b5b951db18b9bf84283a1bdb14eedc4acca23e5"
+                "reference": "2f2078671dadb09e58199bca823ce36fa70c743b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/watchfulli/xcloner-core/zipball/2b5b951db18b9bf84283a1bdb14eedc4acca23e5",
-                "reference": "2b5b951db18b9bf84283a1bdb14eedc4acca23e5",
+                "url": "https://api.github.com/repos/watchfulli/xcloner-core/zipball/2f2078671dadb09e58199bca823ce36fa70c743b",
+                "reference": "2f2078671dadb09e58199bca823ce36fa70c743b",
                 "shasum": ""
             },
             "require": {
@@ -2876,7 +2876,7 @@
                 "issues": "https://github.com/watchfulli/xcloner-core/issues",
                 "source": "https://github.com/watchfulli/xcloner-core/tree/v2.1"
             },
-            "time": "2022-06-06T10:19:28+00:00"
+            "time": "2022-06-06T17:20:30+00:00"
         }
     ],
     "packages-dev": [
