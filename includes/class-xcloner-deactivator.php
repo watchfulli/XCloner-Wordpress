@@ -37,30 +37,23 @@
  * @author     Liuta Ovidiu <info@thinkovi.com>
  * @link       https://watchful.net
  */
+class Xcloner_Deactivator
+{
+    public static function deactivate()
+    {
 
-class Xcloner_Deactivator {
+        global $xcloner_plugin;
 
-	/**
-	 * Short Description. (use period)
-	 *
-	 * Long Description.
-	 *
-	 * @since    1.0.0
-	 */
-	public static function deactivate() {
+        if (is_a($xcloner_plugin, 'Xcloner')) {
+            try {
+                $xcloner_plugin->get_xcloner_filesystem()->cleanup_tmp_directories();
+            } catch (Exception $e) {
+                $xcloner_plugin->trigger_message_notice($e->getMessage());
+            }
 
-		global $xcloner_plugin;
-
-		if (is_a($xcloner_plugin, 'Xcloner')) {
-			try {
-				$xcloner_plugin->get_xcloner_filesystem()->cleanup_tmp_directories();
-			}catch (Exception $e) {
-				$xcloner_plugin->trigger_message_notice($e->getMessage());
-			}
-
-			$xcloner_scheduler = $xcloner_plugin->get_xcloner_scheduler();
-			$xcloner_scheduler->deactivate_wp_cron_hooks();
-		}
-	}
+            $xcloner_scheduler = $xcloner_plugin->get_xcloner_scheduler();
+            $xcloner_scheduler->deactivate_wp_cron_hooks();
+        }
+    }
 
 }
