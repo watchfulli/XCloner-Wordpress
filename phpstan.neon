@@ -5,5 +5,4 @@ parameters:
 	level: 3
 	paths:
 		- admin
-		- api
 		- includes
