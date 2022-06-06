@@ -2,22 +2,24 @@ version: "3.9"
 services:
   wordpress:
     depends_on:
-      wpdb:
-        condition: service_healthy
+      - db
     image: wordpress:latest
     volumes:
       - wordpress_data:/var/www/html
       - ./:/var/www/html/wp-content/plugins/xcloner
-    ports:
-      - "6123:80"
+    # To avoid conflicts, define your own port binding in docker-compose.override.yml. E.g.
+    #services:
+    #  wordpress:
+    #    ports:
+    #      - '8080:80'
     restart: always
     environment:
-      WORDPRESS_DB_HOST: wpdb:3306
+      WORDPRESS_DB_HOST: db
       WORDPRESS_DB_USER: wordpress
       WORDPRESS_DB_PASSWORD: wordpress
       WORDPRESS_DB_NAME: wordpress
 
-  wpdb:
+  db:
     image: mariadb:10.5.8
     volumes:
       - db_data:/var/lib/mysql
@@ -29,22 +31,20 @@ services:
       MYSQL_PASSWORD: wordpress
     healthcheck:
       test: "/usr/bin/mysql --user=wordpress --password=wordpress --execute \"SHOW DATABASES;\""
-      # test: "/usr/local/mysql/bin/mysql --user=wordpress --password=wordpress --execute \"SHOW DATABASES;\""
       interval: 3s
       timeout: 1s
       retries: 10
 
-  wpcli:
+  wordpress-cli:
     image: wordpress:cli
     depends_on:
-      wpdb:
-        condition: service_healthy
+    - db
     volumes:
       - wordpress_data:/var/www/html
       - ./:/var/www/html/wp-content/plugins/xcloner
       - ./db:/var/www/html/db
     environment:
-      WORDPRESS_DB_HOST: wpdb:3306
+      WORDPRESS_DB_HOST: db
       WORDPRESS_DB_USER: wordpress
       WORDPRESS_DB_PASSWORD: wordpress
       WORDPRESS_DB_NAME: wordpress
