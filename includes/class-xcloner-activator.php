@@ -49,7 +49,7 @@ class Xcloner_Activator
      * Minimum required PHP version to run this plugin.
      * @var string
      */
-    const xcloner_minimum_version = '7.1.0';
+    const xcloner_minimum_version = '7.3.0';
 
     /**
      * Triggered when XCloner is activated.
