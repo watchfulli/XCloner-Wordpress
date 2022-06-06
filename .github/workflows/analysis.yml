@@ -14,7 +14,7 @@ jobs:
     strategy:
       matrix:
         operating-system: ['ubuntu-latest']
-        php-versions: ['7.4']
+        php-versions: ['7.3']
     steps:
     - uses: actions/checkout@v2
 
@@ -34,7 +34,7 @@ jobs:
     strategy:
       matrix:
         operating-system: ['ubuntu-latest']
-        php-versions: ['7.4']
+        php-versions: ['7.3']
     steps:
     - uses: actions/checkout@v2
 
@@ -61,8 +61,8 @@ jobs:
       if: steps.composer-cache.outputs.cache-hit != 'true'
       run: composer install --prefer-dist --no-progress
 
-    - name: Test compat for PHP 7.1 or later
-      run: ./vendor/bin/phpcs -p . --standard=PHPCompatibilityWP --extensions=php --runtime-set testVersion 7.1-  --ignore=*/vendor/*,*/tests/*
+    - name: Test compat for PHP 7.3 or later
+      run: ./vendor/bin/phpcs -p . --standard=PHPCompatibilityWP --extensions=php --runtime-set testVersion 7.3-  --ignore=*/vendor/*,*/tests/*
 
   ## Run phpstan analysis
   phpstan:
@@ -71,7 +71,7 @@ jobs:
     strategy:
       matrix:
         operating-system: ['ubuntu-latest']
-        php-versions: ['7.4']
+        php-versions: ['7.3']
     steps:
     - uses: actions/checkout@v2
 
