@@ -1,6 +1,9 @@
 node_modules/
 vendor/
+.idea/
+
 wpv.txt
 log.log
 wpdebug.log
-.idea/
+
+docker-compose.override.yml
