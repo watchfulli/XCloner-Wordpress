@@ -54,16 +54,12 @@ if (file_exists($vendor_source_1)) {
 
 use League\Flysystem\Config;
 use League\Flysystem\Filesystem;
-use League\Flysystem\Util;
 use League\Flysystem\Adapter\Local;
-
-use splitbrain\PHPArchive\Tar;
-use splitbrain\PHPArchive\Archive;
-use splitbrain\PHPArchive\FileInfo;
 
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 
+use Watchful\XClonerCore\Xcloner;
 use Watchful\XClonerCore\Xcloner_Archive;
 
 //do not modify below
@@ -87,17 +83,15 @@ class Xcloner_Restore
     private $filesystem;
     private $logger;
     private $backup_storage_dir;
-    private $parent_api;
 
     private $target_adapter;
     private $target_filesystem;
 
     /**
      * Xcloner_Restore constructor.
-     * @param string $parent_api
      * @throws Exception
      */
-    public function __construct($parent_api = "")
+    public function __construct(Xcloner $parent_api = null)
     {
         register_shutdown_function(array($this, 'exception_handler'));
 
@@ -109,8 +103,6 @@ class Xcloner_Restore
         if (!isset($dir) || !$dir) {
             $dir = dirname(__FILE__);
         }
-
-        $this->parent_api = $parent_api;
 
         $this->backup_storage_dir = $dir;
 
@@ -195,7 +187,7 @@ class Xcloner_Restore
             }
         }
 
-        return $this->check_system();
+        $this->check_system();
     }
 
     /**
