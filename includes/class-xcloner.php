@@ -1,4 +1,5 @@
 <?php
+
 use Watchful\XClonerCore\Xcloner_Loader;
 use Watchful\XClonerCore\Xcloner_i18n;
 use Watchful\XClonerCore\Xcloner_Sanitization;
@@ -58,14 +59,14 @@ use Watchful\XClonerCore\Xcloner_Api;
  *
  *
  * @method Xcloner_Api get_xcloner_api();
-* @method Xcloner_Logger get_xcloner_logger();
-* @method Xcloner_Remote_Storage get_xcloner_remote_storage();
-* @method Xcloner_Sanitization get_xcloner_sanitization();
-* @method Xcloner_Requirements get_xcloner_requirements();
-* @method Xcloner_Archive get_archive_system();
-* @method Xcloner_Database get_xcloner_database();
-* @method Xcloner_Encryption get_xcloner_remote_encryption();
-* @method int|string get_version();
+ * @method Xcloner_Logger get_xcloner_logger();
+ * @method Xcloner_Remote_Storage get_xcloner_remote_storage();
+ * @method Xcloner_Sanitization get_xcloner_sanitization();
+ * @method Xcloner_Requirements get_xcloner_requirements();
+ * @method Xcloner_Archive get_archive_system();
+ * @method Xcloner_Database get_xcloner_database();
+ * @method Xcloner_Encryption get_xcloner_remote_encryption();
+ * @method int|string get_version();
  */
 class Xcloner extends Watchful\XClonerCore\Xcloner
 {
@@ -76,7 +77,7 @@ class Xcloner extends Watchful\XClonerCore\Xcloner
      *
      * @since    1.0.0
      * @access   protected
-     * @var      Xcloner_Loader    $loader    Maintains and registers all hooks for the plugin.
+     * @var      Xcloner_Loader $loader Maintains and registers all hooks for the plugin.
      */
     protected $loader;
 
@@ -85,7 +86,7 @@ class Xcloner extends Watchful\XClonerCore\Xcloner
      *
      * @since    1.0.0
      * @access   protected
-     * @var      string    $plugin_name    The string used to uniquely identify this plugin.
+     * @var      string $plugin_name The string used to uniquely identify this plugin.
      */
     protected $plugin_name;
 
@@ -96,7 +97,7 @@ class Xcloner extends Watchful\XClonerCore\Xcloner
      *
      * @since    1.0.0
      * @access   protected
-     * @var      string    $version    The current version of the plugin.
+     * @var      string $version The current version of the plugin.
      */
     protected $version;
 
@@ -181,7 +182,7 @@ class Xcloner extends Watchful\XClonerCore\Xcloner
 
     public function check_dependencies()
     {
-        $backup_storage_path =  (get_option('xcloner_store_path'));
+        $backup_storage_path = (get_option('xcloner_store_path'));
 
         if (!$backup_storage_path) {
             $backup_storage_path = realpath(__DIR__ . DS . ".." . DS . ".." . DS . "..") . DS . "backups-" . $this->randomString('5') . DS;
@@ -229,10 +230,10 @@ class Xcloner extends Watchful\XClonerCore\Xcloner
     public function trigger_message_notice($message, $status = "success")
     {
         ?>
-		<div class="notice notice-<?php echo $status?> is-dismissible">
-	        <p><?php _e($message, 'xcloner-backup-and-restore'); ?></p>
-	    </div>
-		<?php
+        <div class="notice notice-<?php echo $status ?> is-dismissible">
+            <p><?php _e($message, 'xcloner-backup-and-restore'); ?></p>
+        </div>
+        <?php
     }
 
     /**
@@ -254,8 +255,6 @@ class Xcloner extends Watchful\XClonerCore\Xcloner
     public function load_dependencies()
     {
         $this->loader = new Xcloner_Loader($this);
-
-        return;
     }
 
     /**
@@ -272,9 +271,6 @@ class Xcloner extends Watchful\XClonerCore\Xcloner
         $plugin_i18n = new Xcloner_i18n();
 
         $this->loader->add_action('plugins_loaded', $plugin_i18n, 'load_plugin_textdomain');
-
-        //wp_localize_script( 'ajax-script', 'my_ajax_object',
-        //   array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
     }
 
     /**
@@ -302,14 +298,14 @@ class Xcloner extends Watchful\XClonerCore\Xcloner
     {
         ?>
         <script type='text/javascript'>
-        <?php
-        if (function_exists('wp_create_nonce')) {
-            echo "const XCLONER_WPNONCE = '".wp_create_nonce('xcloner-api-nonce')."';";
-        } else {
-            echo "const XCLONER_WPNONCE = null;";
-        } ?>
+            <?php
+            if (function_exists('wp_create_nonce')) {
+                echo "const XCLONER_WPNONCE = '" . wp_create_nonce('xcloner-api-nonce') . "';";
+            } else {
+                echo "const XCLONER_WPNONCE = null;";
+            } ?>
 
-        const XCLONER_AJAXURL = ajaxurl+"?_wpnonce="+XCLONER_WPNONCE;
+            const XCLONER_AJAXURL = ajaxurl + "?_wpnonce=" + XCLONER_WPNONCE;
         </script>
         <?php
     }
@@ -331,13 +327,18 @@ class Xcloner extends Watchful\XClonerCore\Xcloner
          * register wporg_settings_init to the admin_init action hook
          */
         $this->xcloner_settings = new Xcloner_Settings($this);
+        $this->xcloner_sanitization = new Xcloner_Sanitization();
 
-        if (isset($_POST['xcloner_restore_defaults']) && $_POST['xcloner_restore_defaults']) {
+        if (isset($_POST['hash'])) {
+            $_POST['hash'] = $this->xcloner_sanitization->sanitize_input_as_string($_POST['action']);
+        }
+
+        if (is_admin() && isset($_POST['xcloner_restore_defaults']) && $_POST['xcloner_restore_defaults']) {
             update_option('xcloner_restore_defaults', 0);
             $this->xcloner_settings->restore_defaults();
         }
 
-        if (defined('DOING_CRON') || isset($_POST['hash'])) {
+        if (defined('DOING_CRON') || (is_admin() && isset($_POST['hash']))) {
             if (defined('DOING_CRON') || $_POST['hash'] == "generate_hash") {
                 $this->xcloner_settings->generate_new_hash();
             } else {
@@ -349,8 +350,7 @@ class Xcloner extends Watchful\XClonerCore\Xcloner
             $this->loader->add_action('shutdown', $this, 'do_shutdown');
         }
 
-        $this->xcloner_sanitization 	= new Xcloner_Sanitization();
-        $this->xcloner_requirements 	= new Xcloner_Requirements($this);
+        $this->xcloner_requirements = new Xcloner_Requirements($this);
 
         $this->loader->add_action('admin_init', $this->xcloner_settings, 'settings_init');
 
@@ -387,60 +387,60 @@ class Xcloner extends Watchful\XClonerCore\Xcloner
         $this->get_xcloner_logger()->info(sprintf("Doing automatic backup before %s upgrade, pre_auto_update hook.", $type));
 
         $content_dir = str_replace(ABSPATH, "", WP_CONTENT_DIR);
-        $plugins_dir 	= str_replace(ABSPATH, "", WP_PLUGIN_DIR);
-        $langs_dir 		= $content_dir.DS."languages";
-        $themes_dir 		= $content_dir.DS."themes";
+        $plugins_dir = str_replace(ABSPATH, "", WP_PLUGIN_DIR);
+        $langs_dir = $content_dir . DS . "languages";
+        $themes_dir = $content_dir . DS . "themes";
 
         switch ($type) {
             case 'core':
                 $exclude_files = array(
-                                    "^(?!(wp-admin|wp-includes|(?!.*\/.*.php)))(.*)$",
-                                );
+                    "^(?!(wp-admin|wp-includes|(?!.*\/.*.php)))(.*)$",
+                );
                 break;
             case 'plugin':
 
                 $dir_array = explode(DS, $plugins_dir);
 
                 foreach ($dir_array as $dir) {
-                    $data .= "\/".$dir;
-                    $regex .= $data."$|";
+                    $data .= "\/" . $dir;
+                    $regex .= $data . "$|";
                 }
 
-                $regex .= "\/".implode("\/", $dir_array);
+                $regex .= "\/" . implode("\/", $dir_array);
 
                 $exclude_files = array(
-                                    "^(?!(".$regex."))(.*)$",
-                                );
+                    "^(?!(" . $regex . "))(.*)$",
+                );
                 break;
             case 'theme':
 
                 $dir_array = explode(DS, $themes_dir);
 
                 foreach ($dir_array as $dir) {
-                    $data .= "\/".$dir;
-                    $regex .= $data."$|";
+                    $data .= "\/" . $dir;
+                    $regex .= $data . "$|";
                 }
 
-                $regex .= "\/".implode("\/", $dir_array);
+                $regex .= "\/" . implode("\/", $dir_array);
 
                 $exclude_files = array(
-                                    "^(?!(".$regex."))(.*)$",
-                                );
+                    "^(?!(" . $regex . "))(.*)$",
+                );
                 break;
             case 'translation':
 
                 $dir_array = explode(DS, $langs_dir);
 
                 foreach ($dir_array as $dir) {
-                    $data .= "\/".$dir;
-                    $regex .= $data."$|";
+                    $data .= "\/" . $dir;
+                    $regex .= $data . "$|";
                 }
 
-                $regex .= "\/".implode("\/", $dir_array);
+                $regex .= "\/" . implode("\/", $dir_array);
 
                 $exclude_files = array(
-                                    "^(?!(".$regex."))(.*)$",
-                                );
+                    "^(?!(" . $regex . "))(.*)$",
+                );
                 break;
         }
 
@@ -454,7 +454,7 @@ class Xcloner extends Watchful\XClonerCore\Xcloner
 
         $schedule['backup_params'] = new stdClass();
         $schedule['backup_params']->email_notification = get_option('admin_email');
-        $schedule['backup_params']->backup_name = "backup_pre_auto_update_".$type."_[domain]-[time]-sql";
+        $schedule['backup_params']->backup_name = "backup_pre_auto_update_" . $type . "_[domain]-[time]-sql";
 
         try {
             $this->xcloner_scheduler->xcloner_scheduler_callback(0, $schedule);
@@ -484,9 +484,9 @@ class Xcloner extends Watchful\XClonerCore\Xcloner
         $error = error_get_last();
 
         if (isset($error['type']) && $error['type'] === E_ERROR and $logger) {
-            $logger->error($this->friendly_error_type($error['type']).": ".var_export($error, true));
+            $logger->error($this->friendly_error_type($error['type']) . ": " . var_export($error, true));
         } elseif (isset($error['type']) && $logger) {
-            $logger->debug($this->friendly_error_type($error['type']).": ".var_export($error, true));
+            $logger->debug($this->friendly_error_type($error['type']) . ": " . var_export($error, true));
         }
     }
 
@@ -495,7 +495,7 @@ class Xcloner extends Watchful\XClonerCore\Xcloner
         static $levels = null;
         if ($levels === null) {
             $levels = [];
-            foreach (get_defined_constants() as $key=>$value) {
+            foreach (get_defined_constants() as $key => $value) {
                 if (strpos($key, 'E_') !== 0) {
                     continue;
                 }
@@ -514,10 +514,10 @@ class Xcloner extends Watchful\XClonerCore\Xcloner
         //adding the pre-update hook
 
         if ((
-            //Load in admin or on cron
-            is_admin() || defined('DOING_CRON'))
+                //Load in admin or on cron
+                is_admin() || defined('DOING_CRON'))
             //OR when testing
-            || defined( 'XCLONER_TESTING')
+            || defined('XCLONER_TESTING')
         ) {
             $this->xcloner_logger = new Xcloner_Logger($this, "xcloner_api");
             $this->xcloner_filesystem = new Xcloner_File_System($this);
@@ -527,11 +527,11 @@ class Xcloner extends Watchful\XClonerCore\Xcloner
             $this->xcloner_database = new Xcloner_Database($this);
             $this->xcloner_scheduler = new Xcloner_Scheduler($this);
             $this->xcloner_remote_storage = new Xcloner_Remote_Storage($this);
-            $this->xcloner_file_transfer 	= new Xcloner_File_Transfer($this);
-            $this->xcloner_encryption    	= new Xcloner_Encryption($this);
+            $this->xcloner_file_transfer = new Xcloner_File_Transfer($this);
+            $this->xcloner_encryption = new Xcloner_Encryption($this);
 
             $xcloner_api = new Xcloner_Api($this);
-            $this->xcloner_api   = $xcloner_api;
+            $this->xcloner_api = $xcloner_api;
 
             $this->loader->add_action('wp_ajax_get_database_tables_action', $xcloner_api, 'get_database_tables_action');
             $this->loader->add_action('wp_ajax_get_file_system_action', $xcloner_api, 'get_file_system_action');
@@ -575,18 +575,18 @@ class Xcloner extends Watchful\XClonerCore\Xcloner
             return false;
         }
 
-        $onedrive_expire_in  = get_option('xcloner_onedrive_expires_in');
+        $onedrive_expire_in = get_option('xcloner_onedrive_expires_in');
         $onedrive_refresh_token = get_option('xcloner_onedrive_refresh_token');
 
         $is_refresh = false;
 
-        if ($onedrive_refresh_token && time()> $onedrive_expire_in) {
+        if ($onedrive_refresh_token && time() > $onedrive_expire_in) {
             $parameters = array(
                 'client_id' => get_option("xcloner_onedrive_client_id"),
                 'client_secret' => get_option("xcloner_onedrive_client_secret"),
-                'redirect_uri'=> get_admin_url(),
-                'refresh_token'=> $onedrive_refresh_token,
-                'grant_type'=> 'refresh_token'
+                'redirect_uri' => get_admin_url(),
+                'refresh_token' => $onedrive_refresh_token,
+                'grant_type' => 'refresh_token'
             );
 
             $is_refresh = true;
@@ -596,9 +596,9 @@ class Xcloner extends Watchful\XClonerCore\Xcloner
             $parameters = array(
                 'client_id' => get_option("xcloner_onedrive_client_id"),
                 'client_secret' => get_option("xcloner_onedrive_client_secret"),
-                'redirect_uri'=> get_admin_url(),
-                'code'=> $_REQUEST['code'],
-                'grant_type'=> 'authorization_code'
+                'redirect_uri' => get_admin_url(),
+                'code' => $_REQUEST['code'],
+                'grant_type' => 'authorization_code'
             );
         }
 
@@ -614,11 +614,11 @@ class Xcloner extends Watchful\XClonerCore\Xcloner
                 if ($response['access_token'] && $response['refresh_token']) {
                     update_option('xcloner_onedrive_access_token', $response['access_token']);
                     update_option('xcloner_onedrive_refresh_token', $response['refresh_token']);
-                    update_option('xcloner_onedrive_expires_in', time()+$response['expires_in']);
+                    update_option('xcloner_onedrive_expires_in', time() + $response['expires_in']);
 
                     if (!$is_refresh) {
                         $this->trigger_message(
-                            sprintf(__('OneDrive successfully authenticated, please click <a href="%s">here</a> to continue', 'xcloner-backup-and-restore'), get_admin_url()."admin.php?page=xcloner_remote_storage_page#onedrive"),
+                            sprintf(__('OneDrive successfully authenticated, please click <a href="%s">here</a> to continue', 'xcloner-backup-and-restore'), get_admin_url() . "admin.php?page=xcloner_remote_storage_page#onedrive"),
                             'success'
                         );
                     }
@@ -628,14 +628,14 @@ class Xcloner extends Watchful\XClonerCore\Xcloner
             }
         }
 
-        return ;
+        return;
     }
 
     public function add_plugin_action_links($links, $file)
     {
-        if ($file == plugin_basename(dirname(dirname(__FILE__)).'/xcloner.php')) {
-            $links[] = '<a href="admin.php?page=xcloner_settings_page">'.__('Settings', 'xcloner-backup-and-restore').'</a>';
-            $links[] = '<a href="admin.php?page=xcloner_generate_backups_page">'.__('Generate Backup', 'xcloner-backup-and-restore').'</a>';
+        if ($file == plugin_basename(dirname(dirname(__FILE__)) . '/xcloner.php')) {
+            $links[] = '<a href="admin.php?page=xcloner_settings_page">' . __('Settings', 'xcloner-backup-and-restore') . '</a>';
+            $links[] = '<a href="admin.php?page=xcloner_generate_backups_page">' . __('Generate Backup', 'xcloner-backup-and-restore') . '</a>';
             //$links[] = '<a href="admin.php?page=xcloner_restore_defaults">'.__('Restore Defaults', 'xcloner-backup-and-restore').'</a>';
         }
 
@@ -777,8 +777,8 @@ class Xcloner extends Watchful\XClonerCore\Xcloner
      * The name of the plugin used to uniquely identify it within the context of
      * WordPress and to define internationalization functionality.
      *
-     * @since     1.0.0
      * @return    string    The name of the plugin.
+     * @since     1.0.0
      */
     public function get_plugin_name()
     {
@@ -788,8 +788,8 @@ class Xcloner extends Watchful\XClonerCore\Xcloner
     /**
      * The reference to the class that orchestrates the hooks with the plugin.
      *
-     * @since     1.0.0
      * @return    Xcloner_Loader    Orchestrates the hooks of the plugin.
+     * @since     1.0.0
      */
     public function get_loader()
     {
@@ -826,8 +826,6 @@ class Xcloner extends Watchful\XClonerCore\Xcloner
         $this->xcloner_api->check_access();
 
         define("XCLONER_PLUGIN_ACCESS", 1);
-        include_once(dirname(__DIR__).DS."restore".DS."xcloner_restore.php");
-
-        return;
+        include_once(dirname(__DIR__) . DS . "restore" . DS . "xcloner_restore.php");
     }
 }
