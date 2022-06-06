@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1dd4112dfdf46d03cbd2555092ed424e",
+    "content-hash": "1a86eb578d53885fd35c883747c297cd",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -2835,12 +2835,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/watchfulli/xcloner-core.git",
-                "reference": "6f0fea9c56ccac3ad6b0d6fbdd3291256ee3f027"
+                "reference": "2b5b951db18b9bf84283a1bdb14eedc4acca23e5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/watchfulli/xcloner-core/zipball/6f0fea9c56ccac3ad6b0d6fbdd3291256ee3f027",
-                "reference": "6f0fea9c56ccac3ad6b0d6fbdd3291256ee3f027",
+                "url": "https://api.github.com/repos/watchfulli/xcloner-core/zipball/2b5b951db18b9bf84283a1bdb14eedc4acca23e5",
+                "reference": "2b5b951db18b9bf84283a1bdb14eedc4acca23e5",
                 "shasum": ""
             },
             "require": {
@@ -2876,7 +2876,7 @@
                 "issues": "https://github.com/watchfulli/xcloner-core/issues",
                 "source": "https://github.com/watchfulli/xcloner-core/tree/v2.1"
             },
-            "time": "2022-06-06T10:08:09+00:00"
+            "time": "2022-06-06T10:19:28+00:00"
         }
     ],
     "packages-dev": [

@@ -14,7 +14,7 @@
         "splitbrain/php-archive": "^1.0",
         "srmklive/flysystem-dropbox-v2": "^1.0",
         "vakata/jstree": "^3.3",
-        "watchfulli/xcloner-core": "v2.1.x-dev"
+        "watchfulli/xcloner-core": "^v2.1.x-dev"
     },
     "prefer-stable": true,
     "require-dev": {
