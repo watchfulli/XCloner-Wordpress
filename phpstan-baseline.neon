@@ -1,11 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Result of method watchfulli\\\\XClonerCore\\\\Xcloner_Sanitization\\:\\:sanitize_input_as_string\\(\\) \\(void\\) is used\\.$#"
-			count: 3
-			path: admin/class-xcloner-admin.php
-
-		-
 			message: "#^Variable \\$remote_storage might not be defined\\.$#"
 			count: 1
 			path: admin/partials/remote_storage/aws.php
