@@ -40,11 +40,11 @@ There is a special phpunit container for running WordPress tests, with WordPress
 
 ## Debug Logging
 
-Beacuse most of what xCloner does happens via asynchronous requests, logging PHP errors is important for identifying bugs.
+Because most of what xCloner does happens via asynchronous requests, logging PHP errors is important for identifying bugs.
 
 By default, xCloner registers its own error handlers. This will prevent WordPress default error logging with WP_DEBUG_LOG from working as expected.
 
-You can use that log, or you can disable it in in xCloner's "Settings" screen.
+You can use that log, or you can disable it in xCloner's "Settings" screen.
 
 - @todo find or create documentation about the PHP logging feature in xCloner.
 - [Recent post about WordPress debug logging from Delicious Brains](https://deliciousbrains.com/why-use-wp-debug-log-wordpress-development/)

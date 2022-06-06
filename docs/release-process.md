@@ -7,7 +7,7 @@
 The git workflow ".version.yml" runs once a day, using a [cron trigger](https://docs.github.com/en/actions/learn-github-actions/events-that-trigger-workflows#schedule). This workflow checks if the current value of "Tested up to" is the less than the latest version of WordPress. If it is not, this workflow will do the following:
 
 - Create a new branch.
-- Incriment the "Stable tag" by 1 patch version.
+- Increment the "Stable tag" by 1 patch version.
 - Set the "Tested up to" value to the latest version.
 - Create a pull request title "UPDATE For WordPress $VERSION" where $VERSION is the latest version of WordPress.
 

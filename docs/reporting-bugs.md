@@ -4,7 +4,7 @@ Whenever you find a bug, [please open a GitHub issue for it](https://github.com/
 
 ## What To Include
 
-Begin by stating what you were doing, what you expected to happend and what happened instead. Please include a list of steps to reproduce the error.
+Begin by stating what you were doing, what you expected to happen and what happened instead. Please include a list of steps to reproduce the error.
 
 In the issue, please note what versions of the following you are testing with:
 - WordPress

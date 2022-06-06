@@ -1,14 +1,14 @@
-# XCloner Wordpress Plugin - Backup and Restore
+# XCloner WordPress Plugin - Backup and Restore
 
 [![Author](http://img.shields.io/badge/author-@thinkovi-blue.svg?style=flat-square)](https://twitter.com/WatchfulDashbrd)
 [![Software License](https://img.shields.io/badge/license-GPL-brightgreen.svg?style=flat-square)](LICENSE.txt)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ovidiul/XCloner-Wordpress/badges/quality-score.png?b=dev)](https://scrutinizer-ci.com/g/ovidiul/XCloner-Wordpress/?branch=master)
-[![Build Status](https://scrutinizer-ci.com/g/ovidiul/XCloner-Wordpress/badges/build.png?b=dev)](https://scrutinizer-ci.com/g/ovidiul/XCloner-Wordpress/build-status/master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ovidiul/XCloner-WordPress/badges/quality-score.png?b=dev)](https://scrutinizer-ci.com/g/ovidiul/XCloner-WordPress/?branch=master)
+[![Build Status](https://scrutinizer-ci.com/g/ovidiul/XCloner-WordPress/badges/build.png?b=dev)](https://scrutinizer-ci.com/g/ovidiul/XCloner-WordPress/build-status/master)
 
-Backup your Wordpress site, restore to any web location, send your backups to Dropbox, Amazon S3, Azure, FTP, SFTP and many others with XCloner backup plugin.
+Backup your WordPress site, restore to any web location, send your backups to Dropbox, Amazon S3, Azure, FTP, SFTP and many others with XCloner backup plugin.
 
 
-XCloner is a Backup and Restore plugin that is perfectly integrated with Wordpress.
+XCloner is a Backup and Restore plugin that is perfectly integrated with WordPress.
 
 XCloner design was specifically created to Generate custom backups of any LAMP website through custom admin inputs, and to be able to Restore the clone on any other location with the help of the automatic Restore script we provide!
 
@@ -16,16 +16,16 @@ XCloner Backup tool uses Open Source standards like TAR, Mysql and CSV formats s
 
 ## Features
 
-   * Backup and Restore your Wordpress site easily
+   * Backup and Restore your WordPress site easily
    * Create compressed and uncompressed backups using TAR open source format
    * Create encrypted backups archives with AES-128-CBC algorithm 
    * Create automated backups from your Scheduled Backups Section
    * Received email notifications of created backups
    * Generate automatic backups based on cronjobs, it can run daily, weekly, monthly or even hourly
-   * Restore your backups on any other location, XCloner will attempt to extract the backup archive files for you, as well as import the mysql dump and update the Wordpress config details
+   * Restore your backups on any other location, XCloner will attempt to extract the backup archive files for you, as well as import the mysql dump and update the WordPress config details
    * Upload your backups to Remote Storage locations supporting FTP, SFTP, Dropbox, AWS, Azure Blob and many more to come
    * Watch every step of XCloner through it's built in debugger
-   * Althrough we have optimized XCloner to run properly on most hosts, we give Developers options to customize it's running speed and avoid backup timeouts, all from the XCloner Config-> System Options
+   * Although we have optimized XCloner to run properly on most hosts, we give Developers options to customize its running speed and avoid backup timeouts, all from the XCloner Config-> System Options
    * Ability to split backups into multiple smaller parts if a certain size limit is reached
 
 ## Installation 
@@ -36,7 +36,7 @@ XCloner Backup tool uses Open Source standards like TAR, Mysql and CSV formats s
 
 ## UPGRADE
 
-You can do it easily from the Wordpress backend.
+You can do it easily from the WordPress backend.
 
 ## Frequently Asked Questions
 
@@ -47,7 +47,7 @@ so if the backup name is backup_localhost-2017-02-16_15-36-sql-1c6c6.tgz , the m
 
 <b>How do I restore my backup?</b> 
 
-XCloner provide an easy to use restore script available in the Site Backup -> Restore Backups menu, the process is being described there as well.
+XCloner provide an easy-to-use restore script available in the Site Backup -> Restore Backups menu, the process is being described there as well.
 
 If the XCloner Restore option fails, you can manually restore your backup as follows:
 
