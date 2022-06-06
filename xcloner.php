@@ -15,7 +15,7 @@
  * Plugin Name: XCloner - Site Backup and Restore
  * Plugin URI: https://xcloner.com/
  * Description:  XCloner is a tool that will help you manage your website backups, generate/restore/move so your website will be always secured! With XCloner you will be able to clone your site to any other location with just a few clicks, as well as transfer the backup archives to remote FTP, SFTP, DropBox, Amazon S3, Google Drive, WebDAV, Backblaze, Azure accounts.
- * Version: 4.2.164
+ * Version: 4.3.0
  * Author: watchful
  * Author URI: https://watchful.net/
  * License: GPL-2.0+
@@ -125,7 +125,7 @@ function do_cli_execution($args = array(), $opts = array())
         $backup_file_path= $opts['list'].$opts['l'];
 
         // function to list backup content recursively
-        $list_backup_archive_contents = function ($backup_name, $start=0)
+        $list_backup_archive_contents = function ($backup_name, $start=0) use ($xcloner_backup)
         {
             $xcloner_settings = $xcloner_backup->get_xcloner_settings();
             $xcloner_file_system = $xcloner_backup->get_xcloner_filesystem();
