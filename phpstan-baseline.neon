@@ -61,31 +61,6 @@ parameters:
 			path: admin/partials/xcloner_scheduled_backups_page.php
 
 		-
-			message: "#^Call to method define_ajax_hooks\\(\\) on an unknown class Xcloner_Standalone\\.$#"
-			count: 1
-			path: api/expose_api.php
-
-		-
-			message: "#^Call to method run\\(\\) on an unknown class Xcloner_Standalone\\.$#"
-			count: 1
-			path: api/expose_api.php
-
-		-
-			message: "#^Function is_localhost not found\\.$#"
-			count: 1
-			path: api/expose_api.php
-
-		-
-			message: "#^Instantiated class Xcloner_Standalone not found\\.$#"
-			count: 1
-			path: api/expose_api.php
-
-		-
-			message: "#^Variable \\$config might not be defined\\.$#"
-			count: 1
-			path: api/expose_api.php
-
-		-
 			message: "#^Call to an undefined method Xcloner\\:\\:get_xcloner_scheduler\\(\\)\\.$#"
 			count: 1
 			path: includes/class-xcloner-deactivator.php
