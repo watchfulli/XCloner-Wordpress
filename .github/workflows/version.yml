@@ -59,23 +59,23 @@ jobs:
         run: docker-compose up -d
 
       - name: Install WordPress
-        run: docker-compose run wpcli wp core install --url=example.com --title=Example --admin_user=supervisor --admin_password=strongpassword --admin_email=info@example.com
+        run: docker-compose run wordpress-cli wp core install --url=example.com --title=Example --admin_user=supervisor --admin_password=strongpassword --admin_email=info@example.com
 
       - name: Activate xCloner
-        run: docker-compose run wpcli wp plugin activate xcloner
+        run: docker-compose run wordpress-cli wp plugin activate xcloner
 
       ## Check if we're tested up to latest version of WordPress
-      - name: Get latest version of WordPRess
+      - name: Get latest version of WordPress
         id: wpv
 
         run: |
           touch wpv.txt
           chmod 777 wpv.txt
-          docker-compose run wpcli wp latest-wordpress
+          docker-compose run wordpress-cli wp latest-wordpress
 
       - name: Tested Up To Check
         id: test-up-to-check
-        run: docker-compose run wpcli wp is-tested-up-to
+        run: docker-compose run wordpress-cli wp is-tested-up-to
 
       ### If last step failed, update version
       - name: Update version
@@ -84,7 +84,7 @@ jobs:
         run: |
           chmod 777 xcloner.php
           chmod 777 README.txt
-          docker-compose run wpcli wp update-version
+          docker-compose run wordpress-cli wp update-version
           WPV=$(cat wpv.txt)
           NEW_BRANCH="${WPV//./_}"
           git config --global user.email "${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>"
