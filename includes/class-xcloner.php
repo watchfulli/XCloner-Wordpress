@@ -655,8 +655,8 @@ class Xcloner extends Watchful\XClonerCore\Xcloner
         //registering new schedule intervals
         add_filter('cron_schedules', array($this, 'add_new_intervals'));
 
-
-        $xcloner_scheduler = $this->get_xcloner_scheduler();
+        $this->xcloner_scheduler = new Xcloner_Scheduler($this);
+        $xcloner_scheduler = $this->xcloner_scheduler;
         $xcloner_scheduler->update_wp_cron_hooks();
     }
 
