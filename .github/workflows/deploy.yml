@@ -25,7 +25,7 @@ jobs:
         composer install --no-dev --prefer-dist -o
 
     - name: WordPress Plugin Deploy
-      uses: 10up/action-wordpress-plugin-deploy@master
+      uses: 10up/action-wordpress-plugin-deploy@develop
       env:
         SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
         SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
