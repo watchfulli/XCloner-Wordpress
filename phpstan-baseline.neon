@@ -86,19 +86,14 @@ parameters:
 			path: api/expose_api.php
 
 		-
+			message: "#^Call to an undefined method Xcloner\\:\\:get_xcloner_scheduler\\(\\)\\.$#"
+			count: 1
+			path: includes/class-xcloner-deactivator.php
+
+		-
 			message: "#^Call to an undefined method Xcloner\\:\\:get_xcloner_filesystem\\(\\)\\.$#"
 			count: 1
 			path: includes/class-xcloner-deactivator.php
-
-		-
-			message: "#^Call to an undefined method Xcloner\\:\\:get_xcloner_scheduler\\(\\)\\.$#"
-			count: 1
-			path: includes/class-xcloner-deactivator.php
-
-		-
-			message: "#^Call to an undefined method Xcloner\\:\\:get_xcloner_scheduler\\(\\)\\.$#"
-			count: 1
-			path: includes/class-xcloner.php
 
 		-
 			message: "#^Call to an undefined method Xcloner\\:\\:get_xcloner_settings\\(\\)\\.$#"
