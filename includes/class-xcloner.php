@@ -1,19 +1,19 @@
 <?php
 
-use Watchful\XClonerCore\Xcloner_Loader;
-use Watchful\XClonerCore\Xcloner_i18n;
-use Watchful\XClonerCore\Xcloner_Sanitization;
-use Watchful\XClonerCore\Xcloner_Scheduler;
-use Watchful\XClonerCore\Xcloner_Settings;
-use Watchful\XClonerCore\Xcloner_File_System;
-use Watchful\XClonerCore\Xcloner_File_Transfer;
-use Watchful\XClonerCore\Xcloner_Encryption;
-use Watchful\XClonerCore\Xcloner_Database;
-use Watchful\XClonerCore\Xcloner_Remote_Storage;
-use Watchful\XClonerCore\Xcloner_Requirements;
-use Watchful\XClonerCore\Xcloner_Logger;
-use Watchful\XClonerCore\Xcloner_Archive;
-use Watchful\XClonerCore\Xcloner_Api;
+use Watchfulli\XClonerCore\Xcloner_Loader;
+use Watchfulli\XClonerCore\Xcloner_i18n;
+use Watchfulli\XClonerCore\Xcloner_Sanitization;
+use Watchfulli\XClonerCore\Xcloner_Scheduler;
+use Watchfulli\XClonerCore\Xcloner_Settings;
+use Watchfulli\XClonerCore\Xcloner_File_System;
+use Watchfulli\XClonerCore\Xcloner_File_Transfer;
+use Watchfulli\XClonerCore\Xcloner_Encryption;
+use Watchfulli\XClonerCore\Xcloner_Database;
+use Watchfulli\XClonerCore\Xcloner_Remote_Storage;
+use Watchfulli\XClonerCore\Xcloner_Requirements;
+use Watchfulli\XClonerCore\Xcloner_Logger;
+use Watchfulli\XClonerCore\Xcloner_Archive;
+use Watchfulli\XClonerCore\Xcloner_Api;
 
 /**
  * XCloner - Backup and Restore backup plugin for Wordpress
@@ -68,7 +68,7 @@ use Watchful\XClonerCore\Xcloner_Api;
  * @method Xcloner_Encryption get_xcloner_remote_encryption();
  * @method int|string get_version();
  */
-class Xcloner extends Watchful\XClonerCore\Xcloner
+class Xcloner extends Watchfulli\XClonerCore\Xcloner
 {
 
     /**

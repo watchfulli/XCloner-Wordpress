@@ -52,7 +52,7 @@ class Xcloner_Admin
      * Xcloner_Admin constructor.
      * @param Xcloner $xcloner_container
      */
-    public function __construct(Watchful\XClonerCore\Xcloner $xcloner_container)
+    public function __construct(Watchfulli\XClonerCore\Xcloner $xcloner_container)
     {
 
         $this->plugin_name = $xcloner_container->get_plugin_name();

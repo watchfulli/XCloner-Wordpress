@@ -59,8 +59,8 @@ use League\Flysystem\Adapter\Local;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 
-use Watchful\XClonerCore\Xcloner;
-use Watchful\XClonerCore\Xcloner_Archive;
+use Watchfulli\XClonerCore\Xcloner;
+use Watchfulli\XClonerCore\Xcloner_Archive;
 
 //do not modify below
 $that = "";
@@ -96,7 +96,7 @@ class Xcloner_Restore
         register_shutdown_function(array($this, 'exception_handler'));
 
         if (defined('XCLONER_PLUGIN_ACCESS') && XCLONER_PLUGIN_ACCESS) {
-            $xcloner_settings =  new Watchful\XClonerCore\XCloner_Settings($parent_api);
+            $xcloner_settings =  new Watchfulli\XClonerCore\XCloner_Settings($parent_api);
             $dir = $xcloner_settings->get_xcloner_store_path();
         }
 

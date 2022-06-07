@@ -118,14 +118,14 @@ function do_cli_execution($args = array(), $opts = array())
         $profile_name = $opts['profile'];
     }
 
-    $xcloner_backup = new Watchful\XClonerCore\Xcloner_Standalone();
+    $xcloner_backup = new Watchfulli\XClonerCore\Xcloner_Standalone();
 
     // --list|l list backup archive
     if (isset($opts['l']) || isset($opts['list'])) {
         $backup_file_path= $opts['list'].$opts['l'];
 
         // function to list backup content recursively
-        $list_backup_archive_contents = function ($backup_name, $start=0)
+        $list_backup_archive_contents = function ($backup_name, $start=0) use ($xcloner_backup)
         {
             $xcloner_settings = $xcloner_backup->get_xcloner_settings();
             $xcloner_file_system = $xcloner_backup->get_xcloner_filesystem();

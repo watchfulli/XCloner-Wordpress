@@ -41,7 +41,7 @@ if (!$json_config) {
 }
 
 //pass json config to Xcloner_Standalone lib
-$xcloner = new Watchful\XClonerCore\Xcloner_Standalone($json_config);
+$xcloner = new Watchfulli\XClonerCore\Xcloner_Standalone($json_config);
 
 if (!$backup_name) {
     $return = $xcloner->start();
