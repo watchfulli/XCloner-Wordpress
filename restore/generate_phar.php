@@ -1,6 +1,6 @@
 <?php
 
-echo shell_exec ("composer require watchfulli/xcloner-core:dev-restore");
+echo shell_exec ("composer require watchfulli/xcloner-core:v2.1.x-dev");
 
 $file = __DIR__.'/vendor.phar';
 $dest = __DIR__ . '/vendor.build.txt';
@@ -8,7 +8,7 @@ $dest = __DIR__ . '/vendor.build.txt';
 if (file_exists($file)) {
     unlink($file);
 }
-    
+
 $phar2 = new Phar($file, 0, 'vendor.phar');
 
 // add all files in the project, only include php files
