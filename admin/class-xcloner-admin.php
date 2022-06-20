@@ -268,22 +268,14 @@ class Xcloner_Admin
                     <?php
 
                     if ($active_tab == 'general_options') {
-
                         settings_fields('xcloner_general_settings_group');
                         do_settings_sections('xcloner_settings_page');
-
                     } elseif ($active_tab == 'mysql_options') {
-
                         settings_fields('xcloner_mysql_settings_group');
                         do_settings_sections('xcloner_mysql_settings_page');
                     } elseif ($active_tab == 'system_options') {
-
                         settings_fields('xcloner_system_settings_group');
                         do_settings_sections('xcloner_system_settings_page');
-                    } elseif ($active_tab == 'cleanup_options') {
-
-                        settings_fields('xcloner_cleanup_settings_group');
-                        do_settings_sections('xcloner_cleanup_settings_page');
                     }
 
                     submit_button('Save Settings');
