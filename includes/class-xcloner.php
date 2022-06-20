@@ -334,7 +334,11 @@ class Xcloner extends Watchfulli\XClonerCore\Xcloner
             $_POST['hash'] = $this->xcloner_sanitization->sanitize_input_as_string($_POST['action']);
         }
 
-        if (current_user_can('manage_options') && isset($_POST['xcloner_restore_defaults']) && $_POST['xcloner_restore_defaults']) {
+        if (
+                current_user_can('manage_options') &&
+                !empty($_POST['xcloner_restore_defaults']) &&
+                wp_verify_nonce($_POST['_wpnonce'], 'xcloner_system_settings_group-options')
+        ) {
             update_option('xcloner_restore_defaults', 0);
             $this->xcloner_settings->restore_defaults();
         }
