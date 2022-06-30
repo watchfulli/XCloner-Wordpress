@@ -149,10 +149,6 @@ class Xcloner_Activator
             update_option('xcloner_directories_to_scan_per_request', 25);
         }
 
-        /*if(!get_option('xcloner_diff_backup_recreate_period'))
-            update_option('xcloner_diff_backup_recreate_period', 10);
-            * */
-
         if (!get_option('xcloner_regex_exclude')) {
             update_option('xcloner_regex_exclude', "(wp-content\/updraft|wp-content\/uploads\/wp_all_backup|wp-content\/ai1wm-backups|wp-content\/plugins\/akeebabackupwp\/app\/backups)(.*)\.(.*)$(?<!config|php|html|htaccess|htm)".PHP_EOL."(.*)\.(svn|git)(.*)$".PHP_EOL."wp-content\/cache(.*)$".PHP_EOL."(.*)error_log$".PHP_EOL."xcloner-[0-9a-zA-Z]{5}$");
         }

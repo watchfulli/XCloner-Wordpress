@@ -572,11 +572,8 @@ export class Xcloner_Backup {
 
   /** global: XCLONER_AJAXURL */
   do_ajax(elem, action, init = 0) {
-    
-    let hash = "";
 
-    if (this.params.hash !== undefined) hash = this.params.hash;
-    else if (this.generate_hash) hash = "generate_hash";
+    let hash = !this.params.hash || this.generate_hash ? 'generate_hash' : this.params.hash;
 
     if (this.cancel == true) {
       this.init_resume(elem, action, init);

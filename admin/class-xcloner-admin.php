@@ -54,7 +54,6 @@ class Xcloner_Admin
      */
     public function __construct(Watchfulli\XClonerCore\Xcloner $xcloner_container)
     {
-
         $this->plugin_name = $xcloner_container->get_plugin_name();
         $this->version = $xcloner_container->get_version();
         $this->xcloner_container = $xcloner_container;
@@ -137,7 +136,6 @@ class Xcloner_Admin
     public function xcloner_init_page()
     {
         require_once("partials/xcloner_init_page.php");
-
     }
 
     /**

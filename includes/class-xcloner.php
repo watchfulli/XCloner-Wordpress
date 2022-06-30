@@ -330,28 +330,11 @@ class Xcloner extends Watchfulli\XClonerCore\Xcloner
         $this->xcloner_settings = new Xcloner_Settings($this);
         $this->xcloner_sanitization = new Xcloner_Sanitization();
 
-        if (isset($_POST['hash'])) {
-            $_POST['hash'] = $this->xcloner_sanitization->sanitize_input_as_string($_POST['action']);
-        }
-
-        if (
-                current_user_can('manage_options') &&
-                !empty($_POST['xcloner_restore_defaults']) &&
-                wp_verify_nonce($_POST['_wpnonce'], 'xcloner_system_settings_group-options')
-        ) {
-            update_option('xcloner_restore_defaults', 0);
+        if (get_option('xcloner_restore_defaults')) {
             $this->xcloner_settings->restore_defaults();
         }
 
-        if (defined('DOING_CRON') || (current_user_can('manage_options') && isset($_POST['hash']))) {
-            if (defined('DOING_CRON') || $_POST['hash'] == "generate_hash") {
-                $this->xcloner_settings->generate_new_hash();
-            } else {
-                $this->xcloner_settings->set_hash($_POST['hash']);
-            }
-        }
-
-        if (defined('DOING_CRON') || !isset($_POST['hash'])) {
+        if (defined('DOING_CRON')) {
             $this->loader->add_action('shutdown', $this, 'do_shutdown');
         }
 
