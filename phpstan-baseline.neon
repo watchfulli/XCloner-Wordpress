@@ -3,110 +3,110 @@ parameters:
 		-
 			message: "#^Variable \\$remote_storage might not be defined\\.$#"
 			count: 1
-			path: admin/partials/remote_storage/aws.php
+			path: xcloner-backup-and-restore/admin/partials/remote_storage/aws.php
 
 		-
 			message: "#^Variable \\$gdrive_auth_url might not be defined\\.$#"
 			count: 1
-			path: admin/partials/remote_storage/gdrive.php
+			path: xcloner-backup-and-restore/admin/partials/remote_storage/gdrive.php
 
 		-
 			message: "#^Variable \\$gdrive_construct might not be defined\\.$#"
 			count: 1
-			path: admin/partials/remote_storage/gdrive.php
+			path: xcloner-backup-and-restore/admin/partials/remote_storage/gdrive.php
 
 		-
 			message: "#^Variable \\$remote_storage might not be defined\\.$#"
 			count: 1
-			path: admin/partials/remote_storage/gdrive.php
+			path: xcloner-backup-and-restore/admin/partials/remote_storage/gdrive.php
 
 		-
 			message: "#^Variable \\$this might not be defined\\.$#"
 			count: 2
-			path: admin/partials/xcloner_console_page.php
+			path: xcloner-backup-and-restore/admin/partials/xcloner_console_page.php
 
 		-
 			message: "#^Variable \\$this might not be defined\\.$#"
 			count: 3
-			path: admin/partials/xcloner_generate_backups_page.php
+			path: xcloner-backup-and-restore/admin/partials/xcloner_generate_backups_page.php
 
 		-
 			message: "#^Variable \\$this might not be defined\\.$#"
 			count: 5
-			path: admin/partials/xcloner_init_page.php
+			path: xcloner-backup-and-restore/admin/partials/xcloner_init_page.php
 
 		-
 			message: "#^Variable \\$this might not be defined\\.$#"
 			count: 4
-			path: admin/partials/xcloner_manage_backups_page.php
+			path: xcloner-backup-and-restore/admin/partials/xcloner_manage_backups_page.php
 
 		-
 			message: "#^Variable \\$this might not be defined\\.$#"
 			count: 1
-			path: admin/partials/xcloner_remote_storage_page.php
+			path: xcloner-backup-and-restore/admin/partials/xcloner_remote_storage_page.php
 
 		-
 			message: "#^Constant AUTH_KEY not found\\.$#"
 			count: 1
-			path: admin/partials/xcloner_restore_page.php
+			path: xcloner-backup-and-restore/admin/partials/xcloner_restore_page.php
 
 		-
 			message: "#^Variable \\$this might not be defined\\.$#"
 			count: 4
-			path: admin/partials/xcloner_restore_page.php
+			path: xcloner-backup-and-restore/admin/partials/xcloner_restore_page.php
 
 		-
 			message: "#^Variable \\$this might not be defined\\.$#"
 			count: 2
-			path: admin/partials/xcloner_scheduled_backups_page.php
+			path: xcloner-backup-and-restore/admin/partials/xcloner_scheduled_backups_page.php
 
 		-
 			message: "#^Call to an undefined method Xcloner\\:\\:get_xcloner_scheduler\\(\\)\\.$#"
 			count: 1
-			path: includes/class-xcloner-deactivator.php
+			path: xcloner-backup-and-restore/includes/class-xcloner-deactivator.php
 
 		-
 			message: "#^Call to an undefined method Xcloner\\:\\:get_xcloner_filesystem\\(\\)\\.$#"
 			count: 1
-			path: includes/class-xcloner-deactivator.php
+			path: xcloner-backup-and-restore/includes/class-xcloner-deactivator.php
 
 		-
 			message: "#^Call to an undefined method Xcloner\\:\\:get_xcloner_settings\\(\\)\\.$#"
 			count: 2
-			path: includes/class-xcloner.php
+			path: xcloner-backup-and-restore/includes/class-xcloner.php
 
 		-
 			message: "#^Constant WP_CONTENT_DIR not found\\.$#"
 			count: 1
-			path: includes/class-xcloner.php
+			path: xcloner-backup-and-restore/includes/class-xcloner.php
 
 		-
 			message: "#^Constant WP_PLUGIN_DIR not found\\.$#"
 			count: 1
-			path: includes/class-xcloner.php
+			path: xcloner-backup-and-restore/includes/class-xcloner.php
 
 		-
 			message: "#^Instantiated class Xcloner_Public not found\\.$#"
 			count: 1
-			path: includes/class-xcloner.php
+			path: xcloner-backup-and-restore/includes/class-xcloner.php
 
 		-
 			message: "#^Method Xcloner\\:\\:onedrive_auth_token\\(\\) with return type void returns false but should not return anything\\.$#"
 			count: 1
-			path: includes/class-xcloner.php
+			path: xcloner-backup-and-restore/includes/class-xcloner.php
 
 		-
 			message: "#^PHPDoc tag @param has invalid value \\(\\$args\\)\\: Unexpected token \"\\$args\", expected type at offset 83$#"
 			count: 1
-			path: includes/class-xcloner.php
+			path: xcloner-backup-and-restore/includes/class-xcloner.php
 
 		-
 			message: "#^PHPDoc tag @param has invalid value \\(\\$property\\)\\: Unexpected token \"\\$property\", expected type at offset 59$#"
 			count: 1
-			path: includes/class-xcloner.php
+			path: xcloner-backup-and-restore/includes/class-xcloner.php
 
 		-
 			message: "#^PHPDoc tag @param has invalid value \\(\\$schedules\\)\\: Unexpected token \"\\$schedules\", expected type at offset 18$#"
 			count: 1
-			path: includes/class-xcloner.php
+			path: xcloner-backup-and-restore/includes/class-xcloner.php
 

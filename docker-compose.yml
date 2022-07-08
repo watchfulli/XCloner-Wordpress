@@ -5,8 +5,7 @@ services:
       - db
     image: wordpress:latest
     volumes:
-      - wordpress_data:/var/www/html
-      - ./:/var/www/html/wp-content/plugins/xcloner-backup-and-restore:ro
+      - ./xcloner-backup-and-restore:/var/www/html/wp-content/plugins/xcloner-backup-and-restore:ro
     # To avoid conflicts, define your own port binding in docker-compose.override.yml. E.g.
     #services:
     #  wordpress:
@@ -35,40 +34,5 @@ services:
       timeout: 1s
       retries: 10
 
-  wordpress-cli:
-    image: wordpress:cli
-    depends_on:
-    - db
-    volumes:
-      - wordpress_data:/var/www/html
-      - ./:/var/www/html/wp-content/plugins/xcloner
-      - ./db:/var/www/html/db
-    environment:
-      WORDPRESS_DB_HOST: db
-      WORDPRESS_DB_USER: wordpress
-      WORDPRESS_DB_PASSWORD: wordpress
-      WORDPRESS_DB_NAME: wordpress
-      ABSPATH: /usr/src/wordpress/
-
-  phpunit:
-    command:
-      - bash
-    depends_on:
-      - testwpdb
-    environment:
-      DATABASE_PASSWORD: examplepass
-      DATABASE_HOST: testwpdb
-    image: futureys/phpunit-wordpress-plugin
-    stdin_open: true
-    tty: true
-    volumes:
-      - ./:/plugin
-
-  testwpdb:
-      environment:
-        MYSQL_ROOT_PASSWORD: examplepass
-      image: mariadb:10.5.8
-
 volumes:
   db_data: {}
-  wordpress_data: {}

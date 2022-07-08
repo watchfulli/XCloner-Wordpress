@@ -4,5 +4,5 @@ includes:
 parameters:
 	level: 3
 	paths:
-		- admin
-		- includes
+		- xcloner-backup-and-restore/admin
+		- xcloner-backup-and-restore/includes

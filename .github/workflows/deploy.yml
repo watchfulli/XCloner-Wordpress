@@ -22,6 +22,7 @@ jobs:
 
     - name: Build composer dependencies
       run: |
+        cd xcloner-backup-and-restore
         composer install --no-dev --prefer-dist -o
 
     - name: WordPress Plugin Deploy
@@ -30,5 +31,6 @@ jobs:
         SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
         SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
         SLUG: xcloner-backup-and-restore
+        BUILD_DIR: xcloner-backup-and-restore
       with:
         generate-zip: true

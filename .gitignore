@@ -1,9 +1,5 @@
 node_modules/
-vendor/
+xcloner-backup-and-restore/vendor/
 .idea/
-
-wpv.txt
-log.log
-wpdebug.log
 
 docker-compose.override.yml
