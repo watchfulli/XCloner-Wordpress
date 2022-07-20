@@ -26,8 +26,6 @@ assignees: jimiero
 - [ ] Manage Dropbox Backups - Make sure backups can be deleted
 - [ ] Manage Dropbox Backups - Make sure backups can be uploaded to DropBox
 - [ ] Manage Dropbox Backups - Make sure backups can be downloaded. 
-- [ ] Manage Dropbox Backups - Make sure backup contents can be listed.
-- [ ] Manage Dropbox Backups - Make sure an encrypted backup can be unencrypted.
 - [ ] Create a Scheduled Profile
 - [ ] Check the correct recurrence of a scheduled Profile based on the Wordpress cronjob execution
 - [ ] Trigger any backup profile from the XCloner CLI 
