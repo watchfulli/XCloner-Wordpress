@@ -29,8 +29,10 @@ assignees: jimiero
 - [ ] Create a Scheduled Profile
 - [ ] Check the correct recurrence of a scheduled Profile based on the Wordpress cronjob execution
 - [ ] Trigger any backup profile from the XCloner CLI 
-- [ ] Restore full backup locally
-- [ ] Restore full backup to a remote location
+- [ ] Restore all files from a local backup
+- [ ] Restore database from a local backup
+- [ ] Restore all files from a remote location
+- [ ] Restore database from a remote location
 - [ ] Enable/Disable logs - check if enabling/disabling logs in XCloner works
 - [ ] Site connects/validates in Watchful (test `Refresh data` success)
 - [ ] XCloner backup works as expected in Watchful
