@@ -653,7 +653,7 @@ class Xcloner_Remote_Storage
             /*&& !$this->xcloner_settings->get_xcloner_option("xcloner_aws_region")*/) {
             $credentials['endpoint'] = $this->xcloner_settings->get_xcloner_option('xcloner_aws_endpoint');
         }
-        $client = new S3Client($credentials);
+        $client = @new S3Client($credentials);
 
         $adapter = new AwsS3Adapter($client, $this->xcloner_settings->get_xcloner_option("xcloner_aws_bucket_name"), $this->xcloner_settings->get_xcloner_option("xcloner_aws_prefix"));
         $filesystem = new Filesystem($adapter, new Config([

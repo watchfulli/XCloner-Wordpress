@@ -2,13 +2,12 @@
 export class Xcloner_Backup {
   constructor() {
     this.cancel = 0;
-    this.params;
-    this.generate_hash = false;
+    this.params = {};
     this.last_dumpfile = "";
     this.last_backup_file = "";
     this.backup_part = 0;
     this.backup_size_total = 0;
-    this.resume = new Object();
+    this.resume = {};
   }
 
   get_form_params() {
@@ -19,7 +18,7 @@ export class Xcloner_Backup {
     jQuery.each(
       jQuery("#jstree_database_container").jstree("get_checked", true),
       function () {
-        var object = new Object();
+        var object = {};
         object.id = this.id;
         object.parent = this.parent;
 
@@ -33,7 +32,7 @@ export class Xcloner_Backup {
       function () {
         //console.log(this.id+"-"+this.parent);
 
-        var object = new Object();
+        var object = {};
         object.id = this.id;
         object.parent = this.parent;
 
@@ -42,7 +41,7 @@ export class Xcloner_Backup {
       }
     );
 
-    var $return = new Object();
+    var $return = {};
     $return.table_params = table_params;
     $return.files_params = files_params;
     $return.backup_params = jQuery("#generate_backup_form").serializeArray();
@@ -521,7 +520,7 @@ export class Xcloner_Backup {
     if (this.resume.action) {
       //console.log(this.resume.action)
       this.do_ajax(this.resume.elem, this.resume.action, this.resume.params);
-      this.resume = new Object();
+      this.resume = {};
       return;
     }
 
@@ -529,7 +528,7 @@ export class Xcloner_Backup {
   }
 
   start_backup() {
-    this.resume = new Object();
+    this.resume = {};
     this.set_cancel(false);
     jQuery("#generate_backup .action-buttons a").hide();
     jQuery("#generate_backup .action-buttons .cancel").css(
@@ -537,8 +536,6 @@ export class Xcloner_Backup {
       "inline-block"
     );
 
-    this.generate_hash = true;
-    //this.cancel =  false;
     this.backup_size_total = 0;
     this.last_backup_file = "";
     this.backup_part = 0;
@@ -573,7 +570,7 @@ export class Xcloner_Backup {
   /** global: XCLONER_AJAXURL */
   do_ajax(elem, action, init = 0) {
 
-    let hash = !this.params.hash || this.generate_hash ? 'generate_hash' : this.params.hash;
+    let hash = !this.params.hash ? 'generate_hash' : this.params.hash;
 
     if (this.cancel == true) {
       this.init_resume(elem, action, init);
@@ -599,13 +596,11 @@ export class Xcloner_Backup {
         error: function (err) {
           show_ajax_error("Communication Error", "", err);
           $this.init_resume(elem, action, init);
-          //console.log(err);
         },
       })
       .done(function (json) {
         if (json.hash) {
           $this.params.hash = json.hash;
-          //console.log(json.hash);
         }
         if (json.error !== undefined) {
           show_ajax_error("Communication Error", "", json.error_message);
@@ -613,7 +608,7 @@ export class Xcloner_Backup {
           return;
         }
 
-        $this.resume = new Object();
+        $this.resume = {};
 
         $this[callback](elem, action, json);
       });

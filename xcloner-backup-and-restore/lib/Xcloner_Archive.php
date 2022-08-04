@@ -29,6 +29,10 @@ namespace Watchfulli\XClonerCore;
  *
  */
 
+use Exception;
+use splitbrain\PHPArchive\ArchiveCorruptedException;
+use splitbrain\PHPArchive\ArchiveIllegalCompressionException;
+use splitbrain\PHPArchive\FileInfoException;
 use splitbrain\PHPArchive\Tar;
 use splitbrain\PHPArchive\Archive;
 use splitbrain\PHPArchive\FileInfo;
@@ -83,7 +87,7 @@ class Xcloner_Archive extends Tar
      */
     private $backup_archive;
     /**
-     * @var Xcloner_File_System
+     * @var Xcloner_Filesystem
      */
     private $filesystem;
     /**
@@ -247,9 +251,7 @@ class Xcloner_Archive extends Tar
             $headers[] = 'From: ' . $from . ' <' . $admin_email . '>';
         }
 
-        $return = wp_mail($to, $subject, $body, $headers);
-
-        return $return;
+        wp_mail($to, $subject, $body, $headers);
     }
 
     /*
@@ -266,6 +268,13 @@ class Xcloner_Archive extends Tar
      *
      * @return bool
      */
+    /**
+     * @throws ArchiveIOException
+     * @throws ArchiveCorruptedException
+     * @throws FileInfoException
+     * @throws ArchiveIllegalCompressionException
+     * @throws Exception
+     */
     public function send_notification(
         $to,
         $from,
@@ -281,7 +290,8 @@ class Xcloner_Archive extends Tar
         }
 
         if (($error_message)) {
-            return $this->send_notification_error($to, $from, $subject, $backup_name, $params, $error_message);
+            $this->send_notification_error($to, $from, $subject, $backup_name, $params, $error_message);
+            return;
         }
 
         $params = (array)$params;
@@ -330,27 +340,48 @@ class Xcloner_Archive extends Tar
                 );
         }
 
-        $attachments = $this->filesystem->get_backup_attachments();
-
-        $attachments_archive = $this->xcloner_settings->get_xcloner_tmp_path() . DS . "info.tgz";
-
-        $tar = $this;
-        $tar->create($attachments_archive);
-
-        foreach ($attachments as $key => $file) {
-            $tar->addFile($file, basename($file));
-        }
-        $tar->close();
-
         $this->logger->info(sprintf("Sending backup notification to %s", $to));
 
         $admin_email = $this->xcloner_settings->get_xcloner_option("admin_email");
 
         $headers = array('Content-Type: text/html; charset=UTF-8', 'From: ' . $from . ' <' . $admin_email . '>');
 
-        $return = wp_mail($to, $subject, $body, $headers, array($attachments_archive));
+        $notification_attachments = $this->get_notification_attachments();
+        wp_mail($to, $subject, $body, $headers, $notification_attachments);
 
-        return $return;
+        foreach ($notification_attachments as $attachment) {
+            @unlink($attachment);
+        }
+    }
+
+    /**
+     * @throws ArchiveCorruptedException
+     * @throws ArchiveIOException
+     * @throws FileInfoException
+     * @throws ArchiveIllegalCompressionException
+     * @throws Exception
+     */
+    private function get_notification_attachments() {
+        $attachments = $this->filesystem->get_backup_attachments();
+
+        if (empty($attachments)) {
+            return array();
+        }
+
+        $attachments_archive_path = $this->xcloner_settings->get_xcloner_tmp_path() . DS . "info.tgz";
+
+        if (!@touch($attachments_archive_path)) {
+            $this->logger->error(sprintf("%s is not writable", $attachments_archive_path));
+            return array();
+        }
+
+        $this->create($attachments_archive_path);
+        foreach ($attachments as $file) {
+            $this->addFile($file, basename($file));
+        }
+        $this->close();
+
+        return array($attachments_archive_path);
     }
 
     /*
@@ -959,27 +990,26 @@ class Xcloner_Archive extends Tar
     /**
      * Extract archive contents
      *
-     * @param [type] $outdir
+     * @param string $outdir
      * @param string $strip
      * @param string $exclude
      * @param string $include
      * @param integer $files_limit
-     * @return void
+     * @return array
+     * @throws ArchiveIOException|ArchiveCorruptedException
      */
     public function extract($outdir, $strip = '', $exclude = '', $include = '', $files_limit = 0)
     {
-
         if ($this->closed || !$this->file) {
             throw new ArchiveIOException('Can not read from a closed archive');
         }
 
         $outdir = rtrim($outdir, '/');
-        if (!is_dir($outdir))
+        if (!is_dir($outdir)) {
             @mkdir($outdir, 0755, true);
-        else
+        } else {
             @chmod($outdir, 0777);
-
-        //@mkdir($outdir, 0777, true);
+        }
 
         if (!is_dir($outdir)) {
             throw new ArchiveIOException("Could not create directory '$outdir'");
@@ -1010,7 +1040,7 @@ class Xcloner_Archive extends Tar
             $fileinfo->strip($strip);
 
             // skip unwanted files
-            if (!strlen($fileinfo->getPath()) || !$fileinfo->match($include, $exclude)) {
+            if (!strlen($fileinfo->getPath()) || !$fileinfo->matchExpression($include, $exclude)) {
                 $this->skipbytes(ceil($header['size'] / 512) * 512);
                 continue;
             }
@@ -1018,15 +1048,17 @@ class Xcloner_Archive extends Tar
             // create output directory
             $output = $outdir . '/' . $fileinfo->getPath();
             $directory = ($fileinfo->getIsdir()) ? $output : dirname($output);
-            if (!is_dir($directory))
+            if (!is_dir($directory)) {
                 @mkdir($directory, 0755, true);
-            else
+            } else {
                 @chmod($directory, 0755);
+            }
 
             // extract data
             if (!$fileinfo->getIsdir()) {
-                if (file_exists($output))
+                if (file_exists($output)) {
                     unlink($output);
+                }
 
                 $fp = fopen($output, "wb");
                 if (!$fp) {
@@ -1045,7 +1077,6 @@ class Xcloner_Archive extends Tar
                 touch($output, $fileinfo->getMtime());
                 chmod($output, $fileinfo->getMode());
             } else {
-                //$this->skipbytes(ceil($header['size'] / 512) * 512); // the size is usually 0 for directories
                 $this->skipbytes(ceil(0 / 512) * 512); // the size is usually 0 for directories
             }
 
