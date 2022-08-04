@@ -93,15 +93,14 @@ class Xcloner_Loader
      * Add a new action to the collection to be registered with WordPress.
      *
      * @param string $hook The name of the WordPress action that is being registered.
-     * @param object $component A reference to the instance of the object on which the action is defined.
-     * @param string $callback The name of the function definition on the $component.
+     * @param array $callback The name of the function definition on the $component.
      * @param int $priority Optional. he priority at which the function should be fired. Default is 10.
      * @param int $accepted_args Optional. The number of arguments that should be passed to the $callback. Default is 1.
      * @since    1.0.0
      */
-    public function add_action($hook, $component, $callback, $priority = 10, $accepted_args = 1)
+    public function add_action($hook, $callback, $priority = 10, $accepted_args = 1)
     {
-        $this->actions = $this->add($this->actions, $hook, $component, $callback, $priority, $accepted_args);
+        $this->actions = $this->add($this->actions, $hook, $callback[0], $callback[1], $priority, $accepted_args);
     }
 
     /**
@@ -156,13 +155,11 @@ class Xcloner_Loader
     public function run()
     {
         foreach ($this->filters as $hook) {
-            add_filter($hook['hook'], array($hook['component'], $hook['callback']), $hook['priority'],
-                $hook['accepted_args']);
+            add_filter($hook['hook'], array($hook['component'], $hook['callback']), $hook['priority'], $hook['accepted_args']);
         }
 
         foreach ($this->actions as $hook) {
-            add_action($hook['hook'], array($hook['component'], $hook['callback']), $hook['priority'],
-                $hook['accepted_args']);
+            add_action($hook['hook'], array($hook['component'], $hook['callback']), $hook['priority'], $hook['accepted_args']);
         }
 
     }

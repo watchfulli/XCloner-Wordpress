@@ -29,7 +29,7 @@ namespace Watchfulli\XClonerCore;
  * @modified 7/25/18 1:46 PM
  *
  */
-class Xcloner_File_Transfer extends Xcloner_File_System
+class Xcloner_File_Transfer extends Xcloner_Filesystem
 {
 
     /**

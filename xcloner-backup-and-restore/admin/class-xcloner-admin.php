@@ -10,6 +10,8 @@
  * @subpackage Xcloner/admin
  */
 
+use Watchfulli\XClonerCore\Xcloner;
+
 /**
  * The admin-specific functionality of the plugin.
  *
@@ -33,15 +35,6 @@ class Xcloner_Admin
     private $plugin_name;
 
     /**
-     * The version of this plugin.
-     *
-     * @since    1.0.0
-     * @access   private
-     * @var      string $version The current version of this plugin.
-     */
-    private $version;
-
-    /**
      * @var Xcloner
      */
     private $xcloner_container;
@@ -52,10 +45,9 @@ class Xcloner_Admin
      * Xcloner_Admin constructor.
      * @param Xcloner $xcloner_container
      */
-    public function __construct(Watchfulli\XClonerCore\Xcloner $xcloner_container)
+    public function __construct(Xcloner $xcloner_container)
     {
-        $this->plugin_name = $xcloner_container->get_plugin_name();
-        $this->version = $xcloner_container->get_version();
+        $this->plugin_name = Xcloner::PLUGIN_NAME;
         $this->xcloner_container = $xcloner_container;
     }
 
@@ -75,7 +67,7 @@ class Xcloner_Admin
     public function enqueue_styles($hook)
     {
 
-        if (!stristr($hook, "page_" . $this->plugin_name) || (isset($_GET['option']) and $_GET['option'] == "com_cloner")) {
+        if (!stristr($hook, "page_" . $this->plugin_name) || (isset($_GET['option']) && $_GET['option'] == "com_cloner")) {
             return;
         }
 
@@ -91,12 +83,12 @@ class Xcloner_Admin
          * class.
          */
 
-        wp_enqueue_style($this->plugin_name . "_materialize", plugin_dir_url(__FILE__) . 'css/materialize.min.css', array(), $this->version, 'all');
-        wp_enqueue_style($this->plugin_name . "_materialize.icons", '//fonts.googleapis.com/icon?family=Material+Icons', array(), $this->version, 'all');
-        wp_enqueue_style($this->plugin_name . "_jquery.datatables", plugin_dir_url(__FILE__) . 'css/jquery.dataTables.min.css', array(), $this->version, 'all');
-        wp_enqueue_style($this->plugin_name . "_jquery.datatables.responsive", plugin_dir_url(__FILE__) . 'css/responsive.dataTables.css', array(), $this->version, 'all');
-        wp_enqueue_style($this->plugin_name . "_jstree", dirname(plugin_dir_url(__FILE__)) . '/vendor/vakata/jstree/dist/themes/default/style.min.css', array(), '3.3', 'all');
-        wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/xcloner-admin.css', array(), $this->version, 'all');
+        wp_enqueue_style($this->plugin_name . "_materialize", plugin_dir_url(__FILE__) . 'css/materialize.min.css', array());
+        wp_enqueue_style($this->plugin_name . "_materialize.icons", '//fonts.googleapis.com/icon?family=Material+Icons', array());
+        wp_enqueue_style($this->plugin_name . "_jquery.datatables", plugin_dir_url(__FILE__) . 'css/jquery.dataTables.min.css', array());
+        wp_enqueue_style($this->plugin_name . "_jquery.datatables.responsive", plugin_dir_url(__FILE__) . 'css/responsive.dataTables.css', array());
+        wp_enqueue_style($this->plugin_name . "_jstree", dirname(plugin_dir_url(__FILE__)) . '/vendor/vakata/jstree/dist/themes/default/style.min.css', array());
+        wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/xcloner-admin.css', array());
     }
 
     /**
@@ -126,11 +118,11 @@ class Xcloner_Admin
         add_thickbox();
         wp_enqueue_script('plugin-install');
         wp_enqueue_script('updates');
-        wp_enqueue_script($this->plugin_name . "_jquery.datatables", plugin_dir_url(__FILE__) . 'js/jquery.dataTables.min.js', array('jquery'), $this->version, false);
-        wp_enqueue_script($this->plugin_name . "_jquery.datatables.respnsive", plugin_dir_url(__FILE__) . 'js/dataTables.responsive.js', array('jquery'), $this->version, false);
-        wp_enqueue_script($this->plugin_name . "_vakata", dirname(plugin_dir_url(__FILE__)) . '/vendor/vakata/jstree/dist/jstree.min.js', array('jquery'), '3.3', false);
+        wp_enqueue_script($this->plugin_name . "_jquery.datatables", plugin_dir_url(__FILE__) . 'js/jquery.dataTables.min.js', array('jquery'));
+        wp_enqueue_script($this->plugin_name . "_jquery.datatables.respnsive", plugin_dir_url(__FILE__) . 'js/dataTables.responsive.js', array('jquery'));
+        wp_enqueue_script($this->plugin_name . "_vakata", dirname(plugin_dir_url(__FILE__)) . '/vendor/vakata/jstree/dist/jstree.min.js', array('jquery'));
 
-        wp_enqueue_script($this->plugin_name, dirname(plugin_dir_url(__FILE__)) . '/dist/admin/js/index.min.js', array('jquery'), $this->version, false);
+        wp_enqueue_script($this->plugin_name, dirname(plugin_dir_url(__FILE__)) . '/dist/admin/js/index.min.js', array('jquery'));
     }
 
     public function xcloner_init_page()

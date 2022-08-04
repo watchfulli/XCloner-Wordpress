@@ -1,37 +1,33 @@
 <?php
 namespace Watchfulli\XClonerCore;
 
+use Exception;
+
 class Xcloner_Settings
 {
     private $logger_file = "xcloner_main_%s.log";
     private $logger_file_hash = "xcloner%s.log";
-    private $hash;
-    private $xcloner_sanitization;
-    private $xcloner_container;
-    private $xcloner_database;
     private $xcloner_options_prefix = "xcloner";
+
+    private $hash;
+
+    /** @var Xcloner_Sanitization */
+    private $xcloner_sanitization;
+    /** @var Xcloner  */
+    private $xcloner_container;
+    /** @var Xcloner_Database  */
+    private $xcloner_database;
 
     /**
      * XCloner General Settings Class
      *
      * @param Xcloner $xcloner_container
-     * @param string $hash
      */
-    public function __construct(Xcloner $xcloner_container, $hash = "", $json_config = "")
+    public function __construct(Xcloner $xcloner_container)
     {
-        if ($json_config) {
-            foreach ($json_config as $item) {
-                add_option($item->option_name, $item->option_value);
-            }
-        }
-
         $this->xcloner_container = $xcloner_container;
-
-        $this->xcloner_database  = $xcloner_container->get_xcloner_database();
-
-        if (isset($hash)) {
-            $this->set_hash($hash);
-        }
+        $this->xcloner_database  = $this->xcloner_container->get_xcloner_database();
+        $this->xcloner_sanitization = $this->xcloner_container->get_xcloner_sanitization();
     }
 
     /**
@@ -82,7 +78,6 @@ class Xcloner_Settings
     /**
      * Get XCloner Backup Start Path Setting
      *
-     * @return void
      */
     public function get_xcloner_start_path()
     {
@@ -98,8 +93,6 @@ class Xcloner_Settings
     /**
      * Get XCloner Start Path Setting , function is in legacy mode
      *
-     * @param [type] $dir
-     * @return void
      */
     public function get_xcloner_dir_path($dir)
     {
@@ -111,23 +104,21 @@ class Xcloner_Settings
     /**
      * Get XCloner Backup Store Path Setting
      *
-     * @return void
-     */
+     * @return string
+     * @throws Exception
+    */
     public function get_xcloner_store_path()
     {
         if (!$this->get_xcloner_option('xcloner_store_path') or !is_dir(/** @scrutinizer ignore-type */$this->get_xcloner_option('xcloner_store_path'))) {
-            return $this->xcloner_container->check_dependencies();
-        } else {
-            $path = $this->get_xcloner_option('xcloner_store_path');
+          $this->xcloner_container->check_dependencies();
         }
 
-        return $path;
+        return $this->get_xcloner_option('xcloner_store_path');
     }
 
     /**
      * Get XCloner Encryption Key
      *
-     * @return void
      */
     public function get_xcloner_encryption_key()
     {
@@ -139,23 +130,6 @@ class Xcloner_Settings
         return $key;
     }
 
-    /**
-     * Create a random string
-     * @param $length the length of the string to create
-     * @return string
-     *@author	XEWeb <>
-     */
-    /*public function randomString($length = 6) {
-        $str = "";
-        $characters = array_merge(range('A', 'Z'), range('a', 'z'), range('0', '9'));
-        $max = count($characters) - 1;
-        for ($i = 0; $i < $length; $i++) {
-            $rand = mt_rand(0, $max);
-            $str .= $characters[$rand];
-        }
-        return $str;
-    }*/
-
     public function get_xcloner_tmp_path_suffix()
     {
         return "xcloner".$this->get_hash();
@@ -165,7 +139,7 @@ class Xcloner_Settings
      * Get XCloner Temporary Path
      *
      * @param boolean $suffix
-     * @return void
+     * @throws Exception
      */
     public function get_xcloner_tmp_path($suffix = true)
     {
@@ -176,13 +150,12 @@ class Xcloner_Settings
             if (!is_dir($path)) {
                 try {
                     mkdir($path);
-                    chmod($path, 0777);
                 } catch (Exception $e) {
                     //silent catch
                 }
             }
 
-            if (!is_dir($path) or !is_writeable($path)) {
+            if (!is_dir($path) || !is_writeable($path)) {
                 $path = $this->get_xcloner_store_path();
             }
         }
@@ -191,13 +164,20 @@ class Xcloner_Settings
             $path = $path.DS.".".$this->get_xcloner_tmp_path_suffix();
         }
 
+        if (!is_dir($path)) {
+            try {
+                mkdir($path);
+            } catch (Exception $e) {
+                //silent catch
+            }
+        }
+
         return $path;
     }
 
     /**
      * Get Enable Mysql Backup Option
      *
-     * @return void
      */
     public function get_enable_mysql_backup()
     {
@@ -234,27 +214,7 @@ class Xcloner_Settings
      */
     public function get_hash($readonly = false)
     {
-        if (!$this->hash && !$readonly) {
-            $this->set_hash("-".$this->get_server_unique_hash(5));
-        }
-
         return $this->hash;
-    }
-
-    /**
-     * Generate New Hash
-     *
-     * @return string
-     */
-    public function generate_new_hash()
-    {
-        $hash = "-".md5(rand());
-
-        $hash = substr($hash, 0, 6);
-
-        $this->set_hash($hash);
-
-        return $hash;
     }
 
     /**
@@ -265,13 +225,24 @@ class Xcloner_Settings
      */
     public function set_hash($hash = "")
     {
-        if (substr($hash, 0, 1) != "-" and strlen($hash)) {
+        if ($hash === 'generate_hash' || !$hash) {
+            $hash = $this->generate_new_hash();
+        }
+
+        if (substr($hash, 0, 1) != "-" && strlen($hash)) {
             $hash = "-".$hash;
         }
 
         $this->hash = substr($hash, 0, 6);
 
         return $this;
+    }
+
+    public function generate_new_hash()
+    {
+        $hash = "-".md5(rand());
+
+        return substr($hash, 0, 6);
     }
 
     /**
@@ -289,7 +260,6 @@ class Xcloner_Settings
     /**
      * Get Database Hostname
      *
-     * @return void
      */
     public function get_db_hostname()
     {
@@ -303,7 +273,6 @@ class Xcloner_Settings
     /**
      * Get Database Username
      *
-     * @return void
      */
     public function get_db_username()
     {
@@ -317,7 +286,6 @@ class Xcloner_Settings
     /**
      * Get Database Password
      *
-     * @return void
      */
     public function get_db_password()
     {
@@ -331,15 +299,10 @@ class Xcloner_Settings
     /**
      * Get Database Name
      *
-     * @return void
      */
     public function get_db_database()
     {
-        if (!$data = $this->get_xcloner_option('xcloner_mysql_database')) {
-            //$data = $this->xcloner_database->getDbName();
-        }
-
-        return $data;
+        return $this->get_xcloner_option('xcloner_mysql_database');
     }
 
     /**
@@ -379,8 +342,6 @@ class Xcloner_Settings
 
     public function settings_init()
     {
-        $this->xcloner_sanitization = $this->get_xcloner_container()->get_xcloner_sanitization();
-
         //ADDING MISSING OPTIONS
         if (!$this->get_xcloner_option('xcloner_mysql_settings_page')) {
             update_option('xcloner_mysql_settings_page', '');

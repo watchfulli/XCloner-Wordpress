@@ -24,14 +24,33 @@
  * Domain Path: /languages
  */
 
-require_once __DIR__.'/includes/class-xcloner-activator.php';
+// If this file is called directly, abort.
+if (!defined('WPINC')) {
+    die;
+}
+
+if (!defined("DS")) {
+    define("DS", DIRECTORY_SEPARATOR);
+}
+
+if (!defined("XCLONER_PLUGIN_DIR")) {
+    define("XCLONER_PLUGIN_DIR", plugin_dir_path(__FILE__));
+}
+
+// composer library autoload
+require_once(__DIR__ . '/vendor/autoload.php');
+
+use Watchfulli\XClonerCore\Xcloner_Activator;
+use Watchfulli\XClonerCore\Xcloner_Deactivator;
+use Watchfulli\XClonerCore\Xcloner;
+
 
 if (function_exists('register_activation_hook')) {
-    register_activation_hook(__FILE__, 'activate_xcloner');
+    register_activation_hook(__FILE__, [new Xcloner_Activator(), 'activate']);
 }
 
 if (function_exists('register_deactivation_hook')) {
-    register_deactivation_hook(__FILE__, 'deactivate_xcloner');
+    register_deactivation_hook(__FILE__, [new Xcloner_Deactivator(), 'deactivate']);
 }
 
 if (version_compare(phpversion(), Xcloner_Activator::xcloner_minimum_version, '<')) {
@@ -39,8 +58,8 @@ if (version_compare(phpversion(), Xcloner_Activator::xcloner_minimum_version, '<
     <div class="error notice">
         <p><?php echo sprintf(__("XCloner requires minimum PHP version %s in order to run correctly. We have detected your version as %s. Plugin is now deactivated."), Xcloner_Activator::xcloner_minimum_version, phpversion()) ?></p>
     </div>
-	<?php
-    include_once(ABSPATH.'wp-admin/includes/plugin.php');
+    <?php
+    include_once(ABSPATH . 'wp-admin/includes/plugin.php');
 
     if (function_exists('deactivate_plugins')) {
         deactivate_plugins(plugin_basename(__FILE__));
@@ -50,15 +69,6 @@ if (version_compare(phpversion(), Xcloner_Activator::xcloner_minimum_version, '<
     return;
 }
 
-
-// composer library autoload
-require_once(__DIR__.'/vendor/autoload.php');
-//Register WP Cli testing commands
-if( class_exists( 'WP_CLI' ) && file_exists(__DIR__.'/tests/') ) {
-    require_once(__DIR__.'/tests/latest-wordpress/command.php');
-    require_once(__DIR__.'/tests/is-tested-up-to/command.php');
-    require_once(__DIR__.'/tests/update-version/command.php');
-}
 
 /**
  * Execute xcloner in CLI mode
@@ -70,7 +80,7 @@ if( class_exists( 'WP_CLI' ) && file_exists(__DIR__.'/tests/') ) {
 function do_cli_execution($args = array(), $opts = array())
 {
     if (!sizeof($opts)) {
-        $opts = getopt('v::p:h::q::e:d:k:l:', array('verbose::','profile:','help::', 'quiet::', 'encrypt:', 'decrypt:', 'key:', 'list:'));
+        $opts = getopt('v::p:h::q::e:d:k:l:', array('verbose::', 'profile:', 'help::', 'quiet::', 'encrypt:', 'decrypt:', 'key:', 'list:'));
     }
 
     if (!sizeof($opts)) {
@@ -102,11 +112,11 @@ function do_cli_execution($args = array(), $opts = array())
     }
 
     if (file_exists(__DIR__ . "/../../../wp-load.php")) {
-        require_once(__DIR__ .'/../../../wp-load.php');
+        require_once(__DIR__ . '/../../../wp-load.php');
     }
 
     $profile = [
-    'id' => 0
+        'id' => 0
     ];
 
     $profile_name = "";
@@ -118,19 +128,18 @@ function do_cli_execution($args = array(), $opts = array())
         $profile_name = $opts['profile'];
     }
 
-    $xcloner_backup = new Watchfulli\XClonerCore\Xcloner_Standalone();
+    $xcloner_backup = new Xcloner();
 
     // --list|l list backup archive
     if (isset($opts['l']) || isset($opts['list'])) {
-        $backup_file_path= $opts['list'].$opts['l'];
+        $backup_file_path = $opts['list'] . $opts['l'];
 
         // function to list backup content recursively
-        $list_backup_archive_contents = function ($backup_name, $start=0) use ($xcloner_backup)
-        {
+        $list_backup_archive_contents = function ($backup_name, $start = 0) use ($xcloner_backup) {
             $xcloner_settings = $xcloner_backup->get_xcloner_settings();
             $xcloner_file_system = $xcloner_backup->get_xcloner_filesystem();
 
-            if( $xcloner_backup->get_xcloner_encryption()->is_encrypted_file($backup_name) ) {
+            if ($xcloner_backup->get_xcloner_encryption()->is_encrypted_file($backup_name)) {
                 die(sprintf("%s file is encrypted, please decrypt it first! \n", $backup_name));
             }
 
@@ -143,14 +152,14 @@ function do_cli_execution($args = array(), $opts = array())
             }
 
             foreach ($backup_parts as $backup_name) {
-                if ( !$start) {
+                if (!$start) {
                     echo sprintf("Processing %s \n", $backup_name);
                 }
-                $tar->open($xcloner_settings->get_xcloner_store_path().DS.$backup_name, $start);
+                $tar->open($xcloner_settings->get_xcloner_store_path() . DS . $backup_name, $start);
 
-                $data = $tar->contents($xcloner_settings->get_xcloner_option('xcloner_files_to_process_per_request')) ;
+                $data = $tar->contents($xcloner_settings->get_xcloner_option('xcloner_files_to_process_per_request'));
 
-                foreach ($data['extracted_files'] as $key=>$file) {
+                foreach ($data['extracted_files'] as $key => $file) {
                     echo sprintf("%s (%s) \n", $file->getPath(), size_format($file->getSize()));
                 }
 
@@ -168,12 +177,12 @@ function do_cli_execution($args = array(), $opts = array())
     // --key|k encryption key
     $encryption_key = "";
     if (isset($opts['k']) || isset($opts['key'])) {
-        $encryption_key = $opts['key'].$opts['k'];
+        $encryption_key = $opts['key'] . $opts['k'];
     }
 
     // --encrypt|e encrypt backup archive
     if (isset($opts['e']) || isset($opts['encrypt'])) {
-        $backup_name = $opts['encrypt'].$opts['e'];
+        $backup_name = $opts['encrypt'] . $opts['e'];
         if (!$xcloner_backup->get_xcloner_encryption()->is_encrypted_file($backup_name)) {
             $xcloner_backup->get_xcloner_encryption()->encrypt_file($backup_name, "", $encryption_key, 0, 0, true, true);
         } else {
@@ -183,7 +192,7 @@ function do_cli_execution($args = array(), $opts = array())
 
     // --decrypt|d decrypt backup archive
     if (isset($opts['d']) || isset($opts['decrypt'])) {
-        $backup_name = $opts['decrypt'].$opts['d'];
+        $backup_name = $opts['decrypt'] . $opts['d'];
         if ($xcloner_backup->get_xcloner_encryption()->is_encrypted_file($backup_name)) {
             $xcloner_backup->get_xcloner_encryption()->decrypt_file($backup_name, "", $encryption_key, 0, 0, true);
         } else {
@@ -192,17 +201,15 @@ function do_cli_execution($args = array(), $opts = array())
     }
 
     // start schedule based on profile name
-    if (isset($profile_name) && $profile_name) {
+    if (!empty($profile_name)) {
         $profile = ($xcloner_backup->get_xcloner_scheduler()->get_schedule_by_id_or_name($profile_name));
 
         if ($profile['id']) {
-            $xcloner_backup->start($profile['id']);
+            $xcloner_backup->execute_backup($profile['id']);
         } else {
             die(sprintf('Could not find profile %s', $profile_name));
         }
     }
-
-    return;
 }
 
 $foo = function ($args, $assoc_args) {
@@ -215,79 +222,48 @@ if (php_sapi_name() == "cli") {
     if (defined('WP_CLI') && WP_CLI) {
         WP_CLI::add_command(
             'xcloner_generate_backup',
-    /**
-     * XCloner Generate backup based on supplied profile Name or ID
-     *
-     * [--profile=<profile>]
-     * : backup profile name or id
-     *
-     * [--encrypt=<backup_name>]
-     * : encrypt backup archive
-     *
-     * [--decrypt=<backup_name>]
-     * : decrypt backup archive
-     *
-     * [--key=<encryption_key>]
-     * : custom encryption/decryption key
-     *
-     * [--list=<backup_name>]
-     * : list backup archive contents
-     *
-     * @when before_wp_load
-     */
-    function ($args, $assoc_args) {
-        if (WP_CLI::get_config('quiet')) {
-            $assoc_args['quiet'] = true;
-        }
-        return do_cli_execution($args, $assoc_args);
-    }
+            /**
+             * XCloner Generate backup based on supplied profile Name or ID
+             *
+             * [--profile=<profile>]
+             * : backup profile name or id
+             *
+             * [--encrypt=<backup_name>]
+             * : encrypt backup archive
+             *
+             * [--decrypt=<backup_name>]
+             * : decrypt backup archive
+             *
+             * [--key=<encryption_key>]
+             * : custom encryption/decryption key
+             *
+             * [--list=<backup_name>]
+             * : list backup archive contents
+             *
+             * @when before_wp_load
+             */
+            function ($args, $assoc_args) {
+                if (WP_CLI::get_config('quiet')) {
+                    $assoc_args['quiet'] = true;
+                }
+                do_cli_execution($args, $assoc_args);
+            }
         );
     } elseif (isset($argv) && basename($argv[0]) == "xcloner.php") {
-        return do_cli_execution();
+        do_cli_execution();
     }
-}
-
-
-
-// If this file is called directly, abort.
-if (!defined('WPINC')) {
-    die;
 }
 
 //i will not load the plugin outside admin or cron
 if (!is_admin() && !defined('DOING_CRON')) {
     //Check if we are running tests before leaving
-    if( ! defined( 'XCLONER_TESTING')){
+    if (!defined('XCLONER_TESTING')) {
         return;
     }
 }
 
-if (!defined("DS")) {
-    define("DS", DIRECTORY_SEPARATOR);
-}
 
-
-/**
- * The code that runs during plugin activation.
- * This action is documented in includes/class-xcloner-activator.php
- */
-function activate_xcloner()
-{
-    require_once plugin_dir_path(__FILE__).'includes/class-xcloner-activator.php';
-    Xcloner_Activator::activate();
-}
-
-/**
- * The code that runs during plugin deactivation.
- * This action is documented in includes/class-xcloner-deactivator.php
- */
-function deactivate_xcloner()
-{
-    require_once plugin_dir_path(__FILE__).'includes/class-xcloner-deactivator.php';
-    Xcloner_Deactivator::deactivate();
-}
-
-$db_installed_ver   = get_option("xcloner_db_version");
+$db_installed_ver = get_option("xcloner_db_version");
 $xcloner_db_version = Xcloner_Activator::xcloner_db_version;
 
 if ($db_installed_ver != $xcloner_db_version) {
@@ -305,7 +281,7 @@ function xcloner_stop_heartbeat()
     wp_deregister_script('heartbeat');
 }
 
-if (isset($_GET['page']) and stristr($_GET['page'], "xcloner_")) {
+if (isset($_GET['page']) && stristr($_GET['page'], "xcloner_")) {
     add_action('init', 'xcloner_stop_heartbeat', 1);
 }
 
@@ -316,34 +292,25 @@ if (isset($_GET['page']) and stristr($_GET['page'], "xcloner_")) {
  * then kicking off the plugin from this point in the file does
  * not affect the page life cycle.
  *
+ * @throws Exception
  * @since    1.0.0
  */
 function run_xcloner()
 {
-    $plugin = new \Xcloner();
-    $plugin->check_dependencies();
-
     /**
-    * The class responsible for defining all actions that occur in the admin area.
-    */
-    require_once plugin_dir_path((__FILE__)).'admin/class-xcloner-admin.php';
-
-    /**
-     * The class responsible for defining all actions that occur in the public-facing
-     * side of the site.
+     * The class responsible for defining all actions that occur in the admin area.
      */
-    //require_once plugin_dir_path((__FILE__)).'public/class-xcloner-public.php';
+    require_once plugin_dir_path((__FILE__)) . 'admin/class-xcloner-admin.php';
 
-    $plugin->init();
-    $plugin->extra_define_ajax_hooks();
-    $plugin->run();
+    $xcloner = new Xcloner();
+    $xcloner->check_dependencies();
 
-    return $plugin;
+    $xcloner->init();
+    $xcloner->run();
 }
 
-require plugin_dir_path(__FILE__).'includes/class-xcloner.php';
 try {
-    $xcloner_plugin = run_xcloner();
+   run_xcloner();
 } catch (Exception $e) {
     echo $e->getMessage();
 }

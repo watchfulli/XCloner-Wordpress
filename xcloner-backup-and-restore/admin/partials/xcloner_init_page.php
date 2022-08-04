@@ -12,10 +12,15 @@
  * @subpackage Xcloner/admin/partials
  */
 
+/** @var \Watchfulli\XClonerCore\Xcloner_Requirements $requirements */
 $requirements = $this->get_xcloner_container()->get_xcloner_requirements();
+/** @var \Watchfulli\XClonerCore\Xcloner_Settings $xcloner_settings */
 $xcloner_settings = $this->get_xcloner_container()->get_xcloner_settings();
+/** @var \Watchfulli\XClonerCore\Xcloner_Filesystem $xcloner_file_system */
 $xcloner_file_system = $this->get_xcloner_container()->get_xcloner_filesystem();
+/** @var \Watchfulli\XClonerCore\Xcloner_Logger $logger */
 $logger = $this->get_xcloner_container()->get_xcloner_logger();
+/** @var \Watchfulli\XClonerCore\Xcloner_Scheduler $xcloner_scheduler */
 $xcloner_scheduler = $this->get_xcloner_container()->get_xcloner_scheduler();
 
 $logger_content = $logger->getLastDebugLines();
@@ -35,7 +40,7 @@ if ($requirements->check_backup_ready_status()) {
         <?php include_once(__DIR__ . "/xcloner_header.php") ?>
     </div>
     <div class="col s12">
-        <?php if (isset($latest_backup['timestamp']) and $latest_backup['timestamp'] < strtotime("-1 day")): ?>
+        <?php if (isset($latest_backup['timestamp']) && $latest_backup['timestamp'] < strtotime("-1 day")): ?>
             <div id="setting-error-" class="error settings-error notice is-dismissible">
                 <p><strong>
                         <?php echo __('Your latest backup is older than 24 hours, please create a new backup to keep your site protected.', 'xcloner-backup-and-restore') ?>

@@ -2,6 +2,8 @@
 
 namespace Watchfulli\XClonerCore;
 
+use Exception;
+
 class Xcloner_Scheduler
 {
     private $db;
@@ -162,7 +164,7 @@ class Xcloner_Scheduler
             $hook = 'xcloner_scheduler_' . $schedule->id;
 
             //adding the xcloner_scheduler hook with xcloner_scheduler_callback callback
-            $this->xcloner_container->get_loader()->add_action($hook, $this, 'xcloner_scheduler_callback', 10, 1);
+            $this->xcloner_container->get_xcloner_loader()->add_action($hook, [$this, 'xcloner_scheduler_callback'], 10, 1);
 
             if (!wp_next_scheduled($hook, array($schedule->id)) and $schedule->status) {
                 if ($schedule->recurrence == "single") {
@@ -464,7 +466,7 @@ class Xcloner_Scheduler
                 $schedule['backup_params']->email_notification = "";
             }
 
-            return $this->_xcloner_scheduler_callback($id, $schedule, $xcloner);
+            $this->_xcloner_scheduler_callback($id, $schedule, $xcloner);
         } catch (Exception $e) {
 
             //send email to site admin if email notification is not set in the scheduler

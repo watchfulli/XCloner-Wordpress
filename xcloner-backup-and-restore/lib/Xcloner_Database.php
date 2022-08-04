@@ -23,11 +23,15 @@ namespace Watchfulli\XClonerCore;
  *      MA 02110-1301, USA.
  */
 
- if (!class_exists('wpdb')) {
+use League\Flysystem\FileExistsException;
+use League\Flysystem\FileNotFoundException;
+use wpdb;
+
+if (!class_exists('wpdb')) {
      require_once __DIR__ . "/../lib/wp-db.php";
  }
 
-class Xcloner_Database extends \wpdb
+class Xcloner_Database extends wpdb
 {
     public $debug = 0;
     public $recordsPerSession = 10000;
@@ -123,9 +127,12 @@ class Xcloner_Database extends \wpdb
      * @param array $data {'dbHostname', 'dbUsername', 'dbPassword', 'dbDatabase'}
      * @return
      */
+    /**
+     * @throws FileNotFoundException
+     */
     public function init($data, $start = 0)
     {
-        if ($start and $this->fs->get_tmp_filesystem()->has($this->TEMP_DBPROCESS_FILE)) {
+        if ($start && $this->fs->get_tmp_filesystem()->has($this->TEMP_DBPROCESS_FILE)) {
             $this->fs->get_tmp_filesystem()->delete($this->TEMP_DBPROCESS_FILE);
         }
 
@@ -134,9 +141,12 @@ class Xcloner_Database extends \wpdb
         $this->suppress_errors = true;
     }
 
+    /**
+     * @throws FileNotFoundException
+     * @throws FileExistsException
+     */
     public function start_database_recursion($params, $extra_params, $init = 0)
     {
-        $tables = array();
         $return['finished'] = 0;
         $return['stats'] = array(
                 "total_records"=>0,
@@ -165,7 +175,7 @@ class Xcloner_Database extends \wpdb
                 $db_count = -1;
             }
 
-            if (isset($params) and is_array($params)) {
+            if (isset($params) && is_array($params)) {
                 foreach ($params as $database=>$tables) {
                     if ($database != "#") {
                         $stats = $this->write_backup_process_list($database, $tables);
@@ -194,9 +204,7 @@ class Xcloner_Database extends \wpdb
             $extra_params['dumpfile'] = "";
         }
 
-        $return = $this->process_incremental($extra_params['startAtLine'], $extra_params['startAtRecord'], $extra_params['dumpfile']);
-
-        return $return;
+        return $this->process_incremental($extra_params['startAtLine'], $extra_params['startAtRecord'], $extra_params['dumpfile']);
     }
 
     public function log($message = "")
@@ -328,9 +336,9 @@ class Xcloner_Database extends \wpdb
 
             $tablesList[$inc]['excluded'] = 0;
 
-            if (sizeof($included) and is_array($included)) {
+            if (sizeof($included) && is_array($included)) {
                 $dbTable = $database.".".$table;
-                if (!in_array($table, $included) and !in_array($dbTable, $included)) {
+                if (!in_array($table, $included) && !in_array($dbTable, $included)) {
                     $tablesList[$inc]['excluded'] = 1;
                     $this->log(sprintf(__("Excluding table %s.%s from backup"), $table, $database));
                 }
@@ -342,6 +350,9 @@ class Xcloner_Database extends \wpdb
         return $tablesList;
     }
 
+    /**
+     * @throws FileExistsException
+     */
     public function write_backup_process_list($dbname, $incl_tables)
     {
         $return['total_records'] = 0;
@@ -361,12 +372,12 @@ class Xcloner_Database extends \wpdb
         $this->fs->get_tmp_filesystem_append()->write($this->TEMP_DBPROCESS_FILE, $line);
 
         // write this to the class and write to $TEMP_DBPROCESS_FILE file as database.table records
-        foreach ($tables as $key=>$table) {
-            if ($table != "" and !$tables[$key]['excluded']) {
-                $line = sprintf("`%s`.`%s`\t%s\t%s\n", $dbname, $tables[$key]['name'], $tables[$key]['records'], $tables[$key]['excluded']);
+        foreach ($tables as $table) {
+            if ($table != "" && !$table['excluded']) {
+                $line = sprintf("`%s`.`%s`\t%s\t%s\n", $dbname, $table['name'], $table['records'], $table['excluded']);
                 $this->fs->get_tmp_filesystem_append()->write($this->TEMP_DBPROCESS_FILE, $line);
                 $return['tables_count']++;
-                $return['total_records'] += $tables[$key]['records'];
+                $return['total_records'] += $table['records'];
             }
         }
 
@@ -403,6 +414,10 @@ class Xcloner_Database extends \wpdb
      * 		string $dbCompatibility - MYSQL40, MYSQ32, none=default
      * 		int $dbDropSyntax	- check if the DROP TABLE syntax should be added
      * @return array $return
+     */
+    /**
+     * @throws FileExistsException
+     * @throws FileNotFoundException
      */
     public function process_incremental($startAtLine = 0, $startAtRecord = 0, $dumpfile = "", $dbCompatibility = "")
     {
@@ -459,7 +474,7 @@ class Xcloner_Database extends \wpdb
 
                     $processed_records = 0;
 
-                    if (trim($tableName) != "" and !$tableInfo[2]) {
+                    if (trim($tableName) != "" && !$tableInfo[2]) {
                         $processed_records = $this->export_table($databaseName, $tableName, $startAtRecord, $this->recordsPerSession, $dumpfile);
                     }
 
@@ -480,7 +495,6 @@ class Xcloner_Database extends \wpdb
                     $return['dumpsize']			= $this->fs->get_tmp_filesystem_append()->getSize($dumpfile);
 
                     return $return;
-                    break;
                 }
             }
 
@@ -500,7 +514,7 @@ class Xcloner_Database extends \wpdb
             $this->fs->get_tmp_filesystem()->delete($this->TEMP_DBPROCESS_FILE);
         }
 
-        $this->logger->debug(sprintf(("Database backup finished!")));
+        $this->logger->debug(("Database backup finished!"));
 
         return $return;
     }
@@ -522,6 +536,7 @@ class Xcloner_Database extends \wpdb
     /**
      * @param integer $start
      * @param integer $limit
+     * @throws FileExistsException
      */
     public function export_table($databaseName, $tableName, $start, $limit, $dumpfile)
     {
@@ -538,13 +553,8 @@ class Xcloner_Database extends \wpdb
         //exporting the table content now
 
         $query = "SELECT * from `$databaseName`.`$tableName` Limit $start, $limit ;";
-        if ($this->use_mysqli) {
-            $result = mysqli_query($this->dbh, $query);
-            $mysql_fetch_function = "mysqli_fetch_array";
-        } else {
-            $result = mysql_query($query, $this->dbh);
-            $mysql_fetch_function = "mysqli_fetch_array";
-        }
+        $result = mysqli_query($this->dbh, $query);
+        $mysql_fetch_function = "mysqli_fetch_array";
         //$result = $this->get_results($query, ARRAY_N);
         //print_r($result); exit;
 
@@ -580,6 +590,9 @@ class Xcloner_Database extends \wpdb
         return $records;
     }
 
+    /**
+     * @throws FileExistsException
+     */
     public function dump_structure($databaseName, $tableName, $dumpfile)
     {
         $this->log(sprintf(__("Dumping the structure for %s.%s table"), $databaseName, $tableName));
@@ -603,13 +616,15 @@ class Xcloner_Database extends \wpdb
         $line = ("\n#\n# End Structure for table `$tableName`\n#\n\n");
         $line .= ("#\n# Dumping data for table `$tableName`\n#\n\n");
         $this->fs->get_tmp_filesystem_append()->write($dumpfile, $line);
-
-        return;
     }
 
+    /**
+     * @throws FileNotFoundException
+     * @throws FileExistsException
+     */
     public function data_footers($dumpfile)
     {
-        $this->logger->debug(sprintf(("Writing dump footers in file"), $dumpfile));
+        $this->logger->debug("Writing dump footers in file", array($dumpfile));
         // we finished the dump file, not return the size of it
         $this->fs->get_tmp_filesystem_append()->write($dumpfile, "\n#\n# Finished at: ".date("M j, Y \a\\t H:i")."\n#");
         $size = $this->fs->get_tmp_filesystem_append()->getSize($dumpfile);
@@ -635,15 +650,16 @@ class Xcloner_Database extends \wpdb
     }
 
 
+    /**
+     * @throws FileExistsException
+     */
     public function data_headers($file, $database)
     {
-        $this->logger->debug(sprintf(("Writing dump header for %s database in file"), $database, $file));
+        $this->logger->debug(sprintf(("Writing dump header for %s database in file"), $database), array($file));
 
-        $return = "";
-
-        $return .= "#\n";
+        $return = "#\n";
         $return .= "# Powered by XCloner Site Backup\n";
-        $return .= "# http://www.xcloner.com\n";
+        $return .= "# https://www.xcloner.com\n";
         $return .= "#\n";
         $return .= "# Host: ".get_site_url()."\n";
         $return .= "# Generation Time: ".date("M j, Y \a\\t H:i")."\n";
@@ -669,7 +685,6 @@ class Xcloner_Database extends \wpdb
 
         $this->log(sprintf(__("Writing %s database dump headers"), $database));
 
-        $return = $this->fs->get_tmp_filesystem()->write($file, $return);
-        return $return['size'];
+        $this->fs->get_tmp_filesystem()->write($file, $return);
     }
 }
