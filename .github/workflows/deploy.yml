@@ -25,12 +25,19 @@ jobs:
         cd xcloner-backup-and-restore
         composer install --no-dev --prefer-dist -o
 
+    - name: Remove unneeded files
+      run: |
+        rsync --exclude-from=".distignore" -av --delete "${SRC_DIR}/" "${BUILD_DIR}/"
+      env:
+        BUILD_DIR: xcloner-backup-and-restore-build
+        SRC_DIR: xcloner-backup-and-restore
+
     - name: WordPress Plugin Deploy
       uses: 10up/action-wordpress-plugin-deploy@develop
       env:
         SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
         SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
         SLUG: xcloner-backup-and-restore
-        BUILD_DIR: xcloner-backup-and-restore
+        BUILD_DIR: xcloner-backup-and-restore-build
       with:
         generate-zip: true

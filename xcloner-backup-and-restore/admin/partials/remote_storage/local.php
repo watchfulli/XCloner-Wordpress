@@ -24,7 +24,7 @@ if (!defined('WPINC')) {
         <div class=" col s12 m6">
             <input placeholder="<?php echo __("Backup Start Location", 'xcloner-backup-and-restore') ?>" id="aws_key"
                 type="text" name="xcloner_start_path" class="validate"
-                value="<?php echo get_option("xcloner_start_path") ?>" autocomplete="off">
+                value="<?php echo esc_attr(get_option("xcloner_start_path")) ?>" autocomplete="off">
         </div>
     </div>
 
@@ -35,11 +35,11 @@ if (!defined('WPINC')) {
         <div class=" col s12 m6">
             <input placeholder="<?php echo __("Backup Storage Location", 'xcloner-backup-and-restore') ?>" id="aws_key"
                 type="text" name="xcloner_store_path" class="validate"
-                value="<?php echo get_option("xcloner_store_path") ?>" autocomplete="off">
+                value="<?php echo esc_attr(get_option("xcloner_store_path")) ?>" autocomplete="off">
         </div>
     </div>
 
-    <?=common_cleanup_html('local')?>
+    <?php echo common_cleanup_html('local')?>
 
     <div class="row">
         <div class="col s6 m4">

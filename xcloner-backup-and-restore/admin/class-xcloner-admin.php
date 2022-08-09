@@ -122,7 +122,7 @@ class Xcloner_Admin
         wp_enqueue_script($this->plugin_name . "_jquery.datatables.respnsive", plugin_dir_url(__FILE__) . 'js/dataTables.responsive.js', array('jquery'));
         wp_enqueue_script($this->plugin_name . "_vakata", dirname(plugin_dir_url(__FILE__)) . '/vendor/vakata/jstree/dist/jstree.min.js', array('jquery'));
 
-        wp_enqueue_script($this->plugin_name, dirname(plugin_dir_url(__FILE__)) . '/dist/admin/js/index.min.js', array('jquery'));
+        wp_enqueue_script($this->plugin_name, dirname(plugin_dir_url(__FILE__)) . '/admin/js/index.min.js', array('jquery'));
     }
 
     public function xcloner_init_page()

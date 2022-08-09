@@ -26,12 +26,12 @@ if (!defined('WPINC')) {
                             <div class="col s12 m6">
                                 <input placeholder="<?php echo __("SFTP Hostname", 'xcloner-backup-and-restore') ?>"
                                        id="sftp_host" type="text" name="xcloner_sftp_hostname" class="validate"
-                                       value="<?php echo get_option("xcloner_sftp_hostname") ?>">
+                                       value="<?php echo esc_attr(get_option("xcloner_sftp_hostname")) ?>">
                             </div>
                             <div class=" col s12 m2">
                                 <input placeholder="<?php echo __("SFTP Port", 'xcloner-backup-and-restore') ?>"
                                        id="sftp_port" type="text" name="xcloner_sftp_port" class="validate"
-                                       value="<?php echo get_option("xcloner_sftp_port", 22) ?>">
+                                       value="<?php echo esc_attr(get_option("xcloner_sftp_port", 22)) ?>">
                             </div>
                         </div>
 
@@ -42,7 +42,7 @@ if (!defined('WPINC')) {
                             <div class=" col s12 m6">
                                 <input placeholder="<?php echo __("SFTP Username", 'xcloner-backup-and-restore') ?>"
                                        id="sftp_username" type="text" name="xcloner_sftp_username" class="validate"
-                                       value="<?php echo get_option("xcloner_sftp_username") ?>" autocomplete="off">
+                                       value="<?php echo esc_attr(get_option("xcloner_sftp_username")) ?>" autocomplete="off">
                             </div>
                         </div>
 
@@ -54,7 +54,7 @@ if (!defined('WPINC')) {
                             <div class=" col s12 m6">
                                 <input placeholder="<?php echo __("SFTP or Private Key Password", 'xcloner-backup-and-restore') ?>"
                                        id="ftp_spassword" type="text" name="xcloner_sftp_password" class="validate"
-                                       value="<?php echo str_repeat('*', strlen(get_option("xcloner_sftp_password"))) ?>"
+                                       value="<?php echo esc_attr(str_repeat('*', strlen(get_option("xcloner_sftp_password")))) ?>"
                                        autocomplete="off">
                             </div>
                         </div>
@@ -68,7 +68,7 @@ if (!defined('WPINC')) {
                                           placeholder="<?php echo __("Local Server Path or Contents of the SFTP Private Key RSA File", 'xcloner-backup-and-restore') ?>"
                                           id="sftp_private_key" type="text" name="xcloner_sftp_private_key"
                                           class="validate"
-                                          value=""><?php echo get_option("xcloner_sftp_private_key") ?></textarea>
+                                          value=""><?php echo esc_attr(get_option("xcloner_sftp_private_key")) ?></textarea>
                             </div>
                         </div>
 
@@ -79,7 +79,7 @@ if (!defined('WPINC')) {
                             <div class=" col s12 m6">
                                 <input placeholder="<?php echo __("SFTP Storage Folder", 'xcloner-backup-and-restore') ?>"
                                        id="sftp_root" type="text" name="xcloner_sftp_path" class="validate"
-                                       value="<?php echo get_option("xcloner_sftp_path") ?>">
+                                       value="<?php echo esc_attr(get_option("xcloner_sftp_path")) ?>">
                             </div>
                         </div>
 
@@ -90,11 +90,11 @@ if (!defined('WPINC')) {
                             <div class=" col s12 m2">
                                 <input placeholder="<?php echo __("SFTP Timeout", 'xcloner-backup-and-restore') ?>"
                                        id="sftp_timeout" type="text" name="xcloner_sftp_timeout" class="validate"
-                                       value="<?php echo get_option("xcloner_sftp_timeout", 30) ?>">
+                                       value="<?php echo esc_attr(get_option("xcloner_sftp_timeout", 30)) ?>">
                             </div>
                         </div>
 
-                        <?=common_cleanup_html('sftp')?>
+                        <?php echo common_cleanup_html('sftp')?>
 
                         <div class="row">
                             <div class="col s6 m4">

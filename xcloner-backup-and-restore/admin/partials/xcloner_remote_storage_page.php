@@ -22,14 +22,15 @@ function common_cleanup_html($type)
 <!-- Cleanup by Days -->
 <div class="row">
     <div class="col s12 m3 label">
-        <label
-            for="xcloner_{type}_cleanup_retention_limit_days"><?php echo __("Cleanup by Age", 'xcloner-backup-and-restore') ?></label>
+        <label for="xcloner_{type}_cleanup_retention_limit_days">
+            <?php echo __("Cleanup by Age", 'xcloner-backup-and-restore') ?>
+        </label>
     </div>
     <div class=" col s12 m6">
         <input placeholder="<?php echo __("how many days to keep the backups for", 'xcloner-backup-and-restore') ?>"
             id="xcloner_{type}cleanup_retention_limit_days" type="text"
             name="xcloner_{type}cleanup_retention_limit_days" class="validate"
-            value="<?php echo get_option("xcloner_".$type."cleanup_retention_limit_days") ?>">
+            value="<?php echo esc_attr(get_option("xcloner_".$type."cleanup_retention_limit_days")) ?>">
     </div>
 </div>
 
@@ -43,33 +44,35 @@ function common_cleanup_html($type)
         <input placeholder="<?php echo __("how many backup files to keep", 'xcloner-backup-and-restore') ?>"
             id="xcloner_{type}cleanup_retention_limit_archives" type="number"
             name="xcloner_{type}cleanup_retention_limit_archives" class="validate"
-            value="<?php echo get_option("xcloner_".$type."cleanup_retention_limit_archives") ?>">
+            value="<?php echo esc_attr(get_option("xcloner_".$type."cleanup_retention_limit_archives")) ?>">
     </div>
 </div>
 
 <!-- Cleanup by Capacity -->
 <div class="row">
     <div class="col s12 m3 label">
-        <label
-            for="xcloner_{type}_cleanup_capacity_limit"><?php echo __("Cleanup by Capacity(MB)", 'xcloner-backup-and-restore') ?></label>
+        <label for="xcloner_{type}_cleanup_capacity_limit">
+            <?php echo __("Cleanup by Capacity(MB)", 'xcloner-backup-and-restore') ?>
+        </label>
     </div>
     <div class=" col s12 m6">
         <input placeholder="<?php echo __("delete backup over specified limit", 'xcloner-backup-and-restore') ?>"
             id="xcloner_{type}cleanup_capacity_limit" type="number" name="xcloner_{type}cleanup_capacity_limit"
-            class="validate" value="<?php echo get_option("xcloner_".$type."cleanup_capacity_limit") ?>">
+            class="validate" value="<?php echo esc_attr(get_option("xcloner_".$type."cleanup_capacity_limit")) ?>">
     </div>
 </div>
 
 <!-- Keep backups taken on days -->
 <div class="row">
     <div class="col s12 m3 label">
-        <label
-            for="xcloner_{type}_cleanup_exclude_days"><?php echo __("Keep backups taken on days", 'xcloner-backup-and-restore') ?></label>
+        <label for="xcloner_{type}_cleanup_exclude_days">
+            <?php echo __("Keep backups taken on days", 'xcloner-backup-and-restore') ?>
+        </label>
     </div>
     <div class=" col s12 m6">
         <input placeholder="<?php echo __("days of month, comma separated", 'xcloner-backup-and-restore') ?>"
             id="xcloner_{type}cleanup_exclude_days" type="text" name="xcloner_{type}cleanup_exclude_days"
-            class="validate" value="<?php echo get_option("xcloner_".$type."cleanup_exclude_days") ?>">
+            class="validate" value="<?php echo esc_attr(get_option("xcloner_".$type."cleanup_exclude_days")) ?>">
     </div>
 </div>
 <?php

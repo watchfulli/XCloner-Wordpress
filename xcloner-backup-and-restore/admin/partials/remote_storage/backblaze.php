@@ -5,7 +5,8 @@ if (!defined('WPINC')) {
 }
 ?>
 <div class="collapsible-header">
-    <i class="material-icons">computer</i><?php echo __("Backblaze B2 Storage", 'xcloner-backup-and-restore') ?>
+    <i class="material-icons">computer</i>
+    <?php echo __("Backblaze B2 Storage", 'xcloner-backup-and-restore') ?>
     <div class="switch right">
         <label>
             Off
@@ -38,7 +39,7 @@ if (!defined('WPINC')) {
         <div class=" col s12 m6">
             <input placeholder="<?php echo __("Backblaze KeyID", 'xcloner-backup-and-restore') ?>"
                 id="backblaze_account_id" type="text" name="xcloner_backblaze_account_id" class="validate"
-                value="<?php echo get_option("xcloner_backblaze_account_id") ?>" autocomplete="off">
+                value="<?php echo esc_attr(get_option("xcloner_backblaze_account_id")) ?>" autocomplete="off">
         </div>
     </div>
 
@@ -51,7 +52,7 @@ if (!defined('WPINC')) {
         <div class=" col s12 m6">
             <input placeholder="<?php echo __("Backblaze applicationKey", 'xcloner-backup-and-restore') ?>"
                 id="backblaze_application_key" type="text" name="xcloner_backblaze_application_key" class="validate"
-                value="<?php echo str_repeat('*', strlen(get_option("xcloner_backblaze_application_key"))) ?>"
+                value="<?php echo esc_attr(str_repeat('*', strlen(get_option("xcloner_backblaze_application_key")))) ?>"
                 autocomplete="off">
         </div>
     </div>
@@ -64,11 +65,11 @@ if (!defined('WPINC')) {
         <div class=" col s12 m6">
             <input placeholder="<?php echo __("Backblaze Bucket Name", 'xcloner-backup-and-restore') ?>"
                 id="backblaze_bucket_name" type="text" name="xcloner_backblaze_bucket_name" class="validate"
-                value="<?php echo get_option("xcloner_backblaze_bucket_name") ?>" autocomplete="off">
+                value="<?php echo esc_attr(get_option("xcloner_backblaze_bucket_name")) ?>" autocomplete="off">
         </div>
     </div>
 
-    <?=common_cleanup_html('backblaze')?>
+    <?php echo common_cleanup_html('backblaze')?>
 
     <div class="row">
         <div class="col s6 m4">

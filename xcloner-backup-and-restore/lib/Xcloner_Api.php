@@ -981,14 +981,15 @@ class Xcloner_Api
                 ob_end_clean(); ?>
 
                 <?php ob_start(); ?>
-                <span class=""><?php echo $file_info['path'] ?></span>
+                <span class=""><?php echo esc_html($file_info['path']) ?></span>
                 <?php if (!$file_exists_on_local_storage): ?>
                     <a href="#"
                        title="<?php echo __(
                            "This backup archive does not exist on your local server. If you wish to retain local copies of your backup archives as well as remote copies, please disable local clean-up in the main XCloner settings and/or your scheduled backup profile settings.",
                            "xcloner-backup-and-restore"
-                       ) ?>"><i
-                                class="material-icons backup_warning">warning</i></a>
+                       ) ?>">
+                        <i class="material-icons backup_warning">warning</i>
+                    </a>
                 <?php endif ?>
                 <?php
                 if (isset($file_info['childs']) && is_array($file_info['childs'])):
@@ -1013,34 +1014,37 @@ class Xcloner_Api
                                        title="<?php echo __(
                                            "This backup archive does not exist on your local server. If you wish to retain local copies of your backup archives as well as remote copies, please disable local clean-up in the main XCloner settings and/or your scheduled backup profile settings.",
                                            "xcloner-backup-and-restore"
-                                       ) ?>"><i
-                                                class="material-icons backup_warning">warning</i></a>
+                                       ) ?>">
+                                        <i class="material-icons backup_warning">warning</i>
+                                    </a>
                                 <?php endif ?>
                                 <?php if (!$storage_selection) : ?>
-                                    <a href="#<?php echo $child[0]; ?>" class="download"
-                                       title="Download Backup"><i class="material-icons">file_download</i></a>
+                                    <a href="#<?php echo esc_attr($child[0]); ?>" class="download"
+                                       title="Download Backup">
+                                        <i class="material-icons">file_download</i>
+                                    </a>
 
                                     <?php if ($this->xcloner_encryption->is_encrypted_file($child[0])) : ?>
-                                        <a href="#<?php echo $child[0] ?>" class="backup-decryption"
+                                        <a href="#<?php echo esc_attr($child[0]) ?>" class="backup-decryption"
                                            title="<?php echo __('Backup Decryption', 'xcloner-backup-and-restore') ?>">
                                             <i class="material-icons">enhanced_encryption</i>
                                         </a>
                                     <?php else: ?>
-                                        <a href="#<?php echo $child[0] ?>" class="list-backup-content"
+                                        <a href="#<?php echo esc_attr($child[0]) ?>" class="list-backup-content"
                                            title="<?php echo __(
                                                'List Backup Content',
                                                'xcloner-backup-and-restore'
                                            ) ?>"><i
                                                     class="material-icons">folder_open</i></a>
 
-                                        <a href="#<?php echo $child[0] ?>" class="backup-encryption"
+                                        <a href="#<?php echo esc_attr($child[0]) ?>" class="backup-encryption"
                                            title="<?php echo __('Backup Encryption', 'xcloner-backup-and-restore') ?>">
                                             <i class="material-icons">no_encryption</i>
                                         </a>
                                     <?php endif ?>
 
                                 <?php elseif ($storage_selection != "gdrive" && !$this->xcloner_file_system->get_storage_filesystem()->has($child[0])): ?>
-                                    <a href="#<?php echo $child[0] ?>" class="copy-remote-to-local"
+                                    <a href="#<?php echo esc_attr($child[0]) ?>" class="copy-remote-to-local"
                                        title="<?php echo __(
                                            'Push Backup To Local Storage',
                                            'xcloner-backup-and-restore'
@@ -1070,17 +1074,19 @@ class Xcloner_Api
 
                 <?php ob_start(); ?>
 
-                <a href="#<?php echo $file_info['basename']; ?>" class="download"
-                   title="<?php echo __('Download Backup', 'xcloner-backup-and-restore') ?>"><i
-                            class="material-icons">file_download</i></a>
+                <a href="#<?php echo esc_attr($file_info['basename']); ?>" class="download"
+                   title="<?php echo __('Download Backup', 'xcloner-backup-and-restore') ?>">
+                    <i class="material-icons">file_download</i>
+                </a>
                 <?php if (!$storage_selection): ?>
                     <?php if (sizeof($available_storages)): ?>
-                        <a href="#<?php echo $file_info['basename'] ?>" class="cloud-upload"
+                        <a href="#<?php echo esc_attr($file_info['basename']) ?>" class="cloud-upload"
                            title="<?php echo __(
                                'Send Backup To Remote Storage',
                                'xcloner-backup-and-restore'
-                           ) ?>"><i
-                                    class="material-icons">swap_horiz</i></a>
+                           ) ?>">
+                            <i class="material-icons">swap_horiz</i>
+                        </a>
                     <?php endif ?>
                     <?php
                     $basename = $file_info['basename'];
@@ -1088,30 +1094,32 @@ class Xcloner_Api
                         $basename = $file_info['childs'][0][0];
                     } ?>
                     <?php if ($this->xcloner_encryption->is_encrypted_file($basename)) : ?>
-                        <a href="#<?php echo $file_info['basename'] ?>" class="backup-decryption"
+                        <a href="#<?php echo esc_attr($file_info['basename']) ?>" class="backup-decryption"
                            title="<?php echo __('Backup Decryption', 'xcloner-backup-and-restore') ?>">
                             <i class="material-icons">enhanced_encryption</i>
                         </a>
                     <?php else: ?>
-                        <a href="#<?php echo $file_info['basename'] ?>" class="list-backup-content"
-                           title="<?php echo __('List Backup Content', 'xcloner-backup-and-restore') ?>"><i
-                                    class="material-icons">folder_open</i></a>
+                        <a href="#<?php echo esc_attr($file_info['basename']) ?>" class="list-backup-content"
+                           title="<?php echo __('List Backup Content', 'xcloner-backup-and-restore') ?>">
+                            <i class="material-icons">folder_open</i>
+                        </a>
 
-                        <a href="#<?php echo $file_info['basename'] ?>" class="backup-encryption"
+                        <a href="#<?php echo esc_attr($file_info['basename']) ?>" class="backup-encryption"
                            title="<?php echo __('Backup Encryption', 'xcloner-backup-and-restore') ?>">
                             <i class="material-icons">no_encryption</i>
                         </a>
                     <?php endif ?>
                 <?php endif; ?>
 
-                <a href="#<?php echo $file_info['basename'] ?>" class="delete"
+                <a href="#<?php echo esc_attr($file_info['basename']) ?>" class="delete"
                    title="<?php echo __('Delete Backup', 'xcloner-backup-and-restore') ?>">
                     <i class="material-icons">delete</i>
                 </a>
                 <?php if ($storage_selection && !$file_exists_on_local_storage): ?>
-                    <a href="#<?php echo $file_info['basename']; ?>" class="copy-remote-to-local"
-                       title="<?php echo __('Transfer a copy of the remote backup to local storage.', 'xcloner-backup-and-restore') ?>"><i
-                                class="material-icons">swap_horiz</i></a>
+                    <a href="#<?php echo esc_attr($file_info['basename']); ?>" class="copy-remote-to-local"
+                       title="<?php echo __('Transfer a copy of the remote backup to local storage.', 'xcloner-backup-and-restore') ?>">
+                        <i class="material-icons">swap_horiz</i>
+                    </a>
                 <?php endif ?>
 
                 <?php

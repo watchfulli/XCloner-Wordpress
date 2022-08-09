@@ -25,11 +25,11 @@ if (!defined('WPINC')) {
         <div class="col s12 m6">
             <input placeholder="<?php echo __("Ftp Hostname", 'xcloner-backup-and-restore') ?>" id="ftp_host"
                 type="text" name="xcloner_ftp_hostname" class="validate"
-                value="<?php echo get_option("xcloner_ftp_hostname") ?>">
+                value="<?php echo esc_attr(get_option("xcloner_ftp_hostname")) ?>">
         </div>
         <div class=" col s12 m2">
             <input placeholder="<?php echo __("Ftp Port", 'xcloner-backup-and-restore') ?>" id="ftp_port" type="text"
-                name="xcloner_ftp_port" class="validate" value="<?php echo get_option("xcloner_ftp_port", 21) ?>">
+                name="xcloner_ftp_port" class="validate" value="<?php echo esc_attr(get_option("xcloner_ftp_port", 21)) ?>">
         </div>
     </div>
 
@@ -40,7 +40,7 @@ if (!defined('WPINC')) {
         <div class=" col s12 m6">
             <input placeholder="<?php echo __("Ftp Username", 'xcloner-backup-and-restore') ?>" id="ftp_username"
                 type="text" name="xcloner_ftp_username" class="validate"
-                value="<?php echo get_option("xcloner_ftp_username") ?>" autocomplete="off">
+                value="<?php echo esc_attr(get_option("xcloner_ftp_username")) ?>" autocomplete="off">
         </div>
     </div>
 
@@ -52,7 +52,7 @@ if (!defined('WPINC')) {
         <div class=" col s12 m6">
             <input placeholder="<?php echo __("Ftp Password", 'xcloner-backup-and-restore') ?>" id="ftp_password"
                 type="text" name="xcloner_ftp_password" class="validate"
-                value="<?php echo str_repeat('*', strlen(get_option("xcloner_ftp_password"))) ?>" autocomplete="off">
+                value="<?php echo esc_attr(str_repeat('*', strlen(get_option("xcloner_ftp_password")))) ?>" autocomplete="off">
         </div>
     </div>
 
@@ -63,7 +63,7 @@ if (!defined('WPINC')) {
         <div class=" col s12 m6">
             <input placeholder="<?php echo __("Ftp Storage Folder", 'xcloner-backup-and-restore') ?>" id="ftp_root"
                 type="text" name="xcloner_ftp_path" class="validate"
-                value="<?php echo get_option("xcloner_ftp_path") ?>">
+                value="<?php echo esc_attr(get_option("xcloner_ftp_path")) ?>">
         </div>
     </div>
 
@@ -120,11 +120,11 @@ if (!defined('WPINC')) {
         <div class=" col s12 m2">
             <input placeholder="<?php echo __("Ftp Timeout", 'xcloner-backup-and-restore') ?>" id="ftp_timeout"
                 type="text" name="xcloner_ftp_timeout" class="validate"
-                value="<?php echo get_option("xcloner_ftp_timeout", 30) ?>">
+                value="<?php echo esc_attr(get_option("xcloner_ftp_timeout", 30)) ?>">
         </div>
     </div>
 
-    <?=common_cleanup_html('ftp')?>
+    <?php echo common_cleanup_html('ftp')?>
 
     <div class="row">
         <div class="col s6 m4">

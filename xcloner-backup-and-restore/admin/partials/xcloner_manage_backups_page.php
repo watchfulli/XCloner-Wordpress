@@ -30,17 +30,20 @@ $available_storages = $xcloner_remote_storage->get_available_storages();
         <select name="storage_selection" id="storage_selection" class="validate" required>
 
             <?php if ($storage_selection): ?>
-            <option value="" selected><?php echo __('Change To Local Storage...', 'xcloner-backup-and-restore') ?>
+            <option value="" selected>
+                <?php echo __('Change To Local Storage...', 'xcloner-backup-and-restore') ?>
             </option>
             <?php else: ?>
-            <option value="" selected><?php echo __('Change To Remote Storage...', 'xcloner-backup-and-restore') ?>
+            <option value="" selected>
+                <?php echo __('Change To Remote Storage...', 'xcloner-backup-and-restore') ?>
             </option>
             <?php endif; ?>
 
             <?php foreach ($available_storages as $storage => $text): ?>
-            <option value="<?php echo $storage ?>" <?php if ($storage == $storage_selection) {
+            <option value="<?php echo esc_attr($storage) ?>" <?php if ($storage == $storage_selection) {
                         echo "selected";
-                    } ?>><?php echo $text ?>
+                    } ?>>
+                <?php echo esc_html($text) ?>
             </option>
             <?php endforeach ?>
         </select>
@@ -73,8 +76,10 @@ $available_storages = $xcloner_remote_storage->get_available_storages();
             </tbody>
         </table>
 
-        <a class="waves-effect waves-light btn delete-all"><i
-                class="material-icons left">delete</i><?php echo __("Delete", 'xcloner-backup-and-restore') ?></a>
+        <a class="waves-effect waves-light btn delete-all">
+            <i class="material-icons left">delete</i>
+            <?php echo __("Delete", 'xcloner-backup-and-restore') ?>
+        </a>
     </div>
 
 
@@ -171,16 +176,19 @@ $available_storages = $xcloner_remote_storage->get_available_storages();
                     <?php if (sizeof($available_storages)): ?>
                     <div class="row">
                         <div class="col s12 label">
-                            <label><?php echo sprintf(
-    __('Send %s to remote storage', 'xcloner-backup-and-restore'),
-    "<span class='backup_name'></span>"
-) ?></label>
+                            <label>
+                                <?php echo sprintf(__('Send %s to remote storage', 'xcloner-backup-and-restore'),"<span class='backup_name'></span>") ?>
+                            </label>
                         </div>
                         <div class="input-field col s8 m10">
                             <select name="transfer_storage" id="transfer_storage" class="validate" required>
-                                <option value="" selected><?php echo __('please select...', 'xcloner-backup-and-restore') ?></option>
+                                <option value="" selected>
+                                    <?php echo __('please select...', 'xcloner-backup-and-restore') ?>
+                                </option>
                                 <?php foreach ($available_storages as $storage => $text): ?>
-                                <option value="<?php echo $storage ?>"><?php echo $text ?></option>
+                                <option value="<?php echo esc_attr($storage) ?>">
+                                    <?php echo esc_html($text) ?>
+                                </option>
                                 <?php endforeach ?>
                             </select>
 
