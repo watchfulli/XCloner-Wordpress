@@ -299,7 +299,7 @@ class Xcloner
     public function trigger_message_notice($message, $status = "success")
     {
         ?>
-        <div class="notice notice-<?php echo $status ?> is-dismissible">
+        <div class="notice notice-<?php echo esc_attr($status) ?> is-dismissible">
             <p><?php _e($message, 'xcloner-backup-and-restore'); ?></p>
         </div>
         <?php

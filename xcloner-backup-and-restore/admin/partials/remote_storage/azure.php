@@ -37,7 +37,7 @@ if (!defined('WPINC')) {
         <div class=" col s12 m6">
             <input placeholder="<?php echo __("Azure Account Name", 'xcloner-backup-and-restore') ?>"
                 id="azure_account_name" type="text" name="xcloner_azure_account_name" class="validate"
-                value="<?php echo get_option("xcloner_azure_account_name") ?>" autocomplete="off">
+                value="<?php echo esc_attr(get_option("xcloner_azure_account_name")) ?>" autocomplete="off">
         </div>
     </div>
 
@@ -49,7 +49,7 @@ if (!defined('WPINC')) {
         <div class=" col s12 m6">
             <input placeholder="<?php echo __("Azure Api Key", 'xcloner-backup-and-restore') ?>" id="azure_api_key"
                 type="text" name="xcloner_azure_api_key" class="validate"
-                value="<?php echo str_repeat('*', strlen(get_option("xcloner_azure_api_key"))) ?>" autocomplete="off">
+                value="<?php echo esc_attr(str_repeat('*', strlen(get_option("xcloner_azure_api_key")))) ?>" autocomplete="off">
         </div>
     </div>
 
@@ -60,11 +60,11 @@ if (!defined('WPINC')) {
         <div class=" col s12 m6">
             <input placeholder="<?php echo __("Azure Container", 'xcloner-backup-and-restore') ?>" id="azure_container"
                 type="text" name="xcloner_azure_container" class="validate"
-                value="<?php echo get_option("xcloner_azure_container") ?>">
+                value="<?php echo esc_attr(get_option("xcloner_azure_container")) ?>">
         </div>
     </div>
 
-    <?=common_cleanup_html('azure')?>
+    <?php echo common_cleanup_html('azure')?>
 
     <div class="row">
         <div class="col s6 m4">
@@ -75,7 +75,8 @@ if (!defined('WPINC')) {
         </div>
         <div class="col s6 m4">
             <button class="btn waves-effect waves-light orange" type="submit" name="action" id="action" value="azure"
-                onclick="jQuery('#connection_check').val('1')"><?php echo __("Verify", 'xcloner-backup-and-restore') ?>
+                onclick="jQuery('#connection_check').val('1')">
+                <?php echo __("Verify", 'xcloner-backup-and-restore') ?>
                 <i class="material-icons right">import_export</i>
             </button>
         </div>

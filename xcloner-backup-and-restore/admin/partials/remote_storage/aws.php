@@ -9,9 +9,10 @@ if (!defined('WPINC')) {
     <div class="switch right">
         <label>
             Off
-            <input type="checkbox" name="xcloner_aws_enable" class="status" value="1" <?php if (get_option("xcloner_aws_enable")) {
-    echo "checked";
-} ?> >
+            <input type="checkbox" name="xcloner_aws_enable" class="status"
+                   value="1" <?php if (get_option("xcloner_aws_enable")) {
+                echo "checked";
+            } ?> >
             <span class="lever"></span>
             On
         </label>
@@ -36,8 +37,8 @@ if (!defined('WPINC')) {
         </div>
         <div class=" col s12 m6">
             <input placeholder="<?php echo __("S3 Key", 'xcloner-backup-and-restore') ?>" id="aws_key" type="text"
-                name="xcloner_aws_key" class="validate" value="<?php echo get_option("xcloner_aws_key") ?>"
-                autocomplete="off">
+                   name="xcloner_aws_key" class="validate" value="<?php echo esc_attr(get_option("xcloner_aws_key")) ?>"
+                   autocomplete="off">
         </div>
     </div>
 
@@ -47,8 +48,9 @@ if (!defined('WPINC')) {
         </div>
         <div class=" col s12 m6">
             <input placeholder="<?php echo __("S3 Secret", 'xcloner-backup-and-restore') ?>" id="aws_secret" type="text"
-                name="xcloner_aws_secret" class="validate"
-                value="<?php echo str_repeat('*', strlen(get_option("xcloner_aws_secret"))) ?>" autocomplete="off">
+                   name="xcloner_aws_secret" class="validate"
+                   value="<?php echo esc_attr(str_repeat('*', strlen(get_option("xcloner_aws_secret")))) ?>"
+                   autocomplete="off">
         </div>
     </div>
 
@@ -58,21 +60,19 @@ if (!defined('WPINC')) {
         </div>
         <div class=" col s12 m6">
             <select placeholder="<?php echo __("example: us-east-1", 'xcloner-backup-and-restore') ?>" id="aws_region"
-                type="text" name="xcloner_aws_region" class="validate"
-                value="<?php echo get_option("xcloner_aws_region") ?>" autocomplete="off">
+                    type="text" name="xcloner_aws_region" class="validate"
+                    value="<?php echo esc_attr(get_option("xcloner_aws_region")) ?>" autocomplete="off">
                 <option readonly value="">
-                    <?php echo __("Please Select AWS S3 Region or Leave Unselected for Custom Endpoint") ?></option>
+                    <?php echo __("Please Select AWS S3 Region or Leave Unselected for Custom Endpoint") ?>
+                </option>
                 <?php
-                                    $aws_regions = $remote_storage->get_aws_regions();
-
-                                    foreach ($aws_regions as $key => $region) {
-                                        ?>
-                <option value="<?php echo $key ?>"
-                    <?php echo($key == get_option('xcloner_aws_region') ? "selected" : "") ?>><?php echo $region ?>
-                    = <?php echo $key ?></option>
-                <?php
-                                    }
-                                    ?>
+                $aws_regions = $remote_storage->get_aws_regions();
+                foreach ($aws_regions as $key => $region) { ?>
+                    <option value="<?php echo esc_attr($key) ?>" <?php echo($key == get_option('xcloner_aws_region') ? "selected" : "") ?>>
+                        <?php echo esc_html($region) ?>
+                        = <?php echo esc_html($key) ?>
+                    </option>
+                <?php } ?>
             </select>
         </div>
     </div>
@@ -84,9 +84,9 @@ if (!defined('WPINC')) {
             </div>
             <div class=" col s12 m6">
                 <input
-                    placeholder="<?php echo __("S3 EndPoint, leave blank if you want to use the default Amazon AWS Service", 'xcloner-backup-and-restore') ?>"
-                    id="aws_endpoint" type="text" name="xcloner_aws_endpoint" class="validate"
-                    value="<?php echo get_option("xcloner_aws_endpoint") ?>" autocomplete="off">
+                        placeholder="<?php echo __("S3 EndPoint, leave blank if you want to use the default Amazon AWS Service", 'xcloner-backup-and-restore') ?>"
+                        id="aws_endpoint" type="text" name="xcloner_aws_endpoint" class="validate"
+                        value="<?php echo esc_attr(get_option("xcloner_aws_endpoint")) ?>" autocomplete="off">
             </div>
         </div>
         <div class="row">
@@ -95,8 +95,8 @@ if (!defined('WPINC')) {
             </div>
             <div class=" col s12 m6">
                 <input placeholder="<?php echo __("S3 Custom Region, ex: af-south-1", 'xcloner-backup-and-restore') ?>"
-                    id="aws_region" type="text" name="xcloner_aws_region" class="validate"
-                    value="<?php echo get_option("xcloner_aws_region") ?>" autocomplete="off">
+                       id="aws_region" type="text" name="xcloner_aws_region" class="validate"
+                       value="<?php echo esc_attr(get_option("xcloner_aws_region")) ?>" autocomplete="off">
             </div>
         </div>
     </div>
@@ -107,8 +107,8 @@ if (!defined('WPINC')) {
         </div>
         <div class=" col s12 m6">
             <input placeholder="<?php echo __("S3 Bucket Name", 'xcloner-backup-and-restore') ?>" id="aws_bucket_name"
-                type="text" name="xcloner_aws_bucket_name" class="validate"
-                value="<?php echo get_option("xcloner_aws_bucket_name") ?>" autocomplete="off">
+                   type="text" name="xcloner_aws_bucket_name" class="validate"
+                   value="<?php echo esc_attr(get_option("xcloner_aws_bucket_name")) ?>" autocomplete="off">
         </div>
     </div>
 
@@ -118,24 +118,24 @@ if (!defined('WPINC')) {
         </div>
         <div class=" col s12 m6">
             <input
-                placeholder="<?php echo __("S3 Prefix, use / ending to define a folder", 'xcloner-backup-and-restore') ?>"
-                id="aws_prefix" type="text" name="xcloner_aws_prefix" class="validate"
-                value="<?php echo get_option("xcloner_aws_prefix") ?>" autocomplete="off">
+                    placeholder="<?php echo __("S3 Prefix, use / ending to define a folder", 'xcloner-backup-and-restore') ?>"
+                    id="aws_prefix" type="text" name="xcloner_aws_prefix" class="validate"
+                    value="<?php echo esc_attr(get_option("xcloner_aws_prefix")) ?>" autocomplete="off">
         </div>
     </div>
 
-    <?=common_cleanup_html('aws')?>
+    <? echo common_cleanup_html('aws') ?>
 
     <div class="row">
         <div class="col s6 m4">
             <button class="btn waves-effect waves-light" type="submit" name="action" id="action"
-                value="aws"><?php echo __("Save Settings", 'xcloner-backup-and-restore') ?>
+                    value="aws"><?php echo __("Save Settings", 'xcloner-backup-and-restore') ?>
                 <i class="material-icons right">save</i>
             </button>
         </div>
         <div class="col s6 m4">
             <button class="btn waves-effect waves-light orange" type="submit" name="action" id="action" value="aws"
-                onclick="jQuery('#connection_check').val('1')"><?php echo __("Verify", 'xcloner-backup-and-restore') ?>
+                    onclick="jQuery('#connection_check').val('1')"><?php echo __("Verify", 'xcloner-backup-and-restore') ?>
                 <i class="material-icons right">import_export</i>
             </button>
         </div>

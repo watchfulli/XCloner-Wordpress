@@ -56,8 +56,8 @@ $backup_list = $xcloner_file_system->get_latest_backups();
                                         <?php echo __("Please select the target backup file to restore", 'xcloner-backup-and-restore') ?>
                                     </option>
                                     <?php foreach ($backup_list as $backup) : ?>
-                                        <option value="<?php echo $backup['file_name'] ?>">
-                                            <?php echo ($backup['file_name'] . ' (' . $backup['size'] . ')') ?>
+                                        <option value="<?php echo esc_attr($backup['file_name']) ?>">
+                                            <?php echo esc_html($backup['file_name'] . ' (' . $backup['size'] . ')') ?>
                                         </option>
                                     <?php endforeach; ?>
                                 </select>

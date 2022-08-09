@@ -52,9 +52,6 @@ use League\Flysystem\AwsS3v3\AwsS3Adapter;
 use Mhetreramesh\Flysystem\BackblazeAdapter;
 use BackblazeB2\Client as B2Client;
 
-#use Sabre\DAV\Client as SabreClient;
-#use League\Flysystem\WebDAV\WebDAVAdapter;
-
 use Microsoft\Graph\Graph;
 use NicolasBeauvais\FlysystemOneDrive\OneDriveAdapter;
 
@@ -663,6 +660,9 @@ class Xcloner_Remote_Storage
         return array($adapter, $filesystem);
     }
 
+    /**
+     * @throws Exception
+     */
     public function get_backblaze_filesystem()
     {
         $this->logger->info(sprintf("Creating the BACKBLAZE remote storage connection"), array(""));

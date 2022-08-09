@@ -10,7 +10,6 @@ use League\Flysystem\Adapter\Local;
 
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
-use mysqli;
 use splitbrain\PHPArchive\ArchiveCorruptedException;
 use splitbrain\PHPArchive\ArchiveIllegalCompressionException;
 use splitbrain\PHPArchive\ArchiveIOException;
@@ -24,6 +23,7 @@ class Xcloner_Restore
 
     /** @var Xcloner */
     private $xcloner_container;
+    private $xcloner_sanitization;
     /** @var Local */
     private $adapter;
     /** @var Filesystem */
@@ -49,6 +49,7 @@ class Xcloner_Restore
 
         $this->xcloner_container = $xcloner_container;
         $this->backup_storage_dir = $xcloner_container->get_xcloner_settings()->get_xcloner_store_path();
+        $this->xcloner_sanitization = $xcloner_container->get_xcloner_sanitization();
 
         $this->logger = new Logger('xcloner_restore');
         $logger_path = $this->get_logger_filename();
@@ -60,14 +61,13 @@ class Xcloner_Restore
 
         $this->logger->pushHandler(new StreamHandler($logger_path, Logger::DEBUG));
 
-
         $this->adapter = new Local($this->backup_storage_dir, LOCK_EX, 'SKIP_LINKS');
         $this->filesystem = new Filesystem($this->adapter, new Config([
             'disable_asserts' => true,
         ]));
 
-
         if (isset($_POST['API_ID'])) {
+            $request_id = $this->xcloner_sanitization->sanitize_input_as_string($_POST['API_ID']);
             $this->logger->info("Processing ajax request ID " . substr(filter_input(INPUT_POST, 'API_ID', FILTER_SANITIZE_STRING), 0, 15));
         }
     }
@@ -115,7 +115,6 @@ class Xcloner_Restore
     /**
      * Init method
      *
-     * @return mixed|void
      * @throws Exception
      */
     public function init()
@@ -148,88 +147,54 @@ class Xcloner_Restore
     /**
      * Write file method
      *
-     * @return bool|int
      * @throws Exception
      */
     public function write_file_action()
     {
-        if (isset($_POST['file'])) {
-            $target_file = filter_input(INPUT_POST, 'file', FILTER_SANITIZE_STRING);
+        $target_file = $this->xcloner_sanitization->sanitize_input_as_string($_POST['file']);
 
-            if (!$_POST['start']) {
-                $fp = fopen($target_file, "wb+");
-            } else {
-                $fp = fopen($target_file, "ab+");
-            }
-
-            if (!$fp) {
-                throw new Exception("Unable to open $target_file file for writing");
-            }
-
-            fseek($fp, $_POST['start']);
-
-            if (isset($_FILES['blob'])) {
-                $this->logger->debug(sprintf('Writing %s bytes to file %s starting position %s using FILES blob', filesize($_FILES['blob']['tmp_name']), $target_file, $_POST['start']));
-
-                $blob = file_get_contents($_FILES['blob']['tmp_name']);
-
-                if (!$bytes_written = fwrite($fp, $blob)) {
-                    throw new Exception("Unable to write data to file $target_file");
-                }
-
-                try {
-                    unlink($_FILES['blob']['tmp_name']);
-                } catch (Exception $e) {
-                    //silent message
-                }
-            } elseif (isset($_POST['blob'])) {
-                $this->logger->debug(sprintf('Writing %s bytes to file %s starting position %s using POST blob', strlen($_POST['blob']), $target_file, $_POST['start']));
-
-                $blob = $_POST['blob'];
-
-                if (!$bytes_written = fwrite($fp, $blob)) {
-                    throw new Exception("Unable to write data to file $target_file");
-                }
-            } else {
-                throw new Exception("Upload failed, did not receive any binary data");
-            }
-
-            fclose($fp);
+        if (empty($target_file)) {
+            throw new Exception('Empty file name');
         }
+
+        $start_position = $this->xcloner_sanitization->sanitize_input_as_int($_POST['start']);
+
+        if (!$start_position) {
+            $fp = fopen($target_file, "wb+");
+        } else {
+            $fp = fopen($target_file, "ab+");
+        }
+
+        if (!$fp) {
+            throw new Exception('Unable to open $target_file file for writing');
+        }
+
+        fseek($fp, $start_position);
+
+        if (isset($_FILES['blob'])) {
+            $this->logger->debug(sprintf('Writing %s bytes to file %s starting position %s using FILES blob', filesize($_FILES['blob']['tmp_name']), $target_file, $start_position));
+
+            $blob = file_get_contents($_FILES['blob']['tmp_name']);
+
+            if (!$bytes_written = fwrite($fp, $blob)) {
+                throw new Exception("Unable to write data to file $target_file");
+            }
+
+            @unlink($_FILES['blob']['tmp_name']);
+        } elseif (isset($_POST['blob'])) {
+            $blob = $this->xcloner_sanitization->sanitize_input_as_string($_POST['blob']);
+            $this->logger->debug(sprintf('Writing %s bytes to file %s starting position %s using POST blob', strlen($blob), $target_file, $start_position));
+
+            if (!$bytes_written = fwrite($fp, $blob)) {
+                throw new Exception("Unable to write data to file $target_file");
+            }
+        } else {
+            throw new Exception("Upload failed, did not receive any binary data");
+        }
+
+        fclose($fp);
 
         return $bytes_written;
-    }
-
-    /**
-     * Connect to mysql server method
-     *
-     * @param $remote_mysql_host
-     * @param $remote_mysql_user
-     * @param $remote_mysql_pass
-     * @param $remote_mysql_db
-     * @return mysqli
-     * @throws Exception
-     */
-    public function mysql_connect($remote_mysql_host, $remote_mysql_user, $remote_mysql_pass, $remote_mysql_db)
-    {
-        $this->logger->info(sprintf('Connecting to mysql database %s with %s@%s', $remote_mysql_db, $remote_mysql_user, $remote_mysql_host));
-
-        $mysqli = new mysqli($remote_mysql_host, $remote_mysql_user, $remote_mysql_pass, $remote_mysql_db);
-
-        if ($mysqli->connect_error) {
-            throw new Exception('Connect Error (' . $mysqli->connect_errno . ') '
-                . $mysqli->connect_error);
-        }
-
-        $mysqli->query("SET sql_mode='';");
-        $mysqli->query("SET foreign_key_checks = 0;");
-        if (isset($_REQUEST['charset_of_file']) and $_REQUEST['charset_of_file']) {
-            $mysqli->query("SET NAMES " . $_REQUEST['charset_of_file'] . "");
-        } else {
-            $mysqli->query("SET NAMES utf8;");
-        }
-
-        return $mysqli;
     }
 
     /**
@@ -239,10 +204,10 @@ class Xcloner_Restore
      */
     public function restore_mysql_backup_action()
     {
-        $mysqldump_file = filter_input(INPUT_POST, 'mysqldump_file', FILTER_SANITIZE_STRING);
+        $mysqldump_file = $this->xcloner_sanitization->sanitize_input_as_string($_POST['mysqldump_file']);
 
-        $execute_query = trim(stripslashes($_POST['query']));
-        $start = filter_input(INPUT_POST, 'start', FILTER_SANITIZE_NUMBER_INT);
+        $execute_query = $this->xcloner_sanitization->sanitize_input_as_string(trim(stripslashes($_POST['query'])));
+        $start = $this->xcloner_sanitization->sanitize_input_as_int($_POST['start']);
 
         $mysql_backup_file = $this->site_path . DS . $mysqldump_file;
 
@@ -283,10 +248,8 @@ class Xcloner_Restore
                     }
                 }
 
-                if (substr($line, strlen($line) - 2, strlen($line)) == ";\n") {
-                    $query .= $line;
-                } else {
-                    $query .= $line;
+                $query .= $line;
+                if (substr($line, strlen($line) - 2, strlen($line)) != ";\n") {
                     continue;
                 }
 
@@ -321,7 +284,7 @@ class Xcloner_Restore
             if (!feof($fp)) {
                 $return['finished'] = 0;
             } else {
-                $this->logger->info(sprintf("Mysql Import Done."));
+                $this->logger->info('Mysql Import Done.');
             }
 
             fclose($fp);
@@ -369,8 +332,6 @@ class Xcloner_Restore
 
     /**
      * Delete backup temporary folder
-     *
-     * @return bool
      */
     private function delete_backup_temporary_folder()
     {
@@ -391,8 +352,6 @@ class Xcloner_Restore
                 }
             }
         }
-
-        return true;
     }
 
     /**
@@ -612,6 +571,7 @@ class Xcloner_Restore
      *
      * @param $filename
      * @return bool
+     * @throws FileNotFoundException
      */
     public function is_encrypted_file($filename)
     {
@@ -634,7 +594,7 @@ class Xcloner_Restore
      */
     private function check_system()
     {
-        //check if i can write
+        //check if I can write
         $tmp_file = md5(time());
         if (!file_put_contents($tmp_file, "++")) {
             throw new Exception("Could not write to new host");
@@ -656,7 +616,7 @@ class Xcloner_Restore
     }
 
     /**
-     * Return bytes from human readable value
+     * Return bytes from human-readable value
      *
      * @param string $val
      * @return int
@@ -783,8 +743,6 @@ class Xcloner_Restore
                 }
             }
         );
-
-        return true;
     }
 
     /**

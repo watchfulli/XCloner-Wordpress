@@ -38,7 +38,7 @@ if (!defined('WPINC')) {
         <div class=" col s12 m6">
             <input placeholder="<?php echo __("OneDrive Client ID", 'xcloner-backup-and-restore') ?>"
                 id="onedrive_client_id" type="text" name="xcloner_onedrive_client_id" class="validate"
-                value="<?=get_option("xcloner_onedrive_client_id") ?>" autocomplete="off">
+                value="<?php echo esc_attr(get_option("xcloner_onedrive_client_id")) ?>" autocomplete="off">
         </div>
     </div>
 
@@ -50,7 +50,7 @@ if (!defined('WPINC')) {
         <div class=" col s12 m6">
             <input placeholder="<?php echo __("OneDrive Client Secret", 'xcloner-backup-and-restore') ?>"
                 id="onedrive_client_secret" type="text" name="xcloner_onedrive_client_secret" class="validate"
-                value="<?php echo str_repeat('*', strlen(get_option("xcloner_onedrive_client_secret"))) ?>"
+                value="<?php echo esc_attr(str_repeat('*', strlen(get_option("xcloner_onedrive_client_secret")))) ?>"
                 autocomplete="off">
         </div>
     </div>
@@ -62,7 +62,7 @@ if (!defined('WPINC')) {
         <div class=" col s12 m6">
             <a class="btn" target="_blank" id="onedrive_authorization_click" onclick="jQuery(this).attr('href', jQuery(this).attr('target_href') + '&client_id=' + jQuery('#onedrive_client_id').val());
                                        jQuery('.onedrive-action').click()" href="#"
-                target_href="https://login.microsoftonline.com/common/oauth2/v2.0/authorize?scope=offline_access files.readwrite.all  files.read files.read.all files.readwrite&response_type=code&redirect_uri=<?=get_admin_url('')?>"><?php echo sprintf(__('Authorize OneDrive', 'xcloner-backup-and-restore')) ?></a>
+                target_href="https://login.microsoftonline.com/common/oauth2/v2.0/authorize?scope=offline_access files.readwrite.all  files.read files.read.all files.readwrite&response_type=code&redirect_uri=<?php echo get_admin_url('')?>"><?php echo sprintf(__('Authorize OneDrive', 'xcloner-backup-and-restore')) ?></a>
 
         </div>
     </div>
@@ -74,11 +74,11 @@ if (!defined('WPINC')) {
         <div class=" col s12 m6">
             <input placeholder="<?php echo __("OneDrive Storage Folder Path", 'xcloner-backup-and-restore') ?>"
                 id="onedrive_path" type="text" name="xcloner_onedrive_path" class="validate"
-                value="<?php echo get_option("xcloner_onedrive_path") ?>">
+                value="<?php echo esc_attr(get_option("xcloner_onedrive_path")) ?>">
         </div>
     </div>
 
-    <?=common_cleanup_html('onedrive')?>
+    <?php echo common_cleanup_html('onedrive')?>
 
     <div class="row">
         <div class="col s6 m4">

@@ -38,7 +38,7 @@ if (!defined('WPINC')) {
         <div class=" col s12 m6">
             <input placeholder="<?php echo __("Dropbox Access Token", 'xcloner-backup-and-restore') ?>"
                 id="dropbox_access_token" type="text" name="xcloner_dropbox_access_token" class="validate"
-                value="<?php echo get_option("xcloner_dropbox_access_token") ?>" autocomplete="off">
+                value="<?php echo esc_attr(get_option("xcloner_dropbox_access_token")) ?>" autocomplete="off">
         </div>
     </div>
 
@@ -50,7 +50,7 @@ if (!defined('WPINC')) {
         <div class=" col s12 m6">
             <input placeholder="<?php echo __("Dropbox App Secret", 'xcloner-backup-and-restore') ?>"
                 id="dropbox_app_secret" type="text" name="xcloner_dropbox_app_secret" class="validate"
-                value="<?php echo str_repeat('*', strlen(get_option("xcloner_dropbox_app_secret"))) ?>"
+                value="<?php echo esc_attr(str_repeat('*', strlen(get_option("xcloner_dropbox_app_secret")))) ?>"
                 autocomplete="off">
         </div>
     </div>
@@ -62,11 +62,11 @@ if (!defined('WPINC')) {
         <div class=" col s12 m6">
             <input placeholder="<?php echo __("Dropbox Prefix", 'xcloner-backup-and-restore') ?>" id="dropbox_prefix"
                 type="text" name="xcloner_dropbox_prefix" class="validate"
-                value="<?php echo get_option("xcloner_dropbox_prefix") ?>">
+                value="<?php echo esc_attr(get_option("xcloner_dropbox_prefix")) ?>">
         </div>
     </div>
 
-    <?=common_cleanup_html('dropbox')?>
+    <?php echo common_cleanup_html('dropbox')?>
 
     <div class="row">
         <div class="col s6 m4">

@@ -81,7 +81,7 @@ class Xcloner_Settings
      */
     public function get_xcloner_start_path()
     {
-        if (!$this->get_xcloner_option('xcloner_start_path') or !is_dir(/** @scrutinizer ignore-type */$this->get_xcloner_option('xcloner_start_path'))) {
+        if (!$this->get_xcloner_option('xcloner_start_path') || !is_dir(/** @scrutinizer ignore-type */$this->get_xcloner_option('xcloner_start_path'))) {
             $path = realpath(ABSPATH);
         } else {
             $path = $this->get_xcloner_option('xcloner_start_path');
@@ -936,13 +936,13 @@ class Xcloner_Settings
             <?php else:?>
             <div class="input-field col s10 m5 l3">
             <?php endif?>
-                <input class="validate" <?php echo ($disabled) ? "disabled" : "" ?> name="<?php echo $fieldname ?>"
-                       id="<?php echo $fieldname ?>" type="text" class="validate"
+                <input class="validate" <?php echo ($disabled) ? "disabled" : "" ?> name="<?php echo esc_attr($fieldname) ?>"
+                       id="<?php echo esc_attr($fieldname) ?>" type="text" class="validate"
                        value="<?php echo isset($value) ? esc_attr($value) : ''; ?>">
             </div>
             <div class="col s2 m2 ">
                 <a class="btn-floating tooltipped btn-small" data-position="center" data-delay="50"
-                   data-tooltip="<?php echo $label ?>" data-tooltip-id=""><i class="material-icons">help_outline</i></a>
+                   data-tooltip="<?php echo esc_attr($label) ?>" data-tooltip-id=""><i class="material-icons">help_outline</i></a>
             </div>
         </div>
 
@@ -973,13 +973,13 @@ class Xcloner_Settings
         // output the field?>
         <div class="row">
             <div class="input-field col s10 m10 l8">
-                <input class="validate" <?php echo ($disabled) ? "disabled" : "" ?> name="<?php echo $fieldname ?>"
-                       id="<?php echo $fieldname ?>" type="password" class="validate"
+                <input class="validate" <?php echo ($disabled) ? "disabled" : "" ?> name="<?php echo esc_attr($fieldname) ?>"
+                       id="<?php echo esc_attr($fieldname) ?>" type="password" class="validate"
                        value="<?php echo isset($value) ? esc_attr($value) : ''; ?>">
             </div>
             <div class="col s2 m2 ">
                 <a class="btn-floating tooltipped btn-small" data-position="left" data-delay="50"
-                   data-tooltip="<?php echo $label ?>" data-tooltip-id=""><i class="material-icons">help_outline</i></a>
+                   data-tooltip="<?php echo esc_attr($label) ?>" data-tooltip-id=""><i class="material-icons">help_outline</i></a>
             </div>
         </div>
 
@@ -1005,13 +1005,13 @@ class Xcloner_Settings
         // output the field?>
         <div class="row">
             <div class="input-field col s10 m10 l8">
-                <textarea class="validate" <?php echo ($disabled) ? "disabled" : "" ?> name="<?php echo $fieldname ?>"
-                          id="<?php echo $fieldname ?>" type="text" class="validate"
+                <textarea class="validate" <?php echo ($disabled) ? "disabled" : "" ?> name="<?php echo esc_attr($fieldname) ?>"
+                          id="<?php echo esc_attr($fieldname) ?>" type="text" class="validate"
                           value=""><?php echo isset($value) ? esc_attr($value) : ''; ?></textarea>
             </div>
             <div class="col s2 m2 ">
                 <a class="btn-floating tooltipped btn-small" data-position="center" data-html="true" data-delay="50"
-                   data-tooltip="<?php echo $label ?>" data-tooltip-id=""><i class="material-icons">help_outline</i></a>
+                   data-tooltip="<?php echo esc_attr($label) ?>" data-tooltip-id=""><i class="material-icons">help_outline</i></a>
             </div>
             <div class="col s12">
                 <ul class="xcloner_regex_exclude_limit">
@@ -1075,13 +1075,13 @@ class Xcloner_Settings
         // output the field?>
         <div class="row">
             <div class="input-field col s10 m5 l3">
-                <input class="validate" <?php echo ($disabled) ? "disabled" : "" ?> name="<?php echo $fieldname ?>"
-                       id="<?php echo $fieldname ?>" type="number" class="validate"
+                <input class="validate" <?php echo ($disabled) ? "disabled" : "" ?> name="<?php echo esc_attr($fieldname) ?>"
+                       id="<?php echo esc_attr($fieldname) ?>" type="number" class="validate"
                        value="<?php echo isset($value) ? esc_attr($value) : ''; ?>">
             </div>
             <div class="col s2 m2 ">
                 <a class="btn-floating tooltipped btn-small" data-html="true" data-position="center" data-delay="50"
-                   data-tooltip="<?php echo $label ?>" data-tooltip-id=""><i class="material-icons">help_outline</i></a>
+                   data-tooltip="<?php echo esc_attr($label) ?>" data-tooltip-id=""><i class="material-icons">help_outline</i></a>
             </div>
         </div>
 
@@ -1100,16 +1100,16 @@ class Xcloner_Settings
         <div class="row">
             <div class="input-field col s10 m10 l8">
                 <p class="range-field">
-                    <input <?php echo ($disabled) ? "disabled" : "" ?> type="range" name="<?php echo $fieldname ?>"
-                                                                         id="<?php echo $fieldname ?>"
-                                                                         min="<?php echo $range_start ?>"
-                                                                         max="<?php echo $range_end ?>"
+                    <input <?php echo ($disabled) ? "disabled" : "" ?> type="range" name="<?php echo esc_attr($fieldname) ?>"
+                                                                         id="<?php echo esc_attr($fieldname) ?>"
+                                                                         min="<?php echo esc_attr($range_start) ?>"
+                                                                         max="<?php echo esc_attr($range_end) ?>"
                                                                          value="<?php echo isset($value) ? esc_attr($value) : ''; ?>"/>
                 </p>
             </div>
             <div class="col s2 m2 ">
                 <a class="btn-floating tooltipped btn-small" data-html="true" data-position="center" data-delay="50"
-                   data-tooltip="<?php echo $label ?>" data-tooltip-id=""><i class="material-icons">help_outline</i></a>
+                   data-tooltip="<?php echo esc_attr($label) ?>" data-tooltip-id=""><i class="material-icons">help_outline</i></a>
             </div>
         </div>
 		<?php
@@ -1129,8 +1129,8 @@ class Xcloner_Settings
                     <label>
                         Off
                         <input <?php echo ($disabled) ? "disabled" : "" ?> type="checkbox"
-                                                                             name="<?php echo $fieldname ?>"
-                                                                             id="<?php echo $fieldname ?>"
+                                                                             name="<?php echo esc_attr($fieldname) ?>"
+                                                                             id="<?php echo esc_attr($fieldname) ?>"
                                                                              value="1" <?php echo ($value) ? 'checked="checked"' : ''; ?>
                         ">
                         <span class="lever"></span>
@@ -1140,7 +1140,7 @@ class Xcloner_Settings
             </div>
             <div class="col s2 m2">
                 <a class="btn-floating tooltipped btn-small" data-position="center" data-delay="50"
-                   data-tooltip="<?php echo $label ?>" data-tooltip-id=""><i class="material-icons">help_outline</i></a>
+                   data-tooltip="<?php echo esc_attr($label) ?>" data-tooltip-id=""><i class="material-icons">help_outline</i></a>
             </div>
         </div>
 		<?php

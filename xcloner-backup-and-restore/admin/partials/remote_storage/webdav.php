@@ -38,7 +38,7 @@ if (!defined('WPINC')) {
                             <div class=" col s12 m6">
                                 <input placeholder="<?php echo __("WebDAV Service Url like https://webdav.yandex.com", 'xcloner-backup-and-restore') ?>"
                                        id="webdav_url" type="text" name="xcloner_webdav_url" class="validate"
-                                       value="<?php echo get_option("xcloner_webdav_url") ?>" autocomplete="off">
+                                       value="<?php echo esc_attr(get_option("xcloner_webdav_url")) ?>" autocomplete="off">
                             </div>
                         </div>
 
@@ -49,7 +49,7 @@ if (!defined('WPINC')) {
                             <div class=" col s12 m6">
                                 <input placeholder="<?php echo __("WebDAV Username", 'xcloner-backup-and-restore') ?>"
                                        id="webdav_username" type="text" name="xcloner_webdav_username" class="validate"
-                                       value="<?php echo get_option("xcloner_webdav_username") ?>" autocomplete="off">
+                                       value="<?php echo esc_attr(get_option("xcloner_webdav_username")) ?>" autocomplete="off">
                             </div>
                         </div>
 
@@ -61,7 +61,7 @@ if (!defined('WPINC')) {
                                 <input placeholder="<?php echo __("WebDAV Password", 'xcloner-backup-and-restore') ?>"
                                        id="webdav_password" type="text" name="xcloner_webdav_password"
                                        class="validate"
-                                       value="<?php echo str_repeat('*', strlen(get_option("xcloner_webdav_password"))) ?>"
+                                       value="<?php echo esc_attr(str_repeat('*', strlen(get_option("xcloner_webdav_password")))) ?>"
                                        autocomplete="off">
                             </div>
                         </div>
@@ -74,12 +74,12 @@ if (!defined('WPINC')) {
                                 <input placeholder="<?php echo __("WebDAV Target Path", 'xcloner-backup-and-restore') ?>"
                                        id="webdav_target_folder" type="text" name="xcloner_webdav_target_folder"
                                        class="validate"
-                                       value="<?php echo get_option("xcloner_webdav_target_folder") ?>"
+                                       value="<?php echo esc_attr(get_option("xcloner_webdav_target_folder")) ?>"
                                        autocomplete="off">
                             </div>
                         </div>
 
-                        <?=common_cleanup_html('webdav')?>
+                        <?php echo common_cleanup_html('webdav')?>
 
                         <div class="row">
                             <div class="col s6 m4">
