@@ -17,7 +17,7 @@ $available_storages = $xcloner_remote_storage->get_available_storages();
 ?>
 
 <script>
-    var storage_selection = '<?=$storage_selection?>';
+    var storage_selection = '<?php echo $storage_selection?>';
 </script>
 
 <div class="row">
@@ -133,9 +133,9 @@ $available_storages = $xcloner_remote_storage->get_available_storages();
                     <?php echo __("This option will decrypt your backup archive with your current XCloner Encryption Key or the key provided below, requires PHP openssl library installed.", 'xcloner-backup-and-restore') ?>
                 </p>
                 <p>
-                    <?=__('Provide Alternative Decryption Key:')?>
+                    <?php echo __('Provide Alternative Decryption Key:')?>
                     <input type="text" name="decryption_key" id="decryption_key"
-                        placeholder="<?=__('Decryption Key', 'xcloner-backup-and-restore')?>" />
+                        placeholder="<?php echo __('Decryption Key', 'xcloner-backup-and-restore')?>" />
                 </p>
                 <p class="center-align">
                     <a

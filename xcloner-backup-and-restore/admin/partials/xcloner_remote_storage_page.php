@@ -165,8 +165,8 @@ $common_cleanup_html = ob_get_contents();
 
         //var remote_storage = new Xcloner_Remote_Storage();
 
-        var watchful_gdrive_redirect_uri = "<?=$remote_storage::GDRIVE_REDIRECT_URL_WATCHFUL?>";
-        var default_gdrive_redirect_uri = "<?=$remote_storage::GDRIVE_REDIRECT_URL?>";
+        var watchful_gdrive_redirect_uri = "<?php echo $remote_storage::GDRIVE_REDIRECT_URL_WATCHFUL?>";
+        var default_gdrive_redirect_uri = "<?php echo $remote_storage::GDRIVE_REDIRECT_URL?>";
 
         checkEndpoint()
         jQuery("#aws_region").on("change", function () {
