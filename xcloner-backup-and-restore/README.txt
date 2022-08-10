@@ -5,7 +5,7 @@ Tags: backup, database backup, cloud backup, WordPress backup, WordPress migrati
 Requires at least: 5.1
 Requires PHP: 7.3
 Tested up to: 6.0
-Stable tag: 4.4.1
+Stable tag: 4.4.2
 
 
 XCloner is a backup plugin that allows you to safely back up and restore your WordPress sites. You can send site backups to SFTP, Dropbox, Amazon, Google Drive, Backblaze and other locations.
@@ -116,6 +116,11 @@ Of course, schedules can be adjusted accordingly to how often you update your si
 11. Generate Backup Screen
 
 == Changelog ==
+
+= 4.4.2 =
+* fix: https://github.com/watchfulli/XCloner-Wordpress/issues/227
+* fix: https://github.com/watchfulli/XCloner-Wordpress/issues/231
+
 
 = 4.4.1 =
 * minor code review
