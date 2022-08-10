@@ -646,10 +646,8 @@ class Xcloner_Api
         $this->send_response($data, 0);
     }
 
-    /*
-     *
-     * Get schedule by id API
-     *
+    /**
+     * @throws Exception
      */
     public function get_schedule_by_id()
     {
@@ -670,11 +668,6 @@ class Xcloner_Api
         $this->send_response($data);
     }
 
-    /*
-     *
-     * Get Schedule list API
-     *
-     */
     public function get_scheduler_list()
     {
         $return = array();

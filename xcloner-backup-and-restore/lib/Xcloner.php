@@ -755,7 +755,7 @@ class Xcloner
     }
 
     /**
-     * Run the loader to execute all of the hooks with WordPress.
+     * Run the loader to execute all the hooks with WordPress.
      *
      * @since    1.0.0
      */
@@ -800,7 +800,7 @@ class Xcloner
             $data['id'] = $profile_id;
         }
 
-        $this->xcloner_scheduler->xcloner_scheduler_callback($data['id'], $data, $this);
+        $this->xcloner_scheduler->xcloner_scheduler_callback($data['id'], $data);
     }
 
     /**

@@ -202,13 +202,13 @@ function do_cli_execution($args = array(), $opts = array())
 
     // start schedule based on profile name
     if (!empty($profile_name)) {
-        $profile = ($xcloner_backup->get_xcloner_scheduler()->get_schedule_by_id_or_name($profile_name));
-
-        if ($profile['id']) {
-            $xcloner_backup->execute_backup($profile['id']);
-        } else {
+        try {
+            $profile = $xcloner_backup->get_xcloner_scheduler()->get_schedule_by_id_or_name($profile_name);
+        } catch (Exception $e) {
             die(sprintf('Could not find profile %s', $profile_name));
         }
+
+        $xcloner_backup->execute_backup($profile['id']);
     }
 }
 
