@@ -163,6 +163,7 @@ class Xcloner_Remote_Storage
             "backblaze_account_id" => "string",
             "backblaze_application_key" => "raw",
             "backblaze_bucket_name" => "string",
+            "backblaze_bucket_id" => "string",
             "backblaze_cleanup_retention_limit_days" => "float",
             "backblaze_cleanup_exclude_days" => "string",
             "backblaze_cleanup_retention_limit_archives" => "int",
@@ -671,7 +672,14 @@ class Xcloner_Remote_Storage
             $this->xcloner_settings->get_xcloner_option("xcloner_backblaze_account_id"),
             $this->xcloner_settings->get_xcloner_option("xcloner_backblaze_application_key")
         );
-        $adapter = new BackblazeAdapter($client, $this->xcloner_settings->get_xcloner_option("xcloner_backblaze_bucket_name"));
+
+        $bucket_id = $this->xcloner_settings->get_xcloner_option("xcloner_backblaze_bucket_id");
+
+        $adapter = new BackblazeAdapter(
+            $client,
+            $this->xcloner_settings->get_xcloner_option("xcloner_backblaze_bucket_name"),
+            empty($bucket_id) ? null : $bucket_id,
+        );
 
         $filesystem = new Filesystem($adapter, new Config([
             'disable_asserts' => true,
