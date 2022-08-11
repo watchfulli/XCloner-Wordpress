@@ -61,10 +61,10 @@ In these tests, use a very a simple backup that will complete quickly and have a
 - [ ] Check the correct recurrence of a scheduled Profile based on the Wordpress cronjob execution
 
 # Restore Backups
-- [ ] Restore all files from a local backup
-- [ ] Restore database from a local backup
-- [ ] Restore all files from a remote location
-- [ ] Restore database from a remote location
+- [ ] Restore all files from a local backup. 
+- [ ] Restore database from a local backup.
+- [ ] Migrate files from a backup to a different domain.
+- [ ] Migrate the database from a backup to a different domain.
 
 # Watchful Backups
 - [ ] Site connects/validates in Watchful (test `Refresh data` success).
