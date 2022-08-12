@@ -6,33 +6,19 @@ labels: ''
 assignees: ''
 
 ---
+# Observed Behaviour
+Describe the observed behaviour.
 
-**Describe the bug**
-A clear and concise description of what the bug is.
+# Expected/desired Behaviour
+Describe the expected/desired behaviour. Include a drawing of the end result if UI related.
 
-**To Reproduce**
-Steps to reproduce the behavior:
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
+# Specific site/account to reproduce
+Note which Watchful account this was observed on, and/or what website URL was affected. Be sure to mention if the staging or production sites were used.
 
-**Expected behavior**
-A clear and concise description of what you expected to happen.
+# Basic server & app details
+ - XCloner version: 
+ - PHP version:
+ - WordPress version:
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
-
-**Desktop (please complete the following information):**
- - OS: [e.g. iOS]
- - Browser [e.g. chrome, safari]
- - Version [e.g. 22]
-
-**Smartphone (please complete the following information):**
- - Device: [e.g. iPhone6]
- - OS: [e.g. iOS8.1]
- - Browser [e.g. stock browser, safari]
- - Version [e.g. 22]
-
-**Additional context**
-Add any other context about the problem here.
+# Attachments
+Attach any images, screenshots, and/or files needed.
