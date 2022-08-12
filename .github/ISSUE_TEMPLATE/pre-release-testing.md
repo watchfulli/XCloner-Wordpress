@@ -1,22 +1,14 @@
----
-name: Pre-release testing
-about: Use this checklist template when all issues for a milestone are complete.
-title: ''
-labels: testing
-assignees: jimiero
-
----
-
 # Settings
 - [ ] Basic Settings can be saved
 - [ ] Remote Storages settings show `VALID` message when saved.
-  - [ ] WebDav
-  - [ ] SFTP
-  - [ ] Dropbox
-  - [ ] Azure Blob
   - [ ] Amazon S3
+  - [ ] Azure Blob
   - [ ] Backblaze
   - [ ] BOX
+  - [ ] Dropbox
+  - [ ] Google Drive
+  - [ ] SFTP
+  - [ ] WebDav
 
 # Generate Local Backup
 - [ ] Full backup with default settings completes successfully.
