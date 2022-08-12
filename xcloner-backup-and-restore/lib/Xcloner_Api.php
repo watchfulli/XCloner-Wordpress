@@ -32,6 +32,7 @@ namespace Watchfulli\XClonerCore;
 use Error;
 use Exception;
 use League\Flysystem\Config;
+use League\Flysystem\FileExistsException;
 use League\Flysystem\FileNotFoundException;
 use League\Flysystem\Filesystem;
 use League\Flysystem\Adapter\Local;
@@ -138,16 +139,19 @@ class Xcloner_Api
             $this->process_params();
         }
 
-        if (isset($_POST['id'])) {
+        $id = isset($_POST['id']) ? $this->xcloner_sanitization->sanitize_input_as_int($_POST['id']) : null;
 
-            $_POST['id'] = $this->xcloner_sanitization->sanitize_input_as_int($_POST['id']);
+
+        if ($id !== null) {
             $this->form_params['backup_params']['backup_name'] = $this->xcloner_sanitization->sanitize_input_as_string($_POST['backup_name']);
             $this->form_params['backup_params']['email_notification'] = $this->xcloner_sanitization->sanitize_input_as_string($_POST['email_notification']);
+
             if ($_POST['diff_start_date']) {
                 $this->form_params['backup_params']['diff_start_date'] = strtotime($this->xcloner_sanitization->sanitize_input_as_string($_POST['diff_start_date']));
             } else {
                 $this->form_params['backup_params']['diff_start_date'] = "";
             }
+
             $this->form_params['backup_params']['schedule_name'] = $this->xcloner_sanitization->sanitize_input_as_string($_POST['schedule_name']);
 
             if (isset($_POST['backup_encrypt'])) {
@@ -157,10 +161,10 @@ class Xcloner_Api
             $this->form_params['backup_params']['start_at'] = strtotime($_POST['schedule_start_date']);
             $this->form_params['backup_params']['schedule_frequency'] = $this->xcloner_sanitization->sanitize_input_as_string($_POST['schedule_frequency']);
             $this->form_params['backup_params']['schedule_storage'] = $this->xcloner_sanitization->sanitize_input_as_string($_POST['schedule_storage']);
-            if (!isset($_POST['backup_delete_after_remote_transfer'])) {
-                $_POST['backup_delete_after_remote_transfer'] = 0;
-            }
-            $this->form_params['backup_params']['backup_delete_after_remote_transfer'] = $this->xcloner_sanitization->sanitize_input_as_int($_POST['backup_delete_after_remote_transfer']);
+
+            $backup_delete_after_remote_transfer = isset($_POST['backup_delete_after_remote_transfer']) ? $this->xcloner_sanitization->sanitize_input_as_int($_POST['backup_delete_after_remote_transfer']) : 0;
+
+            $this->form_params['backup_params']['backup_delete_after_remote_transfer'] = $backup_delete_after_remote_transfer;
 
             $this->form_params['database'] = (stripslashes($this->xcloner_sanitization->sanitize_input_as_raw($_POST['table_params'])));
             $this->form_params['excluded_files'] = (stripslashes($this->xcloner_sanitization->sanitize_input_as_raw($_POST['excluded_files'])));
@@ -192,11 +196,9 @@ class Xcloner_Api
 
             $schedule['start_at'] = $this->form_params['backup_params']['start_at'];
 
-            if (!isset($_POST['status'])) {
-                $schedule['status'] = 0;
-            } else {
-                $schedule['status'] = $this->xcloner_sanitization->sanitize_input_as_int($_POST['status']);
-            }
+            $status = isset($_POST['status']) ? $this->xcloner_sanitization->sanitize_input_as_int($_POST['status']) : 0;
+
+            $schedule['status'] = $status;
         } else {
             $schedule['status'] = 1;
             $schedule['start_at'] = strtotime($this->form_params['backup_params']['schedule_start_date'] .
@@ -213,7 +215,6 @@ class Xcloner_Api
                 }
 
                 foreach ($tables as $key => $table) {
-                    //echo $this->form_params['database'][$db][$key];
                     $this->form_params['database'][$db][$key] = substr($table, strlen($db) + 1);
                 }
             }
@@ -234,11 +235,10 @@ class Xcloner_Api
             $this->form_params['backup_params']['schedule_storage'] = "";
         }
         $schedule['remote_storage'] = $this->form_params['backup_params']['schedule_storage'];
-        //$schedule['backup_type'] = $this->form_params['backup_params']['backup_type'];
 
         $schedule['params'] = json_encode($this->form_params);
 
-        if (!isset($_POST['id'])) {
+        if ($id === null) {
             $this->xcloner_database->insert(
                 $this->xcloner_settings->get_table_prefix() . 'xcloner_scheduler',
                 $schedule,
@@ -251,21 +251,21 @@ class Xcloner_Api
             $this->xcloner_database->update(
                 $this->xcloner_settings->get_table_prefix() . 'xcloner_scheduler',
                 $schedule,
-                array('id' => $_POST['id']),
+                array('id' => $id),
                 array(
                     '%s',
                     '%s'
                 )
             );
         }
-        if (isset($_POST['id'])) {
-            $scheduler->update_cron_hook($_POST['id']);
+
+        if ($id !== null) {
+            $scheduler->update_cron_hook($id);
         }
 
         if ($this->xcloner_database->last_error) {
             $response['error'] = 1;
-            $response['error_message'] = $this->xcloner_database->last_error/*."--".$this->xcloner_database->last_query*/
-            ;
+            $response['error_message'] = $this->xcloner_database->last_error;
         }
 
         $scheduler->update_wp_cron_hooks();
@@ -274,11 +274,6 @@ class Xcloner_Api
         $this->send_response($response);
     }
 
-    /*
-     *
-     * Backup Files API
-     *
-     */
     public function backup_files()
     {
         $data = array();
@@ -286,13 +281,12 @@ class Xcloner_Api
 
         $this->check_access();
 
-        $init = (int)$_POST['init'];
+        $init = (int)$this->xcloner_sanitization->sanitize_input_as_int($_POST['init']);
 
         $this->process_params();
 
         $data['finished'] = 1;
 
-        //$return = $this->archive_system->start_incremental_backup($this->form_params['backup_params'], $this->form_params['extra'], $init);
         try {
             $data = $this->archive_system->start_incremental_backup(
                 $this->form_params['backup_params'],
@@ -343,10 +337,9 @@ class Xcloner_Api
         $this->send_response($data);
     }
 
-    /*
-     *
-     * Backup Database API
-     *
+    /**
+     * @throws FileNotFoundException
+     * @throws FileExistsException
      */
     public function backup_database()
     {
@@ -354,7 +347,7 @@ class Xcloner_Api
 
         $this->check_access();
 
-        $init = (int)$_POST['init'];
+        $init = (int)$this->xcloner_sanitization->sanitize_input_as_int($_POST['init']);
 
         $this->process_params();
 
@@ -415,7 +408,7 @@ class Xcloner_Api
         }
 
         if (isset($params->hash)) {
-            $this->xcloner_settings->set_hash($params->hash);
+            $this->xcloner_settings->set_hash($this->xcloner_sanitization->sanitize_input_as_string($params->hash));
         }
 
         $this->form_params['extra'] = array();
@@ -994,7 +987,7 @@ class Xcloner_Api
                     <ul class="multipart">
                         <?php foreach ($file_info['childs'] as $child): ?>
                             <li>
-                                <?php echo $child[0] ?> (<?php echo esc_html(size_format($child[2])) ?>)
+                                <?php echo esc_html($child[0]) ?> (<?php echo esc_html(size_format($child[2])) ?>)
                                 <?php
                                 $child_exists_on_local_storage = true;
                                 if ($storage_selection) {

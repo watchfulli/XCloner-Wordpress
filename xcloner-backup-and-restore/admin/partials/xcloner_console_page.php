@@ -16,9 +16,13 @@ $logger_content   = $logger->getLastDebugLines();
                 <div class="collapsible-header active"><i class="material-icons">bug_report</i>XCloner Debugger
                 </div>
                 <div class="collapsible-body">
-                    <div class="console" id="xcloner-console"><?php if (isset($logger_content)) {
-								echo implode("<br />\n", $logger_content);
-							} ?></div>
+                    <div class="console" id="xcloner-console">
+                        <?php
+                        if (isset($logger_content)) {
+								echo implode("<br />\n", esc_html($logger_content));
+							}
+                        ?>
+                    </div>
                 </div>
             </li>
         </ul>
@@ -26,9 +30,6 @@ $logger_content   = $logger->getLastDebugLines();
             jQuery(document).ready(function () {
                 var objDiv = document.getElementById("xcloner-console");
                 objDiv.scrollTop = objDiv.scrollHeight;
-                /*setInterval(function(){
-						getXclonerLog();
-					}, 2000);*/
             })
         </script>
         <?php endif; ?>

@@ -587,12 +587,14 @@ class Xcloner
             $is_refresh = true;
         }
 
-        if (isset($_REQUEST['code']) && $_REQUEST['code']) {
+        $code = isset($_REQUEST['code']) ? $this->xcloner_sanitization->sanitize_input_as_string($_REQUEST['code']) : null;
+
+        if ($code !== null) {
             $parameters = array(
                 'client_id' => get_option("xcloner_onedrive_client_id"),
                 'client_secret' => get_option("xcloner_onedrive_client_secret"),
                 'redirect_uri' => get_admin_url(),
-                'code' => $_REQUEST['code'],
+                'code' => $code,
                 'grant_type' => 'authorization_code'
             );
         }
