@@ -315,7 +315,7 @@ class Xcloner_Restore
 
         global $wpdb;
 
-        $wpdb->select($this->xcloner_container->get_xcloner_settings()->get_db_database());
+        $wpdb->select($wpdb->dbname);
 
         $wpdb->hide_errors();
         if ($result = $wpdb->get_var("SELECT count(*) FROM " . $wpdb->prefix . "usermeta2")) {

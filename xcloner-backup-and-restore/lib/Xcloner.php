@@ -479,7 +479,7 @@ class Xcloner
         $schedule['name'] = "pre_auto_update";
         $schedule['recurrence'] = "single";
         $schedule['excluded_files'] = json_encode($exclude_files);
-        $schedule['table_params'] = json_encode(array("#" => array($this->get_xcloner_settings()->get_db_database())));
+        $schedule['table_params'] = json_encode(array("#" => array($this->get_xcloner_database()->dbname)));
 
         $schedule['backup_params'] = new stdClass();
         $schedule['backup_params']->email_notification = get_option('admin_email');

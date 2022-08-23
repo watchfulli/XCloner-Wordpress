@@ -258,64 +258,6 @@ class Xcloner_Settings
     }
 
     /**
-     * Get Database Hostname
-     *
-     */
-    public function get_db_hostname()
-    {
-        if (!$data = $this->get_xcloner_option('xcloner_mysql_hostname')) {
-            // $data = $this->xcloner_database->getDbHost();
-        }
-
-        return $data;
-    }
-
-    /**
-     * Get Database Username
-     *
-     */
-    public function get_db_username()
-    {
-        if (!$data = $this->get_xcloner_option('xcloner_mysql_username')) {
-            //$data = $this->xcloner_database->getDbUser();
-        }
-
-        return $data;
-    }
-
-    /**
-     * Get Database Password
-     *
-     */
-    public function get_db_password()
-    {
-        if (!$data = $this->get_xcloner_option('xcloner_mysql_password')) {
-            //$data = $this->xcloner_database->getDbPassword();
-        }
-
-        return $data;
-    }
-
-    /**
-     * Get Database Name
-     *
-     */
-    public function get_db_database()
-    {
-        return $this->get_xcloner_option('xcloner_mysql_database');
-    }
-
-    /**
-     * Get Database Tables Prefix
-     *
-     * @return string
-     */
-    public function get_table_prefix()
-    {
-        return $this->get_xcloner_option('xcloner_mysql_prefix');
-    }
-
-    /**
      * @param string $option
      */
     public function get_xcloner_option($option = "")
@@ -342,11 +284,6 @@ class Xcloner_Settings
 
     public function settings_init()
     {
-        //ADDING MISSING OPTIONS
-        if (!$this->get_xcloner_option('xcloner_mysql_settings_page')) {
-            update_option('xcloner_mysql_settings_page', '');
-        }
-
         if (!$this->get_xcloner_option('xcloner_cron_settings_page')) {
             update_option('xcloner_cron_settings_page', '');
         }
@@ -367,13 +304,6 @@ class Xcloner_Settings
             __(' '),
             array($this, 'xcloner_settings_section_cb'),
             'xcloner_settings_page'
-        );
-        //MYSQL section
-        add_settings_section(
-            'xcloner_mysql_settings_group',
-            __(' '),
-            array($this, 'xcloner_settings_section_cb'),
-            'xcloner_mysql_settings_page'
         );
 
         //SYSTEM section
@@ -526,126 +456,6 @@ class Xcloner_Settings
             )
         );
 
-        //REGISTERING THE 'MYSQL SECTION' FIELDS
-        register_setting('xcloner_mysql_settings_group', 'xcloner_enable_mysql_backup', array(
-            $this->xcloner_sanitization,
-            "sanitize_input_as_int"
-        ));
-        add_settings_field(
-            'xcloner_enable_mysql_backup',
-            __('Enable Mysql Backup', 'xcloner-backup-and-restore'),
-            array($this, 'do_form_switch_field'),
-            'xcloner_mysql_settings_page',
-            'xcloner_mysql_settings_group',
-            array(
-                'xcloner_enable_mysql_backup',
-                __('Enable Mysql Backup Option. If you don\'t want to backup the database, you can disable this.', 'xcloner-backup-and-restore')
-            )
-        );
-
-        register_setting('xcloner_mysql_settings_group', 'xcloner_backup_only_wp_tables');
-        add_settings_field(
-            'xcloner_backup_only_wp_tables',
-            __('Backup only WP tables', 'xcloner-backup-and-restore'),
-            array($this, 'do_form_switch_field'),
-            'xcloner_mysql_settings_page',
-            'xcloner_mysql_settings_group',
-            array(
-                'xcloner_backup_only_wp_tables',
-                sprintf(__('Enable this if you only want to Backup only tables starting with \'%s\' prefix', 'xcloner-backup-and-restore'), $this->get_table_prefix())
-            )
-        );
-
-        register_setting('xcloner_mysql_settings_group', 'xcloner_mysql_hostname', array(
-            $this->xcloner_sanitization,
-            "sanitize_input_as_raw"
-        ));
-        add_settings_field(
-            'xcloner_mysql_hostname',
-            __('Mysql Hostname', 'xcloner-backup-and-restore'),
-            array($this, 'do_form_text_field'),
-            'xcloner_mysql_settings_page',
-            'xcloner_mysql_settings_group',
-            array(
-                'xcloner_mysql_hostname',
-                __('Wordpress mysql hostname', 'xcloner-backup-and-restore'),
-                $this->get_db_hostname(),
-                //'disabled'
-            )
-        );
-
-        register_setting('xcloner_mysql_settings_group', 'xcloner_mysql_username', array(
-            $this->xcloner_sanitization,
-            "sanitize_input_as_raw"
-        ));
-        add_settings_field(
-            'xcloner_mysql_username',
-            __('Mysql Username', 'xcloner-backup-and-restore'),
-            array($this, 'do_form_text_field'),
-            'xcloner_mysql_settings_page',
-            'xcloner_mysql_settings_group',
-            array(
-                'xcloner_mysql_username',
-                __('Wordpress mysql username', 'xcloner-backup-and-restore'),
-                $this->get_db_username(),
-                //'disabled'
-            )
-        );
-
-        register_setting('xcloner_mysql_settings_group', 'xcloner_mysql_password', array(
-            $this->xcloner_sanitization,
-            "sanitize_input_as_raw"
-        ));
-        add_settings_field(
-            'xcloner_mysql_password',
-            __('Mysql Password', 'xcloner-backup-and-restore'),
-            array($this, 'do_form_password_field'),
-            'xcloner_mysql_settings_page',
-            'xcloner_mysql_settings_group',
-            array(
-                'xcloner_mysql_password',
-                __('Wordpress mysql password', 'xcloner-backup-and-restore'),
-                $this->get_db_password(),
-                //'disabled'
-            )
-        );
-
-        register_setting('xcloner_mysql_settings_group', 'xcloner_mysql_database', array(
-            $this->xcloner_sanitization,
-            "sanitize_input_as_raw"
-        ));
-        add_settings_field(
-            'xcloner_mysql_database',
-            __('Mysql Database', 'xcloner-backup-and-restore'),
-            array($this, 'do_form_text_field'),
-            'xcloner_mysql_settings_page',
-            'xcloner_mysql_settings_group',
-            array(
-                'xcloner_mysql_database',
-                __('Wordpress mysql database', 'xcloner-backup-and-restore'),
-                $this->get_db_database(),
-                //'disabled'
-            )
-        );
-
-        register_setting('xcloner_mysql_settings_group', 'xcloner_mysql_prefix', array(
-            $this->xcloner_sanitization,
-            "sanitize_input_as_raw"
-        ));
-        add_settings_field(
-            'xcloner_mysql_prefix',
-            __('Mysql Tables Prefix', 'xcloner-backup-and-restore'),
-            array($this, 'do_form_text_field'),
-            'xcloner_mysql_settings_page',
-            'xcloner_mysql_settings_group',
-            array(
-                'xcloner_mysql_prefix',
-                __('Wordpress mysql tables prefix', 'xcloner-backup-and-restore'),
-                $this->get_table_prefix(),
-                //'disabled'
-            )
-        );
-
         //REGISTERING THE 'SYSTEM SECTION' FIELDS
         register_setting('xcloner_system_settings_group', 'xcloner_size_limit_per_request', array(
             $this->xcloner_sanitization,
@@ -772,7 +582,7 @@ class Xcloner_Settings
             'xcloner_system_settings_group',
             array(
                 'xcloner_force_tmp_path_site_root',
-                sprintf(__('Enable this option if you want the XCloner Temporary Path to be within your XCloner Storage Location', 'xcloner-backup-and-restore'), $this->get_table_prefix())
+                __('Enable this option if you want the XCloner Temporary Path to be within your XCloner Storage Location', 'xcloner-backup-and-restore')
             )
         );
 
@@ -785,7 +595,7 @@ class Xcloner_Settings
             'xcloner_system_settings_group',
             array(
                 'xcloner_disable_email_notification',
-                sprintf(__('Enable this option if you want the XCloner to NOT send email notifications on successful backups', 'xcloner-backup-and-restore'), $this->get_table_prefix())
+                __('Enable this option if you want the XCloner to NOT send email notifications on successful backups', 'xcloner-backup-and-restore')
             )
         );
 
@@ -798,7 +608,7 @@ class Xcloner_Settings
             'xcloner_system_settings_group',
             array(
                 'xcloner_restore_defaults',
-                sprintf(__('This option will completelly remove all existing XCloner options and set them back to a default state.', 'xcloner-backup-and-restore'), $this->get_table_prefix())
+                __('This option will completelly remove all existing XCloner options and set them back to a default state.', 'xcloner-backup-and-restore')
             )
         );
 

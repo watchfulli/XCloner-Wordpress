@@ -15,13 +15,11 @@ $tab = 1;
             <li><a href="#backup_options"
                    class="nav-tab col s12 m3 l2 nav-tab-active"><?php echo esc_html($tab) . ". " . __('Backup Options', 'xcloner-backup-and-restore') ?></a>
             </li>
-            <?php if ($xcloner_settings->get_enable_mysql_backup()): ?>
-                <li>
-                    <a href="#database_options" class="nav-tab col s12 m3 l2 ">
-                        <?php echo esc_html(++$tab) . ". " . __('Database Options', 'xcloner-backup-and-restore') ?>
-                    </a>
-                </li>
-            <?php endif ?>
+            <li>
+                <a href="#database_options" class="nav-tab col s12 m3 l2 ">
+                    <?php echo esc_html(++$tab) . ". " . __('Database Options', 'xcloner-backup-and-restore') ?>
+                </a>
+            </li>
             <li>
                 <a href="#files_options" class="nav-tab col s12 m3 l2 ">
                     <?php echo esc_html(++$tab) . ". " . __('Files Options', 'xcloner-backup-and-restore') ?>
@@ -209,33 +207,31 @@ $tab = 1;
 
                 </div>
 
-                <?php if ($xcloner_settings->get_enable_mysql_backup()): ?>
-                    <div id="database_options" class="tab-content">
-                        <div class="row">
-                            <div class="input-field col s12 m10 l10 right-align">
-                                <a class="waves-effect waves-light btn" onclick="next_tab('#files_options');"><i
-                                            class="material-icons right">skip_next</i>Next</a>
-                            </div>
+                <div id="database_options" class="tab-content">
+                    <div class="row">
+                        <div class="input-field col s12 m10 l10 right-align">
+                            <a class="waves-effect waves-light btn" onclick="next_tab('#files_options');"><i
+                                        class="material-icons right">skip_next</i>Next</a>
                         </div>
-
-                        <h2><?php echo __('Select database data to include in the backup', 'xcloner-backup-and-restore') ?>
-                            :
-                            <a class="btn-floating tooltipped btn-small" data-position="right" data-delay="50"
-                               data-tooltip="<?php echo __('Enable the \'Backup only WP tables\' setting if you don\'t want to show all other databases and tables not related to this Wordpress install', 'xcloner-backup-and-restore'); ?>"
-                               data-tooltip-id="">
-                                <i class="material-icons">help_outline</i>
-                            </a>
-                        </h2>
-
-                        <!-- database/tables tree -->
-                        <div class="row">
-                            <div class="col s12 l6">
-                                <div id="jstree_database_container"></div>
-                            </div>
-                        </div>
-
                     </div>
-                <?php endif ?>
+
+                    <h2><?php echo __('Select database data to include in the backup', 'xcloner-backup-and-restore') ?>
+                        :
+                        <a class="btn-floating tooltipped btn-small" data-position="right" data-delay="50"
+                           data-tooltip="<?php echo __('Enable the \'Backup only WP tables\' setting if you don\'t want to show all other databases and tables not related to this Wordpress install', 'xcloner-backup-and-restore'); ?>"
+                           data-tooltip-id="">
+                            <i class="material-icons">help_outline</i>
+                        </a>
+                    </h2>
+
+                    <!-- database/tables tree -->
+                    <div class="row">
+                        <div class="col s12 l6">
+                            <div id="jstree_database_container"></div>
+                        </div>
+                    </div>
+
+                </div>
 
                 <div id="files_options" class="tab-content">
                     <div class="row">
@@ -299,36 +295,34 @@ $tab = 1;
                                     </div>
                                     <div class="collapsible-body status-body"></div>
                                 </li>
-                                <?php if ($xcloner_settings->get_enable_mysql_backup()): ?>
-                                    <li class="database-backup">
-                                        <div class="collapsible-header">
-                                            <i class="material-icons">storage</i>
-                                            <?php echo __('Generating the Mysql Backup...', 'xcloner-backup-and-restore') ?>
+                                <li class="database-backup">
+                                    <div class="collapsible-header">
+                                        <i class="material-icons">storage</i>
+                                        <?php echo __('Generating the Mysql Backup...', 'xcloner-backup-and-restore') ?>
 
-                                            <p class="right">
-                                                <?php echo sprintf(__('Found %s tables in %s databases (%s)', 'xcloner-backup-and-restore'), '<span class="table-counter">0</span>', '<span class="database-counter">0</span>', '<span data-processed="0" class="total-records">0</span> records', 'xcloner-backup-and-restore') ?>
-                                            </p>
+                                        <p class="right">
+                                            <?php echo sprintf(__('Found %s tables in %s databases (%s)', 'xcloner-backup-and-restore'), '<span class="table-counter">0</span>', '<span class="database-counter">0</span>', '<span data-processed="0" class="total-records">0</span> records', 'xcloner-backup-and-restore') ?>
+                                        </p>
 
-                                            <div>
-                                                <p class="right"><span class="last-logged-table"></span></p>
+                                        <div>
+                                            <p class="right"><span class="last-logged-table"></span></p>
+                                        </div>
+
+                                        <div class="progress">
+                                            <div class="determinate" style="width:0%"></div>
+                                        </div>
+                                    </div>
+                                    <div class="collapsible-body status-body">
+                                        <div class="row">
+                                            <div class="col l7 s12">
+                                                <ul class="logged-tables"></ul>
                                             </div>
-
-                                            <div class="progress">
-                                                <div class="determinate" style="width:0%"></div>
+                                            <div class="col l5 s12">
+                                                <ul class="logged-databases right"></ul>
                                             </div>
                                         </div>
-                                        <div class="collapsible-body status-body">
-                                            <div class="row">
-                                                <div class="col l7 s12">
-                                                    <ul class="logged-tables"></ul>
-                                                </div>
-                                                <div class="col l5 s12">
-                                                    <ul class="logged-databases right"></ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </li>
-                                <?php endif ?>
+                                    </div>
+                                </li>
                                 <li class="files-backup">
                                     <div class="collapsible-header">
                                         <i class="material-icons">archive</i>
@@ -516,7 +510,8 @@ $tab = 1;
 
                     <div class="row">
                         <div class="col s12 l7">
-                            <button class="right btn waves-effect waves-light submit_schedule" type="submit" name="action">
+                            <button class="right btn waves-effect waves-light submit_schedule" type="submit"
+                                    name="action">
                                 <?php echo __("Save Schedule", 'xcloner-backup-and-restore') ?>
                                 <i class="material-icons right">send</i>
                             </button>
@@ -693,7 +688,6 @@ $tab = 1;
       }
     });
 
-      <?php if ($xcloner_settings->get_enable_mysql_backup()): ?>
     jQuery('#jstree_database_container').jstree({
       'core': {
         'check_callback': true,
@@ -737,7 +731,6 @@ $tab = 1;
         "wholerow"
       ]
     });
-      <?php endif ?>
 
     jQuery('#jstree_files_container').jstree({
       'core': {

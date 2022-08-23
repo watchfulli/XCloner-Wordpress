@@ -240,7 +240,7 @@ class Xcloner_Api
 
         if ($id === null) {
             $this->xcloner_database->insert(
-                $this->xcloner_settings->get_table_prefix() . 'xcloner_scheduler',
+                $this->xcloner_database->prefix . 'xcloner_scheduler',
                 $schedule,
                 array(
                     '%s',
@@ -249,7 +249,7 @@ class Xcloner_Api
             );
         } else {
             $this->xcloner_database->update(
-                $this->xcloner_settings->get_table_prefix() . 'xcloner_scheduler',
+                $this->xcloner_database->prefix . 'xcloner_scheduler',
                 $schedule,
                 array('id' => $id),
                 array(
@@ -582,13 +582,13 @@ class Xcloner_Api
             }
 
             foreach ($return as $database) {
-                if ($xcloner_backup_only_wp_tables && $database['name'] != $this->xcloner_settings->get_db_database()) {
+                if ($xcloner_backup_only_wp_tables && $database['name'] != $this->xcloner_database->dbname) {
                     continue;
                 }
 
                 $state = array();
 
-                if ($database['name'] == $this->xcloner_settings->get_db_database()) {
+                if ($database['name'] == $this->xcloner_database->dbname) {
                     $state['selected'] = true;
                     if ($database['num_tables'] < 25) {
                         $state['opened'] = false;
@@ -616,12 +616,12 @@ class Xcloner_Api
 
                 if ($xcloner_backup_only_wp_tables && !stristr(
                         $table['name'],
-                        $this->xcloner_settings->get_table_prefix()
+                        $this->xcloner_database->prefix
                     )) {
                     continue;
                 }
 
-                if (isset($database['name']) && $database['name'] == $this->xcloner_settings->get_db_database()) {
+                if (isset($database['name']) && $database['name'] == $this->xcloner_database->dbname) {
                     $state = array('selected' => true);
                 }
 

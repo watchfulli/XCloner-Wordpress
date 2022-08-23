@@ -74,10 +74,6 @@ class Xcloner_Activator
             update_option('xcloner_force_tmp_path_site_root', 1);
         }
 
-        if (get_option('xcloner_enable_mysql_backup') === false) {
-            update_option('xcloner_enable_mysql_backup', 1);
-        }
-
         if (get_option('xcloner_system_settings_page') === false) {
             update_option('xcloner_system_settings_page', 100);
         }
