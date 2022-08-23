@@ -35,21 +35,12 @@ class Xcloner_Database extends wpdb
 {
     public $debug = 0;
     public $recordsPerSession = 10000;
-    public $dbCompatibility = "";
     public $dbDropSyntax				= 1;
     public $countRecords				= 0;
 
-    private $link;
-    private $db_selected;
     private $logger;
     private $xcloner_settings;
     private $fs;
-
-    private $xcloner_dbhost;
-    private $xcloner_dbuser;
-    private $xcloner_dbpassword;
-	private $xcloner_dbname;
-	private $xcloner_prefix;
 
     private $TEMP_DBPROCESS_FILE = ".database";
     private $TEMP_DUMP_FILE = "database-backup.sql";
@@ -68,56 +59,10 @@ class Xcloner_Database extends wpdb
             $this->recordsPerSession = 100;
         }
 
-        $this->xcloner_dbhost 	= $this->xcloner_settings->get_db_hostname();
-        $this->xcloner_dbuser 	= $this->xcloner_settings->get_db_username();
-        $this->xcloner_dbpassword 	= $this->xcloner_settings->get_db_password();
-        $this->xcloner_dbname = $this->xcloner_settings->get_db_database();
-		$this->xcloner_prefix= "";
+        global $wpdb;
+        $this->set_prefix($wpdb->prefix);
 
-		//fetch the default wordpress mysql credentials
-        if ( !$this->xcloner_dbuser || !$this->xcloner_dbhost || !$this->xcloner_dbname ) {
-            global $wpdb;
-
-            $this->xcloner_dbhost 		= $wpdb->dbhost;
-            update_option('xcloner_mysql_hostname', $this->xcloner_dbhost);
-            $this->xcloner_dbuser 		= $wpdb->dbuser;
-            update_option('xcloner_mysql_username', $this->xcloner_dbuser);
-            $this->xcloner_dbpassword 	= $wpdb->dbpassword;
-            update_option('xcloner_mysql_password', $this->xcloner_dbpassword);
-            $this->xcloner_dbname 		= $wpdb->dbname;
-			update_option('xcloner_mysql_database', $this->xcloner_dbname);
-			$this->xcloner_prefix 		= $wpdb->prefix;
-			update_option('xcloner_mysql_prefix', $this->xcloner_prefix);
-
-        }
-
-        parent::__construct($this->xcloner_dbuser, $this->xcloner_dbpassword, $this->xcloner_dbname, $this->xcloner_dbhost);
-
-        //$this->use_mysqli = true;
-    }
-
-	public function getPrefix() {
-		return $this->xcloner_prefix;
-	}
-
-    public function getDbHost()
-    {
-        return $this->xcloner_dbhost;
-    }
-
-    public function getDbUser()
-    {
-        return $this->xcloner_dbuser;
-    }
-
-    public function getDbPassword()
-    {
-        return $this->xcloner_dbpassword;
-    }
-
-    public function getDbName()
-    {
-        return $this->xcloner_dbname;
+        parent::__construct($wpdb->dbuser, $wpdb->dbpassword, $wpdb->dbname, $wpdb->dbhost);
     }
 
     /*
@@ -153,11 +98,6 @@ class Xcloner_Database extends wpdb
                 "tables_count"=>0,
                 "database_count"=>0,
         );
-
-        if (!$this->xcloner_settings->get_enable_mysql_backup()) {
-            $return['finished'] = 1;
-            return $return;
-        }
 
         $this->logger->debug(__("Starting database backup process"));
 

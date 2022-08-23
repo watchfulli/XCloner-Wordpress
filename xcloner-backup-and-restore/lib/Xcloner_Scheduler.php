@@ -23,7 +23,7 @@ class Xcloner_Scheduler
 
         $this->xcloner_container->get_xcloner_database()->show_errors = false;
 
-        $this->scheduler_table = $this->xcloner_container->get_xcloner_settings()->get_table_prefix() . $this->scheduler_table;
+        $this->scheduler_table = $this->xcloner_container->get_xcloner_database()->prefix . $this->scheduler_table;
     }
 
     public function get_scheduler_list($return_only_enabled = 0)

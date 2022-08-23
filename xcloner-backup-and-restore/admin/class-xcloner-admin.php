@@ -241,14 +241,15 @@ class Xcloner_Admin
             </div>
 
             <ul class="nav-tab-wrapper col s12 ">
-                <li><a href="?page=xcloner_settings_page&tab=general_options"
-                       class="nav-tab col s12 m3 l3 <?php echo $active_tab == 'general_options' ? 'nav-tab-active' : ''; ?>"><?php echo __('General Options', 'xcloner-backup-and-restore') ?></a>
+                <li>
+                    <a href="?page=xcloner_settings_page&tab=general_options"
+                       class="nav-tab col s12 m3 l3 <?php echo $active_tab == 'general_options' ? 'nav-tab-active' : ''; ?>"><?php echo __('General Options', 'xcloner-backup-and-restore') ?>
+                    </a>
                 </li>
-                <li><a href="?page=xcloner_settings_page&tab=mysql_options"
-                       class="nav-tab col s12 m3 l3 <?php echo $active_tab == 'mysql_options' ? 'nav-tab-active' : ''; ?>"><?php echo __('Mysql Options', 'xcloner-backup-and-restore') ?></a>
-                </li>
-                <li><a href="?page=xcloner_settings_page&tab=system_options"
-                       class="nav-tab col s12 m3 l3 <?php echo $active_tab == 'system_options' ? 'nav-tab-active' : ''; ?>"><?php echo __('System Options', 'xcloner-backup-and-restore') ?></a>
+                <li>
+                    <a href="?page=xcloner_settings_page&tab=system_options"
+                       class="nav-tab col s12 m3 l3 <?php echo $active_tab == 'system_options' ? 'nav-tab-active' : ''; ?>"><?php echo __('System Options', 'xcloner-backup-and-restore') ?>
+                    </a>
                 </li>
             </ul>
 
@@ -260,9 +261,6 @@ class Xcloner_Admin
                     if ($active_tab == 'general_options') {
                         settings_fields('xcloner_general_settings_group');
                         do_settings_sections('xcloner_settings_page');
-                    } elseif ($active_tab == 'mysql_options') {
-                        settings_fields('xcloner_mysql_settings_group');
-                        do_settings_sections('xcloner_mysql_settings_page');
                     } elseif ($active_tab == 'system_options') {
                         settings_fields('xcloner_system_settings_group');
                         do_settings_sections('xcloner_system_settings_page');
