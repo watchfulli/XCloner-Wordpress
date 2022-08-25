@@ -1,5 +1,5 @@
 <a href="https://www.xcloner.com" target="_blank" title="XCloner.com">
-  <img src="<? echo plugin_dir_url((__DIR__))?>/images/xcloner-logo.svg" class="xcloner-logo"
+  <img src="<?php echo plugin_dir_url((__DIR__))?>/images/xcloner-logo.svg" class="xcloner-logo"
     alt="XCloner backup and restore plugin" />
 </a>
 <!-- Dropdown Trigger -->

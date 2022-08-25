@@ -124,7 +124,7 @@ if (!defined('WPINC')) {
         </div>
     </div>
 
-    <? echo common_cleanup_html('aws') ?>
+    <?php echo common_cleanup_html('aws') ?>
 
     <div class="row">
         <div class="col s6 m4">
