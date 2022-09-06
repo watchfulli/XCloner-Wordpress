@@ -292,28 +292,27 @@ $backup_list = $xcloner_file_system->get_latest_backups();
                         <div class="status"></div>
                     </div>
 
-                    <div class=" row col s12 center-align" id="xcloner_restore_finish">
-                        <h5><?php echo __("Thank you for using XCloner.", 'xcloner-backup-and-restore') ?></h5>
-                        <h6><?php echo sprintf(__("We would love to hear about your experience in the %s.", 'xcloner-backup-and-restore'), '<a href="https://wordpress.org/support/plugin/xcloner-backup-and-restore" target="_blank">Wordpress XCloner forums</a>') ?>
-                        </h6>
-                        <a class="twitter-follow-button" href="https://twitter.com/thinkovi"
-                           data-show-count="false">Follow
-                            @thinkovi</a>
-                        <script src="//platform.twitter.com/widgets.js" async="" charset="utf-8"></script>
-                    </div>
+
 
                     <div class="col s12 center-align">
+                        <button class="btn waves-effect waves-light teal" type="submit" id="restore_finish"
+                                name="action"><?php echo __("Finish", 'xcloner-backup-and-restore') ?>
+                            <i class="material-icons right">navigate_next</i>
+                        </button>
+                    </div>
+
+                    <div class="col s12 center-align" id="xcloner_restore_finish">
+                        <h5><?php echo __("Thank you for using XCloner.", 'xcloner-backup-and-restore') ?></h5>
                         <div class="row">
                             <div class="col s6 right-align">
-                                <button class="btn waves-effect waves-light teal" type="submit" id="restore_finish"
-                                        name="action"><?php echo __("Finish", 'xcloner-backup-and-restore') ?>
+                                <a href="https://wordpress.org/support/plugin/xcloner-backup-and-restore/reviews/#new-post" class="btn waves-effect waves-light teal" type="button" target="_blank">
+                                    <?php echo __("Leave a review", 'xcloner-backup-and-restore') ?>
                                     <i class="material-icons right">navigate_next</i>
-                                </button>
+                                </a>
                             </div>
-
-                            <div id="open_target_site" class="col s6 left-align">
-                                <a disabled="disabled" href="#" class="btn waves-effect waves-light teal" type="button"
-                                   target="_blank"><?php echo __("Open Target Site", 'xcloner-backup-and-restore') ?>
+                            <div class="col s6 left-align">
+                                <a href="https://wordpress.org/support/plugin/xcloner-backup-and-restore/%60" class="btn waves-effect waves-light teal" type="button" target="_blank">
+                                    <?php echo __("Get support", 'xcloner-backup-and-restore') ?>
                                     <i class="material-icons right">navigate_next</i>
                                 </a>
                             </div>
