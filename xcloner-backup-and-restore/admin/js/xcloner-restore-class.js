@@ -238,7 +238,7 @@ class Xcloner_Restore {
         "xcloner_restore_finish",
         function (e) {
           jQuery(".xcloner-restore #xcloner_restore_finish").show();
-          jQuery(".xcloner-restore #open_target_site a").removeAttr("disabled");
+          jQuery("#restore_finish").hide();
         },
         false
     );

@@ -419,20 +419,23 @@ $tab = 1;
                                     </div>
                                     <div class="collapsible-body center-align">
                                         <div class="row">
-                                            <h5>
-                                                <?php echo __("Thank you for using XCloner.", 'xcloner-backup-and-restore') ?>
-                                            </h5>
-                                            <h6>
-                                                <?php echo sprintf(__("We would love to hear about your experience in the %s.", 'xcloner-backup-and-restore'), '<a href="https://wordpress.org/support/plugin/xcloner-backup-and-restore/reviews/" target="_blank">Wordpress XCloner Reviews Section</a>') ?>
-                                            </h6>
-                                            <a class="twitter-follow-button" href="https://twitter.com/WatchfulDashbrd"
-                                               data-show-count="false">Follow @WatchfulDashbrd</a>
-                                            <script src="//platform.twitter.com/widgets.js" async="" charset="utf-8">
-                                            </script>
-
-                                            <br/>
-                                            <!-- XCLONER SPONSORS AREA-->
-                                            <!-- END XCLONER SPONSORS AREA-->
+                                            <div class="col s12 center-align" id="xcloner_restore_finish">
+                                                <h5><?php echo __("Thank you for using XCloner.", 'xcloner-backup-and-restore') ?></h5>
+                                                <div class="row">
+                                                    <div class="col s6 right-align">
+                                                        <a href="https://wordpress.org/support/plugin/xcloner-backup-and-restore/reviews/#new-post" class="btn waves-effect waves-light teal" type="button" target="_blank">
+                                                            <?php echo __("Leave a review", 'xcloner-backup-and-restore') ?>
+                                                            <i class="material-icons right">navigate_next</i>
+                                                        </a>
+                                                    </div>
+                                                    <div class="col s6 left-align">
+                                                        <a href="https://wordpress.org/support/plugin/xcloner-backup-and-restore/%60" class="btn waves-effect waves-light teal" type="button" target="_blank">
+                                                            <?php echo __("Get support", 'xcloner-backup-and-restore') ?>
+                                                            <i class="material-icons right">navigate_next</i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </li>
