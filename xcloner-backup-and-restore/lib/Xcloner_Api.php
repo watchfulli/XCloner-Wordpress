@@ -1045,8 +1045,8 @@ class Xcloner_Api
                 $return['data'][$i][] = ob_get_contents();
                 ob_end_clean(); ?>
                 <?php ob_start(); ?>
-                <?php if (isset($file_info['timestamp'])) {
-                    echo date("Y-m-d H:i", $file_info['timestamp']);
+                <?php if (!empty($file_info['timestamp'])) {
+                    echo date("Y-m-d H:i", (int)$file_info['timestamp']);
                 } ?>
                 <?php
                 $return['data'][$i][] = ob_get_contents();
