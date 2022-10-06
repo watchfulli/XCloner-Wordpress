@@ -15,7 +15,7 @@ rsync --exclude-from=".distignore" -av --delete "${SRC_DIR}/" "${BUILD_DIR}/"
 
 echo "Install composer dependencies without dev dependencies"
 cd "${BUILD_DIR}"
-/bin/php7.3 /usr/local/bin/composer install --no-dev --prefer-dist -o
+/bin/php7.3 /usr/local/bin/composer install --no-dev --prefer-dist -o --no-interaction
 cd ..
 
 echo "Removing unnecessary files from vendor directory"

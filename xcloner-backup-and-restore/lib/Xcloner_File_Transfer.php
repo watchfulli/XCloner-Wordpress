@@ -2,6 +2,8 @@
 
 namespace Watchfulli\XClonerCore;
 
+use Exception;
+
 /**
  * XCloner - Backup and Restore backup plugin for WordPress
  *
@@ -78,13 +80,13 @@ class Xcloner_File_Transfer extends Xcloner_Filesystem
     public function transfer_file($file, $start = 0, $hash = "")
     {
         if (!$this->target_url) {
-            throw new \Exception("Please setup a target url for upload");
+            throw new Exception("Please setup a target url for upload");
         }
 
 
         $fp = $this->get_storage_filesystem()->readStream($file);
 
-        fseek($fp, $start, SEEK_SET);
+        fseek($fp, $start);
 
         $binary_data = fread($fp, $this->transfer_limit);
 
@@ -119,8 +121,8 @@ class Xcloner_File_Transfer extends Xcloner_Filesystem
         curl_setopt($ch, CURLOPT_URL, $this->target_url);
 
         curl_setopt($ch, CURLOPT_POST, 1);
-        //curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
-        //curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 1);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 60);
         curl_setopt($ch, CURLOPT_TIMEOUT, 1200);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -136,11 +138,11 @@ class Xcloner_File_Transfer extends Xcloner_Filesystem
         $result = json_decode($original_result);
 
         if (!$result) {
-            throw new \Exception("We have received no valid response from the remote host, original message: " . $original_result);
+            throw new Exception("We have received no valid response from the remote host, original message: " . $original_result);
         }
 
         if ($result->status != 200) {
-            throw new \Exception($result->response);
+            throw new Exception($result->response);
         }
 
         if (ftell($fp) >= $this->get_storage_filesystem()->getSize($file)) {

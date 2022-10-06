@@ -267,8 +267,9 @@ class Xcloner_Filesystem
 
         return array_map(static function ($item) {
             return array(
-              'file_name' => $item['path'],
-              'size' => size_format($item['size']),
+                'basename' => $item['basename'],
+                'file_name' => $item['path'],
+                'size' => size_format($item['size']),
             );
         }, $new_list);
     }
