@@ -1,8 +1,8 @@
 ---
-name: Bug report
-about: Create a report to help us improve
-title: "[CATEGORY] Brief description of issue"
-labels: bug
+name: Restore testing
+about: Test the restore script for XCLoner
+title: "[TESTING] Test version X.Y.Z of the restore script for cloning to a new site."
+labels: testing
 assignees: jimiero
 
 ---
