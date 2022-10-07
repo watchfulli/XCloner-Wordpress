@@ -1,5 +1,5 @@
 ---
-name: Restore testing
+name: Restore testing 2
 about: Test the restore script for XCLoner
 title: "[TESTING] Test version X.Y.Z of the restore script for cloning to a new site."
 labels: testing
