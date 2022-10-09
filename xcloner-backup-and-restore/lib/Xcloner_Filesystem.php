@@ -31,6 +31,7 @@ namespace Watchfulli\XClonerCore;
 
 use Exception;
 use League\Flysystem\Config;
+use League\Flysystem\FileNotFoundException;
 use League\Flysystem\Filesystem;
 use League\Flysystem\Adapter\Local;
 
@@ -157,20 +158,20 @@ class Xcloner_Filesystem
 
     public function get_storage_filesystem($remote_storage_selection = "")
     {
-        if ($remote_storage_selection != "") {
-            $remote_storage = $this->get_xcloner_container()->get_xcloner_remote_storage();
-            $method = "get_" . $remote_storage_selection . "_filesystem";
-
-            if (!method_exists($remote_storage, $method)) {
-                return false;
-            }
-
-            list($adapter, $filesystem) = $remote_storage->$method();
-
-            return $filesystem;
+        if (empty($remote_storage_selection)) {
+            return $this->storage_filesystem;
         }
 
-        return $this->storage_filesystem;
+        $remote_storage = $this->get_xcloner_container()->get_xcloner_remote_storage();
+        $method = "get_" . $remote_storage_selection . "_filesystem";
+
+        if (!method_exists($remote_storage, $method)) {
+            return false;
+        }
+
+        list($adapter, $filesystem) = $remote_storage->$method();
+
+        return $filesystem;
     }
 
     public function get_tmp_filesystem_adapter()
@@ -366,54 +367,57 @@ class Xcloner_Filesystem
     }
 
 
+    /**
+     * @throws FileNotFoundException
+     */
     public function get_backup_archives_list($storage_selection = "")
     {
         $list = array();
-
-
-        if (method_exists($this->get_storage_filesystem($storage_selection), "listContents")) {
-            $list = $this->get_storage_filesystem($storage_selection)->listContents();
-        }
-
         $backup_files = array();
         $parents = array();
 
-        foreach ($list as $file_info) {
-            if (isset($file_info['extension']) and $file_info['extension'] == "csv") {
-                $data = array();
+        $filesystem = $this->get_storage_filesystem($storage_selection);
 
-                $lines = explode(PHP_EOL, $this->get_storage_filesystem($storage_selection)->read($file_info['path']));
+        if (method_exists($filesystem, 'listContents')) {
+            $list = $this->get_storage_filesystem($storage_selection)->listContents();
+        }
+
+        foreach ($list as $file_info) {
+            if (isset($file_info['extension']) && $file_info['extension'] == "csv") {
+                $lines = explode(PHP_EOL, $filesystem->read($file_info['path']));
                 foreach ($lines as $line) {
-                    if ($line) {
-                        $data = str_getcsv($line);
-                        if (is_array($data)) {
-                            $parents[$data[0]] = $file_info['basename'];
-                            $file_info['childs'][] = $data;
-                            $file_info['size'] += $data[2];
-                        }
+                    if (!$line) {
+                        continue;
                     }
+                    $data = str_getcsv($line);
+                    $parents[$data[0]] = $file_info['basename'];
+                    $file_info['childs'][] = $data;
+                    $file_info['size'] += $data[2];
                 }
             }
 
-            if ($file_info['type'] == 'file' and isset($file_info['extension']) and in_array(
+            if (
+                $file_info['type'] == 'file' &&
+                isset($file_info['extension']) &&
+                in_array(
                     $file_info['extension'],
                     $this->backup_archive_extensions
-                )) {
+                )
+            ) {
                 $backup_files[$file_info['path']] = $file_info;
             }
         }
 
-        foreach ($backup_files as $key => $file_info) {
-            if (!isset($backup_files[$key]['timestamp'])) {
-                //$backup_files[$key]['timestamp'] = $this->get_storage_filesystem($storage_selection)->getTimestamp($file_info['path']);
+        return array_map(static function ($file_info) use ($filesystem, $parents) {
+            if (empty($file_info['timestamp'])) {
+                $file_info['timestamp'] = $filesystem->getTimestamp($file_info['path']);
             }
 
             if (isset($parents[$file_info['basename']])) {
-                $backup_files[$key]['parent'] = $parents[$file_info['basename']];
+                $file_info['parent'] = $parents[$file_info['basename']];
             }
-        }
-
-        return $backup_files;
+            return $file_info;
+        }, $backup_files);
     }
 
     public function start_file_recursion($init = 0)
@@ -718,7 +722,7 @@ class Xcloner_Filesystem
 
         if (is_array($files)) {
             foreach ($files as $file) {
-                if (isset($file['extension']) and in_array($file['extension'], $this->backup_archive_extensions)) {
+                if (isset($file['extension']) && in_array($file['extension'], $this->backup_archive_extensions)) {
                     $_storage_size += $file['size']; //bytes
                     $_backup_files_list[] = $file;
                 }

@@ -3,12 +3,13 @@
   "license": "GPL-2.0-or-later",
   "description": "WordPress backup plugin for XCloner",
   "require": {
+    "gliterd/backblaze-b2": "^1.5",
     "league/flysystem": "^1.0",
     "league/flysystem-aws-s3-v3": "^1.0",
     "league/flysystem-azure-blob-storage": "^0.1.6",
     "league/flysystem-sftp": "^1.0",
     "league/flysystem-webdav": "^1.0",
-    "mhetreramesh/flysystem-backblaze": "^1.0",
+    "mhetreramesh/flysystem-backblaze": "^1.6",
     "monolog/monolog": "^1.22",
     "nicolasbeauvais/flysystem-onedrive": "^1.0",
     "splitbrain/php-archive": "^1.0",
@@ -33,7 +34,11 @@
   "config": {
     "preferred-install": "dist",
     "sort-packages": true,
-    "optimize-autoloader": true
+    "optimize-autoloader": true,
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true,
+      "phpstan/extension-installer": true
+    }
   },
   "extra": {
     "custom-commands": {
