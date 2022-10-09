@@ -11,6 +11,7 @@
     "league/flysystem-webdav": "^1.0",
     "mhetreramesh/flysystem-backblaze": "^1.6",
     "monolog/monolog": "^1.22",
+    "nao-pon/flysystem-google-drive": "^1.1",
     "nicolasbeauvais/flysystem-onedrive": "^1.0",
     "splitbrain/php-archive": "^1.0",
     "srmklive/flysystem-dropbox-v2": "^1.0",
@@ -36,6 +37,7 @@
     "sort-packages": true,
     "optimize-autoloader": true,
     "allow-plugins": {
+      "bamarni/composer-bin-plugin": true,
       "dealerdirect/phpcodesniffer-composer-installer": true,
       "phpstan/extension-installer": true
     }

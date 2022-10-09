@@ -743,22 +743,22 @@ class Xcloner_Remote_Storage
             return false;
         }
 
+        $client_id = $this->xcloner_settings->get_xcloner_option('xcloner_gdrive_client_id');
+        $client_secret = $this->xcloner_settings->get_xcloner_option('xcloner_gdrive_client_secret');
+
         $client = new \Google_Client();
-        $client->setApplicationName($this::GDRIVE_APP_NAME);
-        $client->setClientId($this->xcloner_settings->get_xcloner_option("xcloner_gdrive_client_id"));
-        $client->setClientSecret($this->xcloner_settings->get_xcloner_option("xcloner_gdrive_client_secret"));
+        $client->setApplicationName(self::GDRIVE_APP_NAME);
+        $client->setClientId(empty($client_id) ? self::GDRIVE_AUTH_WATCHFUL : $client_id);
+        $client->setClientSecret($client_secret);
+
+        $gdrive_redirect_url = empty($client_id) ? $this::GDRIVE_REDIRECT_URL_WATCHFUL : self::GDRIVE_REDIRECT_URL;
 
         //$redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF']."?page=xcloner_remote_storage_page&action=set_gdrive_code";
 
-        $gdrive_redirect_url = $this::GDRIVE_REDIRECT_URL;
-        if (!$this->xcloner_settings->get_xcloner_option("xcloner_gdrive_client_id")) {
-            $gdrive_redirect_url = $this::GDRIVE_REDIRECT_URL_WATCHFUL;
-        }
-
         $client->setRedirectUri($gdrive_redirect_url);
-        $client->addScope("https://www.googleapis.com/auth/drive");
+        $client->addScope('https://www.googleapis.com/auth/drive');
         $client->setAccessType('offline');
-        $client->setApprovalPrompt("force");
+        $client->setApprovalPrompt('force');
 
         return $client;
     }
@@ -771,7 +771,7 @@ class Xcloner_Remote_Storage
             return false;
         }
 
-        return $authUrl = $client->createAuthUrl();
+        return $client->createAuthUrl();
     }
 
     public function gdrive_app_fetch_access_token($code, $param = "gdrive_auth_code")
@@ -950,11 +950,7 @@ class Xcloner_Remote_Storage
 
         $this->logger->info(sprintf("Using target folder with ID %s on the remote storage", $folderID));
 
-        if (class_exists('\XCloner_Google_Drive_Adapter')) {
-            $adapter = new \XCloner_Google_Drive_Adapter($service, $folderID);
-        } else {
-            $adapter = new GoogleDriveAdapter($service, $folderID);
-        }
+        $adapter = new GoogleDriveAdapter($service, $folderID);
 
         $filesystem = new Filesystem($adapter, new Config([
             'disable_asserts' => true,

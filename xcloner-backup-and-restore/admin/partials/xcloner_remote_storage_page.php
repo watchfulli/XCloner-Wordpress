@@ -1,13 +1,5 @@
 <?php
 $remote_storage = $this->get_xcloner_container()->get_xcloner_remote_storage();
-
-$gdrive_auth_url = "";
-
-if (method_exists($remote_storage, "get_gdrive_auth_url")) {
-    $gdrive_auth_url = $remote_storage->get_gdrive_auth_url();
-}
-
-$gdrive_construct = $remote_storage->gdrive_construct();
 ?>
 
 <?php
