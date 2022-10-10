@@ -317,6 +317,9 @@ class Xcloner_Remote_Storage
         return $return;
     }
 
+    /**
+     * @throws Exception
+     */
     public function save($action = "ftp")
     {
         if (!$action) {
@@ -326,34 +329,36 @@ class Xcloner_Remote_Storage
         $storage = $this->xcloner_sanitization->sanitize_input_as_string($action);
         $this->logger->debug(sprintf("Saving the storage %s options", strtoupper($action)));
 
-        if (is_array($this->storage_fields[$storage])) {
-            foreach ($this->storage_fields[$storage] as $field => $validation) {
-                $check_field = $this->storage_fields["option_prefix"] . $field;
-                $sanitize_method = "sanitize_input_as_" . $validation;
+        if (!is_array($this->storage_fields[$storage])) {
+            return false;
+        }
 
-                //we do not save empty encrypted credentials
-                if ($validation == "raw" && str_repeat('*', strlen($_POST[$check_field])) == $_POST[$check_field] && $_POST[$check_field]) {
-                    continue;
-                }
+        foreach ($this->storage_fields[$storage] as $field => $validation) {
+            $check_field = $this->storage_fields["option_prefix"] . $field;
+            $sanitize_method = "sanitize_input_as_" . $validation;
 
-                if (!isset($_POST[$check_field])) {
-                    $_POST[$check_field] = 0;
-                }
-
-                if (!method_exists($this->xcloner_sanitization, $sanitize_method)) {
-                    $sanitize_method = "sanitize_input_as_string";
-                }
-
-                $sanitized_value = $this->xcloner_sanitization->$sanitize_method(stripslashes($_POST[$check_field]));
-                update_option($check_field, $sanitized_value);
+            //we do not save empty encrypted credentials
+            if ($validation == "raw" && str_repeat('*', strlen($_POST[$check_field])) == $_POST[$check_field] && $_POST[$check_field]) {
+                continue;
             }
 
-            $this->xcloner->trigger_message(
-                __("%s storage settings saved.", 'xcloner-backup-and-restore'),
-                "success",
-                $this->storage_fields[$action]['text']
-            );
+            if (!isset($_POST[$check_field])) {
+                $_POST[$check_field] = 0;
+            }
+
+            if (!method_exists($this->xcloner_sanitization, $sanitize_method)) {
+                $sanitize_method = "sanitize_input_as_string";
+            }
+
+            $sanitized_value = $this->xcloner_sanitization->$sanitize_method(stripslashes($_POST[$check_field]));
+            update_option($check_field, $sanitized_value);
         }
+
+        $this->xcloner->trigger_message(
+            __("%s storage settings saved.", 'xcloner-backup-and-restore'),
+            "success",
+            $this->storage_fields[$action]['text']
+        );
 
         $this->get_xcloner_container()->check_dependencies();
         return true;
@@ -724,12 +729,11 @@ class Xcloner_Remote_Storage
         $graph->setAccessToken($accessToken);
 
         $adapter = new OneDriveAdapter($graph, 'root', 1);
-        $adapter->setPathPrefix('/drive/root:/' . get_option('xcloner_onedrive_path') . "/");
+        $adapter->setPathPrefix('/drive/root:/' . urldecode(get_option('xcloner_onedrive_path') ?: '') . "/");
         $filesystem = new Filesystem($adapter);
 
-        //print_r($filesystem->listContents());
 
-        return array($adapter, $filesystem);
+        return [$adapter, $filesystem];
     }
 
 
@@ -962,7 +966,9 @@ class Xcloner_Remote_Storage
 
     public function get_ftp_filesystem()
     {
-        $this->logger->info(sprintf("Creating the FTP remote storage connection"), array(""));
+        $this->logger->info('Creating the FTP remote storage connection');
+
+        $ftp_path = urldecode($this->xcloner_settings->get_xcloner_option("xcloner_ftp_path") ?: null);
 
         $adapter = new FtpAdapter([
             'host' => $this->xcloner_settings->get_xcloner_option("xcloner_ftp_hostname"),
@@ -971,7 +977,7 @@ class Xcloner_Remote_Storage
 
             /** optional config settings */
             'port' => $this->xcloner_settings->get_xcloner_option("xcloner_ftp_port", 21),
-            'root' => $this->xcloner_settings->get_xcloner_option("xcloner_ftp_path"),
+            'root' => $ftp_path,
             'passive' => $this->xcloner_settings->get_xcloner_option("xcloner_ftp_transfer_mode"),
             'ssl' => $this->xcloner_settings->get_xcloner_option("xcloner_ftp_ssl_mode"),
             'timeout' => $this->xcloner_settings->get_xcloner_option("xcloner_ftp_timeout", 30),
@@ -988,7 +994,9 @@ class Xcloner_Remote_Storage
 
     public function get_sftp_filesystem()
     {
-        $this->logger->info(sprintf("Creating the SFTP remote storage connection"), array(""));
+        $this->logger->info('Creating the SFTP remote storage connection');
+
+        $sftp_path = urldecode($this->xcloner_settings->get_xcloner_option("xcloner_sftp_path") ?: './');
 
         $adapter = new SftpAdapter([
             'host' => $this->xcloner_settings->get_xcloner_option("xcloner_sftp_hostname"),
@@ -997,7 +1005,7 @@ class Xcloner_Remote_Storage
 
             /** optional config settings */
             'port' => $this->xcloner_settings->get_xcloner_option("xcloner_sftp_port", 22),
-            'root' => ($this->xcloner_settings->get_xcloner_option("xcloner_sftp_path") ? $this->xcloner_settings->get_xcloner_option("xcloner_sftp_path") : './'),
+            'root' => $sftp_path,
             'privateKey' => $this->xcloner_settings->get_xcloner_option("xcloner_sftp_private_key"),
             'timeout' => $this->xcloner_settings->get_xcloner_option("xcloner_sftp_timeout", 30),
             'directoryPerm' => 0755

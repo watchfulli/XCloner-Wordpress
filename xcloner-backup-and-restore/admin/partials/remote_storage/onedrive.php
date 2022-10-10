@@ -74,7 +74,7 @@ if (!defined('WPINC')) {
         <div class=" col s12 m6">
             <input placeholder="<?php echo __("OneDrive Storage Folder Path", 'xcloner-backup-and-restore') ?>"
                 id="onedrive_path" type="text" name="xcloner_onedrive_path" class="validate"
-                value="<?php echo esc_attr(get_option("xcloner_onedrive_path")) ?>">
+                value="<?php echo esc_attr(urldecode(get_option("xcloner_onedrive_path") ?: '')) ?>">
         </div>
     </div>
 

@@ -257,11 +257,11 @@ class Xcloner_Settings
     }
 
     /**
-     * @param string $option
+     * @param string $option_name
      */
-    public function get_xcloner_option($option = "")
+    public function get_xcloner_option($option_name, $default = null)
     {
-        return get_option($option);
+        return get_option($option_name, $default);
     }
 
     /**
@@ -349,43 +349,6 @@ class Xcloner_Settings
                 9
             )
         );
-
-        /*register_setting('xcloner_general_settings_group', 'xcloner_start_path', array(
-            $this->xcloner_sanitization,
-            "sanitize_input_as_absolute_path"
-        ));
-        add_settings_field(
-            'xcloner_start_path',
-            __('Backup Start Location', 'xcloner-backup-and-restore'),
-            array($this, 'do_form_text_field'),
-            'xcloner_settings_page',
-            'xcloner_general_settings_group',
-            array(
-                'xcloner_start_path',
-                __('Base path location from where XCloner can start the Backup.', 'xcloner-backup-and-restore'),
-                $this->get_xcloner_start_path(),
-                //'disabled'
-            )
-        );
-
-        register_setting('xcloner_general_settings_group', 'xcloner_store_path', array(
-            $this->xcloner_sanitization,
-            "sanitize_input_as_absolute_path"
-        ));
-        add_settings_field(
-            'xcloner_store_path',
-            __('Backup Storage Location', 'xcloner-backup-and-restore'),
-            array($this, 'do_form_text_field'),
-            'xcloner_settings_page',
-            'xcloner_general_settings_group',
-            array(
-                'xcloner_store_path',
-                __('Location where XCloner will store the Backup archives.', 'xcloner-backup-and-restore'),
-                $this->get_xcloner_store_path(),
-                //'disabled'
-            )
-        );
-        */
 
         register_setting('xcloner_general_settings_group', 'xcloner_encryption_key', array(
             $this->xcloner_sanitization,

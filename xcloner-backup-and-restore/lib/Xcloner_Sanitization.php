@@ -38,32 +38,9 @@ class Xcloner_Sanitization
      * @param mixed $option
      * @return string | false
      */
-    public function sanitize_input_as_absolute_path($option)
-    {
-        $path = filter_var($option, FILTER_SANITIZE_URL);
-
-        try {
-            $option = Util::normalizePath($path);
-        } catch (Exception $e) {
-            add_settings_error('xcloner_error_message', '', __($e->getMessage()), 'error');
-        }
-
-        if ($path && !is_dir($path)) {
-            add_settings_error('xcloner_error_message', '', __(sprintf('Invalid Server Path %s', $option)), 'error');
-
-            return false;
-        }
-
-        return $path;
-    }
-
-    /**
-     * @param mixed $option
-     * @return string | false
-     */
     public function sanitize_input_as_path($option)
     {
-        return filter_var($option, FILTER_SANITIZE_URL);
+        return filter_var(urlencode($option ?: ''), FILTER_SANITIZE_URL);
     }
 
     /**
