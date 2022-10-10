@@ -62,7 +62,6 @@ class Xcloner_Settings
      * Get Logger Filename Setting
      *
      * @param integer $include_hash
-     * @return void
      */
     public function get_logger_filename($include_hash = 0)
     {

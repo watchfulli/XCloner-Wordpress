@@ -3,7 +3,7 @@
 namespace Watchfulli\XClonerCore;
 
 /**
- * XCloner - Backup and Restore backup plugin for Wordpress
+ * XCloner - Backup and Restore backup plugin for WordPress
  *
  * class-xcloner-file-system.php
  * @author Liuta Ovidiu <info@thinkovi.com>
@@ -31,9 +31,11 @@ namespace Watchfulli\XClonerCore;
 
 use Exception;
 use League\Flysystem\Config;
+use League\Flysystem\FileExistsException;
 use League\Flysystem\FileNotFoundException;
 use League\Flysystem\Filesystem;
 use League\Flysystem\Adapter\Local;
+use SplFileInfo;
 
 /**
  * Class Xcloner_File_System
@@ -70,9 +72,8 @@ class Xcloner_Filesystem
     /**
      * Xcloner_File_System constructor.
      * @param Xcloner $xcloner_container
-     * @param string $hash
      */
-    public function __construct(Xcloner $xcloner_container, $hash = "")
+    public function __construct(Xcloner $xcloner_container)
     {
         $this->xcloner_container = $xcloner_container;
 
@@ -146,9 +147,9 @@ class Xcloner_Filesystem
         return $this->xcloner_container;
     }
 
-    public function get_hash($hash)
+    public function get_hash()
     {
-        $this->xcloner_settings->get_hash();
+        return $this->xcloner_settings->get_hash();
     }
 
     public function get_tmp_filesystem()
@@ -184,26 +185,9 @@ class Xcloner_Filesystem
         return $this->tmp_filesystem_append;
     }
 
-    public function get_start_adapter()
-    {
-        return $this->start_adapter;
-    }
-
-    public function get_start_filesystem()
-    {
-        return $this->start_filesystem;
-    }
-
     public function get_logger()
     {
         return $this->logger;
-    }
-
-    public function get_start_path_file_info($file)
-    {
-        $info = $this->getMetadataFull('start_adapter', $file);
-
-        return $this->start_filesystem->normalizeFileInfo($info);
     }
 
     /**
@@ -221,9 +205,7 @@ class Xcloner_Filesystem
             return $path;
         }
 
-        $spl_info = $this->getMetadataFull('tmp_adapter', $path);
-
-        return $spl_info;
+        return $this->getMetadataFull('tmp_adapter', $path);
     }
 
     public function get_temp_dir_handler()
@@ -231,6 +213,9 @@ class Xcloner_Filesystem
         return $this->temp_dir_handler;
     }
 
+    /**
+     * @throws FileNotFoundException
+     */
     public function get_latest_backup()
     {
         $files = $this->get_backup_archives_list();
@@ -241,15 +226,18 @@ class Xcloner_Filesystem
 
         $new_list = array();
 
-        foreach ($files as $key => $file) {
+        foreach ($files as $file) {
             if (!isset($file['parent'])) {
-                $new_list[] = ($files[$key]);
+                $new_list[] = ($file);
             }
         }
 
         return $new_list[0] ?? null;
     }
 
+    /**
+     * @throws FileNotFoundException
+     */
     public function get_latest_backups()
     {
         $files = $this->get_backup_archives_list();
@@ -260,9 +248,9 @@ class Xcloner_Filesystem
 
         $new_list = array();
 
-        foreach ($files as $key => $file) {
+        foreach ($files as $file) {
             if (!isset($file['parent'])) {
-                $new_list[] = ($files[$key]);
+                $new_list[] = ($file);
             }
         }
 
@@ -275,6 +263,9 @@ class Xcloner_Filesystem
         }, $new_list);
     }
 
+    /**
+     * @throws FileNotFoundException
+     */
     public function get_storage_usage()
     {
         $files = $this->get_backup_archives_list();
@@ -307,6 +298,9 @@ class Xcloner_Filesystem
         return false;
     }
 
+    /**
+     * @throws FileNotFoundException
+     */
     public function get_backup_size($backup_name)
     {
         $backup_size = $this->get_storage_filesystem()->getSize($backup_name);
@@ -320,9 +314,12 @@ class Xcloner_Filesystem
         return $backup_size;
     }
 
+    /**
+     * @throws FileNotFoundException
+     */
     public function get_multipart_files($backup_name, $storage_selection = "")
     {
-        $files = array();
+        $files = [];
 
         if ($this->is_multipart($backup_name)) {
             $lines = explode(PHP_EOL, $this->get_storage_filesystem($storage_selection)->read($backup_name));
@@ -337,6 +334,9 @@ class Xcloner_Filesystem
         return $files;
     }
 
+    /**
+     * @throws FileNotFoundException
+     */
     public function delete_backup_by_name($backup_name, $storage_selection = "")
     {
         if ($this->is_multipart($backup_name)) {
@@ -358,10 +358,10 @@ class Xcloner_Filesystem
         return $return;
     }
 
-    public function getMetadataFull($adapter = "storage_adapter", $path)
+    public function getMetadataFull($adapter, $path)
     {
         $location = $this->$adapter->applyPathPrefix($path);
-        $spl_info = new \SplFileInfo($location);
+        $spl_info = new SplFileInfo($location);
 
         return ($spl_info);
     }
@@ -420,6 +420,10 @@ class Xcloner_Filesystem
         }, $backup_files);
     }
 
+    /**
+     * @throws FileExistsException
+     * @throws FileNotFoundException
+     */
     public function start_file_recursion($init = 0)
     {
         if ($init) {
@@ -505,6 +509,10 @@ class Xcloner_Filesystem
         return $return;
     }
 
+    /**
+     * @throws FileNotFoundException
+     * @throws Exception
+     */
     public function remove_tmp_filesystem()
     {
         $tmp_path = $this->xcloner_settings->get_xcloner_tmp_path();
@@ -530,13 +538,14 @@ class Xcloner_Filesystem
         } catch (Exception $e) {
             //silent continue
         }
-
-        return;
     }
 
+    /**
+     * @throws Exception
+     */
     public function cleanup_tmp_directories()
     {
-        $this->logger->info(sprintf(("Cleaning up the temporary directories")));
+        $this->logger->info('Cleaning up the temporary directories');
 
         $adapter = new Local($this->xcloner_settings->get_xcloner_tmp_path(false), LOCK_EX, '0001');
         $tmp_filesystem = new Filesystem($adapter, new Config([
@@ -557,6 +566,10 @@ class Xcloner_Filesystem
         return true;
     }
 
+    /**
+     * @throws FileNotFoundException
+     * @throws FileExistsException
+     */
     private function do_system_init()
     {
         $this->files_counter = 0;
@@ -615,11 +628,6 @@ class Xcloner_Filesystem
         return $this->excluded_files;
     }
 
-    public function get_excluded_files()
-    {
-        return $this->excluded_files_by_default;
-    }
-
     public function list_directory($path)
     {
         return $this->start_filesystem->listContents($path);
@@ -627,11 +635,7 @@ class Xcloner_Filesystem
 
     public function build_files_list($folder = "")
     {
-        $this->logger->debug(sprintf(("Building the files system list")));
-
-        //if we start with the root folder(empty value), we initializa the file system
-        if (!$folder) {
-        }
+        $this->logger->debug('Building the files system list');
 
         try {
             $files = $this->start_filesystem->listContents($folder);
@@ -697,6 +701,9 @@ class Xcloner_Filesystem
         return $return;
     }
 
+    /**
+     * @throws FileNotFoundException
+     */
     public function backup_storage_cleanup($storage_name = "local", $storage_filesystem = "")
     {
         //$storage_name = "webdav";
@@ -794,10 +801,11 @@ class Xcloner_Filesystem
 
     /**
      * @param string $tmp_file
+     * @throws FileNotFoundException
      */
     public function estimate_reading_time($tmp_file)
     {
-        $this->logger->debug(sprintf(("Estimating file system reading time")));
+        $this->logger->debug('Estimating file system reading time');
 
         $start_time = microtime(true);
 
@@ -805,9 +813,7 @@ class Xcloner_Filesystem
             $this->tmp_filesystem->read($tmp_file);
         }
 
-        $end_time = microtime(true) - $start_time;
-
-        return $end_time;
+        return microtime(true) - $start_time;
     }
 
     public function process_backup_name($name = "", $max_length = 100)
@@ -1065,11 +1071,6 @@ class Xcloner_Filesystem
         return true;
     }
 
-    public function get_fileystem_handler()
-    {
-        return $this;
-    }
-
     public function get_filesystem($system = "")
     {
         if ($system == "storage_filesystem_append") {
@@ -1101,6 +1102,7 @@ class Xcloner_Filesystem
      * Method called when file scan is finished
      *
      * @return bool
+     * @throws FileNotFoundException
      */
     private function scan_finished()
     {
@@ -1115,7 +1117,7 @@ class Xcloner_Filesystem
             $this->tmp_filesystem->delete($this->get_temp_dir_handler());
         }
 
-        $this->logger->debug(sprintf(("File scan finished")));
+        $this->logger->debug('File scan finished');
 
         return true;
     }

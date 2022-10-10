@@ -735,8 +735,6 @@ class Xcloner_Archive extends Tar
 
         $last_position = $start_at_byte;
 
-        //$start_adapter = $this->filesystem->get_start_adapter();
-
         if (!$append) {
             $bytes_wrote = $file_info['size'];
             $this->logger->info(sprintf(
