@@ -4,8 +4,164 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e2f43670c331fd1694409bbb5d633f94",
+    "content-hash": "517dc7a563944fcc8c0115794fe825c9",
     "packages": [
+        {
+            "name": "as247/cloud-storages",
+            "version": "v1.0.16",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/as247/cloud-storages.git",
+                "reference": "c6b734240bb7fe09a62042b1dd9cfc5ae03a97e8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/as247/cloud-storages/zipball/c6b734240bb7fe09a62042b1dd9cfc5ae03a97e8",
+                "reference": "c6b734240bb7fe09a62042b1dd9cfc5ae03a97e8",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "php": ">=7.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "As247\\CloudStorages\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "As247",
+                    "email": "as247@vui360.com",
+                    "homepage": "http://as247.vui360.com"
+                }
+            ],
+            "description": "Storages wrapper with path support for drive services: google drive, onedrive,...",
+            "homepage": "https://github.com/as247",
+            "keywords": [
+                "drive",
+                "google",
+                "google drive",
+                "one drive",
+                "php",
+                "storage"
+            ],
+            "support": {
+                "issues": "https://github.com/as247/cloud-storages/issues",
+                "source": "https://github.com/as247/cloud-storages/tree/v1.0.16"
+            },
+            "time": "2020-10-19T05:57:25+00:00"
+        },
+        {
+            "name": "as247/flysystem-drive-support",
+            "version": "v1.0.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/as247/flysystem-drive-support.git",
+                "reference": "9bb4199e94541ee1ab373706f7c0a768716efe90"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/as247/flysystem-drive-support/zipball/9bb4199e94541ee1ab373706f7c0a768716efe90",
+                "reference": "9bb4199e94541ee1ab373706f7c0a768716efe90",
+                "shasum": ""
+            },
+            "require": {
+                "as247/cloud-storages": "^1.0",
+                "ext-json": "*",
+                "league/flysystem": "^1.0",
+                "php": ">=7.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "As247\\Flysystem\\DriveSupport\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "As247",
+                    "email": "as247@vui360.com",
+                    "homepage": "http://as247.vui360.com"
+                }
+            ],
+            "description": "Helper for google drive and one drive",
+            "homepage": "https://github.com/as247",
+            "keywords": [
+                "drive",
+                "google",
+                "google drive",
+                "one drive",
+                "php",
+                "storage"
+            ],
+            "support": {
+                "issues": "https://github.com/as247/flysystem-drive-support/issues",
+                "source": "https://github.com/as247/flysystem-drive-support/tree/v1.0.6"
+            },
+            "time": "2020-10-14T01:48:28+00:00"
+        },
+        {
+            "name": "as247/flysystem-onedrive",
+            "version": "v1.0.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/as247/flysystem-onedrive.git",
+                "reference": "dff8aee0c19d6d6ad173e8a6c2703e2832eb88f5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/as247/flysystem-onedrive/zipball/dff8aee0c19d6d6ad173e8a6c2703e2832eb88f5",
+                "reference": "dff8aee0c19d6d6ad173e8a6c2703e2832eb88f5",
+                "shasum": ""
+            },
+            "require": {
+                "as247/flysystem-drive-support": "^1.0",
+                "ext-json": "*",
+                "microsoft/microsoft-graph": "^1.0",
+                "php": ">=7.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "As247\\Flysystem\\OneDrive\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "As247",
+                    "email": "as247@vui360.com",
+                    "homepage": "http://as247.vui360.com"
+                }
+            ],
+            "description": "One Drive Adapter for Flysystem",
+            "homepage": "https://github.com/as247",
+            "keywords": [
+                "drive",
+                "microsoft",
+                "one-drive",
+                "php",
+                "storage"
+            ],
+            "support": {
+                "issues": "https://github.com/as247/flysystem-onedrive/issues",
+                "source": "https://github.com/as247/flysystem-onedrive/tree/v1.0.5"
+            },
+            "time": "2020-09-29T15:35:40+00:00"
+        },
         {
             "name": "aws/aws-crt-php",
             "version": "v1.0.2",
@@ -1841,61 +1997,6 @@
                 }
             ],
             "time": "2022-09-02T07:48:13+00:00"
-        },
-        {
-            "name": "nicolasbeauvais/flysystem-onedrive",
-            "version": "v1.0.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/nicolasbeauvais/flysystem-onedrive.git",
-                "reference": "38ad35f2bbe4efb8f41391ef6ebba057f95b8f47"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/nicolasbeauvais/flysystem-onedrive/zipball/38ad35f2bbe4efb8f41391ef6ebba057f95b8f47",
-                "reference": "38ad35f2bbe4efb8f41391ef6ebba057f95b8f47",
-                "shasum": ""
-            },
-            "require": {
-                "league/flysystem": "^1.0",
-                "microsoft/microsoft-graph": "^1.0",
-                "php": "^7.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^6.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "NicolasBeauvais\\FlysystemOneDrive\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Nicolas Beauvais",
-                    "email": "nicolasbeauvais1@gmail.com",
-                    "homepage": "http://nicolas-beauvais.com",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Flysystem Adapter for the OneDrive API",
-            "homepage": "https://github.com/nicolasbeauvais/flysystem-onedrive",
-            "keywords": [
-                "Flysystem",
-                "OneDrive",
-                "api",
-                "flysystem-onedrive"
-            ],
-            "support": {
-                "issues": "https://github.com/nicolasbeauvais/flysystem-onedrive/issues",
-                "source": "https://github.com/nicolasbeauvais/flysystem-onedrive/tree/master"
-            },
-            "abandoned": true,
-            "time": "2017-08-12T15:18:08+00:00"
         },
         {
             "name": "phpseclib/phpseclib",

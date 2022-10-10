@@ -53,7 +53,7 @@ use Mhetreramesh\Flysystem\BackblazeAdapter;
 use BackblazeB2\Client as B2Client;
 
 use Microsoft\Graph\Graph;
-use NicolasBeauvais\FlysystemOneDrive\OneDriveAdapter;
+use As247\Flysystem\OneDrive\OneDriveAdapter;
 
 use GuzzleHttp\Client;
 
@@ -718,8 +718,6 @@ class Xcloner_Remote_Storage
      * OneDrive connector
      *
      * https://docs.microsoft.com/en-us/onedrive/developer/rest-api/getting-started/graph-oauth?view=odsp-graph-online#token-flow
-     *
-     * @return void
      */
     public function get_onedrive_filesystem()
     {
@@ -728,10 +726,9 @@ class Xcloner_Remote_Storage
         $graph = new Graph();
         $graph->setAccessToken($accessToken);
 
-        $adapter = new OneDriveAdapter($graph, 'root', 1);
+        $adapter = new OneDriveAdapter($graph, '[root path]');
         $adapter->setPathPrefix('/drive/root:/' . urldecode(get_option('xcloner_onedrive_path') ?: '') . "/");
         $filesystem = new Filesystem($adapter);
-
 
         return [$adapter, $filesystem];
     }

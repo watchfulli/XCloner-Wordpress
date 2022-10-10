@@ -3,6 +3,7 @@
   "license": "GPL-2.0-or-later",
   "description": "WordPress backup plugin for XCloner",
   "require": {
+    "as247/flysystem-onedrive": "^1.0",
     "gliterd/backblaze-b2": "^1.5",
     "league/flysystem": "^1.0",
     "league/flysystem-aws-s3-v3": "^1.0",
@@ -12,7 +13,6 @@
     "mhetreramesh/flysystem-backblaze": "^1.6",
     "monolog/monolog": "^1.22",
     "nao-pon/flysystem-google-drive": "^1.1",
-    "nicolasbeauvais/flysystem-onedrive": "^1.0",
     "splitbrain/php-archive": "^1.0",
     "srmklive/flysystem-dropbox-v2": "^1.0",
     "vakata/jstree": "^3.3"
