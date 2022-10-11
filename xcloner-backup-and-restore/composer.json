@@ -30,7 +30,8 @@
     "symfony/process": "^5.4"
   },
   "scripts": {
-    "test": "vendor/bin/phpunit --config=phpunit-integration.xml"
+    "test": "vendor/bin/phpunit --config=phpunit-integration.xml",
+    "pre-autoload-dump": "Watchfulli\\XClonerCore\\Xcloner_Composer_Cleanup::cleanup"
   },
   "config": {
     "preferred-install": "dist",
@@ -47,7 +48,13 @@
       "commands": [
         "ImaginaryMachines\\IsStableTagLatestTag"
       ]
-    }
+    },
+    "google/apiclient-services": [
+      "Drive"
+    ],
+    "aws/aws-sdk-php": [
+      "S3"
+    ]
   },
   "autoload": {
     "psr-4": {
