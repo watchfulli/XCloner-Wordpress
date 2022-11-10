@@ -184,10 +184,14 @@ class Xcloner_Admin
 
     }
 
-    public function xcloner_restore_page()
+    public function xcloner_restore_site()
     {
         require_once("partials/xcloner_restore_page.php");
+    }
 
+    public function xcloner_clone_site()
+    {
+        require_once("partials/xcloner_restore_page.php");
     }
 
     public function xcloner_generate_backups_page()

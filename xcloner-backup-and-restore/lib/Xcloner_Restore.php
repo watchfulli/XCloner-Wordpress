@@ -225,70 +225,71 @@ class Xcloner_Restore
         $return['backup_size'] = filesize($mysql_backup_file);
 
         $fp = fopen($mysql_backup_file, "r");
-        if ($fp) {
-            $this->logger->info(sprintf("Opening mysql dump file %s at position %s.", $mysql_backup_file, $start));
-            fseek($fp, $start);
-            while ($line_count <= $this->process_mysql_records_limit and ($line = fgets($fp)) !== false) {
-                // process the line read.
-
-                //check if line is comment
-                if (substr($line, 0, 1) == "#") {
-                    continue;
-                }
-
-                //check if line is empty
-                if ($line == "\n" or trim($line) == "") {
-                    continue;
-                }
-
-                //exclude usermeta info for local restores to fix potential session logout
-                if (defined('XCLONER_PLUGIN_ACCESS') && XCLONER_PLUGIN_ACCESS) {
-                    if (strpos($line, "_usermeta`") !== false) {
-                        $line = str_replace("_usermeta`", "_usermeta2`", $line);
-                    }
-                }
-
-                $query .= $line;
-                if (substr($line, strlen($line) - 2, strlen($line)) != ";\n") {
-                    continue;
-                }
-
-                if ($execute_query) {
-                    $query = (($execute_query));
-                    $execute_query = "";
-                }
-
-                if (!$mysqli->query($query) && !stristr($mysqli->error, "Duplicate entry")) {
-                    //$return['error_line'] = $line_count;
-                    $return['start'] = ftell($fp) - strlen($line);
-                    $return['query_error'] = true;
-                    $return['query'] = $query;
-                    $return['message'] = sprintf("Mysql Error: %s\n", $mysqli->error);
-
-                    $this->logger->error($return['message']);
-
-                    $this->send_response(418, $return);
-                    //throw new Exception(sprintf("Mysql Error: %s\n Mysql Query: %s", $mysqli->error, $query));
-                }
-                //else echo $line;
-
-                $query = "";
-
-                $line_count++;
-            }
-
-            $return['start'] = ftell($fp);
-
-            $this->logger->info(sprintf("Executed %s queries of size %s bytes", $line_count, ($return['start'] - $start)));
-
-            if (!feof($fp)) {
-                $return['finished'] = 0;
-            } else {
-                $this->logger->info('Mysql Import Done.');
-            }
-
-            fclose($fp);
+        if (!$fp) {
+            $this->logger->error(sprintf('Unable to open mysql backup file %s', $mysql_backup_file));
+            $this->send_response(200, $return);
         }
+
+        $this->logger->info(sprintf("Opening mysql dump file %s at position %s.", $mysql_backup_file, $start));
+        fseek($fp, $start);
+        while ($line_count <= $this->process_mysql_records_limit and ($line = fgets($fp)) !== false) {
+            // process the line read.
+
+            //check if line is comment
+            if (substr($line, 0, 1) == "#") {
+                continue;
+            }
+
+            //check if line is empty
+            if ($line == "\n" or trim($line) == "") {
+                continue;
+            }
+
+            //exclude usermeta info for local restores to fix potential session logout
+            if (strpos($line, "_usermeta`") !== false) {
+                $line = str_replace("_usermeta`", "_usermeta2`", $line);
+            }
+
+            $query .= $line;
+            if (substr($line, strlen($line) - 2, strlen($line)) != ";\n") {
+                continue;
+            }
+
+            if ($execute_query) {
+                $query = (($execute_query));
+                $execute_query = "";
+            }
+
+            if (!$mysqli->query($query) && !stristr($mysqli->error, "Duplicate entry")) {
+                //$return['error_line'] = $line_count;
+                $return['start'] = ftell($fp) - strlen($line);
+                $return['query_error'] = true;
+                $return['query'] = $query;
+                $return['message'] = sprintf("Mysql Error: %s\n", $mysqli->error);
+
+                $this->logger->error($return['message']);
+
+                $this->send_response(418, $return);
+                //throw new Exception(sprintf("Mysql Error: %s\n Mysql Query: %s", $mysqli->error, $query));
+            }
+            //else echo $line;
+
+            $query = "";
+
+            $line_count++;
+        }
+
+        $return['start'] = ftell($fp);
+
+        $this->logger->info(sprintf("Executed %s queries of size %s bytes", $line_count, ($return['start'] - $start)));
+
+        if (!feof($fp)) {
+            $return['finished'] = 0;
+        } else {
+            $this->logger->info('Mysql Import Done.');
+        }
+
+        fclose($fp);
 
         $this->send_response(200, $return);
     }
@@ -437,46 +438,56 @@ class Xcloner_Restore
         $parents = array();
 
         foreach ($list as $file_info) {
-            $data = array();
-
-            if (isset($file_info['extension']) and $file_info['extension'] == "csv") {
+            if (!isset($file_info['extension'])) {
+                continue;
+            }
+            if ($file_info['extension'] == "csv") {
                 $lines = explode(PHP_EOL, $this->filesystem->read($file_info['path']));
                 foreach ($lines as $line) {
-                    if ($line) {
-                        $data = str_getcsv($line);
-                        if (is_array($data)) {
-                            $parents[$data[0]] = $file_info['path'];
-                            $file_info['childs'][] = $data;
-                            $file_info['size'] += $data[2];
-                        }
+                    if (!$line) {
+                        continue;
                     }
+                    $data = str_getcsv($line);
+                    $parents[$data[0]] = $file_info['path'];
+                    $file_info['childs'][] = $data;
+                    $file_info['size'] += $data[2];
                 }
             }
 
-            if ($file_info['type'] == 'file' and isset($file_info['extension']) and in_array($file_info['extension'], $this->backup_archive_extensions)) {
+            if ($file_info['type'] == 'file' && in_array($file_info['extension'], $this->backup_archive_extensions)) {
                 $backup_files[$file_info['path']] = $file_info;
             }
         }
 
-        $new_list = array();
-
-        foreach ($backup_files as $key => $file_info) {
+        $backup_files = array_map(function ($file_info) use ($parents, $local_backup_file) {
             if (isset($parents[$file_info['path']])) {
-                $backup_files[$key]['parent'] = $parents[$file_info['path']];
+                $file_info['parent'] = $parents[$file_info['path']];
             } else {
-                if ($local_backup_file and ($file_info['basename'] == $local_backup_file)) {
+                if ($local_backup_file && ($file_info['basename'] == $local_backup_file)) {
                     $file_info['selected'] = 'selected';
                 }
-
-                $this->logger->info(sprintf('Found %s backup file', $file_info['path']));
-
-                $new_list[$key] = $file_info;
             }
-        }
+            $file_info['file_size'] = $file_info['size'];
+            return $file_info;
+        }, $backup_files);
 
-        $this->sort_by($new_list, "timestamp", "desc");
+        $this->sort_by($backup_files, "timestamp", "desc");
 
-        $return['files'] = $new_list;
+        $return['files'] = $backup_files;
+
+        $this->send_response(200, $return);
+    }
+
+    public function get_current_directory_action()
+    {
+        $return['dir'] = realpath(get_home_path());
+        $return['restore_script_url'] = get_site_url();
+        $return['remote_mysql_host'] 	= '';
+        $return['remote_mysql_user'] 	= '';
+        $return['remote_mysql_pass'] 	= '';
+        $return['remote_mysql_db'] = '';
+
+        $this->logger->info(sprintf('Determining current url as %s and path as %s', $return['dir'], $return['restore_script_url']));
 
         $this->send_response(200, $return);
     }
@@ -702,14 +713,6 @@ class Xcloner_Restore
         return $files;
     }
 
-    /**
-     * Sort_by method
-     *
-     * @param $array
-     * @param string $field
-     * @param string $direction
-     * @return bool
-     */
     private function sort_by(&$array, $field, $direction = 'asc')
     {
         $direction = strtolower($direction);
@@ -744,6 +747,7 @@ class Xcloner_Restore
             }
         );
     }
+
 
     /**
      * Send response method
