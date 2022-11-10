@@ -747,10 +747,18 @@ class Xcloner
             );
             add_submenu_page(
                 'xcloner_init_page',
-                __('Restore Backups', 'xcloner-backup-and-restore'),
-                __('Restore Backups', 'xcloner-backup-and-restore'),
+                __('Restore Site', 'xcloner-backup-and-restore'),
+                __('Restore Site', 'xcloner-backup-and-restore'),
                 'manage_options',
-                'xcloner_restore_page',
+                'xcloner_restore_site',
+                array($this, 'xcloner_display')
+            );
+            add_submenu_page(
+                'xcloner_init_page',
+                __('Clone Site', 'xcloner-backup-and-restore'),
+                __('Clone Site', 'xcloner-backup-and-restore'),
+                'manage_options',
+                'xcloner_clone_site',
                 array($this, 'xcloner_display')
             );
         }
@@ -786,10 +794,6 @@ class Xcloner
         call_user_func_array(array($this->xcloner_admin, $page), array());
     }
 
-    /**
-     * Start backup process trigger method
-     *
-     */
     public function execute_backup($profile_id = null)
     {
         $profile_config = ($this->xcloner_settings->get_xcloner_option('profile'));

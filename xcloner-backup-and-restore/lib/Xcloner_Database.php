@@ -45,7 +45,7 @@ class Xcloner_Database extends wpdb
     private $TEMP_DBPROCESS_FILE = ".database";
     private $TEMP_DUMP_FILE = "database-backup.sql";
 
-    public function __construct(Xcloner $xcloner_container, $wp_user = "", $wp_pass = "", $wp_db = "", $wp_host = "")
+    public function __construct(Xcloner $xcloner_container)
     {
         $this->logger = $xcloner_container->get_xcloner_logger()->withName("xcloner_database");
         $this->xcloner_settings = $xcloner_container->get_xcloner_settings();

@@ -1,10 +1,10 @@
 /** global: CustomEvent */
 /** global: Event */
 
-import { ID } from "./xcloner-admin";
+import {ID} from "./xcloner-admin";
 
 class Xcloner_Restore {
-  constructor(hash) {
+  constructor(local_restore = false) {
     this.steps = [
       "restore-script-upload-step",
       "backup-upload-step",
@@ -15,10 +15,13 @@ class Xcloner_Restore {
     this.ajaxurl = location.origin + ajaxurl + "?action=restore_backup";
     this.restore_script_url = "";
     this.cancel = false;
-    this.upload_file_event = new Event("upload_file_event");
     this.resume = {};
-    this.hash = hash;
+    this.hash = null;
     this.file_counter = 0;
+    this.local_restore = local_restore;
+    this.current_step = 0;
+
+    this.set_options_by_restore_location();
 
     document.addEventListener(
         "backup_upload_finish",
@@ -56,7 +59,8 @@ class Xcloner_Restore {
           jQuery(".xcloner-restore #restore_script_url")
               .addClass("invalid")
               .removeClass("valid");
-          jQuery(".xcloner-restore #validate_url .material-icons").text("error");
+          jQuery(".xcloner-restore #validate_url .material-icons")
+              .text("error");
         },
         false
     );
@@ -152,22 +156,6 @@ class Xcloner_Restore {
     );
 
     document.addEventListener(
-        "xcloner_restore_next_step",
-        function (e) {
-          if (e.detail.$this !== undefined) {
-            var $this = e.detail.$this;
-            //console.log($this.steps[$this.set_current_step]);
-            jQuery(".xcloner-restore li." + $this.steps[$this.set_current_step])
-                .show()
-                .find(".collapsible-header")
-                .trigger("click");
-            //jQuery(".xcloner-restore li."+$this.steps[$this.set_current_step]).addClass('active').show().find(".collapsible-body").show();
-          }
-        },
-        false
-    );
-
-    document.addEventListener(
         "xcloner_restore_update_progress",
         function (e) {
           if (e.detail.percent !== undefined) {
@@ -191,10 +179,11 @@ class Xcloner_Restore {
                   .addClass("determinate")
                   .css("width", e.detail.percent + "%");
             } else {
-              jQuery(".xcloner-restore .steps.active .progress .determinate").css(
-                  "width",
-                  e.detail.percent + "%"
-              );
+              jQuery(".xcloner-restore .steps.active .progress .determinate")
+                  .css(
+                      "width",
+                      e.detail.percent + "%"
+                  );
             }
           }
         },
@@ -271,29 +260,26 @@ class Xcloner_Restore {
     document.addEventListener(
         "remote_restore_update_files_list",
         function (e) {
-          if (e.detail.files !== undefined && e.detail.files.length) {
-            var files_text = [];
-            for (var i = 0; i < 20; i++) {
-              files_text[i] = "<li>" + e.detail.files[i] + "</li>";
-            }
-            if (
-                !jQuery(
-                    ".xcloner-restore .restore-remote-backup-step .files-list"
-                ).is(":hidden")
-            ) {
-              jQuery(
-                  ".xcloner-restore .restore-remote-backup-step .files-list"
-              ).html(files_text.reverse().join("\n"));
-              if (e.detail.files.length > 20) {
-                jQuery(
-                    ".xcloner-restore .restore-remote-backup-step .files-list"
-                ).append("<li>..."+ (e.detail.files.length - 20) + " more</li>");
-              }
-            }
-          } else if (!jQuery.isArray(e.detail.files)) {
-            jQuery(
-                ".xcloner-restore .restore-remote-backup-step .files-list"
-            ).html("");
+          const listElement = jQuery(
+              ".xcloner-restore .restore-remote-backup-step .files-list");
+
+          if (e.detail.files === undefined || !e.detail.files.length) {
+            listElement.html('');
+            return;
+          }
+
+          const filesText = e.detail.files.map((file) => {
+            return `<li>${file}</li>`;
+          })
+              .reverse()
+              .slice(0, 20)
+              .join('\n');
+
+          listElement.html(filesText);
+
+          if (e.detail.files.length > 20) {
+            listElement.append(
+                `<li>...${e.detail.files.length - 20} more</li>`);
           }
         },
         false
@@ -323,15 +309,61 @@ class Xcloner_Restore {
     );
   }
 
-  get_remote_backup_files_callback(response, status) {
-    if (status) {
-      var files = response.statusText.files;
-      document.dispatchEvent(
-          new CustomEvent("xcloner_populate_remote_backup_files_list", {
-            detail: { files: files, $this: this },
-          })
-      );
+  set_options_by_restore_location() {
+    const remoteRestoreElement = jQuery("#remote-restore-options");
+    const updateRemoteSiteUrlElement = jQuery("#update_remote_site_url");
+    const deleteBackupArchiveElement = jQuery("#delete_backup_archive");
+    const deleteRestoreScriptElement = jQuery("#delete_restore_script");
+    const filterInputElement = jQuery(
+        ".xcloner-restore input[name=filter_files]");
+    const filterFilesAllElement = jQuery("#filter_files_all");
+    const filterFilesWpContentElement = jQuery("#filter_files_wp_content");
+
+    filterInputElement.val(
+        [
+          this.local_restore ?
+              filterFilesWpContentElement.val() :
+              filterFilesAllElement.val()]
+    );
+
+    if (this.local_restore) {
+      this.restore_script_url = this.ajaxurl;
+      remoteRestoreElement.hide();
+      deleteBackupArchiveElement
+          .attr("disabled", "disabled")
+          .removeAttr("checked");
+      deleteRestoreScriptElement
+          .attr("disabled", "disabled")
+          .removeAttr("checked");
+      filterFilesAllElement
+          .removeAttr("checked")
+          .attr("disabled", "disabled")
+          .parent()
+          .attr("data-tooltip", "Available only when cloning a site")
+          .tooltip();
+    } else {
+      remoteRestoreElement.show();
+      updateRemoteSiteUrlElement
+          .attr("checked", "checked").removeAttr("disabled");
+      deleteRestoreScriptElement
+          .attr("checked", "checked")
+          .removeAttr("disabled");
+      filterFilesAllElement
+          .removeAttr("disabled");
     }
+  }
+
+  get_remote_backup_files_callback(response, status) {
+    this.get_remote_restore_path_default();
+    if (!status) {
+      return
+    }
+    var files = response.statusText.files;
+    document.dispatchEvent(
+        new CustomEvent("xcloner_populate_remote_backup_files_list", {
+          detail: {files: files, $this: this},
+        })
+    );
   }
 
   get_remote_backup_files() {
@@ -348,8 +380,6 @@ class Xcloner_Restore {
         params,
         true
     );
-
-    this.get_remote_restore_path_default();
   }
 
   get_remote_mysqldump_files_callback(response, status) {
@@ -357,7 +387,7 @@ class Xcloner_Restore {
       var files = response.statusText.files;
       document.dispatchEvent(
           new CustomEvent("xcloner_populate_remote_mysqldump_files_list", {
-            detail: { files: files, $this: this },
+            detail: {files: files, $this: this},
           })
       );
     }
@@ -368,7 +398,6 @@ class Xcloner_Restore {
     this.resume.callback = "";
 
     if (this.resume.callback == "get_remote_mysqldump_files_callback") {
-      //console.log("do resume");
       this.do_ajax(
           this.resume.callback,
           this.resume.action,
@@ -381,8 +410,6 @@ class Xcloner_Restore {
     var params = {};
     params.backup_file = this.get_backup_file();
     params.remote_path = this.get_remote_path();
-
-    //console.log(params)
 
     this.do_ajax(
         "get_remote_mysqldump_files_callback",
@@ -441,7 +468,7 @@ class Xcloner_Restore {
       );
       document.dispatchEvent(
           new CustomEvent("xcloner_restore_update_progress", {
-            detail: { percent: 100 },
+            detail: {percent: 100},
           })
       );
       document.dispatchEvent(new CustomEvent("remote_restore_backup_finish"));
@@ -452,10 +479,11 @@ class Xcloner_Restore {
         parseInt(response.statusText.start) +
         parseInt(response.statusText.processed);
 
-    if (response.statusText.extracted_files) {
+    if (response.statusText.extracted_files &&
+        response.statusText.extracted_files.length) {
       document.dispatchEvent(
           new CustomEvent("remote_restore_update_files_list", {
-            detail: { files: response.statusText.extracted_files },
+            detail: {files: response.statusText.extracted_files},
           })
       );
     }
@@ -489,7 +517,7 @@ class Xcloner_Restore {
 
     document.dispatchEvent(
         new CustomEvent("xcloner_restore_update_progress", {
-          detail: { percent: 100 },
+          detail: {percent: 100},
         })
     );
     document.dispatchEvent(
@@ -510,10 +538,9 @@ class Xcloner_Restore {
     var params = {};
     params.backup_file = this.get_backup_file();
     params.remote_path = this.get_remote_path();
-    params.filter_files = jQuery(".xcloner-restore input[name=filter_files]:checked").val();
-
+    params.filter_files = jQuery(
+        ".xcloner-restore input[name=filter_files]:checked").val();
     if (this.resume.callback == "remote_restore_backup_file_callback") {
-      //console.log("do resume");
       this.do_ajax(
           this.resume.callback,
           this.resume.action,
@@ -533,7 +560,7 @@ class Xcloner_Restore {
     }
     document.dispatchEvent(
         new CustomEvent("remote_restore_update_files_list", {
-          detail: { files: "" },
+          detail: {files: ""},
         })
     );
     this.do_ajax(
@@ -562,7 +589,7 @@ class Xcloner_Restore {
 
       document.dispatchEvent(
           new CustomEvent("xcloner_restore_display_query_box", {
-            detail: { query: response.statusText.query },
+            detail: {query: response.statusText.query},
           })
       );
 
@@ -584,7 +611,7 @@ class Xcloner_Restore {
 
     document.dispatchEvent(
         new CustomEvent("xcloner_restore_display_query_box", {
-          detail: { query: "" },
+          detail: {query: ""},
         })
     );
     params.query = "";
@@ -619,7 +646,7 @@ class Xcloner_Restore {
       );
       document.dispatchEvent(
           new CustomEvent("xcloner_restore_update_progress", {
-            detail: { percent: percent },
+            detail: {percent: percent},
           })
       );
 
@@ -634,7 +661,7 @@ class Xcloner_Restore {
 
     document.dispatchEvent(
         new CustomEvent("xcloner_restore_update_progress", {
-          detail: { percent: 100 },
+          detail: {percent: 100},
         })
     );
     document.dispatchEvent(
@@ -682,8 +709,6 @@ class Xcloner_Restore {
       ).val();
     }
 
-    //console.log(params)
-
     params.mysqldump_file = mysqldump_file;
     params.query = "";
     params.start = 0;
@@ -695,12 +720,11 @@ class Xcloner_Restore {
 
     document.dispatchEvent(
         new CustomEvent("xcloner_restore_display_query_box", {
-          detail: { query: "" },
+          detail: {query: ""},
         })
     );
 
     if (this.resume.callback == "remote_restore_mysql_backup_file_callback") {
-      //console.log("do resume mysql backup restore");
       this.do_ajax(
           this.resume.callback,
           this.resume.action,
@@ -722,7 +746,7 @@ class Xcloner_Restore {
     if (status) {
       document.dispatchEvent(
           new CustomEvent("xcloner_restore_display_status_text", {
-            detail: { message: response.statusText, $this: this },
+            detail: {message: response.statusText, $this: this},
           })
       );
     } else {
@@ -740,7 +764,7 @@ class Xcloner_Restore {
 
     document.dispatchEvent(
         new CustomEvent("xcloner_restore_finish", {
-          detail: { message: response.statusText, $this: this },
+          detail: {message: response.statusText, $this: this},
         })
     );
   }
@@ -773,7 +797,8 @@ class Xcloner_Restore {
     params.update_remote_site_url = 0;
 
     if (
-        jQuery(".xcloner-restore #delete_backup_temporary_folder").is(":checked")
+        jQuery(".xcloner-restore #delete_backup_temporary_folder")
+            .is(":checked")
     )
       params.delete_backup_temporary_folder = 1;
 
@@ -816,12 +841,12 @@ class Xcloner_Restore {
     document.dispatchEvent(new CustomEvent("backup_upload_start"));
     document.dispatchEvent(
         new CustomEvent("xcloner_restore_display_status_text", {
-          detail: { message: "Uploading backup 0%" },
+          detail: {message: "Uploading backup 0%"},
         })
     );
     document.dispatchEvent(
         new CustomEvent("xcloner_restore_update_progress", {
-          detail: { percent: 0 },
+          detail: {percent: 0},
         })
     );
 
@@ -845,7 +870,7 @@ class Xcloner_Restore {
       );
       document.dispatchEvent(
           new CustomEvent("xcloner_restore_update_progress", {
-            detail: { percent: 100 },
+            detail: {percent: 100},
           })
       );
       return;
@@ -867,7 +892,7 @@ class Xcloner_Restore {
 
       document.dispatchEvent(
           new CustomEvent("xcloner_restore_update_progress", {
-            detail: { percent: percent },
+            detail: {percent: percent},
           })
       );
       document.dispatchEvent(
@@ -897,18 +922,18 @@ class Xcloner_Restore {
       document.dispatchEvent(new CustomEvent("backup_upload_finish"));
       document.dispatchEvent(
           new CustomEvent("xcloner_restore_update_progress", {
-            detail: { percent: 100 },
+            detail: {percent: 100},
           })
       );
       document.dispatchEvent(
           new CustomEvent("xcloner_restore_display_status_text", {
-            detail: { message: "Done." },
+            detail: {message: "Done."},
           })
       );
     }
   }
 
-  verify_restore_url_callback(response, status, params = new Object()) {
+  verify_restore_url_callback(response, status) {
     if (!status) {
       var href_url =
           "<a href='" +
@@ -935,64 +960,46 @@ class Xcloner_Restore {
       document.dispatchEvent(new CustomEvent("restore_script_valid"));
       document.dispatchEvent(
           new CustomEvent("xcloner_restore_display_status_text", {
-            detail: { message: "Validation ok." },
+            detail: {message: "Validation ok."},
           })
       );
 
-      if (this.local_restore) {
-        this.next_step(1);
-      } else {
-        this.next_step();
-      }
+      this.next_step();
     }
   }
 
   verify_restore_url(response, status, params = {}) {
-    if (
-        this.restore_script_url == "http://" ||
-        this.restore_script_url == "https://" ||
-        this.restore_script_url == "" ||
-        this.restore_script_url === undefined
-    ) {
-      this.restore_script_url = ajaxurl + "?action=restore_backup";
-      this.local_restore = 1;
-      //jQuery("#remote-restore-options").hide();
-      jQuery("#delete_backup_archive")
-          .attr("disabled", "disabled")
-          .removeAttr("checked");
-      jQuery("#delete_restore_script")
-          .attr("disabled", "disabled")
-          .removeAttr("checked");
-    } else {
-      this.local_restore = 0;
-      // jQuery("#remote-restore-options").show();
-      // jQuery("#update_remote_site_url").attr("checked", "checked").removeAttr("disabled");
-      jQuery("#delete_restore_script")
-          .attr("checked", "checked")
-          .removeAttr("disabled");
-    }
+    jQuery("#delete_restore_script")
+        .attr("checked", "checked")
+        .removeAttr("disabled");
 
-    if (this.local_restore == 1) {
-      jQuery(".restore-remote-backup-step #filter_files_all")
-          .removeAttr("checked")
-          .attr("disabled", "disabled");
-      jQuery(".restore-remote-backup-step #filter_files_wp_content").attr(
-          "checked",
-          "checked"
+    jQuery(".restore-remote-backup-step #filter_files_all")
+        .removeAttr("disabled")
+        .attr("checked", "checked");
+    jQuery(".restore-remote-backup-step #filter_files_wp_content").removeAttr(
+        "checked"
+    );
+
+    try {
+      new URL(this.restore_script_url);
+    } catch (e) {
+      document.dispatchEvent(new CustomEvent("restore_script_invalid"));
+      document.dispatchEvent(
+          new CustomEvent("xcloner_restore_display_status_text", {
+            detail: {
+              status: "error",
+              message:
+                  "The restore script url is not valid, please check the restore script url and try again.",
+            },
+          })
       );
-    } else {
-      jQuery(".restore-remote-backup-step #filter_files_all")
-          .removeAttr("disabled")
-          .attr("checked", "checked");
-      jQuery(".restore-remote-backup-step #filter_files_wp_content").removeAttr(
-          "checked"
-      );
+      return;
     }
 
     jQuery(".xcloner-restore #xcloner_restore_finish").hide();
 
     this.cancel = false;
-    this.set_current_step = 0;
+    this.current_step = 0;
 
     this.do_ajax("verify_restore_url_callback", "", params, true);
   }
@@ -1007,16 +1014,12 @@ class Xcloner_Restore {
     jQuery(elem).attr("href", url);
   }
 
-  next_step(inc = 0) {
-    this.set_current_step = jQuery(".xcloner-restore li.active").attr(
-        "data-step"
-    );
-
-    this.set_current_step = parseInt(this.set_current_step) + parseInt(inc);
-
-    document.dispatchEvent(
-        new CustomEvent("xcloner_restore_next_step", { detail: { $this: this } })
-    );
+  next_step(inc = 1) {
+    this.current_step = parseInt(this.current_step) + parseInt(inc);
+    jQuery(".xcloner-restore li." + this.steps[this.current_step])
+        .show()
+        .find(".collapsible-header")
+        .trigger("click");
   }
 
   list_backup_content_callback(response, status, params = {}) {
@@ -1095,18 +1098,18 @@ class Xcloner_Restore {
     if (jQuery(".xcloner-restore .steps.active .progress").is(":visible"))
       document.dispatchEvent(
           new CustomEvent("xcloner_restore_update_progress", {
-            detail: { percent: 0 },
+            detail: {percent: 0},
           })
       );
     if (jQuery(".xcloner-restore .steps.active .status").html())
       document.dispatchEvent(
           new CustomEvent("xcloner_restore_display_status_text", {
-            detail: { message: "" },
+            detail: {message: ""},
           })
       );
     document.dispatchEvent(
         new CustomEvent("remote_restore_update_files_list", {
-          detail: { files: "" },
+          detail: {files: ""},
         })
     );
   }
@@ -1186,7 +1189,7 @@ class Xcloner_Restore {
             if (json.error) {
               document.dispatchEvent(
                   new CustomEvent("xcloner_restore_display_status_text", {
-                    detail: { status: "error", message: json.message },
+                    detail: {status: "error", message: json.message},
                   })
               );
             } else {
@@ -1203,16 +1206,12 @@ class Xcloner_Restore {
     this.restore_script_url = url;
   }
 
-  set_current_step(id) {
-    this.set_current_step = id;
-  }
-
   set_cancel(status) {
     if (status) {
       //document.dispatchEvent(new CustomEvent("xcloner_restore_display_status_text", {detail: {append : true, message: "Cancelled" }}));
       document.dispatchEvent(
           new CustomEvent("xcloner_restore_update_progress", {
-            detail: { percent: 0, class: "determinate" },
+            detail: {percent: 0, class: "determinate"},
           })
       );
     }
@@ -1220,7 +1219,7 @@ class Xcloner_Restore {
     this.cancel = status;
   }
 
-  get_cancel(status) {
+  get_cancel() {
     return this.cancel;
   }
 
@@ -1229,36 +1228,27 @@ class Xcloner_Restore {
   }
 }
 
-//var xcloner_auth_key = "";
-
 jQuery(document).ready(function () {
-  if (typeof xcloner_auth_key !== "undefined") {
-    var xcloner_restore = new Xcloner_Restore(xcloner_auth_key);
-  } else {
-    var xcloner_restore = new Xcloner_Restore();
-  }
-
-  xcloner_restore.set_current_step(0);
+  const localRestore = typeof xcloner_local_restore === "undefined" ? false : xcloner_local_restore;
+  const xclonerRestore = new Xcloner_Restore(localRestore);
 
   jQuery(".col select").formSelect();
 
   jQuery(".xcloner-restore .upload-backup.cancel").on("click", function () {
-    //jQuery(".xcloner-restore #upload_backup").show();
-    //jQuery(this).hide();
-    xcloner_restore.set_cancel(true);
+    xclonerRestore.set_cancel(true);
   });
 
   jQuery(".xcloner-restore .upload-backup").on("click", function () {
-    if (jQuery(this).hasClass("cancel")) xcloner_restore.set_cancel(true);
-    else xcloner_restore.set_cancel(false);
+    if (jQuery(this).hasClass("cancel")) xclonerRestore.set_cancel(true);
+    else xclonerRestore.set_cancel(false);
 
     var backup_file = jQuery(".xcloner-restore #backup_file").val();
 
     if (backup_file) {
       jQuery(this).parent().toggleClass("cancel");
 
-      if (!xcloner_restore.get_cancel())
-        xcloner_restore.upload_backup_file(backup_file);
+      if (!xclonerRestore.get_cancel())
+        xclonerRestore.upload_backup_file(backup_file);
     } else {
       document.dispatchEvent(
           new CustomEvent("xcloner_restore_display_status_text", {
@@ -1271,84 +1261,72 @@ jQuery(document).ready(function () {
     }
   });
 
-  jQuery(".xcloner-restore #validate_url").on("click", function () {
-    xcloner_restore.set_restore_script_url(
+  jQuery("#restore_script_url_form").on("submit", function (e) {
+    e.preventDefault();
+    xclonerRestore.set_restore_script_url(
         jQuery(".xcloner-restore #restore_script_url").val()
     );
-    xcloner_restore.verify_restore_url();
+    xclonerRestore.verify_restore_url();
   });
 
   jQuery(".xcloner-restore #skip_upload_backup").on("click", function () {
-    xcloner_restore.set_cancel(true);
-    xcloner_restore.next_step();
+    xclonerRestore.set_cancel(true);
+    xclonerRestore.next_step(1);
   });
 
   jQuery(".xcloner-restore #skip_restore_remote_database_step").on(
       "click",
       function () {
-        xcloner_restore.set_cancel(true);
-        xcloner_restore.next_step();
+        xclonerRestore.set_cancel(true);
+        xclonerRestore.next_step();
       }
   );
 
-  jQuery(".xcloner-restore li.steps").on("click", function () {
-    xcloner_restore.set_current_step = jQuery(this).attr("data-step") - 1;
+  jQuery(".xcloner-restore li.steps .collapsible-header").on("click", function (e) {
+    xclonerRestore.current_step = jQuery(this).parent().attr("data-step") - 1;
   });
 
   jQuery(".xcloner-restore #skip_remote_backup_step").on("click", function () {
-    xcloner_restore.set_cancel(true);
-    xcloner_restore.next_step();
+    xclonerRestore.set_cancel(true);
+    xclonerRestore.next_step();
   });
 
   jQuery(
-      ".xcloner-restore .restore-remote-backup-step .collapsible-header"
+      ".xcloner-restore .restore-remote-backup-step .collapsible-header, .xcloner-restore #refresh_remote_backup_file"
   ).click(function () {
-    xcloner_restore.get_remote_backup_files();
+    xclonerRestore.get_remote_backup_files();
   });
 
   jQuery(
       ".xcloner-restore .restore-remote-database-step .collapsible-header"
   ).click(function () {
-    xcloner_restore.get_remote_mysqldump_files();
+    xclonerRestore.get_remote_mysqldump_files();
   });
 
   jQuery(".xcloner-restore #remote_backup_file").on("change", function () {
-    xcloner_restore.init_resume();
+    xclonerRestore.init_resume();
   });
 
   jQuery(".xcloner-restore #backup_file").on("change", function () {
-    xcloner_restore.init_resume();
+    xclonerRestore.init_resume();
   });
 
   jQuery(".xcloner-restore #restore_finish").click(function () {
-    xcloner_restore.restore_finish();
+    xclonerRestore.restore_finish();
   });
 
   jQuery(".xcloner-restore #open_target_site a").click(function () {
-    xcloner_restore.open_target_site(this);
-  });
-
-  jQuery(".xcloner-restore #refresh_remote_backup_file").on("click", function (
-      e
-  ) {
-    document.dispatchEvent(
-        new CustomEvent("xcloner_restore_update_progress", {
-          detail: { percent: 0 },
-        })
-    );
-    xcloner_restore.resume = {};
-    xcloner_restore.get_remote_backup_files();
-    e.stopPropagation();
+    xclonerRestore.open_target_site(this);
   });
 
   jQuery(".xcloner-restore #refresh_database_file").on("click", function (e) {
     document.dispatchEvent(
         new CustomEvent("xcloner_restore_update_progress", {
-          detail: { percent: 0 },
+          detail: {percent: 0},
         })
     );
-    xcloner_restore.resume = {};
-    xcloner_restore.get_remote_mysqldump_files();
+    xclonerRestore.resume = {};
+    xclonerRestore.get_remote_mysqldump_files();
     e.stopPropagation();
   });
 
@@ -1358,56 +1336,52 @@ jQuery(document).ready(function () {
     jQuery(".xcloner-restore .restore-remote-backup-step .files-list").toggle();
   });
 
-  jQuery(".xcloner-restore .restore_remote_mysqldump").on("click", function (
-      e
-  ) {
-    if (jQuery(this).hasClass("cancel")) xcloner_restore.set_cancel(true);
-    else xcloner_restore.set_cancel(false);
+  jQuery(".xcloner-restore .restore_remote_mysqldump")
+      .on("click", function () {
+        xclonerRestore.set_cancel(jQuery(this).hasClass("cancel"));
 
-    this.remote_database_file = jQuery(
-        ".xcloner-restore #remote_database_file"
-    ).val();
+        this.remote_database_file = jQuery(
+            ".xcloner-restore #remote_database_file"
+        ).val();
 
-    if (!this.remote_database_file) {
-      document.dispatchEvent(
-          new CustomEvent("xcloner_restore_display_status_text", {
-            detail: {
-              status: "error",
-              message: "Please select a mysqld backup file from the list",
-            },
-          })
-      );
-      return;
-    }
+        if (!this.remote_database_file) {
+          document.dispatchEvent(
+              new CustomEvent("xcloner_restore_display_status_text", {
+                detail: {
+                  status: "error",
+                  message: "Please select a mysqld backup file from the list",
+                },
+              })
+          );
+          return;
+        }
 
-    jQuery(this).parent().toggleClass("cancel");
+        jQuery(this).parent().toggleClass("cancel");
 
-    if (!xcloner_restore.get_cancel()) {
-      document.dispatchEvent(
-          new CustomEvent("xcloner_restore_update_progress", {
-            detail: { percent: 0, class: "determinate" },
-          })
-      );
-      xcloner_restore.remote_restore_mysql_backup_file(
-          this.remote_database_file
-      );
-    }
-  });
+        if (!xclonerRestore.get_cancel()) {
+          document.dispatchEvent(
+              new CustomEvent("xcloner_restore_update_progress", {
+                detail: {percent: 0, class: "determinate"},
+              })
+          );
+          xclonerRestore.remote_restore_mysql_backup_file(
+              this.remote_database_file
+          );
+        }
+      });
 
   jQuery(".xcloner-restore .list-backup-content").on("click", function (e) {
-    var id = jQuery(".xcloner-restore #remote_backup_file").val();
+    const id = jQuery(".xcloner-restore #remote_backup_file").val();
 
     if (id) {
-      xcloner_restore.list_backup_content(id);
+      xclonerRestore.list_backup_content(id);
     }
     e.preventDefault();
   });
 
-  jQuery(
-      ".xcloner-restore .restore-remote-backup-step .restore_remote_backup"
-  ).click(function () {
-    xcloner_restore.set_cancel(jQuery(this).hasClass("cancel"))
-
+  jQuery("#restore_backup_to_path_form").on("submit", function (e) {
+    e.preventDefault();
+    xclonerRestore.set_cancel(false);
     this.backup_file = jQuery(".xcloner-restore #remote_backup_file").val();
 
     if (!this.backup_file) {
@@ -1421,17 +1395,23 @@ jQuery(document).ready(function () {
       );
       return;
     }
+    jQuery("#restore_backup_to_path_submit").parent().toggleClass("cancel");
 
-    jQuery(this).parent().toggleClass("cancel");
-
-    if (xcloner_restore.get_cancel()) {
-      return;
-    }
     document.dispatchEvent(
         new CustomEvent("xcloner_restore_update_progress", {
-          detail: { percent: 0, class: "indeterminate" },
+          detail: {percent: 0, class: "indeterminate"},
         })
     );
-    xcloner_restore.remote_restore_backup_file();
+    xclonerRestore.remote_restore_backup_file();
   });
+
+  jQuery("#restore_backup_to_path_cancel").on("click", function () {
+    xclonerRestore.set_cancel(true);
+    jQuery(this).parent().toggleClass("cancel");
+  });
+
+  xclonerRestore.current_step = localRestore ? 2 : 0;
+  xclonerRestore.next_step(0);
 });
+
+
