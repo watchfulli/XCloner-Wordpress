@@ -1,11 +1,13 @@
-version: "3.9"
+name: xcloner-testing
 services:
   wordpress:
     depends_on:
       - db
-    image: wordpress:latest
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
     volumes:
-      - ./xcloner-backup-and-restore:/var/www/html/wp-content/plugins/xcloner-backup-and-restore:ro
+      - ./xcloner-backup-and-restore:/src/xcloner-backup-and-restore:ro
     # To avoid conflicts, define your own port binding in docker-compose.override.yml. E.g.
     #services:
     #  wordpress:
@@ -13,10 +15,16 @@ services:
     #      - '8080:80'
     restart: always
     environment:
+      WORDPRESS_DEBUG: true
       WORDPRESS_DB_HOST: db
       WORDPRESS_DB_USER: wordpress
       WORDPRESS_DB_PASSWORD: wordpress
       WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_URL: https://wordpress.xcloner.local
+      WORDPRESS_TITLE: XCloner Testing
+      WORDPRESS_ADMIN_USER: admin
+      WORDPRESS_ADMIN_PASSWORD: admin
+      WORDPRESS_ADMIN_EMAIL: hello@watchful.net
 
   db:
     image: mariadb:10.5.8
