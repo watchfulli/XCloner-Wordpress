@@ -67,8 +67,6 @@ class Xcloner_Api
      */
     public function __construct(Xcloner $xcloner_container)
     {
-        //global $wpdb;
-
         if (ob_get_length()) {
             ob_end_clean();
         }
@@ -99,37 +97,11 @@ class Xcloner_Api
     }
 
     /**
-     * Get XCloner Container
-     */
-    public function get_xcloner_container()
-    {
-        return $this->xcloner_container;
-    }
-
-
-    /**
-     * Checks API access
-     */
-    public function check_access()
-    {
-        //preparing nonce verification
-        if (function_exists('wp_verify_nonce')) {
-            if (!isset($_REQUEST['_wpnonce']) || !wp_verify_nonce($_REQUEST['_wpnonce'], 'xcloner-api-nonce')) {
-                throw new Error(json_encode("Invalid nonce, please try again by refreshing the page!"));
-            }
-        }
-
-        if (function_exists('current_user_can') && !current_user_can('manage_options')) {
-            throw new Error(json_encode("Access not allowed!"));
-        }
-    }
-
-    /*
-     * Save Schedule API
+     * @throws Exception
      */
     public function save_schedule()
     {
-        $this->check_access();
+        $this->xcloner_container->check_access();
 
         $scheduler = $this->xcloner_scheduler;
         $schedule = array();
@@ -274,12 +246,16 @@ class Xcloner_Api
         $this->send_response($response);
     }
 
+    /**
+     * @throws FileNotFoundException
+     * @throws Exception
+     */
     public function backup_files()
     {
         $data = array();
         $additional = array();
 
-        $this->check_access();
+        $this->xcloner_container->check_access();
 
         $init = (int)$this->xcloner_sanitization->sanitize_input_as_int($_POST['init']);
 
@@ -340,12 +316,13 @@ class Xcloner_Api
     /**
      * @throws FileNotFoundException
      * @throws FileExistsException
+     * @throws Exception
      */
     public function backup_database()
     {
         $data = array();
 
-        $this->check_access();
+        $this->xcloner_container->check_access();
 
         $init = (int)$this->xcloner_sanitization->sanitize_input_as_int($_POST['init']);
 
@@ -368,16 +345,17 @@ class Xcloner_Api
         $this->send_response($data);
     }
 
-    /*
-     *
-     * Scan Filesystem API
-     *
+
+    /**
+     * @throws FileNotFoundException
+     * @throws FileExistsException
+     * @throws Exception
      */
     public function scan_filesystem()
     {
         $data = array();
 
-        $this->check_access();
+        $this->xcloner_container->check_access();
 
         $init = (int)$this->xcloner_sanitization->sanitize_input_as_int($_POST['init']);
 
@@ -405,10 +383,6 @@ class Xcloner_Api
         if ($params && isset($params->processed)) {
             $this->form_params = json_decode(json_encode((array)$params), true);
             return;
-        }
-
-        if (isset($params->hash)) {
-            $this->xcloner_settings->set_hash($this->xcloner_sanitization->sanitize_input_as_string($params->hash));
         }
 
         $this->form_params['extra'] = array();
@@ -479,19 +453,15 @@ class Xcloner_Api
             $this->send_response('{"status":false,"msg":"The data parameter must be valid JSON"}');
         }
 
-        $params->hash = $this->xcloner_sanitization->sanitize_input_as_string($_POST['hash']);
-
         return $params;
     }
 
-    /*
-     *
-     * Get file list for tree view API
-     *
+    /**
+     * @throws Exception
      */
     public function get_file_system_action()
     {
-        $this->check_access();
+        $this->xcloner_container->check_access();
 
         $folder = $this->xcloner_sanitization->sanitize_input_as_relative_path($_POST['id']);
 
@@ -559,14 +529,12 @@ class Xcloner_Api
         $this->send_response($data, 0);
     }
 
-    /*
-     *
-     * Get databases/tables list for frontend tree display API
-     *
+    /**
+     * @throws Exception
      */
     public function get_database_tables_action()
     {
-        $this->check_access();
+        $this->xcloner_container->check_access();
 
         $database = $this->xcloner_sanitization->sanitize_input_as_raw($_POST['id']);
 
@@ -644,7 +612,7 @@ class Xcloner_Api
      */
     public function get_schedule_by_id()
     {
-        $this->check_access();
+        $this->xcloner_container->check_access();
 
         $schedule_id = $this->xcloner_sanitization->sanitize_input_as_int($_GET['id']);
         $scheduler = $this->xcloner_scheduler;
@@ -661,11 +629,15 @@ class Xcloner_Api
         $this->send_response($data);
     }
 
+    /**
+     * @throws FileNotFoundException
+     * @throws Exception
+     */
     public function get_scheduler_list()
     {
         $return = array();
 
-        $this->check_access();
+        $this->xcloner_container->check_access();
 
         $scheduler = $this->xcloner_scheduler;
         $data = $scheduler->get_scheduler_list();
@@ -744,16 +716,14 @@ class Xcloner_Api
         $this->send_response($return, 0);
     }
 
-    /*
-     *
-     * Delete Schedule by ID API
-     *
+    /**
+     * @throws Exception
      */
     public function delete_schedule_by_id()
     {
         $data = array();
 
-        $this->check_access();
+        $this->xcloner_container->check_access();
 
         $schedule_id = $this->xcloner_sanitization->sanitize_input_as_int($_GET['id']);
         $scheduler = $this->xcloner_scheduler;
@@ -762,16 +732,15 @@ class Xcloner_Api
         $this->send_response($data);
     }
 
-    /*
-     *
-     * Delete backup by name from the storage path
-     *
+    /**
+     * @throws FileNotFoundException
+     * @throws Exception
      */
     public function delete_backup_by_name()
     {
         $data = array();
 
-        $this->check_access();
+        $this->xcloner_container->check_access();
 
         $backup_name = $this->xcloner_sanitization->sanitize_input_as_string($_POST['name']);
         $storage_selection = $this->xcloner_sanitization->sanitize_input_as_string($_POST['storage_selection']);
@@ -787,7 +756,7 @@ class Xcloner_Api
      */
     public function backup_encryption()
     {
-        $this->check_access();
+        $this->xcloner_container->check_access();
 
         $backup_parts = array();
         $return = array();
@@ -871,7 +840,7 @@ class Xcloner_Api
      */
     public function backup_decryption()
     {
-        $this->check_access();
+        $this->xcloner_container->check_access();
 
         $backup_parts = array();
         $return = array();
@@ -917,9 +886,12 @@ class Xcloner_Api
         $this->send_response($return, 0);
     }
 
+    /**
+     * @throws Exception
+     */
     public function get_manage_backups_list()
     {
-        $this->check_access();
+        $this->xcloner_container->check_access();
 
         $return = array(
             "data" => array()
@@ -1124,7 +1096,7 @@ class Xcloner_Api
      */
     public function list_backup_files()
     {
-        $this->check_access();
+        $this->xcloner_container->check_access();
 
         $backup_parts = array();
         $return = array();
@@ -1194,17 +1166,17 @@ class Xcloner_Api
         $this->send_response($return, 0);
     }
 
-    /*
-     * Copy remote backup to local storage
+    /**
+     * @throws Exception
      */
     public function copy_backup_remote_to_local()
     {
-        $this->check_access();
+        $this->xcloner_container->check_access();
 
         $backup_file = $this->xcloner_sanitization->sanitize_input_as_string($_POST['file']);
         $storage_type = $this->xcloner_sanitization->sanitize_input_as_string($_POST['storage_type']);
 
-        $xcloner_remote_storage = $this->get_xcloner_container()->get_xcloner_remote_storage();
+        $xcloner_remote_storage = $this->xcloner_container->get_xcloner_remote_storage();
 
         $return = array();
 
@@ -1229,14 +1201,12 @@ class Xcloner_Api
         $this->send_response($return, 0);
     }
 
-    /*
-     *
-     * Upload backup to remote API
-     *
+    /**
+     * @throws Exception
      */
     public function upload_backup_to_remote()
     {
-        $this->check_access();
+        $this->xcloner_container->check_access();
 
         $return = array();
 
@@ -1249,7 +1219,7 @@ class Xcloner_Api
             $storage_type = $this->xcloner_sanitization->sanitize_input_as_string($_POST['storage_type']);
             $delete_local_copy_after_transfer = $this->xcloner_sanitization->sanitize_input_as_string($_POST['delete_after_transfer']);
         }
-        $xcloner_remote_storage = $this->get_xcloner_container()->get_xcloner_remote_storage();
+        $xcloner_remote_storage = $this->xcloner_container->get_xcloner_remote_storage();
 
         try {
             if (method_exists($xcloner_remote_storage, "upload_backup_to_storage")) {
@@ -1272,120 +1242,29 @@ class Xcloner_Api
         $this->send_response($return, 0);
     }
 
-    /*
-     *
-     * Remote Storage Status Save
-     *
+    /**
+     * @throws Exception
      */
     public function remote_storage_save_status()
     {
-        $this->check_access();
+        $this->xcloner_container->check_access();
 
         $return = array();
 
-        $xcloner_remote_storage = $this->get_xcloner_container()->get_xcloner_remote_storage();
+        $xcloner_remote_storage = $this->xcloner_container->get_xcloner_remote_storage();
 
         $return['finished'] = $xcloner_remote_storage->change_storage_status($_POST['id'], $_POST['value']);
 
         $this->send_response($return, 0);
     }
 
-
-    /**
-     * @throws ArchiveIllegalCompressionException
-     * @throws ArchiveIOException
-     * @throws ArchiveCorruptedException
-     * @throws FileInfoException
-     */
-    public function download_restore_script()
-    {
-        $this->check_access();
-
-        ob_end_clean();
-
-        $adapter = new Local(dirname(__DIR__), LOCK_EX, '0001');
-        $xcloner_plugin_filesystem = new Filesystem($adapter, new Config([
-            'disable_asserts' => true,
-        ]));
-
-        /* Generate PHAR FILE
-        $file = 'restore/vendor.built';
-
-        if(file_exists($file))
-            unlink($file);
-        $phar2 = new Phar($file, 0, 'vendor.phar');
-
-        // add all files in the project, only include php files
-        $phar2->buildFromIterator(
-            new RecursiveIteratorIterator(
-             new RecursiveDirectoryIterator(__DIR__.'/vendor/')),
-            __DIR__);
-
-        $phar2->setStub($phar2->createDefaultStub('vendor/autoload.php', 'vendor/autoload.php'));
-         * */
-
-        $tmp_file = $this->xcloner_settings->get_xcloner_tmp_path() . DS . "xcloner-restore.tgz";
-
-        $tar = $this->archive_system;
-        $tar->create($tmp_file);
-
-        $vendor_phar_file = __DIR__ . "/../../../../restore/vendor.build.txt";
-        if (!file_exists($vendor_phar_file)) {
-            $vendor_phar_file = __DIR__ . "/../../restore/vendor.build.txt";
-        }
-
-        $tar->addFile($vendor_phar_file, "vendor.phar");
-
-        //$tar->addFile(dirname(__DIR__)."/restore/vendor.tgz", "vendor.tgz");
-
-        $files = $xcloner_plugin_filesystem->listContents("vendor/", true);
-        foreach ($files as $file) {
-            $tar->addFile(dirname(__DIR__) . DS . $file['path'], $file['path']);
-        }
-
-        $xcloner_restore_file = (__DIR__ . "/../../../../restore/xcloner_restore.php");
-        if (!file_exists($xcloner_restore_file)) {
-            $xcloner_restore_file = (__DIR__ . "/../../restore/xcloner_restore.php");
-        }
-
-        $content = file_get_contents($xcloner_restore_file);
-        $content = str_replace("define('AUTH_KEY', '');", "define('AUTH_KEY', '" . md5(AUTH_KEY) . "');", $content);
-
-        $tar->addData("xcloner_restore.php", $content);
-
-        $tar->close();
-
-        if (file_exists($tmp_file)) {
-            header('Content-Description: File Transfer');
-            header('Content-Type: application/octet-stream');
-            header('Content-Disposition: attachment; filename="' . basename($tmp_file) . '"');
-            header('Expires: 0');
-            header('Cache-Control: must-revalidate');
-            header('Pragma: public');
-            header('Content-Length: ' . filesize($tmp_file));
-            readfile($tmp_file);
-        }
-
-        try {
-            unlink($tmp_file);
-        } catch (Exception $e) {
-            //We are not interested in the error here
-        }
-
-        die();
-    }
-
-    /*
-     *
-     * Download backup by Name from the Storage Path
-     *
-     */
     /**
      * @throws FileNotFoundException
+     * @throws Exception
      */
     public function download_backup_by_name()
     {
-        $this->check_access();
+        $this->xcloner_container->check_access();
 
         ob_end_clean();
 
@@ -1428,15 +1307,13 @@ class Xcloner_Api
         wp_die();
     }
 
-    /*
-     * Restore upload backup
-     */
     /**
      * @throws FileNotFoundException
+     * @throws Exception
      */
     public function restore_upload_backup()
     {
-        $this->check_access();
+        $this->xcloner_container->check_access();
 
         $return = array();
 
@@ -1474,7 +1351,7 @@ class Xcloner_Api
         }
 
         try {
-            $xcloner_file_transfer = $this->get_xcloner_container()->get_xcloner_file_transfer();
+            $xcloner_file_transfer = $this->xcloner_container->get_xcloner_file_transfer();
             $xcloner_file_transfer->set_target($target_url);
             $return['start'] = $xcloner_file_transfer->transfer_file($file, $start, $hash);
         } catch (Exception $e) {

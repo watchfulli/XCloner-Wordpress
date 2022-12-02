@@ -147,11 +147,6 @@ class Xcloner_Filesystem
         return $this->xcloner_container;
     }
 
-    public function get_hash()
-    {
-        return $this->xcloner_settings->get_hash();
-    }
-
     public function get_tmp_filesystem()
     {
         return $this->tmp_filesystem;
@@ -454,6 +449,11 @@ class Xcloner_Filesystem
         }
 
         if ($this->scan_finished()) {
+            //adding a default index.html to the temp xcloner folder
+            if (!$this->get_tmp_filesystem()->has("index.html")) {
+                $this->get_tmp_filesystem()->write("index.html", "");
+            }
+
             $metadata_dumpfile = $this->get_tmp_filesystem()->getMetadata("index.html");
             $this->store_file($metadata_dumpfile, 'tmp_filesystem');
             $this->files_counter++;
@@ -463,11 +463,6 @@ class Xcloner_Filesystem
                 $metadata_dumpfile = $this->get_tmp_filesystem()->getMetadata($this->get_included_files_handler());
                 $this->store_file($metadata_dumpfile, 'tmp_filesystem');
                 $this->files_counter++;
-            }
-
-            //adding a default index.html to the temp xcloner folder
-            if (!$this->get_tmp_filesystem()->has("index.html")) {
-                $this->get_tmp_filesystem()->write("index.html", "");
             }
 
             //adding the default log file
@@ -567,7 +562,6 @@ class Xcloner_Filesystem
     }
 
     /**
-     * @throws FileNotFoundException
      * @throws FileExistsException
      */
     private function do_system_init()
@@ -580,14 +574,6 @@ class Xcloner_Filesystem
 
         if (!$this->tmp_filesystem->has("index.html")) {
             $this->tmp_filesystem->write("index.html", "");
-        }
-
-        if ($this->tmp_filesystem->has($this->get_included_files_handler())) {
-            $this->tmp_filesystem->delete($this->get_included_files_handler());
-        }
-
-        if ($this->tmp_filesystem->has($this->get_temp_dir_handler())) {
-            $this->tmp_filesystem->delete($this->get_temp_dir_handler());
         }
     }
 

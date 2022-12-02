@@ -27,10 +27,6 @@ use League\Flysystem\FileExistsException;
 use League\Flysystem\FileNotFoundException;
 use wpdb;
 
-if (!class_exists('wpdb')) {
-     require_once __DIR__ . "/../lib/wp-db.php";
- }
-
 class Xcloner_Database extends wpdb
 {
     public $debug = 0;

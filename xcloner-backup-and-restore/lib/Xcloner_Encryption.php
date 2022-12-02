@@ -20,11 +20,7 @@ class Xcloner_Encryption
     public function __construct(Xcloner $xcloner_container)
     {
         $this->xcloner_container = $xcloner_container;
-        //if (property_exists($xcloner_container, 'xcloner_settings')) {
         $this->xcloner_settings = $xcloner_container->get_xcloner_settings();
-        //} else {
-        //    $this->xcloner_settings = "";
-        //}
 
         if (property_exists($xcloner_container, 'xcloner_logger')) {
             $this->logger = $xcloner_container->get_xcloner_logger()->withName("xcloner_encryption");
