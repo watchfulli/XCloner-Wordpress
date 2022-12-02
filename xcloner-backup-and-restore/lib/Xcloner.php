@@ -88,12 +88,17 @@ class Xcloner
     /**
      * @throws Exception
      */
-    public function __construct()
+    public function __construct($hash = null)
     {
+        $this->xcloner_sanitization = new Xcloner_Sanitization();
+        $this->xcloner_settings = new Xcloner_Settings($this);
+        $hash = $hash ?? $this->get_hash_from_request();
+        if ($hash) {
+            $this->xcloner_settings->set_hash($hash);
+        }
+
         $this->xcloner_logger = new Xcloner_Logger($this, "xcloner_api");
         $this->xcloner_loader = new Xcloner_Loader($this);
-        $this->xcloner_settings = new Xcloner_Settings($this);
-        $this->xcloner_sanitization = new Xcloner_Sanitization();
         $this->xcloner_requirements = new Xcloner_Requirements($this);
         $this->xcloner_filesystem = new Xcloner_Filesystem($this);
         $this->archive_system = new Xcloner_Archive($this);
@@ -105,11 +110,51 @@ class Xcloner
         $this->xcloner_api = new Xcloner_Api($this);
         $this->xcloner_restore = new Xcloner_Restore($this);
 
-        if (!class_exists('Xcloner_Admin')) {
+        if (!class_exists('Xcloner_Admin') && defined('XCLONER_PLUGIN_DIR')) {
             require_once XCLONER_PLUGIN_DIR . '/admin/class-xcloner-admin.php';
         }
 
         $this->xcloner_admin = new Xcloner_Admin($this);
+    }
+
+    private function get_hash_from_request()
+    {
+        try {
+            $this->check_access();
+        } catch (Exception $e) {
+            return null;
+        }
+
+        if (!isset($_POST['hash'])) {
+            return null;
+        }
+
+        return $this->xcloner_sanitization->sanitize_input_as_string($_POST['hash']) ?: null;
+    }
+
+    /**
+     * Checks API access
+     * @throws Exception
+     */
+    public function check_access()
+    {
+        require_once( ABSPATH . '/wp-includes/pluggable.php' );
+
+        if (!function_exists('wp_verify_nonce')) {
+            throw new Exception("wp_verify_nonce function not found");
+        }
+
+        if (!isset($_REQUEST['_wpnonce']) || !wp_verify_nonce($_REQUEST['_wpnonce'], 'xcloner-api-nonce')) {
+            throw new Exception("Invalid nonce, please try again by refreshing the page!");
+        }
+
+        if (!function_exists('current_user_can')) {
+            throw new Exception("current_user_can function not found");
+        }
+
+        if (!current_user_can('manage_options')) {
+            throw new Exception("Access denied!");
+        }
     }
 
     public function get_xcloner_loader()
@@ -368,7 +413,6 @@ class Xcloner
 
     public function define_plugin_settings()
     {
-        require_once( ABSPATH . '/wp-includes/pluggable.php' );
         /**
          * register wporg_settings_init to the admin_init action hook
          */
@@ -549,7 +593,6 @@ class Xcloner
         $this->xcloner_loader->add_action('wp_ajax_upload_backup_to_remote', [$this->xcloner_api, 'upload_backup_to_remote']);
         $this->xcloner_loader->add_action('wp_ajax_list_backup_files', [$this->xcloner_api, 'list_backup_files']);
         $this->xcloner_loader->add_action('wp_ajax_restore_upload_backup', [$this->xcloner_api, 'restore_upload_backup']);
-        $this->xcloner_loader->add_action('wp_ajax_download_restore_script', [$this->xcloner_api, 'download_restore_script']);
         $this->xcloner_loader->add_action('wp_ajax_copy_backup_remote_to_local', [$this->xcloner_api, 'copy_backup_remote_to_local']);
         $this->xcloner_loader->add_action('wp_ajax_restore_backup', [$this, 'restore_backup']);
         $this->xcloner_loader->add_action('wp_ajax_backup_encryption', [$this->xcloner_api, 'backup_encryption']);
@@ -816,7 +859,7 @@ class Xcloner
      */
     public function restore_backup()
     {
-        $this->xcloner_api->check_access();
+        $this->check_access();
 
         $action = $this->xcloner_sanitization->sanitize_input_as_string($_POST['xcloner_action']);
         if (empty($action)) {

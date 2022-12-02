@@ -476,7 +476,7 @@ class Xcloner_Archive extends Tar
 
         $byte_limit = 0;
 
-        while (!$file->eof() and $counter <= $this->files_to_process_per_request) {
+        while (!$file->eof() && $counter <= $this->files_to_process_per_request) {
             $current_line_str = $file->current();
 
             $line = str_getcsv($current_line_str);
@@ -718,7 +718,7 @@ class Xcloner_Archive extends Tar
     /**
      * @param integer $append
      */
-    public function add_file_to_archive($file_info, $start_at_byte, $byte_limit = 0, $append, $filesystem)
+    public function add_file_to_archive($file_info, $start_at_byte, $byte_limit, $append, $filesystem)
     {
         $start_adapter = $this->filesystem->get_adapter($filesystem);
         $start_filesystem = $this->filesystem->get_adapter($filesystem);
@@ -828,7 +828,6 @@ class Xcloner_Archive extends Tar
      *
      * @param string $file path to the original file
      * @param int $start starting reading position in file
-     * @param int $end end position in reading multiple with 512
      * @param string|FileInfo $fileinfo either the name to us in archive (string) or a FileInfo oject with
      * all meta data, empty to take from original
      * @throws ArchiveIOException

@@ -15,8 +15,6 @@ class Xcloner_Settings
     private $xcloner_sanitization;
     /** @var Xcloner  */
     private $xcloner_container;
-    /** @var Xcloner_Database  */
-    private $xcloner_database;
 
     /**
      * XCloner General Settings Class
@@ -26,7 +24,6 @@ class Xcloner_Settings
     public function __construct(Xcloner $xcloner_container)
     {
         $this->xcloner_container = $xcloner_container;
-        $this->xcloner_database  = $this->xcloner_container->get_xcloner_database();
         $this->xcloner_sanitization = $this->xcloner_container->get_xcloner_sanitization();
     }
 
@@ -46,16 +43,6 @@ class Xcloner_Settings
      */
     public function get_options_prefix() {
         return $this->xcloner_options_prefix;
-    }
-
-    /**
-     * Get XCloner Main Container
-     *
-     * @return Xcloner_Standalone
-     */
-    private function get_xcloner_container()
-    {
-        return $this->xcloner_container;
     }
 
     /**
@@ -174,10 +161,6 @@ class Xcloner_Settings
         return $path;
     }
 
-    /**
-     * Get Enable Mysql Backup Option
-     *
-     */
     public function get_enable_mysql_backup()
     {
         if ($this->get_xcloner_option('xcloner_enable_mysql_backup')) {
@@ -207,11 +190,9 @@ class Xcloner_Settings
     }
 
     /**
-     * Get Backup Hash
-     *
      * @return string
      */
-    public function get_hash($readonly = false)
+    public function get_hash()
     {
         return $this->hash;
     }

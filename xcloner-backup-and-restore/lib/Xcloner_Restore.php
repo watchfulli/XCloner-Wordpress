@@ -68,7 +68,7 @@ class Xcloner_Restore
 
         if (isset($_POST['API_ID'])) {
             $request_id = $this->xcloner_sanitization->sanitize_input_as_string($_POST['API_ID']);
-            $this->logger->info("Processing ajax request ID " . substr(filter_input(INPUT_POST, 'API_ID', FILTER_SANITIZE_STRING), 0, 15));
+            $this->logger->info("Processing ajax request ID " . $request_id);
         }
     }
 
