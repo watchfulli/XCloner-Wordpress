@@ -114,7 +114,7 @@ watcher() {
 sync
 watcher &
 
-wait-for-it db:3306 --timeout=0 --strict -- echo "Database is up"
+wait-for-it "${WORDPRESS_DB_HOST}:3306" --timeout=0 --strict -- echo "Database is up"
 
 wp core install --url="${WORDPRESS_URL}" --title="${WORDPRESS_TITLE}" --admin_user="${WORDPRESS_ADMIN_USER}" --admin_password="${WORDPRESS_ADMIN_PASSWORD}" --admin_email="${WORDPRESS_ADMIN_EMAIL}" --allow-root
 wp plugin activate xcloner-backup-and-restore --allow-root
