@@ -839,7 +839,7 @@ class Xcloner
 
     public function execute_backup($profile_id = null)
     {
-        $profile_config = ($this->xcloner_settings->get_xcloner_option('profile'));
+        $profile_config = $this->xcloner_settings->get_xcloner_option('profile');
 
         $data['params'] = "";
         $data['backup_params'] = $profile_config->backup_params;
