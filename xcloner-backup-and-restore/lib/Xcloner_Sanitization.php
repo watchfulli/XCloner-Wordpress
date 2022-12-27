@@ -31,7 +31,7 @@ class Xcloner_Sanitization
      */
     public function sanitize_input_as_string($option)
     {
-        return filter_var($option, FILTER_SANITIZE_STRING);
+        return sanitize_text_field($option);
     }
 
     /**

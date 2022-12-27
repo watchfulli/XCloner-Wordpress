@@ -77,17 +77,6 @@ class Xcloner_Settings
     }
 
     /**
-     * Get XCloner Start Path Setting , function is in legacy mode
-     *
-     */
-    public function get_xcloner_dir_path($dir)
-    {
-        $path = $this->get_xcloner_start_path().DS.$dir;
-
-        return $path;
-    }
-
-    /**
      * Get XCloner Backup Store Path Setting
      *
      * @return string

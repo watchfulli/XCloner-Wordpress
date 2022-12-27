@@ -301,10 +301,10 @@ class Xcloner_Restore
      */
     public function restore_finish_action()
     {
-        $backup_archive = filter_input(INPUT_POST, 'backup_archive', FILTER_SANITIZE_STRING);
+        $backup_archive = $this->xcloner_sanitization->sanitize_input_as_string($_POST['bakcup_archive']);
 
-        $delete_backup_archive = filter_input(INPUT_POST, 'delete_backup_archive', FILTER_SANITIZE_NUMBER_INT);
-        $delete_backup_temporary_folder = filter_input(INPUT_POST, 'delete_backup_temporary_folder', FILTER_SANITIZE_NUMBER_INT);
+        $delete_backup_archive = $this->xcloner_sanitization->sanitize_input_as_int($_POST['delete_backup_archive']);
+        $delete_backup_temporary_folder = $this->xcloner_sanitization->sanitize_input_as_int($_POST['delete_backup_temporary_folder']);
 
         if ($delete_backup_temporary_folder) {
             $this->delete_backup_temporary_folder();
@@ -361,7 +361,7 @@ class Xcloner_Restore
      */
     public function list_mysqldump_backups_action()
     {
-        $source_backup_file = filter_input(INPUT_POST, 'backup_file', FILTER_SANITIZE_STRING);
+        $source_backup_file = $this->xcloner_sanitization->sanitize_input_as_string($_POST['backup_file']);
 
         $hash = $this->get_hash_from_backup($source_backup_file);
 
@@ -431,7 +431,8 @@ class Xcloner_Restore
      */
     public function list_backup_archives_action()
     {
-        $local_backup_file = filter_input(INPUT_POST, 'local_backup_file', FILTER_SANITIZE_STRING);
+        $local_backup_file = $this->xcloner_sanitization->sanitize_input_as_string($_POST['local_backup_file']);
+
         $list = $this->filesystem->listContents();
 
         $backup_files = array();
@@ -502,12 +503,12 @@ class Xcloner_Restore
      */
     public function restore_backup_to_path_action()
     {
-        $source_backup_file = filter_input(INPUT_POST, 'backup_file', FILTER_SANITIZE_STRING);
-        $include_filter_files = filter_input(INPUT_POST, 'filter_files', FILTER_SANITIZE_STRING);
+        $source_backup_file = $this->xcloner_sanitization->sanitize_input_as_string($_POST['backup_file']);
+        $include_filter_files = $this->xcloner_sanitization->sanitize_input_as_string($_POST['filter_files']);
         $exclude_filter_files = "";
-        $start = filter_input(INPUT_POST, 'start', FILTER_SANITIZE_NUMBER_INT);
-        $return['part'] = (int)filter_input(INPUT_POST, 'part', FILTER_SANITIZE_NUMBER_INT);
-        $return['processed'] = (int)filter_input(INPUT_POST, 'processed', FILTER_SANITIZE_NUMBER_INT);
+        $start = $this->xcloner_sanitization->sanitize_input_as_int($_POST['start']);
+        $return['part'] = (int)$this->xcloner_sanitization->sanitize_input_as_int($_POST['part']);
+        $return['processed'] = (int)$this->xcloner_sanitization->sanitize_input_as_int($_POST['processed']);
         $this->target_adapter = new Local($this->site_path, LOCK_EX, 'SKIP_LINKS');
         $this->target_filesystem = new Filesystem($this->target_adapter, new Config([
             'disable_asserts' => true,
