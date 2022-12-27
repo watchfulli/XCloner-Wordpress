@@ -39,7 +39,7 @@ if (!defined("XCLONER_PLUGIN_DIR")) {
 }
 
 $xcloner_cli = new Xcloner_cli($argv ?? []);
-if ($xcloner_cli->shouldRun()) {
+if ($xcloner_cli->should_run()) {
     try {
         $xcloner_cli->run();
     } catch (Exception $e) {
