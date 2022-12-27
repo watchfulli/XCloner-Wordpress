@@ -14,11 +14,6 @@ class Xcloner_Requirements
         $this->xcloner_settings = $xcloner_container->get_xcloner_settings();
     }
 
-    private function get_xcloner_container()
-    {
-        return $this->xcloner_container;
-    }
-
     public function check_backup_ready_status()
     {
         if (!$this->check_min_php_version(1)) {

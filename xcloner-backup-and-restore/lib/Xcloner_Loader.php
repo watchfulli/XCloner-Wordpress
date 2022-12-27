@@ -65,11 +65,6 @@ class Xcloner_Loader
     /**
      * @var Xcloner
      */
-    private $xcloner_plugin;
-
-    /**
-     * @var Xcloner
-     */
     private $xcloner_container;
 
 

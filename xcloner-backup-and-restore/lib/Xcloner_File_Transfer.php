@@ -61,15 +61,6 @@ class Xcloner_File_Transfer extends Xcloner_Filesystem
     }
 
     /**
-     * @return string
-     */
-    public function get_target()
-    {
-        return $this->target_url;
-    }
-
-
-    /**
      * @param $file
      * @param int $start
      * @param string $hash
