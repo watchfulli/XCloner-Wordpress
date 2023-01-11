@@ -13,7 +13,6 @@ services:
     #  wordpress:
     #    ports:
     #      - '8080:80'
-    restart: always
     environment:
       WORDPRESS_DEBUG: true
       WORDPRESS_DB_HOST: db
@@ -30,7 +29,6 @@ services:
     image: mariadb:10.5.8
     volumes:
       - db_data:/var/lib/mysql
-    restart: always
     environment:
       MYSQL_ROOT_PASSWORD: wordpress
       MYSQL_DATABASE: wordpress
