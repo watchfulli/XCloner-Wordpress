@@ -6,3 +6,5 @@ docker-compose.override.yml
 
 /xcloner-backup-and-restore-build/
 /xcloner-backup-and-restore*.zip
+
+.env

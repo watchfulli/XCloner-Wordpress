@@ -8,32 +8,29 @@ services:
       dockerfile: docker/Dockerfile
     volumes:
       - ./xcloner-backup-and-restore:/src/xcloner-backup-and-restore:ro
-    # To avoid conflicts, define your own port binding in docker-compose.override.yml. E.g.
-    #services:
-    #  wordpress:
-    #    ports:
-    #      - '8080:80'
+    ports:
+      - "${WORDPRESS_PORT:-8080}:80"
     environment:
-      WORDPRESS_DEBUG: true
-      WORDPRESS_DB_HOST: db
-      WORDPRESS_DB_USER: wordpress
-      WORDPRESS_DB_PASSWORD: wordpress
-      WORDPRESS_DB_NAME: wordpress
-      WORDPRESS_URL: https://wordpress.xcloner.local
-      WORDPRESS_TITLE: XCloner Testing
-      WORDPRESS_ADMIN_USER: admin
-      WORDPRESS_ADMIN_PASSWORD: admin
-      WORDPRESS_ADMIN_EMAIL: hello@watchful.net
+      WORDPRESS_DEBUG: "${WORDPRESS_DEBUG:-false}"
+      WORDPRESS_DB_HOST: "${WORDPRESS_DB_HOST:-db}"
+      WORDPRESS_DB_USER: "${WORDPRESS_DB_USER:-wordpress}"
+      WORDPRESS_DB_PASSWORD: "${WORDPRESS_DB_PASSWORD:-wordpress}"
+      WORDPRESS_DB_NAME: "${WORDPRESS_DB_NAME:-wordpress}"
+      WORDPRESS_URL: "${WORDPRESS_URL:-http://localhost:8080}"
+      WORDPRESS_TITLE: "${WORDPRESS_TITLE:-WordPress}"
+      WORDPRESS_ADMIN_USER: "${WORDPRESS_ADMIN_USER:-admin}"
+      WORDPRESS_ADMIN_PASSWORD: "${WORDPRESS_ADMIN_PASSWORD:-password}"
+      WORDPRESS_ADMIN_EMAIL: "${WORDPRESS_ADMIN_EMAIL:-example@example.com}"
 
   db:
     image: mariadb:10.5.8
     volumes:
       - db_data:/var/lib/mysql
     environment:
-      MYSQL_ROOT_PASSWORD: wordpress
-      MYSQL_DATABASE: wordpress
-      MYSQL_USER: wordpress
-      MYSQL_PASSWORD: wordpress
+      MYSQL_ROOT_PASSWORD: "${WORDPRESS_DB_PASSWORD:-wordpress}"
+      MYSQL_DATABASE: "${WORDPRESS_DB_NAME:-wordpress}"
+      MYSQL_USER: "${WORDPRESS_DB_USER:-wordpress}"
+      MYSQL_PASSWORD: "${WORDPRESS_DB_PASSWORD:-wordpress}"
     healthcheck:
       test: "/usr/bin/mysql --user=wordpress --password=wordpress --execute \"SHOW DATABASES;\""
       interval: 3s
