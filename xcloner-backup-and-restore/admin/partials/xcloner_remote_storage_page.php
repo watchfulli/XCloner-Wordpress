@@ -155,11 +155,6 @@ $common_cleanup_html = ob_get_contents();
 
     jQuery(document).ready(function () {
 
-        //var remote_storage = new Xcloner_Remote_Storage();
-
-        var watchful_gdrive_redirect_uri = "<?php echo $remote_storage::GDRIVE_REDIRECT_URL_WATCHFUL?>";
-        var default_gdrive_redirect_uri = "<?php echo $remote_storage::GDRIVE_REDIRECT_URL?>";
-
         checkEndpoint()
         jQuery("#aws_region").on("change", function () {
             checkEndpoint();
@@ -174,42 +169,6 @@ $common_cleanup_html = ob_get_contents();
             var tag = jQuery(this).val()
             window.location.hash = "#" + tag;
         })
-
-        if (!jQuery("#gdrive_client_id").val()) {
-            jQuery("#gdrive_client_secret_wrapper").hide();
-        }
-
-        jQuery("#gdrive_client_id").on('keyup', function () {
-
-            if (jQuery("#gdrive_client_id").val()) {
-                jQuery("#gdrive_client_secret_wrapper").show();
-            } else {
-                jQuery("#gdrive_client_secret_wrapper").hide();
-            }
-
-        })
-
-        jQuery("#gdrive_authorization_click").on("click", function (e) {
-
-            var href = (jQuery(this).attr("href"))
-
-            var client_id = jQuery("#gdrive_client_id").val() || jQuery("#gdrive_client_id").attr(
-                'default-client-id')
-
-            var redirect_uri = default_gdrive_redirect_uri;
-
-            if (client_id === jQuery("#gdrive_client_id").attr('default-client-id')) {
-                redirect_uri = watchful_gdrive_redirect_uri
-            }
-
-            var new_href = href.
-            replace(/(client_id=).*?(&)/, '$1' + client_id + '$2').
-            replace(/(redirect_uri=).*?(&)/, '$1' + redirect_uri + '$2');
-
-            console.log(new_href)
-            jQuery(this).attr("href", new_href)
-
-        });
 
         if (location.hash) {
             jQuery(location.hash).addClass("active");

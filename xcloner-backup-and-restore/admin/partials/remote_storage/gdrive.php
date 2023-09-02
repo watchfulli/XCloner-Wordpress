@@ -8,8 +8,8 @@ $remote_storage = $this->get_xcloner_container()->get_xcloner_remote_storage();
 
 $gdrive_auth_url = "";
 
-if (method_exists($remote_storage, "get_gdrive_auth_url")) {
-    $gdrive_auth_url = $remote_storage->get_gdrive_auth_url();
+if (method_exists($remote_storage, "gdrive_get_auth_url")) {
+    $gdrive_auth_url = $remote_storage->gdrive_get_auth_url();
 }
 
 $gdrive_construct = $remote_storage->gdrive_construct();
@@ -39,12 +39,7 @@ $gdrive_construct = $remote_storage->gdrive_construct();
         </div>
         <div class=" col s12 m9">
             <p>
-                <?php echo sprintf(__('Click the Google Sign-in button below to complete the 1-time integration. If you would like to create your own custom app, please visit %s to create a new application and get your Client ID and Client Secret and enter it below. ', 'xcloner-backup-and-restore'), '<a href="https://console.developers.google.com" target="_blank">https://console.developers.google.com</a>') ?>
-                <a href="https://youtu.be/kBxf-39F4Nw" target="_blank" class="btn-floating tooltipped btn-small"
-                    data-position="right" data-delay="50" data-html="true"
-                    data-tooltip="<?php echo sprintf(__('Click here to view a short video explaining how to create the Client ID and Client Secret as well as connecting XCloner with the Google Drive API %s', 'xcloner-backup-and-restore'), "<br />https://youtu.be/kBxf-39F4Nw") ?>"
-                    data-tooltip-id="92c95730-94e9-7b59-bd52-14adc30d5e3e"><i
-                        class="material-icons">help_outline</i></a>
+                <?php echo sprintf(__('Click the Google Sign-in button below to complete the 1-time integration.'));  ?>
             </p>
         </div>
     </div>
@@ -62,30 +57,6 @@ $gdrive_construct = $remote_storage->gdrive_construct();
                 </a>
             <input type="text" name="authentification_code" id="authentification_code"
                 placeholder="<?php echo __("Paste Authorization Code Here", "xcloner-backup-and-restore") ?>">
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col s12 m3 label">
-            <label for="gdrive_client_id"><?php echo __("Client ID", 'xcloner-backup-and-restore') ?></label>
-        </div>
-        <div class=" col s12 m6">
-            <input
-                placeholder="<?php echo __("Leave blank unless you wish to set up Google Drive integration manually", 'xcloner-backup-and-restore') ?>"
-                id="gdrive_client_id" type="text" name="xcloner_gdrive_client_id" class="validate"
-                value="<?php echo esc_attr(get_option("xcloner_gdrive_client_id")) ?>"
-                default-client-id=<?php echo $remote_storage::GDRIVE_AUTH_WATCHFUL?>>
-        </div>
-    </div>
-
-    <div class="row" id="gdrive_client_secret_wrapper">
-        <div class="col s12 m3 label">
-            <label for="gdrive_client_secret"><?php echo __("Client Secret", 'xcloner-backup-and-restore') ?></label>
-        </div>
-        <div class=" col s12 m6">
-            <input placeholder="<?php echo __("Google Client Secret", 'xcloner-backup-and-restore') ?>"
-                id="gdrive_client_secret" type="text" name="xcloner_gdrive_client_secret" class="validate"
-                value="<?php echo esc_attr(str_repeat('*', strlen(get_option("xcloner_gdrive_client_secret")))) ?>">
         </div>
     </div>
 

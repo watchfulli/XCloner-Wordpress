@@ -1,4 +1,5 @@
 name: xcloner-testing
+
 services:
   wordpress:
     depends_on:
@@ -21,6 +22,8 @@ services:
       WORDPRESS_ADMIN_USER: "${WORDPRESS_ADMIN_USER:-admin}"
       WORDPRESS_ADMIN_PASSWORD: "${WORDPRESS_ADMIN_PASSWORD:-password}"
       WORDPRESS_ADMIN_EMAIL: "${WORDPRESS_ADMIN_EMAIL:-example@example.com}"
+      XCLONER_GDRIVE_CLIENT_ID: "${XCLONER_GDRIVE_CLIENT_ID:-}"
+      XCLONER_GDRIVE_REDIRECT_URL: "${XCLONER_GDRIVE_REDIRECT_URL:-}"
 
   db:
     image: mariadb:10.5.8

@@ -146,7 +146,7 @@ class Xcloner_Admin
         if (isset($_POST['authentification_code']) && $_POST['authentification_code'] != "") {
             $_POST['authentification_code'] = $xcloner_sanitization->sanitize_input_as_string($_POST['authentification_code']);
 
-            $remote_storage->set_access_token($_POST['authentification_code']);
+            $remote_storage->gdrive_set_access_token($_POST['authentification_code']);
         }
 
         if (isset($_POST['connection_check']) && $_POST['connection_check']) {
