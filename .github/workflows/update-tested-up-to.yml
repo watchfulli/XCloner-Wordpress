@@ -1,0 +1,12 @@
+name: Update tested up to version
+on: workflow_dispatch
+jobs:
+  deploy-wp:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Update "tested up to version" to WordPress SVN
+        run: ${{ github.workspace }}/.github/workflows/update-tested-up-to.sh
+        env:
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
