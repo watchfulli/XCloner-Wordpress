@@ -4,7 +4,7 @@ Donate link: http://www.xcloner.com
 Tags: backup, database backup, cloud backup, WordPress backup, WordPress migration
 Requires at least: 5.1
 Requires PHP: 7.3
-Tested up to: 6.5.3
+Tested up to: 6.5.4
 Stable tag: 4.7.2
 
 
@@ -116,6 +116,9 @@ Of course, schedules can be adjusted accordingly to how often you update your si
 11. Generate Backup Screen
 
 == Changelog ==
+
+= 4.7.3 =
+* Update "tested up to" version
 
 = 4.7.2 =
 * Update "tested up to" version
