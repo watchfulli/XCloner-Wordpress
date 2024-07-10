@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "517dc7a563944fcc8c0115794fe825c9",
+    "content-hash": "9833a701906c29e14e899e7bad4efc59",
     "packages": [
         {
             "name": "as247/cloud-storages",
@@ -5746,5 +5746,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }
