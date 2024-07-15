@@ -1,29 +1,20 @@
-SCRIPT_DIR="$( dirname -- "$0"; )"
-SRC_DIR="${SCRIPT_DIR}/xcloner-backup-and-restore"
-BUILD_DIR="${SCRIPT_DIR}/xcloner-backup-and-restore-build"
-
 DATE=$(date +"%Y%m%d%H%M")
+SLUG="xcloner-backup-and-restore"
+BUILD_ONLY="true"
+BUILD_SCRIPT_PATH="./.github/workflows/deploy-wp.sh"
+BUILD_DIR="xcloner-backup-and-restore-build"
 
-echo "Building Webpack bundle"
+export BUILD_ONLY
 
-npm i
-npm run build-prod
+echo "Building plugin"
 
-echo "Moving source files to build directory"
-
-rsync --exclude-from=".distignore" -av --delete "${SRC_DIR}/" "${BUILD_DIR}/"
-
-echo "Install composer dependencies without dev dependencies"
-cd "${BUILD_DIR}"
-/bin/php7.3 /usr/local/bin/composer install --no-dev --prefer-dist -o --no-interaction
-cd ..
-
-echo "Removing unnecessary files from vendor directory"
-rsync --exclude-from=".distignore" -av --delete "${BUILD_DIR}/" "${BUILD_DIR}/xcloner-backup-and-restore/"
+bash "${BUILD_SCRIPT_PATH}"
 
 echo "Creating archive"
-cd "${BUILD_DIR}"
-zip -r "xcloner-backup-and-restore-${DATE}.zip" "xcloner-backup-and-restore"
+cd "${BUILD_DIR}" || exit 1
+mkdir "${SLUG}"
+mv ./* "${SLUG}"
+zip -r "xcloner-backup-and-restore-${DATE}.zip" "${SLUG}" || exit 1
 mv "xcloner-backup-and-restore-${DATE}.zip" ../
 cd ..
 

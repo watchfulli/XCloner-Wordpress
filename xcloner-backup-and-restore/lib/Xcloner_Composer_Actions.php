@@ -33,7 +33,7 @@ class Xcloner_Composer_Actions
                     continue;
                 }
 
-                $contents = preg_replace('/^namespace\s+([a-zA-Z0-9_\\\\]+);/m', "namespace $1;\n\n$check_to_add\n", $contents, 1);
+                $contents = preg_replace('/namespace\s+([a-zA-Z0-9_\\\\]+);/m', "namespace $1;\n\n$check_to_add\n", $contents, 1);
 
                 if (
                     strpos($contents, $check_to_add) === false

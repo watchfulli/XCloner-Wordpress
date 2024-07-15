@@ -1,44 +1,16 @@
 name: Deploy to WordPress.org
 on:
-  push:
-    tags:
-    - "*"
+  workflow_dispatch:
 jobs:
-  tag:
-    name: New tag
+  deploy:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
-    - name: Build npm dependencies
-      run: |
-        export NODE_OPTIONS=--openssl-legacy-provider
-        npm install
-        npm run build-prod
-
-    - name: Setup PHP with composer
-      uses: shivammathur/setup-php@v2
+    - uses: shivammathur/setup-php@v2
       with:
         php-version: '7.3'
         tools: composer
-
-    - name: Build composer dependencies
-      run: |
-        cd xcloner-backup-and-restore
-        composer install --no-dev --prefer-dist -o
-
-    - name: Remove unneeded files
-      run: |
-        rsync --exclude-from=".distignore" -av --delete "${SRC_DIR}/" "${BUILD_DIR}/"
+      run: ${{ github.workspace }}/.github/workflows/deploy-wp.sh
       env:
-        BUILD_DIR: xcloner-backup-and-restore-build
-        SRC_DIR: xcloner-backup-and-restore
-
-    - name: WordPress Plugin Deploy
-      uses: 10up/action-wordpress-plugin-deploy@develop
-      env:
-        SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
         SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
-        SLUG: xcloner-backup-and-restore
-        BUILD_DIR: xcloner-backup-and-restore-build
-      with:
-        generate-zip: true
+        SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}

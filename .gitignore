@@ -5,6 +5,7 @@ xcloner-backup-and-restore/vendor/
 docker-compose.override.yml
 
 /xcloner-backup-and-restore-build/
+/xcloner-backup-and-restore-svn/
 /xcloner-backup-and-restore*.zip
 
 .env
