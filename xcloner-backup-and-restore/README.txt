@@ -4,7 +4,7 @@ Donate link: http://www.xcloner.com
 Tags: backup, database backup, cloud backup, WordPress backup, WordPress migration
 Requires at least: 5.1
 Requires PHP: 7.3
-Tested up to: 6.6.1
+Tested up to: 6.7
 Stable tag: 4.7.5
 
 
