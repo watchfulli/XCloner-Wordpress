@@ -1,4 +1,4 @@
-=== Backup, Restore and Migrate WordPress Sites With the XCloner Plugin ===
+=== Backup, Restore and Migrate your sites with XCloner ===
 Contributors: watchful
 Donate link: http://www.xcloner.com
 Tags: backup, database backup, cloud backup, WordPress backup, WordPress migration
