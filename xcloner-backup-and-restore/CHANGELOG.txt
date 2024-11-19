@@ -1,3 +1,6 @@
+= 4.7.5 =
+* Move changelog to a separate file (https://github.com/watchfulli/XCloner-Wordpress/issues/315)
+
 = 4.7.4 =
 * Prevent direct access to Composer vendor files to avoid security issues
 
