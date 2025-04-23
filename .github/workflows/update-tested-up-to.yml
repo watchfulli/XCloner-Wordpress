@@ -6,7 +6,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Update "tested up to version" to WordPress SVN
-        run: ${{ github.workspace }}/.github/workflows/update-tested-up-to.sh
+        run: |
+          sudo apt-get update && sudo apt-get install -y subversion
+          ${{ github.workspace }}/.github/workflows/update-tested-up-to.sh
         env:
           SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
           SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
