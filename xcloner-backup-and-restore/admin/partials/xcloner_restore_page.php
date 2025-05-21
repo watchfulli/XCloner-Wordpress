@@ -237,7 +237,7 @@ $page = $xcloner_sanitization->sanitize_input_as_string($_GET['page']);
                                     <label for="filter_files_database" class="tooltipped"
                                            data-tooltip="<?php echo __('Restore the database-sql.sql mysql backup from the xcloner-xxxxx/ folder', 'xcloner-backup-and-restore') ?>">
                                         <input class="with-gap" name="filter_files" type="radio" id="filter_files_database"
-                                               value="/^xcloner-(.*)\/(.*)\.sql/"/>
+                                               value="#^xcloner-(.*)/(.*).sql#"/>
                                         <span>
                                         <?php echo __("Only Database Backup", "xcloner-backup-and-restore") ?>
                                     </span>
