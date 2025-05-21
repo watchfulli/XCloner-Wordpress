@@ -245,10 +245,15 @@ class Xcloner_Restore
                 continue;
             }
 
-            //exclude usermeta info for local restores to fix potential session logout
-            if (strpos($line, "_usermeta`") !== false) {
-                $line = str_replace("_usermeta`", "_usermeta2`", $line);
-            }
+			$prefix = $mysqli->prefix;
+
+	        if (strpos($line, "`{$prefix}usermeta`") !== false) {
+		        $line = str_replace("`{$prefix}usermeta`", "`{$prefix}usermeta_new`", $line);
+	        }
+
+	        if (strpos($line, "`{$prefix}users`") !== false) {
+		        $line = str_replace("`{$prefix}users`", "`{$prefix}users_new`", $line);
+	        }
 
             $query .= $line;
             if (substr($line, strlen($line) - 2, strlen($line)) != ";\n") {
@@ -317,15 +322,21 @@ class Xcloner_Restore
         global $wpdb;
 
         $wpdb->select($wpdb->dbname);
-
         $wpdb->hide_errors();
-        if ($result = $wpdb->get_var("SELECT count(*) FROM " . $wpdb->prefix . "usermeta2")) {
-            if ($result > 0) {
-                $wpdb->query("DROP TABLE IF EXISTS " . $wpdb->prefix . "usermeta_backup");
-                $wpdb->query("ALTER TABLE " . $wpdb->prefix . "usermeta RENAME TO " . $wpdb->prefix . "usermeta_backup");
-                $wpdb->query("ALTER TABLE " . $wpdb->prefix . "usermeta2 RENAME TO " . $wpdb->prefix . "usermeta");
-            }
-        }
+
+	    $user_meta_count = $wpdb->get_var("SELECT count(*) FROM `{$wpdb->prefix}usermeta_new`");
+	    if ($user_meta_count > 0) {
+		    $wpdb->query("DROP TABLE IF EXISTS `{$wpdb->prefix}usermeta_backup`");
+		    $wpdb->query("ALTER TABLE `{$wpdb->prefix}usermeta` RENAME TO `{$wpdb->prefix}usermeta_backup`");
+		    $wpdb->query("ALTER TABLE `{$wpdb->prefix}usermeta_new` RENAME TO `{$wpdb->prefix}usermeta`");
+	    }
+
+	    $users_count = $wpdb->get_var("SELECT count(*) FROM `{$wpdb->prefix}users_new`");
+	    if ($users_count > 0) {
+		    $wpdb->query("DROP TABLE IF EXISTS `{$wpdb->prefix}users_backup`");
+		    $wpdb->query("ALTER TABLE `{$wpdb->prefix}users` RENAME TO `{$wpdb->prefix}users_backup`");
+		    $wpdb->query("ALTER TABLE `{$wpdb->prefix}users_new` RENAME TO `{$wpdb->prefix}users`");
+	    }
 
         $return = "Restore Process Finished.";
         $this->send_response(200, $return);
