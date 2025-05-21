@@ -506,9 +506,9 @@ class Xcloner_Restore
         $source_backup_file = $this->xcloner_sanitization->sanitize_input_as_string($_POST['backup_file']);
         $include_filter_files = $this->xcloner_sanitization->sanitize_input_as_string($_POST['filter_files']);
         $exclude_filter_files = "";
-        $start = $this->xcloner_sanitization->sanitize_input_as_int($_POST['start']);
-        $return['part'] = (int)$this->xcloner_sanitization->sanitize_input_as_int($_POST['part']);
-        $return['processed'] = (int)$this->xcloner_sanitization->sanitize_input_as_int($_POST['processed']);
+        $start = $this->xcloner_sanitization->sanitize_input_as_int($_POST['start'] ?? 0);
+        $return['part'] = (int)$this->xcloner_sanitization->sanitize_input_as_int($_POST['part'] ?? 0);
+        $return['processed'] = (int)$this->xcloner_sanitization->sanitize_input_as_int($_POST['processed'] ?? 0);
         $this->target_adapter = new Local($this->site_path, LOCK_EX, 'SKIP_LINKS');
         $this->target_filesystem = new Filesystem($this->target_adapter, new Config([
             'disable_asserts' => true,
