@@ -216,6 +216,7 @@ class Xcloner_Restore
         }
 
         $mysqli = $this->xcloner_container->get_xcloner_database();
+		$this->set_foreign_key_checks_status($mysqli, false);
 
         $line_count = 0;
         $query = "";
@@ -292,6 +293,7 @@ class Xcloner_Restore
             $return['finished'] = 0;
         } else {
             $this->logger->info('Mysql Import Done.');
+            $this->set_foreign_key_checks_status($mysqli, true);
         }
 
         fclose($fp);
@@ -788,4 +790,8 @@ class Xcloner_Restore
 
         die(json_encode($return));
     }
+
+	private function set_foreign_key_checks_status( Xcloner_Database $mysqli, bool $enable ) {
+		$mysqli->query( "SET FOREIGN_KEY_CHECKS=$enable;" );
+	}
 }
