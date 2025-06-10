@@ -216,6 +216,7 @@ class Xcloner_Restore
         }
 
         $mysqli = $this->xcloner_container->get_xcloner_database();
+		$this->set_foreign_key_checks($mysqli, false);
 
         $line_count = 0;
         $query = "";
@@ -245,10 +246,21 @@ class Xcloner_Restore
                 continue;
             }
 
-            //exclude usermeta info for local restores to fix potential session logout
-            if (strpos($line, "_usermeta`") !== false) {
-                $line = str_replace("_usermeta`", "_usermeta2`", $line);
-            }
+			$prefix = $mysqli->prefix;
+	        $tables_to_update = ['usermeta', 'users', 'options'];
+
+	        foreach ($tables_to_update as $table) {
+		        $search = "`$prefix$table`";
+		        $replace = "`$prefix{$table}_new`";
+
+		        if (strpos($line, $search) !== false) {
+			        $line = str_replace($search, $replace, $line);
+		        }
+	        }
+
+	        if (stripos($line, 'INSERT INTO') !== false) {
+		        $line = preg_replace('/INSERT\s+INTO/i', 'INSERT IGNORE INTO', $line);
+	        }
 
             $query .= $line;
             if (substr($line, strlen($line) - 2, strlen($line)) != ";\n") {
@@ -260,7 +272,7 @@ class Xcloner_Restore
                 $execute_query = "";
             }
 
-            if (!$mysqli->query($query) && !stristr($mysqli->error, "Duplicate entry")) {
+            if ($mysqli->query($query) === false && !stristr($mysqli->error, "Duplicate entry")) {
                 //$return['error_line'] = $line_count;
                 $return['start'] = ftell($fp) - strlen($line);
                 $return['query_error'] = true;
@@ -287,6 +299,7 @@ class Xcloner_Restore
             $return['finished'] = 0;
         } else {
             $this->logger->info('Mysql Import Done.');
+            $this->set_foreign_key_checks($mysqli, true);
         }
 
         fclose($fp);
@@ -317,19 +330,28 @@ class Xcloner_Restore
         global $wpdb;
 
         $wpdb->select($wpdb->dbname);
-
         $wpdb->hide_errors();
-        if ($result = $wpdb->get_var("SELECT count(*) FROM " . $wpdb->prefix . "usermeta2")) {
-            if ($result > 0) {
-                $wpdb->query("DROP TABLE IF EXISTS " . $wpdb->prefix . "usermeta_backup");
-                $wpdb->query("ALTER TABLE " . $wpdb->prefix . "usermeta RENAME TO " . $wpdb->prefix . "usermeta_backup");
-                $wpdb->query("ALTER TABLE " . $wpdb->prefix . "usermeta2 RENAME TO " . $wpdb->prefix . "usermeta");
-            }
-        }
+
+	    foreach ( [ 'usermeta', 'users', 'options' ] as $table ) {
+		    $this->replace_table_with_new_version( $wpdb, $table );
+	    }
 
         $return = "Restore Process Finished.";
         $this->send_response(200, $return);
     }
+
+	private function replace_table_with_new_version( $mysqli, $table_name ) {
+		$prefix = $mysqli->prefix;
+
+		$count = $mysqli->get_var( "SELECT count(*) FROM `$prefix{$table_name}_new`" );
+		if ( $count <= 0 ) {
+			return;
+		}
+
+		$mysqli->query( "DROP TABLE IF EXISTS `$prefix{$table_name}_backup`" );
+		$mysqli->query( "ALTER TABLE `$prefix$table_name` RENAME TO `$prefix{$table_name}_backup`" );
+		$mysqli->query( "ALTER TABLE `$prefix{$table_name}_new` RENAME TO `$prefix$table_name`" );
+	}
 
     /**
      * Delete backup temporary folder
@@ -506,9 +528,9 @@ class Xcloner_Restore
         $source_backup_file = $this->xcloner_sanitization->sanitize_input_as_string($_POST['backup_file']);
         $include_filter_files = $this->xcloner_sanitization->sanitize_input_as_string($_POST['filter_files']);
         $exclude_filter_files = "";
-        $start = $this->xcloner_sanitization->sanitize_input_as_int($_POST['start']);
-        $return['part'] = (int)$this->xcloner_sanitization->sanitize_input_as_int($_POST['part']);
-        $return['processed'] = (int)$this->xcloner_sanitization->sanitize_input_as_int($_POST['processed']);
+        $start = $this->xcloner_sanitization->sanitize_input_as_int($_POST['start'] ?? 0);
+        $return['part'] = (int)$this->xcloner_sanitization->sanitize_input_as_int($_POST['part'] ?? 0);
+        $return['processed'] = (int)$this->xcloner_sanitization->sanitize_input_as_int($_POST['processed'] ?? 0);
         $this->target_adapter = new Local($this->site_path, LOCK_EX, 'SKIP_LINKS');
         $this->target_filesystem = new Filesystem($this->target_adapter, new Config([
             'disable_asserts' => true,
@@ -777,4 +799,9 @@ class Xcloner_Restore
 
         die(json_encode($return));
     }
+
+	private function set_foreign_key_checks( Xcloner_Database $mysqli, bool $enable ) {
+		$status = (int) $enable;
+		$mysqli->query( "SET FOREIGN_KEY_CHECKS=$status;" );
+	}
 }
