@@ -614,9 +614,10 @@ class Xcloner_Database extends wpdb
 
         if (isset($results[0])) {
             $return .= "# MYSQL DEFAULT_CHARACTER_SET_NAME: ".$results[0]->DEFAULT_CHARACTER_SET_NAME."\n";
-            $return .= "# MYSQL SCHEMA_NAME: ".$results[0]->DEFAULT_COLLATION_NAME."\n";
+	        $return .= "# MYSQL SCHEMA_NAME: " . $results[0]->DEFAULT_COLLATION_NAME . str_repeat( PHP_EOL, 2 );
         }
 
+		$return .= "SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';" . str_repeat( PHP_EOL, 2 );
         $return .= "#\n# Database : `".$database."`\n# --------------------------------------------------------\n\n";
 
         $this->log(sprintf(__("Writing %s database dump headers"), $database));
