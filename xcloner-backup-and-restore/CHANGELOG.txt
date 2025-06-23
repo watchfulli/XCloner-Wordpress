@@ -1,3 +1,6 @@
+= 4.7.9 =
+* https://github.com/watchfulli/XCloner-Wordpress/issues/303
+
 = 4.7.8 =
 * https://github.com/watchfulli/XCloner-Wordpress/issues/322
 * https://github.com/watchfulli/XCloner-Wordpress/issues/329
