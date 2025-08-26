@@ -1,5 +1,7 @@
 node_modules/
 xcloner-backup-and-restore/vendor/
+/build/
+php-scoper.phar
 .idea/
 
 docker-compose.override.yml
