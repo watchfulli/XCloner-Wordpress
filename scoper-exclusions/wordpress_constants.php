@@ -1,0 +1,17 @@
+<?php
+
+return [
+	'ABSPATH',
+	'ARRAY_A',
+	'ARRAY_N',
+	'DOING_CRON',
+	'HOUR_IN_SECONDS',
+	'NONCE_KEY',
+	'NONCE_SALT',
+	'WPINC',
+	'WP_CONTENT_DIR',
+	'WP_DEBUG',
+	'WP_DEBUG_DISPLAY',
+	'WP_PLUGIN_DIR',
+	'WP_UNINSTALL_PLUGIN',
+];
