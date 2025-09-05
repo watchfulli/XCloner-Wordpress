@@ -30,18 +30,61 @@ SVN_URL="https://plugins.svn.wordpress.org/${SLUG}/"
 SVN_DIR="${CURRENT_DIR}/${SLUG}-svn"
 BUILD_DIR="${CURRENT_DIR}/${SLUG}-build"
 
+PHPSCOPER_VERSION="0.18.17"
+PHPSCOPER_PHAR="php-scoper.phar"
+PHPSCOPER_URL="https://github.com/humbug/php-scoper/releases/download/${PHPSCOPER_VERSION}/php-scoper.phar"
+
 echo "➤ Building Webpack bundle"
 export NODE_OPTIONS=--openssl-legacy-provider
 npm install || exit 1
 npm run build-prod || exit 1
 
-echo "➤ Copying files to build directory"
-rsync -av --delete "${CURRENT_DIR}/${SLUG}/" "${BUILD_DIR}/"
+echo "==> Ensuring php-scoper is available"
+if [ ! -f "$PHPSCOPER_PHAR" ]; then
+  echo "Downloading php-scoper..."
+  if command -v curl >/dev/null 2>&1; then
+    curl -fsSL "$PHPSCOPER_URL" -o "$PHPSCOPER_PHAR" || { echo "x Download failed"; exit 1; }
+  elif command -v wget >/dev/null 2>&1; then
+    wget -q -O "$PHPSCOPER_PHAR" "$PHPSCOPER_URL" || { echo "x Download failed"; exit 1; }
+  else
+    echo "x Neither curl nor wget found";
+    exit 1
+  fi
+  chmod +x "$PHPSCOPER_PHAR"
+fi
 
-echo "➤ Install composer dependencies without dev dependencies"
-cd "${BUILD_DIR}" || exit 1
-composer install --no-dev --prefer-dist -o --no-interaction || exit 1
-cd "${CURRENT_DIR}" || exit 1
+echo "➤ Installing composer dependencies (excluding dev) for scoping"
+composer install --no-dev --prefer-dist -o --no-interaction --working-dir="${SLUG}" --ignore-platform-reqs || exit 1
+
+echo "➤ Running PHP-Scoper to prefix namespaces"
+php "${PHPSCOPER_PHAR}" add-prefix --config "${CURRENT_DIR}/scoper.inc.php" --output-dir "${CURRENT_DIR}/build" --force || exit 1
+
+echo "➤ Preparing build directory from PHP-Scoper output"
+rm -rf "${BUILD_DIR}"
+mkdir -p "${BUILD_DIR}"
+rsync -a --delete "${CURRENT_DIR}/build/" "${BUILD_DIR}/"
+
+echo "➤ Copying non-scoped admin directory into scoped build"
+if [[ -d "${CURRENT_DIR}/${SLUG}/admin" ]]; then
+  mkdir -p "${BUILD_DIR}/admin"
+  rsync -a --delete --exclude 'class-xcloner-admin.php' "${CURRENT_DIR}/${SLUG}/admin/" "${BUILD_DIR}/admin/"
+  if [[ -f "${CURRENT_DIR}/build/admin/class-xcloner-admin.php" ]]; then
+    cp -f "${CURRENT_DIR}/build/admin/class-xcloner-admin.php" "${BUILD_DIR}/admin/class-xcloner-admin.php"
+  elif [[ -f "${CURRENT_DIR}/build/${SLUG}/admin/class-xcloner-admin.php" ]]; then
+    cp -f "${CURRENT_DIR}/build/${SLUG}/admin/class-xcloner-admin.php" "${BUILD_DIR}/admin/class-xcloner-admin.php"
+  else
+    echo "Scoped admin class not found in build output!"
+    exit 1
+  fi
+fi
+
+echo "➤ Checking if composer.json/vendor exist in build directory"
+if [[ -f "${BUILD_DIR}/composer.json" && -d "${BUILD_DIR}/vendor" ]]; then
+  echo "➤ Optimizing autoload in build directory"
+  (cd "${BUILD_DIR}" && composer dump-autoload -o --no-interaction) || exit 1
+else
+  echo "⚠ Skipping autoload optimization (composer.json or vendor dir missing)"
+fi
 
 if [[ -n "$BUILD_ONLY" ]]; then
   echo "✓ Plugin built!"
