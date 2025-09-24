@@ -116,8 +116,10 @@ Of course, schedules can be adjusted accordingly to how often you update your si
 
 == Changelog ==
 
-= 4.7.9 =
-* https://github.com/watchfulli/XCloner-Wordpress/issues/303
+= 4.8.0 =
+* Isolate dependencies to reduce incompatibility issues:
+  - https://github.com/watchfulli/XCloner-Wordpress/issues/331
+  - https://github.com/watchfulli/XCloner-Wordpress/issues/235
 
 [See changelog for all versions](https://raw.githubusercontent.com/watchfulli/XCloner-Wordpress/master/xcloner-backup-and-restore/CHANGELOG.txt).
 
