@@ -38,21 +38,6 @@ XCloner Backup tool uses Open Source standards like TAR, Mysql and CSV formats s
 
 You can do it easily from the WordPress backend.
 
-## Isolate dependencies
-
-To avoid runtime errors and incompatibilities, any function, class, or constant used by the code that must remain
-“global” (typically those from WordPress) should be excluded from PHP-Scoper's scoping.
-
-In practice: if the code refers to a symbol that should not be renamed/packaged in an isolated namespace, add it to
-PHP-Scoper's exclusions. This prevents problems such as “function not found,” “class not found,” or conflicts with
-hooks/filters.
-
-### How to add exclusions
-Add symbols to the corresponding lists:
-- scoper-exclusions/wordpress_functions: for global functions (e.g., `add_action`, `is_admin`).
-- scoper-exclusions/wordpress_classes: for global classes (e.g., `WP_Error`, `wpdb`).
-- scoper-exclusions/wordpress_constants: for global constants (e.g., `ABSPATH`, `WP_DEBUG`).
-
 ## Frequently Asked Questions
 
 <b>Where does XCloner keep it's database backups?</b>

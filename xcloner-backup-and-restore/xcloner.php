@@ -106,7 +106,7 @@ function xcloner_stop_heartbeat()
 }
 
 if (isset($_GET['page']) && stristr($_GET['page'], "xcloner_")) {
-    add_action('init', __NAMESPACE__ . '\\xcloner_stop_heartbeat', 1);
+    add_action('init', 'xcloner_stop_heartbeat', 1);
 }
 
 /**

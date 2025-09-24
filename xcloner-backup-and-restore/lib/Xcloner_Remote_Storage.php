@@ -733,11 +733,11 @@ class Xcloner_Remote_Storage
 
     public function gdrive_construct()
     {
-        if (!class_exists('\Google\Client')) {
+        if (!class_exists('Google_Client')) {
             return false;
         }
 
-        $client = new \Google\Client();
+        $client = new \Google_Client();
         $client->setApplicationName(self::DEFAULT_GDRIVE_APP_NAME);
         $client->setClientId($this->gdrive_get_client_id());
 
@@ -865,7 +865,7 @@ class Xcloner_Remote_Storage
             }
         }
 
-        $service = new \Google\Service\Drive($client);
+        $service = new \Google_Service_Drive($client);
 
         if ($this->xcloner_settings->get_xcloner_option("xcloner_gdrive_empty_trash", 0)) {
             $this->logger->info(sprintf("Doing a Google Drive emptyTrash call"), array(""));
