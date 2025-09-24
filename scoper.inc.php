@@ -20,6 +20,7 @@ $wordpress_functions = file_exists( $exclusions_dir . '/wordpress_functions.php'
 
 return [
 	'prefix'            => 'XCloner',
+	'php-version'       => null,
 	'exclude-constants' => $wordpress_constants,
 	'exclude-classes'   => $wordpress_classes,
 	'exclude-functions' => $wordpress_functions,

@@ -30,7 +30,7 @@ SVN_URL="https://plugins.svn.wordpress.org/${SLUG}/"
 SVN_DIR="${CURRENT_DIR}/${SLUG}-svn"
 BUILD_DIR="${CURRENT_DIR}/${SLUG}-build"
 
-PHPSCOPER_VERSION="0.18.17"
+PHPSCOPER_VERSION="0.15"
 PHPSCOPER_PHAR="php-scoper.phar"
 PHPSCOPER_URL="https://github.com/humbug/php-scoper/releases/download/${PHPSCOPER_VERSION}/php-scoper.phar"
 
