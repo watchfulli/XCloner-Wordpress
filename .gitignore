@@ -7,6 +7,7 @@ php-scoper.phar
 docker-compose.override.yml
 
 /xcloner-backup-and-restore-build/
+svn-deploy/
 /xcloner-backup-and-restore-svn/
 /xcloner-backup-and-restore*.zip
 
