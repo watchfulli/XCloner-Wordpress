@@ -2,4 +2,5 @@
 
 return [
 	'wpdb',
+	'\\WP_CLI',
 ];
