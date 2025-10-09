@@ -1,7 +1,7 @@
 FROM wordpress:latest
 
 RUN apt-get update
-RUN apt-get install -y inotify-tools rsync wait-for-it
+RUN apt-get install -y inotify-tools rsync less wait-for-it
 
 COPY docker/entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/entrypoint.sh
