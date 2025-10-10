@@ -1,77 +1,89 @@
 <?php
+
 $remote_storage = $this->get_xcloner_container()->get_xcloner_remote_storage();
-?>
 
-<?php
-function common_cleanup_html($type)
-{
-    if ($type == "local") {
-        $type = "";
-    } else {
-        $type .= "_";
-    }
-    ob_start(); ?>
-<!-- Cleanup by Days -->
-<div class="row">
-    <div class="col s12 m3 label">
-        <label for="xcloner_{type}_cleanup_retention_limit_days">
-            <?php echo __("Cleanup by Age", 'xcloner-backup-and-restore') ?>
-        </label>
-    </div>
-    <div class=" col s12 m6">
-        <input placeholder="<?php echo __("how many days to keep the backups for", 'xcloner-backup-and-restore') ?>"
-            id="xcloner_{type}cleanup_retention_limit_days" type="text"
-            name="xcloner_{type}cleanup_retention_limit_days" class="validate"
-            value="<?php echo esc_attr(get_option("xcloner_".$type."cleanup_retention_limit_days")) ?>">
-    </div>
-</div>
+function common_cleanup_html( $type ): string {
+    $typePrefix = ( $type === 'local' ) ? '' : $type . '_';
 
-<!-- Cleanup by Quantity -->
-<div class="row">
-    <div class="col s12 m3 label">
-        <label
-            for="xcloner_{type}_cleanup_retention_limit_archives"><?php echo __("Cleanup by Quantity", 'xcloner-backup-and-restore') ?></label>
-    </div>
-    <div class=" col s12 m6">
-        <input placeholder="<?php echo __("how many backup files to keep", 'xcloner-backup-and-restore') ?>"
-            id="xcloner_{type}cleanup_retention_limit_archives" type="number"
-            name="xcloner_{type}cleanup_retention_limit_archives" class="validate"
-            value="<?php echo esc_attr(get_option("xcloner_".$type."cleanup_retention_limit_archives")) ?>">
-    </div>
-</div>
+    return buildCleanupHtml( $typePrefix );
+}
 
-<!-- Cleanup by Capacity -->
-<div class="row">
-    <div class="col s12 m3 label">
-        <label for="xcloner_{type}_cleanup_capacity_limit">
-            <?php echo __("Cleanup by Capacity(MB)", 'xcloner-backup-and-restore') ?>
-        </label>
-    </div>
-    <div class=" col s12 m6">
-        <input placeholder="<?php echo __("delete backup over specified limit", 'xcloner-backup-and-restore') ?>"
-            id="xcloner_{type}cleanup_capacity_limit" type="number" name="xcloner_{type}cleanup_capacity_limit"
-            class="validate" value="<?php echo esc_attr(get_option("xcloner_".$type."cleanup_capacity_limit")) ?>">
-    </div>
-</div>
+function buildCleanupHtml( $typePrefix ): string {
+    $cleanupByAgePlaceholder      = __( "how many days to keep the backups for", 'xcloner-backup-and-restore' );
+    $cleanupByQuantityPlaceholder = __( "how many backup files to keep", 'xcloner-backup-and-restore' );
+    $cleanupByCapacityPlaceholder = __( "delete backup over specified limit", 'xcloner-backup-and-restore' );
+    $keepBackupsPlaceholder       = __( "days of month, comma separated", 'xcloner-backup-and-restore' );
 
-<!-- Keep backups taken on days -->
-<div class="row">
-    <div class="col s12 m3 label">
-        <label for="xcloner_{type}_cleanup_exclude_days">
-            <?php echo __("Keep backups taken on days", 'xcloner-backup-and-restore') ?>
-        </label>
-    </div>
-    <div class=" col s12 m6">
-        <input placeholder="<?php echo __("days of month, comma separated", 'xcloner-backup-and-restore') ?>"
-            id="xcloner_{type}cleanup_exclude_days" type="text" name="xcloner_{type}cleanup_exclude_days"
-            class="validate" value="<?php echo esc_attr(get_option("xcloner_".$type."cleanup_exclude_days")) ?>">
-    </div>
-</div>
-<?php
-$common_cleanup_html = ob_get_contents();
-    ob_end_clean();
+    $cleanupByAgeLabel      = __( "Cleanup by Age", 'xcloner-backup-and-restore' );
+    $cleanupByQuantityLabel = __( "Cleanup by Quantity", 'xcloner-backup-and-restore' );
+    $cleanupByCapacityLabel = __( "Cleanup by Capacity(MB)", 'xcloner-backup-and-restore' );
+    $keepBackupsLabel       = __( "Keep backups taken on days", 'xcloner-backup-and-restore' );
 
-    return str_replace("{type}", $type, $common_cleanup_html);
+    $cleanupByAgeValue      = esc_attr( get_option( "xcloner_{$typePrefix}cleanup_retention_limit_days" ) );
+    $cleanupByQuantityValue = esc_attr( get_option( "xcloner_{$typePrefix}cleanup_retention_limit_archives" ) );
+    $cleanupByCapacityValue = esc_attr( get_option( "xcloner_{$typePrefix}cleanup_capacity_limit" ) );
+    $keepBackupsValue       = esc_attr( get_option( "xcloner_{$typePrefix}cleanup_exclude_days" ) );
+
+    return <<<HTML
+    <div class="row">
+        <div class="col s12 m3 label">
+            <label for="xcloner_{$typePrefix}cleanup_retention_limit_days">
+                {$cleanupByAgeLabel}
+            </label>
+        </div>
+        <div class=" col s12 m6">
+            <input placeholder="$cleanupByAgePlaceholder"
+                id="xcloner_{$typePrefix}cleanup_retention_limit_days" type="text"
+                name="xcloner_{$typePrefix}cleanup_retention_limit_days" class="validate"
+                value="$cleanupByAgeValue">
+        </div>
+    </div>
+    
+    <!-- Cleanup by Quantity -->
+    <div class="row">
+        <div class="col s12 m3 label">
+            <label for="xcloner_{$typePrefix}cleanup_retention_limit_archives">
+                {$cleanupByQuantityLabel}
+            </label>
+        </div>
+        <div class=" col s12 m6">
+            <input placeholder="$cleanupByQuantityPlaceholder"
+                id="xcloner_{$typePrefix}cleanup_retention_limit_archives" type="number"
+                name="xcloner_{$typePrefix}cleanup_retention_limit_archives" class="validate"
+                value="$cleanupByQuantityValue">
+        </div>
+    </div>
+    
+    <!-- Cleanup by Capacity -->
+    <div class="row">
+        <div class="col s12 m3 label">
+            <label for="xcloner_{$typePrefix}cleanup_capacity_limit">
+                {$cleanupByCapacityLabel}
+            </label>
+        </div>
+        <div class=" col s12 m6">
+            <input placeholder="$cleanupByCapacityPlaceholder"
+                id="xcloner_{$typePrefix}cleanup_capacity_limit" type="number" 
+                name="xcloner_{$typePrefix}cleanup_capacity_limit"
+                class="validate" value="$cleanupByCapacityValue">
+        </div>
+    </div>
+    
+    <!-- Keep backups taken on days -->
+    <div class="row">
+        <div class="col s12 m3 label">
+            <label for="xcloner_{$typePrefix}cleanup_exclude_days">
+                {$keepBackupsLabel}
+            </label>
+        </div>
+        <div class=" col s12 m6">
+            <input placeholder="$keepBackupsPlaceholder"
+                id="xcloner_{$typePrefix}cleanup_exclude_days" type="text" 
+                name="xcloner_{$typePrefix}cleanup_exclude_days"
+                class="validate" value="$keepBackupsValue">
+        </div>
+    </div>
+    HTML;
 }
 
 ?>
