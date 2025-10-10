@@ -3,6 +3,9 @@ FROM wordpress:latest
 RUN apt-get update
 RUN apt-get install -y inotify-tools rsync less wait-for-it
 
+COPY docker/php/post_max_size.ini /usr/local/etc/php/conf.d/post_max_size.ini
+COPY docker/php/upload_max_file_size.ini /usr/local/etc/php/conf.d/upload_max_file_size.ini
+
 COPY docker/entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
