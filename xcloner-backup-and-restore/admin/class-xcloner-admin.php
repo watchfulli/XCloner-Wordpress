@@ -138,6 +138,22 @@ class Xcloner_Admin
         $xcloner_sanitization = $this->get_xcloner_container()->get_xcloner_sanitization();
         $remote_storage = $this->get_xcloner_container()->get_xcloner_remote_storage();
 
+        if ( ! empty( $_POST ) ) {
+            $errorMessage = 'Nonce verification failed';
+            $domain       = 'xcloner-backup-and-restore';
+            $statusCode   = 403;
+
+            if ( ! isset( $_POST['xcloner_remote_storage_nonce'] ) ) {
+                wp_die( __( $errorMessage, $domain ), $statusCode );
+            }
+
+            $nonce = wp_unslash( $_POST['xcloner_remote_storage_nonce'] );
+
+            if ( ! wp_verify_nonce( $nonce, 'xcloner_remote_storage_action' ) ) {
+                wp_die( __( $errorMessage, $domain ), $statusCode );
+            }
+        }
+
         if (isset($_POST['action'])) {
             $_POST['action'] = $xcloner_sanitization->sanitize_input_as_string($_POST['action']);
             $remote_storage->save($_POST['action']);

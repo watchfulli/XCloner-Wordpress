@@ -89,6 +89,8 @@ function buildCleanupHtml( $typePrefix ): string {
 ?>
 <form class="remote-storage-form" method="POST">
 
+    <?php wp_nonce_field('xcloner_remote_storage_action', 'xcloner_remote_storage_nonce'); ?>
+
     <input type="hidden" id="connection_check" name="connection_check" value="">
 
     <div class="row remote-storage">
