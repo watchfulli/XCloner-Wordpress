@@ -8,6 +8,7 @@ class Xcloner_Settings
     private $logger_file = "xcloner_main_%s.log";
     private $logger_file_hash = "xcloner%s.log";
     private $xcloner_options_prefix = "xcloner";
+    private $cli_store_path_override = null;
 
     private $hash;
 
@@ -84,6 +85,10 @@ class Xcloner_Settings
     */
     public function get_xcloner_store_path()
     {
+        if ($this->cli_store_path_override !== null) {
+            return $this->cli_store_path_override;
+        }
+    
         if (!$this->get_xcloner_option('xcloner_store_path') or !is_dir(/** @scrutinizer ignore-type */$this->get_xcloner_option('xcloner_store_path'))) {
           $this->xcloner_container->check_dependencies();
         }
@@ -91,6 +96,17 @@ class Xcloner_Settings
         return $this->get_xcloner_option('xcloner_store_path');
     }
 
+    /**
+     * Set XCloner Backup Store Path
+     *
+     * @param string $path
+     * @return void
+     */
+    public function set_xcloner_store_path($path)
+    {
+        $this->cli_store_path_override = $path;
+    }
+    
     /**
      * Get XCloner Encryption Key
      *

@@ -86,9 +86,11 @@ class Xcloner
     private $xcloner_restore;
 
     /**
+     * @param string|null $storage_path_override Optional storage path override for CLI usage
+     *
      * @throws Exception
      */
-    public function __construct($hash = null)
+	public function __construct( $hash = null, $storage_path_override = null )
     {
         $this->xcloner_sanitization = new Xcloner_Sanitization();
         $this->xcloner_settings = new Xcloner_Settings($this);
@@ -96,6 +98,10 @@ class Xcloner
         if ($hash) {
             $this->xcloner_settings->set_hash($hash);
         }
+	    
+	    if ( $storage_path_override !== null ) {
+		    $this->xcloner_settings->set_xcloner_store_path( $storage_path_override );
+	    }
 
         $this->xcloner_logger = new Xcloner_Logger($this, "xcloner_api");
         $this->xcloner_loader = new Xcloner_Loader($this);

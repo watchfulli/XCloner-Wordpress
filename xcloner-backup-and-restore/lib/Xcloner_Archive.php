@@ -481,7 +481,7 @@ class Xcloner_Archive extends Tar
 
             $line = str_getcsv($current_line_str);
 
-            $relative_path = stripslashes($line[0]);
+            $relative_path = stripslashes($line[0] ?? '');
 
             $start_filesystem = "start_filesystem";
 

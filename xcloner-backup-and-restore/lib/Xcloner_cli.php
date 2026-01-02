@@ -74,6 +74,9 @@ class Xcloner_cli {
 			 * [--list=<backup_name>]
 			 * : list backup archive contents
 			 *
+			 * [--storage-path=<path>]
+			 * : override backup storage path
+			 *
 			 * @when before_wp_load
 			 */
 			function ( $args, $assoc_args ) {
@@ -100,7 +103,7 @@ class Xcloner_cli {
 	private function do_cli_execution( $opts = array() ) {
 		if ( ! sizeof( $opts ) ) {
 			$opts = getopt(
-				'v::p:h::q::e:d:k:l:',
+				'v::p:h::q::e:d:k:l:s:',
 				array(
 					'verbose::',
 					'profile:',
@@ -109,7 +112,8 @@ class Xcloner_cli {
 					'encrypt:',
 					'decrypt:',
 					'key:',
-					'list:'
+					'list:',
+					'storage-path:'
 				)
 			);
 		}
@@ -132,7 +136,14 @@ class Xcloner_cli {
 			define( 'WP_DEBUG_DISPLAY', $this->should_be_verbose( $opts ) );
 		}
 		
-		$this->xcloner_container = new Xcloner();
+		$storage_path_override = null;
+		
+		// --storage-path|s override backup storage path
+		if ( $this->should_ovveride_storage_path( $opts ) ) {
+			$storage_path_override = $this->get_storage_path_from_arguments( $opts );
+		}
+		
+		$this->xcloner_container = new Xcloner( null, $storage_path_override );
 		
 		// --list|l list backup archive
 		if ( $this->should_list_backup_contents( $opts ) ) {
@@ -175,6 +186,7 @@ class Xcloner_cli {
 		echo "-d <backup name>          Decrypt backup file" . PHP_EOL;
 		echo "-k <encryption key>       Encryption/Decryption Key" . PHP_EOL;
 		echo "-l <backup name>          List files inside backup" . PHP_EOL;
+		echo "-s <storage path>         Override backup storage path" . PHP_EOL;
 		echo "-v                        Verbose output" . PHP_EOL;
 		echo "-q                        Disable output" . PHP_EOL;
 	}
@@ -197,6 +209,22 @@ class Xcloner_cli {
 	
 	private function should_be_verbose( $opts ) {
 		return ( isset( $opts['v'] ) || isset( $opts['verbose'] ) ) && ! $this->should_be_quiet( $opts );
+	}
+	
+	private function should_ovveride_storage_path( $opts ) {
+		return isset( $opts['s'] ) || isset( $opts['storage-path'] );
+	}
+	
+	private function get_storage_path_from_arguments( $opts ) {
+		if ( isset( $opts['s'] ) ) {
+			return $opts['s'];
+		}
+		
+		if ( isset( $opts['storage-path'] ) ) {
+			return $opts['storage-path'];
+		}
+		
+		return null;
 	}
 	
 	private function should_list_backup_contents( $opts ) {
