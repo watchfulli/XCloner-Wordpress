@@ -177,6 +177,10 @@ class Xcloner_cli
      */
     private function load_wordpress()
     {
+	    if ( $this->is_wordpress_loaded() ) {
+		    return;
+	    }
+		
         $wp_load_path = XCLONER_PLUGIN_DIR . '/../../../wp-load.php';
         if (!file_exists($wp_load_path)) {
             throw new Exception('Can\'t find WordPress load file (wp-load.php)');
@@ -184,6 +188,10 @@ class Xcloner_cli
 
         require_once($wp_load_path);
     }
+	
+	private function is_wordpress_loaded() {
+		return defined( 'ABSPATH' );
+	}
 
     private function should_list_backup_contents($opts)
     {
