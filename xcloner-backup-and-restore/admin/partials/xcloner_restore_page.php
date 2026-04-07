@@ -13,7 +13,7 @@ $page = $xcloner_sanitization->sanitize_input_as_string($_GET['page']);
 ?>
 
 <script>
-  const xcloner_local_restore = (<?php echo (int)($page === 'xcloner_restore_site'); ?> === 1);
+  const xcloner_local_restore = (<?php echo (int)($page === 'xcloner_restore_site_page'); ?> === 1);
 </script>
 
 <div class="row xcloner-restore">

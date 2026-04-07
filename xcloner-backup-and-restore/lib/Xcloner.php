@@ -793,7 +793,7 @@ class Xcloner
                 __('Restore Site', 'xcloner-backup-and-restore'),
                 __('Restore Site', 'xcloner-backup-and-restore'),
                 'manage_options',
-                'xcloner_restore_site',
+                'xcloner_restore_site_page',
                 array($this, 'xcloner_display')
             );
             add_submenu_page(
@@ -801,7 +801,7 @@ class Xcloner
                 __('Clone Site', 'xcloner-backup-and-restore'),
                 __('Clone Site', 'xcloner-backup-and-restore'),
                 'manage_options',
-                'xcloner_clone_site',
+                'xcloner_clone_site_page',
                 array($this, 'xcloner_display')
             );
         }

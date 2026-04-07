@@ -47,13 +47,13 @@
         </a>
     </li>
     <li>
-        <a href="<?php echo menu_page_url('xcloner_restore_page', false) ?>">
+        <a href="<?php echo menu_page_url('xcloner_restore_site_page', false) ?>">
             <i class="material-icons">restore</i>
             <?php echo __('Restore Site', 'xcloner-backup-and-restore') ?>
         </a>
     </li>
     <li>
-        <a href="<?php echo menu_page_url('xcloner_restore_page', false) ?>">
+        <a href="<?php echo menu_page_url('xcloner_clone_site_page', false) ?>">
             <i class="material-icons">restore</i>
             <?php echo __('Clone Site', 'xcloner-backup-and-restore') ?>
         </a>
