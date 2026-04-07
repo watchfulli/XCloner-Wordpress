@@ -30,6 +30,10 @@ use Watchfulli\XClonerCore\Xcloner_cli;
 use Watchfulli\XClonerCore\Xcloner_Deactivator;
 use Watchfulli\XClonerCore\Xcloner;
 
+if (!defined('XCLONER_PLUGIN_VERSION')) {
+	define('XCLONER_PLUGIN_VERSION', '4.8.5');
+}
+
 if (!defined("DS")) {
     define("DS", DIRECTORY_SEPARATOR);
 }

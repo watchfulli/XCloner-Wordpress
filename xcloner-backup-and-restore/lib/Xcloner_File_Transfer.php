@@ -115,6 +115,12 @@ class Xcloner_File_Transfer extends Xcloner_Filesystem {
 		curl_setopt( $ch, CURLOPT_TIMEOUT, 1200 );
 		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1 );
 		
+		curl_setopt(
+			$ch,
+			CURLOPT_USERAGENT,
+			sprintf( 'XCloner/%s (+https://www.xcloner.com)', XCLONER_PLUGIN_VERSION )
+		);
+		
 		curl_setopt( $ch, CURLOPT_POSTFIELDS, $send_array );
 		curl_setopt( $ch, CURLOPT_VERBOSE, true );
 		
