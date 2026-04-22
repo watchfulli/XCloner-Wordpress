@@ -24,6 +24,10 @@ services:
       WORDPRESS_ADMIN_EMAIL: "${WORDPRESS_ADMIN_EMAIL:-example@example.com}"
       XCLONER_GDRIVE_CLIENT_ID: "${XCLONER_GDRIVE_CLIENT_ID:-}"
       XCLONER_GDRIVE_REDIRECT_URL: "${XCLONER_GDRIVE_REDIRECT_URL:-}"
+      WORDPRESS_SMTP_HOST: "${WORDPRESS_SMTP_HOST:-mailpit}"
+      WORDPRESS_SMTP_PORT: "${WORDPRESS_SMTP_PORT:-1025}"
+      WORDPRESS_SMTP_FROM: "${WORDPRESS_SMTP_FROM:-wordpress@xcloner.local}"
+      WORDPRESS_SMTP_FROM_NAME: "${WORDPRESS_SMTP_FROM_NAME:-XCloner Testing}"
 
   db:
     image: mariadb:10.5.8
@@ -39,6 +43,17 @@ services:
       interval: 3s
       timeout: 1s
       retries: 10
+
+  mailpit:
+    image: axllent/mailpit:latest
+    restart: unless-stopped
+    ports:
+      - "${MAILPIT_UI_PORT:-8025}:8025"
+      - "${MAILPIT_SMTP_PORT:-1025}:1025"
+    environment:
+      MP_MAX_MESSAGES: 5000
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1
 
 volumes:
   db_data: {}

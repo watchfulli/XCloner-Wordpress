@@ -5,6 +5,7 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
+COPY docker/mu-plugins/mailpit-smtp.php /var/www/html/wp-content/mu-plugins/mailpit-smtp.php
 COPY docker/php/post_max_size.ini /usr/local/etc/php/conf.d/post_max_size.ini
 COPY docker/php/upload_max_file_size.ini /usr/local/etc/php/conf.d/upload_max_file_size.ini
 
