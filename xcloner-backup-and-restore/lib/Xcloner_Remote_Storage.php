@@ -724,8 +724,8 @@ class Xcloner_Remote_Storage
         $graph = new Graph();
         $graph->setAccessToken($accessToken);
 
-        $adapter = new OneDriveAdapter($graph, '[root path]');
-        $adapter->setPathPrefix('/drive/root:/' . urldecode(get_option('xcloner_onedrive_path') ?: '') . "/");
+        $path = trim(urldecode(get_option('xcloner_onedrive_path') ?: ''), '/');
+        $adapter = new OneDriveAdapter($graph, $path);
         $filesystem = new Filesystem($adapter);
 
         return [$adapter, $filesystem];
