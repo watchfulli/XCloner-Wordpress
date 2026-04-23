@@ -28,6 +28,10 @@ class Xcloner_Scheduler
 
     public function get_scheduler_list($return_only_enabled = 0)
     {
+        if (!$this->scheduler_table_exists()) {
+            return array();
+        }
+
         $list = $this->xcloner_container->get_xcloner_database()->get_results("SELECT * FROM " . $this->scheduler_table);
 
         if (!$list) {
@@ -49,6 +53,13 @@ class Xcloner_Scheduler
         }
 
         return $list;
+    }
+
+    private function scheduler_table_exists()
+    {
+        return $this->xcloner_container->get_xcloner_database()->get_var(
+            $this->xcloner_container->get_xcloner_database()->prepare("SHOW TABLES LIKE %s", $this->scheduler_table)
+        ) == $this->scheduler_table;
     }
 
     public function get_next_run_schedule()
