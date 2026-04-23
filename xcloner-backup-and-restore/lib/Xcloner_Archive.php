@@ -304,7 +304,7 @@ class Xcloner_Archive extends Tar
         $body = sprintf(__("Generated Backup Size: %s"), $additional['backup_size']);
         $body .= "<br /><br />";
 
-        if (isset($additional['lines_total'])) {
+        if (isset($additional['lines_total']) && $additional['lines_total'] > 0) {
             $body .= sprintf(__("Total files added: %s"), $additional['lines_total']);
             $body .= "<br /><br />";
         }
