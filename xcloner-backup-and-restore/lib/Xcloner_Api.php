@@ -286,7 +286,7 @@ class Xcloner_Api
                 try {
                     $from = "";
                     $subject = "";
-                    $additional['lines_total'] = $data['extra']['lines_total'];
+                    $additional['lines_total'] = $data['extra']['lines_total'] ?? 0;
                     $additional['backup_size'] = size_format($this->xcloner_file_system->get_backup_size($data['extra']['backup_parent']));
 
                     $this->archive_system->send_notification(

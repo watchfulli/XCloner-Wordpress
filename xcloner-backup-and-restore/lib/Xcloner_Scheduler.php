@@ -374,7 +374,7 @@ class Xcloner_Scheduler
         if (isset($schedule['backup_params']->email_notification) and $to = $schedule['backup_params']->email_notification) {
             try {
                 $from = "";
-                $additional['lines_total'] = $return['extra']['lines_total'];
+                $additional['lines_total'] = $return['extra']['lines_total'] ?? 0;
                 $subject = sprintf(__("%s - new backup generated %s"), $schedule['name'], $return['extra']['backup_parent']);
 
                 $this->xcloner_container->get_archive_system()->send_notification($to, $from, $subject, $return['extra']['backup_parent'], $schedule, "", $additional);
