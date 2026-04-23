@@ -99,20 +99,6 @@ if ($db_installed_ver != $xcloner_db_version) {
     Xcloner_Activator::activate();
 }
 
-
-/**
- * The core plugin class that is used to define internationalization,
- * admin-specific hooks, and public-facing site hooks.
- */
-function xcloner_stop_heartbeat()
-{
-    wp_deregister_script('heartbeat');
-}
-
-if (isset($_GET['page']) && stristr($_GET['page'], "xcloner_")) {
-    add_action('init', __NAMESPACE__ . '\\xcloner_stop_heartbeat', 1);
-}
-
 /**
  * Begins execution of the plugin.
  *
