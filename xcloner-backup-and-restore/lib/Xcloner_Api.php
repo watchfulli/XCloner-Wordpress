@@ -1194,6 +1194,9 @@ class Xcloner_Api
                 $this->xcloner_container->get_xcloner_remote_storage()->download_webdav_backup_to_output($backup_name);
             } catch (Exception $e) {
                 $this->logger->error($e->getMessage());
+                status_header(500);
+                header('Content-Type: text/plain; charset=utf-8');
+                echo esc_html($e->getMessage());
             }
 
             die();
