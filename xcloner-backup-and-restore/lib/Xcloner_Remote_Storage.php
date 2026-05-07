@@ -370,6 +370,7 @@ class Xcloner_Remote_Storage
 
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "GET");
         curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 60);
+        // Large backup transfers can take a long time, so only the connection phase is time limited.
         curl_setopt($curl, CURLOPT_TIMEOUT, 0);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, false);
         curl_setopt($curl, CURLOPT_FILE, $destination_handle);
@@ -400,7 +401,7 @@ class Xcloner_Remote_Storage
         $target_path = $this->xcloner_settings->get_xcloner_store_path() . DS . $local_file;
         $target_dir = dirname($target_path);
 
-        if (!is_dir($target_dir) && !@mkdir($target_dir, 0755, true) && !is_dir($target_dir)) {
+        if (!is_dir($target_dir) && !@mkdir($target_dir, 0700, true) && !is_dir($target_dir)) {
             throw new Exception(sprintf("Could not create local backup directory %s.", $target_dir));
         }
 
@@ -872,6 +873,8 @@ class Xcloner_Remote_Storage
         } else {
             $backup_name_export = preg_replace('/[^A-Za-z0-9._-]/', '_', basename($backup_name_export));
         }
+
+        $backup_name_export = str_replace(array("\\", '"', "\r", "\n"), '', $backup_name_export);
 
         header('Pragma: public');
         header('Expires: 0');

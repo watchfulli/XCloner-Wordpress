@@ -1190,7 +1190,12 @@ class Xcloner_Api
         $storage_selection = $this->xcloner_sanitization->sanitize_input_as_string($_GET['storage_selection']);
 
         if ($storage_selection == "webdav") {
-            $this->xcloner_container->get_xcloner_remote_storage()->download_webdav_backup_to_output($backup_name);
+            try {
+                $this->xcloner_container->get_xcloner_remote_storage()->download_webdav_backup_to_output($backup_name);
+            } catch (Exception $e) {
+                $this->logger->error($e->getMessage());
+            }
+
             die();
         }
 
