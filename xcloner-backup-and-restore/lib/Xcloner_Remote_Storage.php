@@ -302,6 +302,117 @@ class Xcloner_Remote_Storage
         return $this->xcloner;
     }
 
+    private function get_webdav_settings()
+    {
+        return array(
+            'baseUri' => $this->xcloner_settings->get_xcloner_option("xcloner_webdav_url"),
+            'userName' => $this->xcloner_settings->get_xcloner_option("xcloner_webdav_username"),
+            'password' => $this->xcloner_settings->get_xcloner_option("xcloner_webdav_password"),
+            'authType' => \Sabre\DAV\Client::AUTH_BASIC,
+        );
+    }
+
+    private function encode_webdav_path($path)
+    {
+        $parts = explode('/', trim($path, '/'));
+
+        foreach ($parts as &$part) {
+            $part = rawurlencode($part);
+        }
+
+        return implode('/', array_filter($parts, 'strlen'));
+    }
+
+    private function get_webdav_remote_path($path = "")
+    {
+        $target_folder = trim((string)$this->xcloner_settings->get_xcloner_option("xcloner_webdav_target_folder"), '/');
+        $path = trim((string)$path, '/');
+
+        if ($target_folder !== '') {
+            $path = $target_folder . ($path !== '' ? "/" . $path : "");
+        }
+
+        return $this->encode_webdav_path($path);
+    }
+
+    private function get_webdav_remote_url($path = "")
+    {
+        $client = new \Sabre\DAV\Client($this->get_webdav_settings());
+
+        return $client->getAbsoluteUrl($this->get_webdav_remote_path($path));
+    }
+
+    private function stream_webdav_file($file, $destination_handle)
+    {
+        if (!function_exists('curl_init')) {
+            throw new Exception("cURL extension is required for WebDAV file transfers.");
+        }
+
+        $curl = curl_init($this->get_webdav_remote_url($file));
+
+        if (!$curl) {
+            throw new Exception(sprintf("Could not initialize the WebDAV transfer for file %s.", $file));
+        }
+
+        curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+        curl_setopt($curl, CURLOPT_USERPWD, $this->xcloner_settings->get_xcloner_option("xcloner_webdav_username") . ":" . $this->xcloner_settings->get_xcloner_option("xcloner_webdav_password"));
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "GET");
+        curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 60);
+        curl_setopt($curl, CURLOPT_TIMEOUT, 0);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, false);
+        curl_setopt($curl, CURLOPT_FILE, $destination_handle);
+
+        $result = curl_exec($curl);
+        $status_code = (int)curl_getinfo($curl, CURLINFO_RESPONSE_CODE);
+
+        if ($result === false) {
+            $error = curl_error($curl);
+            curl_close($curl);
+
+            throw new Exception(sprintf("Could not transfer file %s from WebDAV storage: %s", $file, $error));
+        }
+
+        curl_close($curl);
+
+        if ($status_code < 200 || $status_code >= 300) {
+            throw new Exception(sprintf(
+                "Could not transfer file %s from WebDAV storage, server responded with HTTP %s.",
+                $file,
+                $status_code
+            ));
+        }
+    }
+
+    private function copy_webdav_backup_file_to_local($remote_file, $local_file)
+    {
+        $target_path = $this->xcloner_settings->get_xcloner_store_path() . DS . $local_file;
+        $target_dir = dirname($target_path);
+
+        if (!is_dir($target_dir) && !mkdir($target_dir, 0755, true) && !is_dir($target_dir)) {
+            throw new Exception(sprintf("Could not create local backup directory %s.", $target_dir));
+        }
+
+        $write_handle = fopen($target_path, "w+b");
+
+        if (!$write_handle) {
+            throw new Exception(sprintf("Could not open local backup file %s for writing.", $target_path));
+        }
+
+        try {
+            $this->stream_webdav_file($remote_file, $write_handle);
+        } catch (Exception $e) {
+            fclose($write_handle);
+
+            if (file_exists($target_path)) {
+                unlink($target_path);
+            }
+
+            throw $e;
+        }
+
+        fclose($write_handle);
+    }
+
     public function get_available_storages()
     {
         $return = array();
@@ -529,6 +640,29 @@ class Xcloner_Remote_Storage
             strtoupper($storage)
         ), array(""));
 
+        if ($storage == "webdav") {
+            $this->copy_webdav_backup_file_to_local($file, $target_filename);
+
+            if ($this->xcloner_file_system->is_multipart($target_filename)) {
+                $parts = $this->xcloner_file_system->get_multipart_files($target_filename);
+                if (is_array($parts)) {
+                    foreach ($parts as $part_file) {
+                        $this->logger->info(sprintf(
+                            "Transferring backup %s to local storage from %s storage",
+                            $part_file,
+                            strtoupper($storage)
+                        ), array(""));
+
+                        $this->copy_webdav_backup_file_to_local($part_file, $part_file);
+                    }
+                }
+            }
+
+            $this->logger->info(sprintf("Upload done, disconnecting from remote storage %s", strtoupper($storage)));
+
+            return true;
+        }
+
         $backup_file_stream = $remote_storage_filesystem->readStream($file);
 
         if (!$this->xcloner_file_system->get_storage_filesystem()->writeStream($target_filename, $backup_file_stream)) {
@@ -695,21 +829,60 @@ class Xcloner_Remote_Storage
     {
         $this->logger->info(sprintf("Creating the WEBDAV remote storage connection"), array(""));
 
-        $settings = array(
-            'baseUri' => $this->xcloner_settings->get_xcloner_option("xcloner_webdav_url"),
-            'userName' => $this->xcloner_settings->get_xcloner_option("xcloner_webdav_username"),
-            'password' => $this->xcloner_settings->get_xcloner_option("xcloner_webdav_password"),
-            'authType' => \Sabre\DAV\Client::AUTH_BASIC,
-            //'proxy' => 'locahost:8888',
-        );
-
-        $client = new \Sabre\DAV\Client($settings);
+        $client = new \Sabre\DAV\Client($this->get_webdav_settings());
         $adapter = new WebDAVAdapter($client, $this->xcloner_settings->get_xcloner_option("xcloner_webdav_target_folder"));
         $filesystem = new Filesystem($adapter, new Config([
             'disable_asserts' => true,
         ]));
 
         return array($adapter, $filesystem);
+    }
+
+    public function download_webdav_backup_to_output($file)
+    {
+        list($webdav_storage_adapter, $webdav_storage_filesystem) = $this->get_webdav_filesystem();
+
+        if (!$webdav_storage_filesystem->has($file)) {
+            return false;
+        }
+
+        $metadata = $webdav_storage_filesystem->getMetadata($file);
+        $backup_name_export = $file;
+
+        if (!empty($metadata['name'])) {
+            $backup_name_export = $metadata['name'];
+        } elseif (!empty($metadata['path'])) {
+            $backup_name_export = $metadata['path'];
+        }
+
+        $backup_name_export = str_replace(array('"', "\r", "\n"), '', basename($backup_name_export));
+
+        header('Pragma: public');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+        header('Cache-Control: private', false);
+        header('Content-Transfer-Encoding: binary');
+        header('Content-Disposition: attachment; filename="' . $backup_name_export . '";');
+        header('Content-Type: application/octet-stream');
+
+        if (!empty($metadata['size'])) {
+            header('Content-Length: ' . $metadata['size']);
+        }
+
+        if (function_exists('set_time_limit')) {
+            @set_time_limit(0);
+        }
+
+        $output = fopen('php://output', 'wb');
+
+        if (!$output) {
+            throw new Exception("Could not open the output stream for the WebDAV backup download.");
+        }
+
+        $this->stream_webdav_file($file, $output);
+        fclose($output);
+
+        return true;
     }
 
     /**
