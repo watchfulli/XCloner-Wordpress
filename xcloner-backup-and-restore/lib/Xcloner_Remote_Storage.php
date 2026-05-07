@@ -320,7 +320,9 @@ class Xcloner_Remote_Storage
             $part = rawurlencode($part);
         }
 
-        return implode('/', array_filter($parts, 'strlen'));
+        return implode('/', array_filter($parts, function ($part) {
+            return strlen($part) > 0;
+        }));
     }
 
     private function get_webdav_remote_path($path = "")
@@ -355,7 +357,17 @@ class Xcloner_Remote_Storage
         }
 
         curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-        curl_setopt($curl, CURLOPT_USERPWD, $this->xcloner_settings->get_xcloner_option("xcloner_webdav_username") . ":" . $this->xcloner_settings->get_xcloner_option("xcloner_webdav_password"));
+
+        $username = (string)$this->xcloner_settings->get_xcloner_option("xcloner_webdav_username");
+        $password = (string)$this->xcloner_settings->get_xcloner_option("xcloner_webdav_password");
+
+        if (defined('CURLOPT_USERNAME') && defined('CURLOPT_PASSWORD')) {
+            curl_setopt($curl, CURLOPT_USERNAME, $username);
+            curl_setopt($curl, CURLOPT_PASSWORD, $password);
+        } else {
+            curl_setopt($curl, CURLOPT_USERPWD, $username . ":" . $password);
+        }
+
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "GET");
         curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 60);
         curl_setopt($curl, CURLOPT_TIMEOUT, 0);
@@ -388,7 +400,7 @@ class Xcloner_Remote_Storage
         $target_path = $this->xcloner_settings->get_xcloner_store_path() . DS . $local_file;
         $target_dir = dirname($target_path);
 
-        if (!is_dir($target_dir) && !mkdir($target_dir, 0755, true) && !is_dir($target_dir)) {
+        if (!is_dir($target_dir) && !@mkdir($target_dir, 0755, true) && !is_dir($target_dir)) {
             throw new Exception(sprintf("Could not create local backup directory %s.", $target_dir));
         }
 
@@ -855,7 +867,11 @@ class Xcloner_Remote_Storage
             $backup_name_export = $metadata['path'];
         }
 
-        $backup_name_export = str_replace(array('"', "\r", "\n"), '', basename($backup_name_export));
+        if (function_exists('sanitize_file_name')) {
+            $backup_name_export = sanitize_file_name(wp_basename($backup_name_export));
+        } else {
+            $backup_name_export = preg_replace('/[^A-Za-z0-9._-]/', '_', basename($backup_name_export));
+        }
 
         header('Pragma: public');
         header('Expires: 0');
