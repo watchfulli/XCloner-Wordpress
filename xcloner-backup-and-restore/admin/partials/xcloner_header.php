@@ -1,3 +1,4 @@
+<?php if ( ! defined( 'ABSPATH' ) ) exit; ?>
 <a href="https://www.xcloner.com" target="_blank" title="XCloner.com">
     <img src="<?php echo esc_url(plugin_dir_url((__DIR__))) ?>/images/xcloner-logo.svg" class="xcloner-logo"
          alt="XCloner backup and restore plugin"/>

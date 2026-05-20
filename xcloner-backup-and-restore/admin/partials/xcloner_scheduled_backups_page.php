@@ -1,4 +1,7 @@
 <?php
+
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 $xcloner_scheduler = $this->get_xcloner_container()->get_xcloner_scheduler();
 
 $xcloner_remote_storage = $this->get_xcloner_container()->get_xcloner_remote_storage();

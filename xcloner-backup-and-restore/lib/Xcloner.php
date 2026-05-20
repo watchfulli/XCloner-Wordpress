@@ -2,6 +2,9 @@
 
 namespace Watchfulli\XClonerCore;
 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
+
 use Exception;
 use stdClass;
 use Xcloner_Admin;

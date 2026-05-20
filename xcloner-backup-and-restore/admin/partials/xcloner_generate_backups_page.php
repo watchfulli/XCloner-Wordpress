@@ -1,4 +1,7 @@
 <?php
+
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 $xcloner_settings = $this->get_xcloner_container()->get_xcloner_settings();
 $xcloner_remote_storage = $this->get_xcloner_container()->get_xcloner_remote_storage();
 $available_storages = $xcloner_remote_storage->get_available_storages();

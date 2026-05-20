@@ -1,5 +1,8 @@
 <?php
 
+
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 $remote_storage = $this->get_xcloner_container()->get_xcloner_remote_storage();
 
 function common_cleanup_html( $type ): string {

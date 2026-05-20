@@ -2,6 +2,9 @@
 
 namespace Watchfulli\XClonerCore;
 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
+
 /**
  * XCloner - Backup and Restore backup plugin for Wordpress
  *

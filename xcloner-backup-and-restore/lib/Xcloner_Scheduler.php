@@ -2,6 +2,9 @@
 
 namespace Watchfulli\XClonerCore;
 
+if ( ! defined( 'ABSPATH' ) ) exit;
+
+
 use Exception;
 use splitbrain\PHPArchive\ArchiveCorruptedException;
 use splitbrain\PHPArchive\ArchiveIllegalCompressionException;

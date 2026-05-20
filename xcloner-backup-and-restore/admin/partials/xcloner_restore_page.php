@@ -1,4 +1,7 @@
 <?php
+
+if ( ! defined( 'ABSPATH' ) ) exit;
+
 /** @var Xcloner_Admin $this */
 $xcloner_settings = $this->get_xcloner_container()->get_xcloner_settings();
 $logger = $this->get_xcloner_container()->get_xcloner_logger();
