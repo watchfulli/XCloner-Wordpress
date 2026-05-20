@@ -609,6 +609,10 @@ class Xcloner
      */
     public function onedrive_auth_token()
     {
+        if (!current_user_can('manage_options')) {
+            return;
+        }
+
         if (!get_option('xcloner_onedrive_enable', 0)) {
             return;
         }
