@@ -136,7 +136,7 @@ $available_storages = $xcloner_remote_storage->get_available_storages();
                     <?php echo esc_html__("This option will decrypt your backup archive with your current XCloner Encryption Key or the key provided below, requires PHP openssl library installed.", 'xcloner-backup-and-restore') ?>
                 </p>
                 <p>
-                    <?php echo esc_html__('Provide Alternative Decryption Key:')?>
+                    <?php echo esc_html__('Provide Alternative Decryption Key:', 'xcloner-backup-and-restore')?>
                     <input type="text" name="decryption_key" id="decryption_key"
                         placeholder="<?php echo esc_html__('Decryption Key', 'xcloner-backup-and-restore')?>" />
                 </p>
@@ -180,8 +180,8 @@ $available_storages = $xcloner_remote_storage->get_available_storages();
                     <div class="row">
                         <div class="col s12 label">
                             <label>
-                                <?php echo sprintf(__('Send %s to remote storage', 'xcloner-backup-and-restore'),"<span class='backup_name'></span>") // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-                            </label>
+                                <?php /* translators: %1$s is a value */
+                                    echo sprintf(__('Send %1$s to remote storage', 'xcloner-backup-and-restore'),"<span class='backup_name'></span>") // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>                            </label>
                         </div>
                         <div class="input-field col s8 m10">
                             <select name="transfer_storage" id="transfer_storage" class="validate" required>

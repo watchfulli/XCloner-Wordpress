@@ -308,7 +308,8 @@ class Xcloner
             if (!@mkdir($backup_storage_path)) {
                 $status = "error";
                 $message = sprintf(
-                    __("Unable to create the Backup Storage Location Folder %s . This will automatically be fixed using a default path."),
+                    /* translators: %1$s is a value */
+                    __("Unable to create the Backup Storage Location Folder %1$s . This will automatically be fixed using a default path.", 'xcloner-backup-and-restore'),
                     $backup_storage_path
                 );
                 $this->trigger_message($message, $status, $backup_storage_path);
@@ -319,7 +320,8 @@ class Xcloner
         if (!is_writable($backup_storage_path)) {
             $status = "error";
             $message = sprintf(
-                __("Unable to write to the Backup Storage Location Folder %s . This will automatically be fixed using a default path."),
+                /* translators: %1$s is a value */
+                __("Unable to write to the Backup Storage Location Folder %1$s . This will automatically be fixed using a default path.", 'xcloner-backup-and-restore'),
                 $backup_storage_path
             );
             $this->trigger_message($message, $status, $backup_storage_path);
@@ -335,7 +337,7 @@ class Xcloner
      */
     public function trigger_message($message, $status = "error", $message_param1 = "", $message_param2 = "", $message_param3 = "")
     {
-        $message = sprintf(__($message), $message_param1, $message_param2, $message_param3);
+        $message = sprintf(__($message), $message_param1, $message_param2, $message_param3); // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText, WordPress.WP.I18n.MissingArgDomain
         add_action('xcloner_admin_notices', array($this, "trigger_message_notice"), 10, 2);
         do_action('xcloner_admin_notices', $message, $status);
 
@@ -653,7 +655,7 @@ class Xcloner
             $response = wp_remote_post("https://login.microsoftonline.com/common/oauth2/v2.0/token", array('body' => $parameters));
 
             if (is_wp_error($response)) {
-                $this->trigger_message(__('There was a communication error with the OneDrive API details.'));
+                $this->trigger_message(__('There was a communication error with the OneDrive API details.', 'xcloner-backup-and-restore'));
                 $this->trigger_message($response->get_error_message());
             } else {
                 $response = (json_decode($response['body'], true));
@@ -665,12 +667,13 @@ class Xcloner
 
                     if (!$is_refresh) {
                         $this->trigger_message(
-                            sprintf(__('OneDrive successfully authenticated, please click <a href="%s">here</a> to continue', 'xcloner-backup-and-restore'), get_admin_url() . "admin.php?page=xcloner_remote_storage_page#onedrive"),
+                            /* translators: %1$s is a value */
+                            sprintf(__('OneDrive successfully authenticated, please click <a href="%1$s">here</a> to continue', 'xcloner-backup-and-restore'), get_admin_url() . "admin.php?page=xcloner_remote_storage_page#onedrive"),
                             'success'
                         );
                     }
                 } else {
-                    $this->trigger_message(__('There was a communication error with the OneDrive API details.'));
+                    $this->trigger_message(__('There was a communication error with the OneDrive API details.', 'xcloner-backup-and-restore'));
                 }
             }
         }

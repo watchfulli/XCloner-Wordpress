@@ -356,7 +356,8 @@ class Xcloner_Remote_Storage
         }
 
         $this->xcloner->trigger_message(
-            __("%s storage settings saved.", 'xcloner-backup-and-restore'),
+            /* translators: %1$s is a value */
+            __("%1$s storage settings saved.", 'xcloner-backup-and-restore'),
             "success",
             $this->storage_fields[$action]['text']
         );
@@ -370,7 +371,8 @@ class Xcloner_Remote_Storage
         try {
             $this->verify_filesystem($action);
             $this->xcloner->trigger_message(
-                __("%s connection is valid.", 'xcloner-backup-and-restore'),
+                /* translators: %1$s is a value */
+                __("%1$s connection is valid.", 'xcloner-backup-and-restore'),
                 "success",
                 $this->storage_fields[$action]['text']
             );

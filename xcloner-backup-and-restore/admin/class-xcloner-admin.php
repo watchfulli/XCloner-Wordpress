@@ -144,13 +144,13 @@ class Xcloner_Admin
             $statusCode   = 403;
 
             if ( ! isset( $_POST['xcloner_remote_storage_nonce'] ) ) {
-                wp_die( __( $errorMessage, $domain ), $statusCode ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                wp_die( __( 'Nonce verification failed', 'xcloner-backup-and-restore' ), $statusCode ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
             }
 
             $nonce = wp_unslash( $_POST['xcloner_remote_storage_nonce'] );
 
             if ( ! wp_verify_nonce( $nonce, 'xcloner_remote_storage_action' ) ) {
-                wp_die( __( $errorMessage, $domain ), $statusCode ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                wp_die( __( 'Nonce verification failed', 'xcloner-backup-and-restore' ), $statusCode ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
             }
         }
 
@@ -238,7 +238,7 @@ class Xcloner_Admin
         // wordpress will add the "settings-updated" $_GET parameter to the url
         if (isset($_GET['settings-updated'])) {
             // add settings saved message with the class of "updated"
-            add_settings_error('wporg_messages', 'wporg_message', __('Settings Saved', 'wporg'), 'updated');
+            add_settings_error('wporg_messages', 'wporg_message', __('Settings Saved', 'xcloner-backup-and-restore'), 'updated');
         }
 
         // show error/update messages

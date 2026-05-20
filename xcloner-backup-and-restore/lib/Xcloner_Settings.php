@@ -270,7 +270,7 @@ class Xcloner_Settings
         //GENERAL section
         add_settings_section(
             'xcloner_general_settings_group',
-            __(' '),
+            ' ',
             array($this, 'xcloner_settings_section_cb'),
             'xcloner_settings_page'
         );
@@ -286,7 +286,7 @@ class Xcloner_Settings
         //CLEANUP section
         /*add_settings_section(
             'xcloner_cleanup_settings_group',
-            __(' '),
+            ' ',
             array($this, 'xcloner_settings_section_cb'),
             'xcloner_cleanup_settings_page'
         );*/
@@ -295,7 +295,7 @@ class Xcloner_Settings
         //CRON section
         add_settings_section(
             'xcloner_cron_settings_group',
-            __(' '),
+            ' ',
             array($this, 'xcloner_settings_section_cb'),
             'xcloner_cron_settings_page'
         );
@@ -350,7 +350,8 @@ class Xcloner_Settings
             'xcloner_general_settings_group',
             array(
                 'xcloner_enable_log',
-                sprintf(__('Enable the XCloner Backup log. You will find it stored unde the Backup Storage Location, file %s', 'xcloner-backup-and-restore'), $this->get_logger_filename())
+                /* translators: %1$s is a value */
+                sprintf(__('Enable the XCloner Backup log. You will find it stored under the Backup Storage Location, file %1$s', 'xcloner-backup-and-restore'), $this->get_logger_filename())
             )
         );
 
@@ -638,7 +639,7 @@ class Xcloner_Settings
             'xcloner_cron_settings_group',
             array(
                 'xcloner_cron_frequency',
-                __('Cron frequency')
+                __('Cron frequency', 'xcloner-backup-and-restore')
             )
         );
     }

@@ -95,7 +95,7 @@ class Xcloner_Database extends wpdb
                 "database_count"=>0,
         );
 
-        $this->logger->debug(__("Starting database backup process"));
+        $this->logger->debug(__("Starting database backup process", 'xcloner-backup-and-restore'));
 
         $this->init($params, $init);
 
@@ -181,7 +181,7 @@ class Xcloner_Database extends wpdb
      */
     private function headers()
     {
-        $this->logger->debug(__("Setting mysql headers"));
+        $this->logger->debug(__("Setting mysql headers", 'xcloner-backup-and-restore'));
 
         $this->query("SET SQL_QUOTE_SHOW_CREATE=1;");
         //$this->log();
@@ -194,7 +194,8 @@ class Xcloner_Database extends wpdb
 
     public function get_database_num_tables($database)
     {
-        $this->logger->debug(sprintf(__("Getting number of tables in %s"), $database));
+        /* translators: %1$s is a value */
+        $this->logger->debug(sprintf(__("Getting number of tables in %1$s", 'xcloner-backup-and-restore'), $database));
 
         $query = "show tables in `".$database."`";
 
@@ -276,7 +277,8 @@ class Xcloner_Database extends wpdb
                 $dbTable = $database.".".$table;
                 if (!in_array($table, $included) && !in_array($dbTable, $included)) {
                     $tablesList[$inc]['excluded'] = 1;
-                    $this->log(sprintf(__("Excluding table %s.%s from backup"), $table, $database));
+                    /* translators: %1$s is a value, %2$s is a value */
+                    $this->log(sprintf(__("Excluding table %1$s.%2$s from backup", 'xcloner-backup-and-restore'), $table, $database));
                 }
             }
 
@@ -294,7 +296,7 @@ class Xcloner_Database extends wpdb
         $return['total_records'] = 0;
         $return['tables_count'] = 0;
 
-        $this->log(__("Preparing the database recursion file"));
+        $this->log(__("Preparing the database recursion file", 'xcloner-backup-and-restore'));
 
         $tables = $this->list_tables($dbname, $incl_tables, 1);
 
@@ -378,7 +380,8 @@ class Xcloner_Database extends wpdb
 
                     $dumpfile = $tableInfo[2];
 
-                    $this->log(sprintf(__("Starting new backup dump to file %s"), $dumpfile));
+                    /* translators: %1$s is a value */
+                    $this->log(sprintf(__("Starting new backup dump to file %1$s", 'xcloner-backup-and-restore'), $dumpfile));
 
                     $this->data_headers($dumpfile, $tableInfo[1]);
                     $dumpfile = $tableInfo[2];
@@ -521,7 +524,8 @@ class Xcloner_Database extends wpdb
             }
         }
 
-        $this->log(sprintf(__("Dumping %s records starting position %s from %s.%s table"), $records, $start, $databaseName, $tableName));
+        /* translators: %1$s is a value, %2$s is a value, %3$s is a value, %4$s is a value */
+        $this->log(sprintf(__("Dumping %1$s records starting position %2$s from %3$s.%4$s table", 'xcloner-backup-and-restore'), $records, $start, $databaseName, $tableName));
 
         return $records;
     }
@@ -531,7 +535,8 @@ class Xcloner_Database extends wpdb
      */
     public function dump_structure($databaseName, $tableName, $dumpfile)
     {
-        $this->log(sprintf(__("Dumping the structure for %s.%s table"), $databaseName, $tableName));
+        /* translators: %1$s is a value, %2$s is a value */
+        $this->log(sprintf(__("Dumping the structure for %1$s.%2$s table", 'xcloner-backup-and-restore'), $databaseName, $tableName));
 
         $line = ("\n#\n# Table structure for table `$tableName`\n#\n\n");
         $this->fs->get_tmp_filesystem_append()->write($dumpfile, $line);
@@ -620,7 +625,8 @@ class Xcloner_Database extends wpdb
 		$return .= "SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';" . str_repeat( PHP_EOL, 2 );
         $return .= "#\n# Database : `".$database."`\n# --------------------------------------------------------\n\n";
 
-        $this->log(sprintf(__("Writing %s database dump headers"), $database));
+        /* translators: %1$s is a value */
+        $this->log(sprintf(__("Writing %1$s database dump headers", 'xcloner-backup-and-restore'), $database));
 
         $this->fs->get_tmp_filesystem()->write($file, $return);
     }

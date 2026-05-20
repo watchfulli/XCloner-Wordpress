@@ -63,7 +63,7 @@ if (!defined('WPINC')) {
                     type="text" name="xcloner_aws_region" class="validate"
                     value="<?php echo esc_attr(get_option("xcloner_aws_region")) ?>" autocomplete="off">
                 <option readonly value="">
-                    <?php echo esc_html__("Please Select AWS S3 Region or Leave Unselected for Custom Endpoint") ?>
+                    <?php echo esc_html__("Please Select AWS S3 Region or Leave Unselected for Custom Endpoint", 'xcloner-backup-and-restore') ?>
                 </option>
                 <?php
                 $aws_regions = $remote_storage->get_aws_regions();

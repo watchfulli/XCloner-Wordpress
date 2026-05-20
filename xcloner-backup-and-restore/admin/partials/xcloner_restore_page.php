@@ -55,7 +55,7 @@ $page = $xcloner_sanitization->sanitize_input_as_string($_GET['page']);
                             </li>
                             <?php if (is_ssl()): ?>
                                 <li class="warning">
-                                    <?php echo esc_html__("We have detected your connection to the site as being secure, so your restore script address must start with https://.") ?>
+                                    <?php echo esc_html__("We have detected your connection to the site as being secure, so your restore script address must start with https://.", 'xcloner-backup-and-restore') ?>
                                 </li>
                             <?php endif ?>
 

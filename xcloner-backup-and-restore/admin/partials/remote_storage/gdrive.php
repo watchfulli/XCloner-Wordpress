@@ -39,7 +39,7 @@ $gdrive_construct = $remote_storage->gdrive_construct();
         </div>
         <div class=" col s12 m9">
             <p>
-                <?php echo sprintf(__('Click the Google Sign-in button below to complete the 1-time integration.')); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+                <?php echo sprintf(__('Click the Google Sign-in button below to complete the 1-time integration.', 'xcloner-backup-and-restore')); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
             </p>
         </div>
     </div>
@@ -126,9 +126,9 @@ $gdrive_construct = $remote_storage->gdrive_construct();
                 <?php
                                         $url = wp_nonce_url(self_admin_url('update.php?action=install-plugin&plugin=xcloner-google-drive'), 'install-plugin_xcloner-google-drive');
                                         ?>
-                <h6><?php echo esc_html__("This storage option requires the XCloner-Google-Drive Wordpress Plugin to be installed and activated.") ?>
+                <h6><?php echo esc_html__("This storage option requires the XCloner-Google-Drive Wordpress Plugin to be installed and activated.", 'xcloner-backup-and-restore') ?>
                 </h6>
-                <h6><?php echo esc_html__("PHP 5.5 minimum version is required.") ?></h6>
+                <h6><?php echo esc_html__("PHP 5.5 minimum version is required.", 'xcloner-backup-and-restore') ?></h6>
                 <br />
                 <a class="install-now btn" data-slug="xcloner-google-drive" href="<?php echo esc_url($url); ?>"
                     aria-label="Install XCloner Google Drive 1.0.0 now" data-name="XCloner Google Drive 1.0.0">

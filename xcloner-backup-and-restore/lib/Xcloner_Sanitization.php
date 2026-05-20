@@ -51,7 +51,8 @@ class Xcloner_Sanitization
     {
         $option = filter_var($option, FILTER_SANITIZE_URL);
         if (!$option) {
-            add_settings_error('xcloner_error_message', '', __(sprintf('Invalid Server Path %s', $option)));
+            /* translators: %1$s is a value */
+            add_settings_error('xcloner_error_message', '', sprintf(__('Invalid Server Path %1$s', 'xcloner-backup-and-restore'), $option));
             return false;
         }
         return str_replace("..", "", $option);

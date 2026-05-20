@@ -273,11 +273,11 @@ if ($requirements->check_backup_ready_status()) {
                     ?>
                     <li class="card-panel grey darken-1">
                         <?php echo esc_html__('Reading Time 1MB Block', 'xcloner-backup-and-restore') ?>:
-                        <?php echo(isset($data['reading_time']) ? esc_html($data['reading_time']) : esc_html__("unknown")); ?>
+                        <?php echo(isset($data['reading_time']) ? esc_html($data['reading_time']) : esc_html__("unknown", 'xcloner-backup-and-restore')); ?>
                     </li>
                     <li class="card-panel grey darken-1">
                         <?php echo esc_html__('Writing Time 1MB Block', 'xcloner-backup-and-restore') ?>:
-                        <?php echo(isset($data['writing_time']) ? esc_html($data['writing_time']) : esc_html__("unknown")); ?>
+                        <?php echo(isset($data['writing_time']) ? esc_html($data['writing_time']) : esc_html__("unknown", 'xcloner-backup-and-restore')); ?>
                     </li>
                     <li class="card-panel grey darken-1">
                         <?php echo esc_html__('Free Disk Space', 'xcloner-backup-and-restore') ?>:

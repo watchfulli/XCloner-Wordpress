@@ -283,8 +283,8 @@ $tab = 1;
                                         <?php echo esc_html__('Scanning The File System...', 'xcloner-backup-and-restore') ?>
 
                                         <p class="right">
-                                            <?php echo sprintf(__('Found %s files (%s)', 'xcloner-backup-and-restore'), '<span class="file-counter">0</span>', '<span  class="file-size-total">0</span>MB') // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-                                        </p>
+                                            <?php /* translators: %1$s is a value, %2$s is a value */
+                                                echo sprintf(__('Found %1$s files (%2$s)', 'xcloner-backup-and-restore'), '<span class="file-counter">0</span>', '<span  class="file-size-total">0</span>MB') // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>                                        </p>
 
                                         <div>
                                             <p class="right">
@@ -304,8 +304,8 @@ $tab = 1;
                                         <?php echo esc_html__('Generating the Mysql Backup...', 'xcloner-backup-and-restore') ?>
 
                                         <p class="right">
-                                            <?php echo sprintf(__('Found %s tables in %s databases (%s)', 'xcloner-backup-and-restore'), '<span class="table-counter">0</span>', '<span class="database-counter">0</span>', '<span data-processed="0" class="total-records">0</span> records', 'xcloner-backup-and-restore') // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-                                        </p>
+                                            <?php /* translators: %1$s is a value, %2$s is a value, %3$s is a value */
+                                                echo sprintf(__('Found %1$s tables in %2$s databases (%3$s)', 'xcloner-backup-and-restore'), '<span class="table-counter">0</span>', '<span class="database-counter">0</span>', '<span data-processed="0" class="total-records">0</span> records', 'xcloner-backup-and-restore') // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>                                        </p>
 
                                         <div>
                                             <p class="right"><span class="last-logged-table"></span></p>
@@ -332,8 +332,8 @@ $tab = 1;
                                         <?php echo esc_html__('Adding Files to Archive...', 'xcloner-backup-and-restore') ?>
 
                                         <p class="right">
-                                            <?php echo sprintf(__('Adding %s files (%s)', 'xcloner-backup-and-restore'), '<span class="file-counter">0</span>', '<span  data-processed="0" class="file-size-total">0</span>MB') // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-                                        </p>
+                                            <?php /* translators: %1$s is a value, %2$s is a value */
+                                                echo sprintf(__('Adding %1$s files (%2$s)', 'xcloner-backup-and-restore'), '<span class="file-counter">0</span>', '<span  data-processed="0" class="file-size-total">0</span>MB') // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>                                        </p>
 
                                         <div>
                                             <p class="right">
@@ -574,8 +574,8 @@ $tab = 1;
             <div class="row">
                 <div class="col s12 label">
                     <label>
-                        <?php echo esc_html__(sprintf('Send %s to remote storage', "<span class='backup_name'></span>"), 'xcloner-backup-and-restore') ?>
-                    </label>
+                        <?php /* translators: %1$s is a value */
+                            echo sprintf(esc_html__('Send %1$s to remote storage', 'xcloner-backup-and-restore'), "<span class='backup_name'></span>") ?>                    </label>
                 </div>
                 <div class="input-field col s8 m10">
                     <select name="transfer_storage" id="transfer_storage" class="validate" required>

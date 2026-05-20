@@ -25,7 +25,8 @@ if (!defined('WPINC')) {
         </div>
         <div class=" col s12 m6">
             <p>
-                <?php echo sprintf(__('Visit %s and get your "App secret".'), "<a href='https://www.dropbox.com/developers/apps' target='_blank'>https://www.dropbox.com/developers/apps</a>") // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+                <?php /* translators: %1$s is a value */
+                echo sprintf(__('Visit %1$s and get your "App secret".', 'xcloner-backup-and-restore'), "<a href='https://www.dropbox.com/developers/apps' target='_blank'>https://www.dropbox.com/developers/apps</a>") // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
             </p>
         </div>
     </div>

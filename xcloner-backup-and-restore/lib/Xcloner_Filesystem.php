@@ -423,7 +423,8 @@ class Xcloner_Filesystem
     {
         if ($init) {
             $this->logger->info(sprintf(
-                __("Starting the filesystem scanner on root folder %s"),
+                /* translators: %1$s is a value */
+                __("Starting the filesystem scanner on root folder %1$s", 'xcloner-backup-and-restore'),
                 $this->xcloner_settings->get_xcloner_start_path()
             ));
             $this->do_system_init();
@@ -628,14 +629,16 @@ class Xcloner_Filesystem
             foreach ($files as $file) {
                 if (!is_readable($this->xcloner_settings->get_xcloner_start_path() . DS . $file['path'])) {
                     $this->logger->info(sprintf(
-                        __("Excluding %s from the filesystem list, file not readable"),
+                        /* translators: %1$s is a value */
+                        __("Excluding %1$s from the filesystem list, file not readable", 'xcloner-backup-and-restore'),
                         $file['path']
                     ), array(
                         "FILESYSTEM SCAN",
                         "NOT READABLE"
                     ));
                 } elseif (!$matching_pattern = $this->is_excluded($file)) {
-                    $this->logger->info(sprintf(__("Adding %s to the filesystem list"), $file['path']), array(
+                    /* translators: %1$s is a value */
+                    $this->logger->info(sprintf(__("Adding %1$s to the filesystem list", 'xcloner-backup-and-restore'), $file['path']), array(
                         "FILESYSTEM SCAN",
                         "INCLUDE"
                     ));
@@ -648,7 +651,8 @@ class Xcloner_Filesystem
                     }
                 } else {
                     $this->logger->info(sprintf(
-                        __("Excluding %s from the filesystem list, matching pattern %s"),
+                        /* translators: %1$s is a value, %2$s is a value */
+                        __("Excluding %1$s from the filesystem list, matching pattern %2$s", 'xcloner-backup-and-restore'),
                         $file['path'],
                         $matching_pattern
                     ), array(

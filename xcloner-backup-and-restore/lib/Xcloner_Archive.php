@@ -236,10 +236,12 @@ class Xcloner_Archive extends Tar
     public function send_notification_error($to, $from, $subject, $backup_name, $params, $error_message)
     {
         $body = "";
-        $body .= sprintf(__("Backup Site Url: %s"), get_home_url());
+        /* translators: %1$s is a value */
+        $body .= sprintf(__("Backup Site Url: %1$s", 'xcloner-backup-and-restore'), get_home_url());
         $body .= "<br /><>";
 
-        $body .= sprintf(__("Error Message: %s"), $error_message);
+        /* translators: %1$s is a value */
+        $body .= sprintf(__("Error Message: %1$s", 'xcloner-backup-and-restore'), $error_message);
 
         $this->logger->info(sprintf("Sending backup error notification to %s", $to));
 
@@ -297,15 +299,18 @@ class Xcloner_Archive extends Tar
         $params = (array)$params;
 
         if (!$subject) {
-            $subject = sprintf(__("New backup generated %s"), $backup_name);
+            /* translators: %1$s is a value */
+            $subject = sprintf(__("New backup generated %1$s", 'xcloner-backup-and-restore'), $backup_name);
         }
 
         //$body = sprintf(__("Generated Backup Size: %s"), size_format($this->filesystem->get_backup_size($backup_name)));
-        $body = sprintf(__("Generated Backup Size: %s"), $additional['backup_size']);
+        /* translators: %1$s is a value */
+        $body = sprintf(__("Generated Backup Size: %1$s", 'xcloner-backup-and-restore'), $additional['backup_size']);
         $body .= "<br /><br />";
 
         if (isset($additional['lines_total']) && $additional['lines_total'] > 0) {
-            $body .= sprintf(__("Total files added: %s"), $additional['lines_total']);
+            /* translators: %1$s is a value */
+            $body .= sprintf(__("Total files added: %1$s", 'xcloner-backup-and-restore'), $additional['lines_total']);
             $body .= "<br /><br />";
         }
 
@@ -315,7 +320,8 @@ class Xcloner_Archive extends Tar
             $backups_counter = 1;
         }
 
-        $body .= sprintf(__("Backup Parts: %s"), $backups_counter);
+        /* translators: %1$s is a value */
+        $body .= sprintf(__("Backup Parts: %1$s", 'xcloner-backup-and-restore'), $backups_counter);
         $body .= "<br />";
 
         if (sizeof($backup_parts)) {
@@ -325,16 +331,17 @@ class Xcloner_Archive extends Tar
 
         $body .= "<br />";
 
-        $body .= sprintf(__("Backup Site Url: %s"), get_home_url());
+        /* translators: %1$s is a value */
+        $body .= sprintf(__("Backup Site Url: %1$s", 'xcloner-backup-and-restore'), get_home_url());
         $body .= "<br />";
 
         if (isset($params['backup_params']->backup_comments)) {
-            $body .= __("Backup Comments: ") . $params['backup_params']->backup_comments;
+            $body .= __("Backup Comments: ", 'xcloner-backup-and-restore') . $params['backup_params']->backup_comments;
             $body .= "<br /><br />";
         }
 
         if ($this->xcloner_settings->get_xcloner_option('xcloner_enable_log')) {
-            $body .= __("Latest 50 Log Lines: ") . "<br />" . implode(
+            $body .= __("Latest 50 Log Lines: ", 'xcloner-backup-and-restore') . "<br />" . implode(
                     "<br />\n",
                     $this->logger->getLastDebugLines(50)
                 );
@@ -419,13 +426,15 @@ class Xcloner_Archive extends Tar
         $archive_info = $this->filesystem->get_storage_path_file_info($this->get_archive_name_with_extension());
 
         if ($init) {
-            $this->logger->info(sprintf(__("Initializing the backup archive %s"), $this->get_archive_name()));
+            /* translators: %1$s is a value */
+            $this->logger->info(sprintf(__("Initializing the backup archive %1$s", 'xcloner-backup-and-restore'), $this->get_archive_name()));
 
             $this->backup_archive->create($archive_info->getPath() . DS . $archive_info->getFilename());
 
             $return['extra']['backup_init'] = 1;
         } else {
-            $this->logger->info(sprintf(__("Opening for append the backup archive %s"), $this->get_archive_name()));
+            /* translators: %1$s is a value */
+            $this->logger->info(sprintf(__("Opening for append the backup archive %1$s", 'xcloner-backup-and-restore'), $this->get_archive_name()));
 
             $this->backup_archive->openForAppend($archive_info->getPath() . DS . $archive_info->getFilename());
 

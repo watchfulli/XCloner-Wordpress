@@ -26,8 +26,8 @@ if (!defined('WPINC')) {
         </div>
         <div class=" col s12 m6">
             <p>
-                <?php echo sprintf(__('Visit %s and get your KeyID and  applicationKey.', 'xcloner-backup-and-restore'), '<a href="https://secure.backblaze.com/b2_buckets.htm" target="_blank">https://secure.backblaze.com/b2_buckets.htm</a>') // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-            </p>
+                <?php /* translators: %1$s is a value */
+                    echo sprintf(__('Visit %1$s and get your KeyID and  applicationKey.', 'xcloner-backup-and-restore'), '<a href="https://secure.backblaze.com/b2_buckets.htm" target="_blank">https://secure.backblaze.com/b2_buckets.htm</a>') // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>            </p>
             <p>
                 If you specify <strong>only the bucket name</strong>, you must use the <strong>master key</strong>.<br>
                 However, if you specify <strong>both bucket name and bucket id</strong>, you do not need the master key and can use a <strong>single-bucket key</strong>.

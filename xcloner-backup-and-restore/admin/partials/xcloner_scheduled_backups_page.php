@@ -10,8 +10,8 @@ $available_storages     = $xcloner_remote_storage->get_available_storages();
 <?php if (!defined("DISABLE_WP_CRON") || !DISABLE_WP_CRON): ?>
 <div id="setting-error-" class="error settings-error notice is-dismissible">
     <p><strong>
-            <?php echo sprintf(__('We have noticed that DISABLE_WP_CRON is disabled, we recommend enabling that and setting up wp-cron.php to run manually through your hosting account scheduler as explained <a href="%s" target="_blank">here</a>', 'xcloner-backup-and-restore'), "http://www.inmotionhosting.com/support/website/wordpress/disabling-the-wp-cronphp-in-wordpress") // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-        </strong>
+            <?php /* translators: %1$s is a value */
+                echo sprintf(__('We have noticed that DISABLE_WP_CRON is disabled, we recommend enabling that and setting up wp-cron.php to run manually through your hosting account scheduler as explained <a href="%1$s" target="_blank">here</a>', 'xcloner-backup-and-restore'), "http://www.inmotionhosting.com/support/website/wordpress/disabling-the-wp-cronphp-in-wordpress") // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>        </strong>
     </p>
     <button type="button" class="notice-dismiss"><span class="screen-reader-text">Dismiss this notice.</span>
     </button>
