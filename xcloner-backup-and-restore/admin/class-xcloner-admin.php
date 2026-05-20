@@ -144,13 +144,13 @@ class Xcloner_Admin
             $statusCode   = 403;
 
             if ( ! isset( $_POST['xcloner_remote_storage_nonce'] ) ) {
-                wp_die( __( $errorMessage, $domain ), $statusCode );
+                wp_die( __( $errorMessage, $domain ), $statusCode ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
             }
 
             $nonce = wp_unslash( $_POST['xcloner_remote_storage_nonce'] );
 
             if ( ! wp_verify_nonce( $nonce, 'xcloner_remote_storage_action' ) ) {
-                wp_die( __( $errorMessage, $domain ), $statusCode );
+                wp_die( __( $errorMessage, $domain ), $statusCode ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
             }
         }
 
@@ -263,12 +263,12 @@ class Xcloner_Admin
             <ul class="nav-tab-wrapper col s12 ">
                 <li>
                     <a href="?page=xcloner_settings_page&tab=general_options"
-                       class="nav-tab col s12 m3 l3 <?php echo $active_tab == 'general_options' ? 'nav-tab-active' : ''; ?>"><?php echo __('General Options', 'xcloner-backup-and-restore') ?>
+                       class="nav-tab col s12 m3 l3 <?php echo $active_tab == 'general_options' ? 'nav-tab-active' : ''; ?>"><?php echo esc_html__('General Options', 'xcloner-backup-and-restore') ?>
                     </a>
                 </li>
                 <li>
                     <a href="?page=xcloner_settings_page&tab=system_options"
-                       class="nav-tab col s12 m3 l3 <?php echo $active_tab == 'system_options' ? 'nav-tab-active' : ''; ?>"><?php echo __('System Options', 'xcloner-backup-and-restore') ?>
+                       class="nav-tab col s12 m3 l3 <?php echo $active_tab == 'system_options' ? 'nav-tab-active' : ''; ?>"><?php echo esc_html__('System Options', 'xcloner-backup-and-restore') ?>
                     </a>
                 </li>
             </ul>

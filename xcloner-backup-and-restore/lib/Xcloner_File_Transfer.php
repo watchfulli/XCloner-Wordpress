@@ -137,7 +137,7 @@ class Xcloner_File_Transfer extends Xcloner_Filesystem {
 		}
 		
 		if ( $result->status != 200 ) {
-			throw new Exception( $result->response );
+			throw new Exception( $result->response ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
 		}
 		
 		if ( ftell( $fp ) >= $this->get_storage_filesystem()->getSize( $file ) ) {

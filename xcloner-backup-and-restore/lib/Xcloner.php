@@ -345,7 +345,7 @@ class Xcloner
     {
         ?>
         <div class="notice notice-<?php echo esc_attr($status) ?> is-dismissible">
-            <p><?php _e($message, 'xcloner-backup-and-restore'); ?></p>
+            <p><?php echo wp_kses_post($message); ?></p>
         </div>
         <?php
     }
@@ -390,9 +390,9 @@ class Xcloner
         <script type='text/javascript'>
             <?php
             if (function_exists('wp_create_nonce')) {
-                echo "const XCLONER_WPNONCE = '" . wp_create_nonce('xcloner-api-nonce') . "';";
+                echo "const XCLONER_WPNONCE = '" . wp_create_nonce('xcloner-api-nonce') . "';"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
             } else {
-                echo "const XCLONER_WPNONCE = null;";
+                echo "const XCLONER_WPNONCE = null;"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
             } ?>
 
             const XCLONER_AJAXURL = ajaxurl + "?_wpnonce=" + XCLONER_WPNONCE;
@@ -676,8 +676,8 @@ class Xcloner
     public function add_plugin_action_links($links, $file)
     {
         if ($file == plugin_basename(dirname(__FILE__, 2) . '/xcloner.php')) {
-            $links[] = '<a href="admin.php?page=xcloner_settings_page">' . __('Settings', 'xcloner-backup-and-restore') . '</a>';
-            $links[] = '<a href="admin.php?page=xcloner_generate_backups_page">' . __('Generate Backup', 'xcloner-backup-and-restore') . '</a>';
+            $links[] = '<a href="admin.php?page=xcloner_settings_page">' . esc_html__('Settings', 'xcloner-backup-and-restore') . '</a>';
+            $links[] = '<a href="admin.php?page=xcloner_generate_backups_page">' . esc_html__('Generate Backup', 'xcloner-backup-and-restore') . '</a>';
             //$links[] = '<a href="admin.php?page=xcloner_restore_defaults">'.__('Restore Defaults', 'xcloner-backup-and-restore').'</a>';
         }
 

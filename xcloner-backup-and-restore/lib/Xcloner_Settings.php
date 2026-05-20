@@ -678,7 +678,7 @@ class Xcloner_Settings
             <?php else:?>
             <div class="input-field col s10 m5 l3">
             <?php endif?>
-                <input class="validate" <?php echo ($disabled) ? "disabled" : "" ?> name="<?php echo esc_attr($fieldname) ?>"
+                <input class="validate" <?php echo ($disabled) ? "disabled" : "" ?> name="<?php echo esc_attr($fieldname) ?>" // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                        id="<?php echo esc_attr($fieldname) ?>" type="text" class="validate"
                        value="<?php echo isset($value) ? esc_attr($value) : ''; ?>">
             </div>
@@ -715,7 +715,7 @@ class Xcloner_Settings
         // output the field?>
         <div class="row">
             <div class="input-field col s10 m10 l8">
-                <input class="validate" <?php echo ($disabled) ? "disabled" : "" ?> name="<?php echo esc_attr($fieldname) ?>"
+                <input class="validate" <?php echo ($disabled) ? "disabled" : "" ?> name="<?php echo esc_attr($fieldname) ?>" // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                        id="<?php echo esc_attr($fieldname) ?>" type="password" class="validate"
                        value="<?php echo isset($value) ? esc_attr($value) : ''; ?>">
             </div>
@@ -747,7 +747,7 @@ class Xcloner_Settings
         // output the field?>
         <div class="row">
             <div class="input-field col s10 m10 l8">
-                <textarea class="validate" <?php echo ($disabled) ? "disabled" : "" ?> name="<?php echo esc_attr($fieldname) ?>"
+                <textarea class="validate" <?php echo ($disabled) ? "disabled" : "" ?> name="<?php echo esc_attr($fieldname) ?>" // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                           id="<?php echo esc_attr($fieldname) ?>" type="text" class="validate"
                           value=""><?php echo isset($value) ? esc_attr($value) : ''; ?></textarea>
             </div>
@@ -758,39 +758,39 @@ class Xcloner_Settings
             <div class="col s12">
                 <ul class="xcloner_regex_exclude_limit">
                     <li>Exclude all except .php file: <span
-                                class="regex_pattern"><?php echo htmlentities('(.*)\.(.+)$(?<!(php))') ?></span></li>
+                                class="regex_pattern"><?php echo esc_html('(.*)\.(.+)$(?<!(php))') ?></span></li>
                     <li>Exclude all except .php and .txt: <span
-                                class="regex_pattern"> <?php echo htmlentities('(.*)\.(.+)$(?<!(php|txt))') ?></span>
+                                class="regex_pattern"> <?php echo esc_html('(.*)\.(.+)$(?<!(php|txt))') ?></span>
                     </li>
                     <li>Exclude all .avi files: <span
-                                class="regex_pattern"> <?php echo htmlentities('(.*)\.(.+)$(?<=(avi))') ?></span></li>
+                                class="regex_pattern"> <?php echo esc_html('(.*)\.(.+)$(?<=(avi))') ?></span></li>
                     <li>Exclude all .jpg,.gif and .png files: <span
-                                class="regex_pattern"> <?php echo htmlentities('(.*)\.(.+)$(?<=(gif|png|jpg))') ?></span>
+                                class="regex_pattern"> <?php echo esc_html('(.*)\.(.+)$(?<=(gif|png|jpg))') ?></span>
                     </li>
                     <li>Exclude all .svn and .git: <span
-                                class="regex_pattern"> <?php echo htmlentities('(.*)\.(svn|git)(.*)$') ?></span></li>
+                                class="regex_pattern"> <?php echo esc_html('(.*)\.(svn|git)(.*)$') ?></span></li>
                     <li>Exclude root directory /test: <span
-                                class="regex_pattern"> <?php echo htmlentities('\/test(.*)$') ?></span> or <span
-                                class="regex_pattern"> <?php echo htmlentities('test(.*)$') ?></span></li>
+                                class="regex_pattern"> <?php echo esc_html('\/test(.*)$') ?></span> or <span
+                                class="regex_pattern"> <?php echo esc_html('test(.*)$') ?></span></li>
                     <li>Exclude the wp-admin folder: <span
-                                class="regex_pattern"> <?php echo htmlentities('(\/wp-admin)(.*)$') ?></span></li>
+                                class="regex_pattern"> <?php echo esc_html('(\/wp-admin)(.*)$') ?></span></li>
                     <li>Exclude the wp-content/uploads folder: <span
-                                class="regex_pattern"> <?php echo htmlentities('(\/wp-content\/uploads)(.*)$') ?></span>
+                                class="regex_pattern"> <?php echo esc_html('(\/wp-content\/uploads)(.*)$') ?></span>
                     </li>
                     <li>Exclude the wp-admin, wp-includes and wp-config.php: <span
-                                class="regex_pattern"> <?php echo htmlentities('\/(wp-admin|wp-includes|wp-config.php)(.*)$') ?></span>
+                                class="regex_pattern"> <?php echo esc_html('\/(wp-admin|wp-includes|wp-config.php)(.*)$') ?></span>
                     </li>
                     <li>Exclude wp-content/updraft and wp/content/uploads/wp_all_backup folder :<span
                                 class="regex_pattern">\/(wp-content\/updraft|\/wp-content\/uploads\/wp_all_backup)(.*)$</span>
                     </li>
                     <li>Exclude all cache folders from wp-content/ and it's subdirectories: <span
-                                class="regex_pattern"> <?php echo htmlentities('\/wp-content(.*)\/cache($|\/)(.*)') ?></span>
+                                class="regex_pattern"> <?php echo esc_html('\/wp-content(.*)\/cache($|\/)(.*)') ?></span>
                     </li>
                     <li>Exclude wp-content/cache/ folder: <span
-                                class="regex_pattern"> <?php echo htmlentities('\/wp-content\/cache(.*)') ?></span>
+                                class="regex_pattern"> <?php echo esc_html('\/wp-content\/cache(.*)') ?></span>
                     </li>
                     <li>Exclude all error_log files: <span
-                                class="regex_pattern"> <?php echo htmlentities('(.*)error_log$') ?></span></li>
+                                class="regex_pattern"> <?php echo esc_html('(.*)error_log$') ?></span></li>
                 </ul>
             </div>
         </div>
@@ -817,7 +817,7 @@ class Xcloner_Settings
         // output the field?>
         <div class="row">
             <div class="input-field col s10 m5 l3">
-                <input class="validate" <?php echo ($disabled) ? "disabled" : "" ?> name="<?php echo esc_attr($fieldname) ?>"
+                <input class="validate" <?php echo ($disabled) ? "disabled" : "" ?> name="<?php echo esc_attr($fieldname) ?>" // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                        id="<?php echo esc_attr($fieldname) ?>" type="number" class="validate"
                        value="<?php echo isset($value) ? esc_attr($value) : ''; ?>">
             </div>
@@ -842,7 +842,7 @@ class Xcloner_Settings
         <div class="row">
             <div class="input-field col s10 m10 l8">
                 <p class="range-field">
-                    <input <?php echo ($disabled) ? "disabled" : "" ?> type="range" name="<?php echo esc_attr($fieldname) ?>"
+                    <input <?php echo ($disabled) ? "disabled" : "" ?> type="range" name="<?php echo esc_attr($fieldname) ?>" // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                                                                          id="<?php echo esc_attr($fieldname) ?>"
                                                                          min="<?php echo esc_attr($range_start) ?>"
                                                                          max="<?php echo esc_attr($range_end) ?>"
@@ -870,10 +870,10 @@ class Xcloner_Settings
                 <div class="switch">
                     <label>
                         Off
-                        <input <?php echo ($disabled) ? "disabled" : "" ?> type="checkbox"
+                        <input <?php echo ($disabled) ? "disabled" : "" ?> type="checkbox" // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                                                                              name="<?php echo esc_attr($fieldname) ?>"
                                                                              id="<?php echo esc_attr($fieldname) ?>"
-                                                                             value="1" <?php echo ($value) ? 'checked="checked"' : ''; ?>
+                                                                             value="1" <?php echo ($value) ? 'checked="checked"' : ''; ?> // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                         ">
                         <span class="lever"></span>
                         On

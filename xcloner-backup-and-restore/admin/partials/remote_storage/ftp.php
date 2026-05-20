@@ -5,7 +5,7 @@ if (!defined('WPINC')) {
 }
 ?>
 <div class="collapsible-header">
-    <i class="material-icons">computer</i><?php echo __("FTP Storage", 'xcloner-backup-and-restore') ?>
+    <i class="material-icons">computer</i><?php echo esc_html__("FTP Storage", 'xcloner-backup-and-restore') ?>
     <div class="switch right">
         <label>
             Off
@@ -26,17 +26,17 @@ if (!defined('WPINC')) {
 <div class="collapsible-body">
     <div class="row">
         <div class="col s12 m3 label">
-            <label for="ftp_host"><?php echo __("Ftp Hostname", 'xcloner-backup-and-restore') ?></label>
+            <label for="ftp_host"><?php echo esc_html__("Ftp Hostname", 'xcloner-backup-and-restore') ?></label>
         </div>
         <div class="col s12 m6">
             <input
                     id="ftp_host"
-                    placeholder="<?php echo __("Ftp Hostname", 'xcloner-backup-and-restore') ?>"
+                    placeholder="<?php echo esc_html__("Ftp Hostname", 'xcloner-backup-and-restore') ?>"
                     type="text" name="xcloner_ftp_hostname" class="validate"
                     value="<?php echo esc_attr(get_option("xcloner_ftp_hostname")) ?>">
         </div>
         <div class=" col s12 m2">
-            <input placeholder="<?php echo __("Ftp Port", 'xcloner-backup-and-restore') ?>" id="ftp_port" type="text"
+            <input placeholder="<?php echo esc_html__("Ftp Port", 'xcloner-backup-and-restore') ?>" id="ftp_port" type="text"
                    name="xcloner_ftp_port" class="validate"
                    value="<?php echo esc_attr(get_option("xcloner_ftp_port", 21)) ?>">
         </div>
@@ -44,10 +44,10 @@ if (!defined('WPINC')) {
 
     <div class="row">
         <div class="col s12 m3 label">
-            <label for="ftp_username"><?php echo __("Ftp Username", 'xcloner-backup-and-restore') ?></label>
+            <label for="ftp_username"><?php echo esc_html__("Ftp Username", 'xcloner-backup-and-restore') ?></label>
         </div>
         <div class=" col s12 m6">
-            <input placeholder="<?php echo __("Ftp Username", 'xcloner-backup-and-restore') ?>" id="ftp_username"
+            <input placeholder="<?php echo esc_html__("Ftp Username", 'xcloner-backup-and-restore') ?>" id="ftp_username"
                    type="text" name="xcloner_ftp_username" class="validate"
                    value="<?php echo esc_attr(get_option("xcloner_ftp_username")) ?>" autocomplete="off">
         </div>
@@ -56,10 +56,10 @@ if (!defined('WPINC')) {
 
     <div class="row">
         <div class="col s12 m3 label">
-            <label for="ftp_password"><?php echo __("Ftp Password", 'xcloner-backup-and-restore') ?></label>
+            <label for="ftp_password"><?php echo esc_html__("Ftp Password", 'xcloner-backup-and-restore') ?></label>
         </div>
         <div class=" col s12 m6">
-            <input placeholder="<?php echo __("Ftp Password", 'xcloner-backup-and-restore') ?>" id="ftp_password"
+            <input placeholder="<?php echo esc_html__("Ftp Password", 'xcloner-backup-and-restore') ?>" id="ftp_password"
                    type="text" name="xcloner_ftp_password" class="validate"
                    value="<?php echo esc_attr(str_repeat('*', strlen(get_option("xcloner_ftp_password")))) ?>"
                    autocomplete="off">
@@ -68,10 +68,10 @@ if (!defined('WPINC')) {
 
     <div class="row">
         <div class="col s12 m3 label">
-            <label for="ftp_root"><?php echo __("Ftp Storage Folder", 'xcloner-backup-and-restore') ?></label>
+            <label for="ftp_root"><?php echo esc_html__("Ftp Storage Folder", 'xcloner-backup-and-restore') ?></label>
         </div>
         <div class=" col s12 m6">
-            <input placeholder="<?php echo __("Ftp Storage Folder", 'xcloner-backup-and-restore') ?>" id="ftp_root"
+            <input placeholder="<?php echo esc_html__("Ftp Storage Folder", 'xcloner-backup-and-restore') ?>" id="ftp_root"
                    type="text" name="xcloner_ftp_path" class="validate"
                    value="<?php echo esc_attr(urldecode(get_option("xcloner_ftp_path") ?: '')) ?>">
         </div>
@@ -79,7 +79,7 @@ if (!defined('WPINC')) {
 
     <div class="row">
         <div class="col s12 m3 label">
-            <label for="ftp_root"><?php echo __("Ftp Transfer Mode", 'xcloner-backup-and-restore') ?></label>
+            <label for="ftp_root"><?php echo esc_html__("Ftp Transfer Mode", 'xcloner-backup-and-restore') ?></label>
         </div>
         <div class=" col s12 m6 input-field inline">
             <p>
@@ -88,7 +88,7 @@ if (!defined('WPINC')) {
                            value="1" <?php if (get_option("xcloner_ftp_transfer_mode", 1)) {
                         echo "checked";
                     } ?> />
-                    <span><?php echo __("Passive", 'xcloner-backup-and-restore') ?></span>
+                    <span><?php echo esc_html__("Passive", 'xcloner-backup-and-restore') ?></span>
                 </label>
             </p>
             <p>
@@ -97,7 +97,7 @@ if (!defined('WPINC')) {
                            value="0" <?php if (!get_option("xcloner_ftp_transfer_mode", 1)) {
                         echo "checked";
                     } ?> />
-                    <span><?php echo __("Active", 'xcloner-backup-and-restore') ?></span>
+                    <span><?php echo esc_html__("Active", 'xcloner-backup-and-restore') ?></span>
                 </label>
             </p>
         </div>
@@ -105,7 +105,7 @@ if (!defined('WPINC')) {
 
     <div class="row">
         <div class="col s12 m3 label">
-            <label for="ftp_ssl_mode"><?php echo __("Ftp Secure Connection", 'xcloner-backup-and-restore') ?></label>
+            <label for="ftp_ssl_mode"><?php echo esc_html__("Ftp Secure Connection", 'xcloner-backup-and-restore') ?></label>
         </div>
         <div class=" col s12 m6 input-field inline">
             <p>
@@ -114,7 +114,7 @@ if (!defined('WPINC')) {
                            value="0" <?php if (!get_option("xcloner_ftp_ssl_mode")) {
                         echo "checked";
                     } ?> />
-                    <span><?php echo __("Disable", 'xcloner-backup-and-restore') ?></span>
+                    <span><?php echo esc_html__("Disable", 'xcloner-backup-and-restore') ?></span>
                 </label></p>
             <p>
                 <label for="ftp_ssl_mode_active">
@@ -122,34 +122,34 @@ if (!defined('WPINC')) {
                            value="1" <?php if (get_option("xcloner_ftp_ssl_mode")) {
                         echo "checked";
                     } ?> />
-                    <span><?php echo __("Enable", 'xcloner-backup-and-restore') ?></span>
+                    <span><?php echo esc_html__("Enable", 'xcloner-backup-and-restore') ?></span>
                 </label></p>
         </div>
     </div>
 
     <div class="row">
         <div class="col s12 m3 label">
-            <label for="ftp_timeout"><?php echo __("Ftp Timeout", 'xcloner-backup-and-restore') ?></label>
+            <label for="ftp_timeout"><?php echo esc_html__("Ftp Timeout", 'xcloner-backup-and-restore') ?></label>
         </div>
         <div class=" col s12 m2">
-            <input placeholder="<?php echo __("Ftp Timeout", 'xcloner-backup-and-restore') ?>" id="ftp_timeout"
+            <input placeholder="<?php echo esc_html__("Ftp Timeout", 'xcloner-backup-and-restore') ?>" id="ftp_timeout"
                    type="text" name="xcloner_ftp_timeout" class="validate"
                    value="<?php echo esc_attr(get_option("xcloner_ftp_timeout", 30)) ?>">
         </div>
     </div>
 
-    <?php echo common_cleanup_html('ftp') ?>
+    <?php echo common_cleanup_html('ftp') // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 
     <div class="row">
         <div class="col s6 m4">
             <button class="btn waves-effect waves-light" type="submit" name="action" id="action"
-                    value="ftp"><?php echo __("Save Settings", 'xcloner-backup-and-restore') ?>
+                    value="ftp"><?php echo esc_html__("Save Settings", 'xcloner-backup-and-restore') ?>
                 <i class="material-icons right">save</i>
             </button>
         </div>
         <div class="col s6 m4">
             <button class="btn waves-effect waves-light orange" type="submit" name="action" id="action" value="ftp"
-                    onclick="jQuery('#connection_check').val('1')"><?php echo __("Verify", 'xcloner-backup-and-restore') ?>
+                    onclick="jQuery('#connection_check').val('1')"><?php echo esc_html__("Verify", 'xcloner-backup-and-restore') ?>
                 <i class="material-icons right">import_export</i>
             </button>
         </div>

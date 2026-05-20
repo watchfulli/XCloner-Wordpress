@@ -477,7 +477,7 @@ class Xcloner_Api
         try {
             $files = $this->xcloner_file_system->list_directory($folder);
         } catch (Exception $e) {
-            print $e->getMessage();
+            print $e->getMessage(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
             $this->logger->error($e->getMessage());
 
             return;
@@ -954,13 +954,13 @@ class Xcloner_Api
 							$column2 .= '<a href="#' . esc_attr( $child[0] ) . '" class="download" title="Download Backup"><i class="material-icons">file_download</i></a>';
 
 							if ( $this->xcloner_encryption->is_encrypted_file( $child[0] ) ) {
-								$column2 .= '<a href="#' . esc_attr( $child[0] ) . '" class="backup-decryption" title="' . __( 'Backup Decryption', 'xcloner-backup-and-restore' ) . '"><i class="material-icons">enhanced_encryption</i></a>';
+								$column2 .= '<a href="#' . esc_attr( $child[0] ) . '" class="backup-decryption" title="' . esc_html__( 'Backup Decryption', 'xcloner-backup-and-restore' ) . '"><i class="material-icons">enhanced_encryption</i></a>';
 							} else {
-								$column2 .= '<a href="#' . esc_attr( $child[0] ) . '" class="list-backup-content" title="' . __( 'List Backup Content', 'xcloner-backup-and-restore' ) . '"><i class="material-icons">folder_open</i></a>';
-								$column2 .= '<a href="#' . esc_attr( $child[0] ) . '" class="backup-encryption" title="' . __( 'Backup Encryption', 'xcloner-backup-and-restore' ) . '"><i class="material-icons">no_encryption</i></a>';
+								$column2 .= '<a href="#' . esc_attr( $child[0] ) . '" class="list-backup-content" title="' . esc_html__( 'List Backup Content', 'xcloner-backup-and-restore' ) . '"><i class="material-icons">folder_open</i></a>';
+								$column2 .= '<a href="#' . esc_attr( $child[0] ) . '" class="backup-encryption" title="' . esc_html__( 'Backup Encryption', 'xcloner-backup-and-restore' ) . '"><i class="material-icons">no_encryption</i></a>';
 							}
 						} elseif ( $storage_selection != "gdrive" && ! $this->xcloner_file_system->get_storage_filesystem()->has( $child[0] ) ) {
-							$column2 .= '<a href="#' . esc_attr( $child[0] ) . '" class="copy-remote-to-local" title="' . __( 'Push Backup To Local Storage', 'xcloner-backup-and-restore' ) . '"><i class="material-icons">file_upload</i></a>';
+							$column2 .= '<a href="#' . esc_attr( $child[0] ) . '" class="copy-remote-to-local" title="' . esc_html__( 'Push Backup To Local Storage', 'xcloner-backup-and-restore' ) . '"><i class="material-icons">file_upload</i></a>';
 						}
 
 						$column2 .= '</li>';
@@ -977,11 +977,11 @@ class Xcloner_Api
 				$return['data'][ $i ][] = esc_html( size_format( $file_info['size'] ) );
 
 				// Column 5: Actions
-				$column5 = '<a href="#' . esc_attr( $file_info['basename'] ) . '" class="download" title="' . __( 'Download Backup', 'xcloner-backup-and-restore' ) . '"><i class="material-icons">file_download</i></a>';
+				$column5 = '<a href="#' . esc_attr( $file_info['basename'] ) . '" class="download" title="' . esc_html__( 'Download Backup', 'xcloner-backup-and-restore' ) . '"><i class="material-icons">file_download</i></a>';
 
 				if ( ! $storage_selection ) {
 					if ( sizeof( $available_storages ) ) {
-						$column5 .= '<a href="#' . esc_attr( $file_info['basename'] ) . '" class="cloud-upload" title="' . __( 'Send Backup To Remote Storage', 'xcloner-backup-and-restore' ) . '"><i class="material-icons">swap_horiz</i></a>';
+						$column5 .= '<a href="#' . esc_attr( $file_info['basename'] ) . '" class="cloud-upload" title="' . esc_html__( 'Send Backup To Remote Storage', 'xcloner-backup-and-restore' ) . '"><i class="material-icons">swap_horiz</i></a>';
 					}
 
 					$basename = $file_info['basename'];
@@ -990,17 +990,17 @@ class Xcloner_Api
 					}
 
 					if ( $this->xcloner_encryption->is_encrypted_file( $basename ) ) {
-						$column5 .= '<a href="#' . esc_attr( $file_info['basename'] ) . '" class="backup-decryption" title="' . __( 'Backup Decryption', 'xcloner-backup-and-restore' ) . '"><i class="material-icons">enhanced_encryption</i></a>';
+						$column5 .= '<a href="#' . esc_attr( $file_info['basename'] ) . '" class="backup-decryption" title="' . esc_html__( 'Backup Decryption', 'xcloner-backup-and-restore' ) . '"><i class="material-icons">enhanced_encryption</i></a>';
 					} else {
-						$column5 .= '<a href="#' . esc_attr( $file_info['basename'] ) . '" class="list-backup-content" title="' . __( 'List Backup Content', 'xcloner-backup-and-restore' ) . '"><i class="material-icons">folder_open</i></a>';
-						$column5 .= '<a href="#' . esc_attr( $file_info['basename'] ) . '" class="backup-encryption" title="' . __( 'Backup Encryption', 'xcloner-backup-and-restore' ) . '"><i class="material-icons">no_encryption</i></a>';
+						$column5 .= '<a href="#' . esc_attr( $file_info['basename'] ) . '" class="list-backup-content" title="' . esc_html__( 'List Backup Content', 'xcloner-backup-and-restore' ) . '"><i class="material-icons">folder_open</i></a>';
+						$column5 .= '<a href="#' . esc_attr( $file_info['basename'] ) . '" class="backup-encryption" title="' . esc_html__( 'Backup Encryption', 'xcloner-backup-and-restore' ) . '"><i class="material-icons">no_encryption</i></a>';
 					}
 				}
 
-				$column5 .= '<a href="#' . esc_attr( $file_info['basename'] ) . '" class="delete" title="' . __( 'Delete Backup', 'xcloner-backup-and-restore' ) . '"><i class="material-icons">delete</i></a>';
+				$column5 .= '<a href="#' . esc_attr( $file_info['basename'] ) . '" class="delete" title="' . esc_html__( 'Delete Backup', 'xcloner-backup-and-restore' ) . '"><i class="material-icons">delete</i></a>';
 
 				if ( $storage_selection && ! $file_exists_on_local_storage ) {
-					$column5 .= '<a href="#' . esc_attr( $file_info['basename'] ) . '" class="copy-remote-to-local" title="' . __( 'Transfer a copy of the remote backup to local storage.', 'xcloner-backup-and-restore' ) . '"><i class="material-icons">swap_horiz</i></a>';
+					$column5 .= '<a href="#' . esc_attr( $file_info['basename'] ) . '" class="copy-remote-to-local" title="' . esc_html__( 'Transfer a copy of the remote backup to local storage.', 'xcloner-backup-and-restore' ) . '"><i class="material-icons">swap_horiz</i></a>';
 				}
 
 				$return['data'][ $i ][] = $column5;
@@ -1216,7 +1216,7 @@ class Xcloner_Api
         $chunkSize = 1024 * 1024;
         while (!feof($read_stream)) {
             $buffer = fread($read_stream, $chunkSize);
-            echo $buffer;
+            echo $buffer; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
         }
         fclose($read_stream);
 

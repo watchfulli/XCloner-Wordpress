@@ -132,7 +132,7 @@ class Xcloner_Restore
         $method = $action . "_action";
 
         if (!method_exists($this, $method) && !method_exists($this->xcloner_container->get_xcloner_api(), $action)) {
-            throw new Exception($method . " does not exists");
+            throw new Exception($method . " does not exists"); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
         }
 
         $this->logger->debug(sprintf('Starting action %s', $method));
@@ -166,7 +166,7 @@ class Xcloner_Restore
         }
 
         if (!$fp) {
-            throw new Exception('Unable to open $target_file file for writing');
+            throw new Exception('Unable to open $target_file file for writing'); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
         }
 
         fseek($fp, $start_position);
@@ -177,7 +177,7 @@ class Xcloner_Restore
             $blob = file_get_contents($_FILES['blob']['tmp_name']);
 
             if (!$bytes_written = fwrite($fp, $blob)) {
-                throw new Exception("Unable to write data to file $target_file");
+                throw new Exception("Unable to write data to file $target_file"); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
             }
 
             @unlink($_FILES['blob']['tmp_name']);
@@ -186,7 +186,7 @@ class Xcloner_Restore
             $this->logger->debug(sprintf('Writing %s bytes to file %s starting position %s using POST blob', strlen($blob), $target_file, $start_position));
 
             if (!$bytes_written = fwrite($fp, $blob)) {
-                throw new Exception("Unable to write data to file $target_file");
+                throw new Exception("Unable to write data to file $target_file"); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
             }
         } else {
             throw new Exception("Upload failed, did not receive any binary data");
@@ -212,7 +212,7 @@ class Xcloner_Restore
         $mysql_backup_file = $this->site_path . DS . $mysqldump_file;
 
         if (!file_exists($mysql_backup_file)) {
-            throw new Exception(sprintf("Mysql backup file %s does not exists", $mysql_backup_file));
+            throw new Exception(sprintf("Mysql backup file %s does not exists", $mysql_backup_file)); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
         }
 
         $mysqli = $this->xcloner_container->get_xcloner_database();

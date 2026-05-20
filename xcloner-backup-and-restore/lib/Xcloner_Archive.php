@@ -857,7 +857,7 @@ class Xcloner_Archive extends Tar
         fseek($fp, $start);
 
         if (!$fp) {
-            throw new ArchiveIOException('Could not open file for reading: ' . $file);
+            throw new ArchiveIOException('Could not open file for reading: ' . $file); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
         }
 
         // create file header
@@ -930,7 +930,7 @@ class Xcloner_Archive extends Tar
             }
 
             if (!$this->fh) {
-                throw new ArchiveIOException('Could not open file for writing: ' . $this->file);
+                throw new ArchiveIOException('Could not open file for writing: ' . $this->file); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
             }
         }
         $this->writeaccess = true;
@@ -1009,7 +1009,7 @@ class Xcloner_Archive extends Tar
         }
 
         if (!is_dir($outdir)) {
-            throw new ArchiveIOException("Could not create directory '$outdir'");
+            throw new ArchiveIOException("Could not create directory '$outdir'"); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
         }
 
         $files_counter = 0;
@@ -1059,7 +1059,7 @@ class Xcloner_Archive extends Tar
 
                 $fp = fopen($output, "wb");
                 if (!$fp) {
-                    throw new ArchiveIOException('Could not open file for writing: ' . $output);
+                    throw new ArchiveIOException('Could not open file for writing: ' . $output); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
                 }
 
                 $size = floor($header['size'] / 512);

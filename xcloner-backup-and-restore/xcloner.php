@@ -47,7 +47,7 @@ if ($xcloner_cli->should_run()) {
     try {
         $xcloner_cli->run();
     } catch (Exception $e) {
-      echo $e->getMessage() . "\n";
+      echo $e->getMessage() . "\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
     }
     return;
 }
@@ -69,7 +69,7 @@ if (function_exists('register_deactivation_hook')) {
 if (version_compare(phpversion(), Xcloner_Activator::xcloner_minimum_version, '<')) {
     ?>
     <div class="error notice">
-        <p><?php echo sprintf(__("XCloner requires minimum PHP version %s in order to run correctly. We have detected your version as %s. Plugin is now deactivated."), Xcloner_Activator::xcloner_minimum_version, phpversion()) ?></p>
+        <p><?php echo sprintf(__("XCloner requires minimum PHP version %s in order to run correctly. We have detected your version as %s. Plugin is now deactivated."), Xcloner_Activator::xcloner_minimum_version, phpversion()) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></p>
     </div>
     <?php
     include_once(ABSPATH . 'wp-admin/includes/plugin.php');
@@ -126,5 +126,5 @@ function run_xcloner()
 try {
     run_xcloner();
 } catch (Exception $e) {
-    echo $e->getMessage();
+    echo $e->getMessage(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }

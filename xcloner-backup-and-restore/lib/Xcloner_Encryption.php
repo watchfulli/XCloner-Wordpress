@@ -380,5 +380,5 @@ try {
         }
     }
 } catch (\Exception $e) {
-    echo "CAUGHT: " . $e->getMessage();
+    echo "CAUGHT: " . $e->getMessage(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }

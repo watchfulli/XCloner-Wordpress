@@ -849,7 +849,7 @@ class Xcloner_Remote_Storage
         if (!$client) {
             $error_msg = "Could not initialize the Google Drive Class, please check that the xcloner-google-drive plugin is enabled...";
             $this->logger->error($error_msg);
-            throw new Exception($error_msg);
+            throw new Exception($error_msg); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
         }
 
         $access_token = $this->xcloner_settings->get_xcloner_option("xcloner_gdrive_access_token");

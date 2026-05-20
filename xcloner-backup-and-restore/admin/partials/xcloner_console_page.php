@@ -7,7 +7,7 @@ $logger_content   = $logger->getLastDebugLines();
 <div class="col s12 ">
     <div>
         <h5 class="left-align">
-            <?php echo __('XCloner Debugger Dashboard', 'xcloner-backup-and-restore') ?>
+            <?php echo esc_html__('XCloner Debugger Dashboard', 'xcloner-backup-and-restore') ?>
         </h5>
 
         <?php if ($xcloner_settings->get_xcloner_option('xcloner_enable_log')) : ?>
