@@ -357,7 +357,7 @@ class Xcloner_Remote_Storage
 
         $this->xcloner->trigger_message(
             /* translators: %1$s is a value */
-            __("%1$s storage settings saved.", 'xcloner-backup-and-restore'),
+            __('%1$s storage settings saved.', 'xcloner-backup-and-restore'), // phpcs:ignore WordPress.WP.I18n.InterpolatedVariableText
             "success",
             $this->storage_fields[$action]['text']
         );
@@ -372,7 +372,7 @@ class Xcloner_Remote_Storage
             $this->verify_filesystem($action);
             $this->xcloner->trigger_message(
                 /* translators: %1$s is a value */
-                __("%1$s connection is valid.", 'xcloner-backup-and-restore'),
+                __('%1$s connection is valid.', 'xcloner-backup-and-restore'), // phpcs:ignore WordPress.WP.I18n.InterpolatedVariableText
                 "success",
                 $this->storage_fields[$action]['text']
             );
@@ -409,7 +409,7 @@ class Xcloner_Remote_Storage
 
         if ($storage_type == "gdrive") {
             if (!is_array($filesystem->listContents())) {
-                throw new Exception(__("Could not read data", 'xcloner-backup-and-restore'));
+                throw new Exception(__("Could not read data", 'xcloner-backup-and-restore')); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
             }
             $this->logger->debug(sprintf("I can list data from remote storage %s", strtoupper($storage_type)));
 
@@ -418,19 +418,19 @@ class Xcloner_Remote_Storage
 
         //testing write access
         if (!$filesystem->write($test_file, "data")) {
-            throw new Exception(__("Could not write data", 'xcloner-backup-and-restore'));
+            throw new Exception(__("Could not write data", 'xcloner-backup-and-restore')); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
         }
         $this->logger->debug(sprintf("I can write data to remote storage %s", strtoupper($storage_type)));
 
         //testing read access
         if (!$filesystem->has($test_file)) {
-            throw new Exception(__("Could not read data", 'xcloner-backup-and-restore'));
+            throw new Exception(__("Could not read data", 'xcloner-backup-and-restore')); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
         }
         $this->logger->debug(sprintf("I can read data to remote storage %s", strtoupper($storage_type)));
 
         //delete test file
         if (!$filesystem->delete($test_file)) {
-            throw new Exception(__("Could not delete data", 'xcloner-backup-and-restore'));
+            throw new Exception(__("Could not delete data", 'xcloner-backup-and-restore')); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
         }
         $this->logger->debug(sprintf("I can delete data to remote storage %s", strtoupper($storage_type)));
 
@@ -882,7 +882,7 @@ class Xcloner_Remote_Storage
 
         $folderID = $this->xcloner_settings->get_xcloner_option("xcloner_gdrive_target_folder");
 
-        $tmp = parse_url($folderID);
+        $tmp = wp_parse_url($folderID);
 
         if (isset($tmp['query'])) {
             $folderID = str_replace("id=", "", $tmp['query']);
@@ -904,6 +904,7 @@ class Xcloner_Remote_Storage
                     $folderID = $obj->getId();
                 }
             } else {
+                /* translators: %s is the Google Drive folder ID or name */
                 $this->xcloner->trigger_message(sprintf(__(
                     "Could not find folder ID by name %s",
                     'xcloner-backup-and-restore'

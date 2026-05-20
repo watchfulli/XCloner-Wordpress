@@ -379,7 +379,7 @@ class Xcloner_Scheduler
                 $from = "";
                 $additional['lines_total'] = $return['extra']['lines_total'] ?? 0;
                 /* translators: %1$s is a value, %2$s is a value */
-                $subject = sprintf(__("%1$s - new backup generated %2$s", 'xcloner-backup-and-restore'), $schedule['name'], $return['extra']['backup_parent']);
+                $subject = sprintf(__('%1$s - new backup generated %2$s', 'xcloner-backup-and-restore'), $schedule['name'], $return['extra']['backup_parent']); // phpcs:ignore WordPress.WP.I18n.InterpolatedVariableText
 
                 $this->xcloner_container->get_archive_system()->send_notification($to, $from, $subject, $return['extra']['backup_parent'], $schedule, "", $additional);
             } catch (Exception $e) {

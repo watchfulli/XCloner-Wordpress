@@ -195,7 +195,7 @@ class Xcloner_Database extends wpdb
     public function get_database_num_tables($database)
     {
         /* translators: %1$s is a value */
-        $this->logger->debug(sprintf(__("Getting number of tables in %1$s", 'xcloner-backup-and-restore'), $database));
+        $this->logger->debug(sprintf(__('Getting number of tables in %1$s', 'xcloner-backup-and-restore'), $database)); // phpcs:ignore WordPress.WP.I18n.InterpolatedVariableText
 
         $query = "show tables in `".$database."`";
 
@@ -278,7 +278,7 @@ class Xcloner_Database extends wpdb
                 if (!in_array($table, $included) && !in_array($dbTable, $included)) {
                     $tablesList[$inc]['excluded'] = 1;
                     /* translators: %1$s is a value, %2$s is a value */
-                    $this->log(sprintf(__("Excluding table %1$s.%2$s from backup", 'xcloner-backup-and-restore'), $table, $database));
+                    $this->log(sprintf(__('Excluding table %1$s.%2$s from backup', 'xcloner-backup-and-restore'), $table, $database)); // phpcs:ignore WordPress.WP.I18n.InterpolatedVariableText
                 }
             }
 
@@ -381,7 +381,7 @@ class Xcloner_Database extends wpdb
                     $dumpfile = $tableInfo[2];
 
                     /* translators: %1$s is a value */
-                    $this->log(sprintf(__("Starting new backup dump to file %1$s", 'xcloner-backup-and-restore'), $dumpfile));
+                    $this->log(sprintf(__('Starting new backup dump to file %1$s', 'xcloner-backup-and-restore'), $dumpfile)); // phpcs:ignore WordPress.WP.I18n.InterpolatedVariableText
 
                     $this->data_headers($dumpfile, $tableInfo[1]);
                     $dumpfile = $tableInfo[2];
@@ -492,13 +492,10 @@ class Xcloner_Database extends wpdb
         //exporting the table content now
 
         $query = "SELECT * from `$databaseName`.`$tableName` Limit $start, $limit ;";
-        $result = mysqli_query($this->dbh, $query);
-        $mysql_fetch_function = "mysqli_fetch_array";
-        //$result = $this->get_results($query, ARRAY_N);
-        //print_r($result); exit;
+        $results = $this->get_results($query, ARRAY_A); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
-        if ($result) {
-            while ($row = $mysql_fetch_function($result, MYSQLI_ASSOC)) {
+        if ($results) {
+            foreach ($results as $row) {
                 $this->fs->get_tmp_filesystem_append()->write($dumpfile, "INSERT INTO `$tableName` VALUES (");
                 $arr = $row;
                 $buffer = "";
@@ -525,7 +522,7 @@ class Xcloner_Database extends wpdb
         }
 
         /* translators: %1$s is a value, %2$s is a value, %3$s is a value, %4$s is a value */
-        $this->log(sprintf(__("Dumping %1$s records starting position %2$s from %3$s.%4$s table", 'xcloner-backup-and-restore'), $records, $start, $databaseName, $tableName));
+        $this->log(sprintf(__('Dumping %1$s records starting position %2$s from %3$s.%4$s table', 'xcloner-backup-and-restore'), $records, $start, $databaseName, $tableName)); // phpcs:ignore WordPress.WP.I18n.InterpolatedVariableText
 
         return $records;
     }
@@ -536,7 +533,7 @@ class Xcloner_Database extends wpdb
     public function dump_structure($databaseName, $tableName, $dumpfile)
     {
         /* translators: %1$s is a value, %2$s is a value */
-        $this->log(sprintf(__("Dumping the structure for %1$s.%2$s table", 'xcloner-backup-and-restore'), $databaseName, $tableName));
+        $this->log(sprintf(__('Dumping the structure for %1$s.%2$s table', 'xcloner-backup-and-restore'), $databaseName, $tableName)); // phpcs:ignore WordPress.WP.I18n.InterpolatedVariableText
 
         $line = ("\n#\n# Table structure for table `$tableName`\n#\n\n");
         $this->fs->get_tmp_filesystem_append()->write($dumpfile, $line);
@@ -567,7 +564,7 @@ class Xcloner_Database extends wpdb
     {
         $this->logger->debug("Writing dump footers in file", array($dumpfile));
         // we finished the dump file, not return the size of it
-        $this->fs->get_tmp_filesystem_append()->write($dumpfile, "\n#\n# Finished at: ".date("M j, Y \a\\t H:i")."\n#");
+        $this->fs->get_tmp_filesystem_append()->write($dumpfile, "\n#\n# Finished at: ".gmdate("M j, Y \a\\t H:i")."\n#");
         $size = $this->fs->get_tmp_filesystem_append()->getSize($dumpfile);
 
         $metadata_dumpfile = $this->fs->get_tmp_filesystem()->getMetadata($dumpfile);
@@ -603,7 +600,7 @@ class Xcloner_Database extends wpdb
         $return .= "# https://www.xcloner.com\n";
         $return .= "#\n";
         $return .= "# Host: ".get_site_url()."\n";
-        $return .= "# Generation Time: ".date("M j, Y \a\\t H:i")."\n";
+        $return .= "# Generation Time: ".gmdate("M j, Y \a\\t H:i")."\n";
         $return .= "# PHP Version: ".phpversion()."\n";
         $return .= "# Database Charset: ".$this->charset."\n";
 
@@ -626,7 +623,7 @@ class Xcloner_Database extends wpdb
         $return .= "#\n# Database : `".$database."`\n# --------------------------------------------------------\n\n";
 
         /* translators: %1$s is a value */
-        $this->log(sprintf(__("Writing %1$s database dump headers", 'xcloner-backup-and-restore'), $database));
+        $this->log(sprintf(__('Writing %1$s database dump headers', 'xcloner-backup-and-restore'), $database)); // phpcs:ignore WordPress.WP.I18n.InterpolatedVariableText
 
         $this->fs->get_tmp_filesystem()->write($file, $return);
     }

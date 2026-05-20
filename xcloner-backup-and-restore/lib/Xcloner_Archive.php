@@ -165,7 +165,7 @@ class Xcloner_Archive extends Tar
             $new_name = $this->archive_name;
 
             if (!stristr($new_name, "-diff")) {
-                $new_name = $this->archive_name . "-diff" . date("Y-m-d_H-i", $diff_timestamp_start);
+                $new_name = $this->archive_name . "-diff" . gmdate("Y-m-d_H-i", $diff_timestamp_start);
             }
 
             $this->archive_name = $new_name;
@@ -237,11 +237,11 @@ class Xcloner_Archive extends Tar
     {
         $body = "";
         /* translators: %1$s is a value */
-        $body .= sprintf(__("Backup Site Url: %1$s", 'xcloner-backup-and-restore'), get_home_url());
+        $body .= sprintf(__('Backup Site Url: %1$s', 'xcloner-backup-and-restore'), get_home_url()); // phpcs:ignore WordPress.WP.I18n.InterpolatedVariableText
         $body .= "<br /><>";
 
         /* translators: %1$s is a value */
-        $body .= sprintf(__("Error Message: %1$s", 'xcloner-backup-and-restore'), $error_message);
+        $body .= sprintf(__('Error Message: %1$s', 'xcloner-backup-and-restore'), $error_message); // phpcs:ignore WordPress.WP.I18n.InterpolatedVariableText
 
         $this->logger->info(sprintf("Sending backup error notification to %s", $to));
 
@@ -300,17 +300,17 @@ class Xcloner_Archive extends Tar
 
         if (!$subject) {
             /* translators: %1$s is a value */
-            $subject = sprintf(__("New backup generated %1$s", 'xcloner-backup-and-restore'), $backup_name);
+            $subject = sprintf(__('New backup generated %1$s', 'xcloner-backup-and-restore'), $backup_name); // phpcs:ignore WordPress.WP.I18n.InterpolatedVariableText
         }
 
         //$body = sprintf(__("Generated Backup Size: %s"), size_format($this->filesystem->get_backup_size($backup_name)));
         /* translators: %1$s is a value */
-        $body = sprintf(__("Generated Backup Size: %1$s", 'xcloner-backup-and-restore'), $additional['backup_size']);
+        $body = sprintf(__('Generated Backup Size: %1$s', 'xcloner-backup-and-restore'), $additional['backup_size']); // phpcs:ignore WordPress.WP.I18n.InterpolatedVariableText
         $body .= "<br /><br />";
 
         if (isset($additional['lines_total']) && $additional['lines_total'] > 0) {
             /* translators: %1$s is a value */
-            $body .= sprintf(__("Total files added: %1$s", 'xcloner-backup-and-restore'), $additional['lines_total']);
+            $body .= sprintf(__('Total files added: %1$s', 'xcloner-backup-and-restore'), $additional['lines_total']); // phpcs:ignore WordPress.WP.I18n.InterpolatedVariableText
             $body .= "<br /><br />";
         }
 
@@ -321,7 +321,7 @@ class Xcloner_Archive extends Tar
         }
 
         /* translators: %1$s is a value */
-        $body .= sprintf(__("Backup Parts: %1$s", 'xcloner-backup-and-restore'), $backups_counter);
+        $body .= sprintf(__('Backup Parts: %1$s', 'xcloner-backup-and-restore'), $backups_counter); // phpcs:ignore WordPress.WP.I18n.InterpolatedVariableText
         $body .= "<br />";
 
         if (sizeof($backup_parts)) {
@@ -332,7 +332,7 @@ class Xcloner_Archive extends Tar
         $body .= "<br />";
 
         /* translators: %1$s is a value */
-        $body .= sprintf(__("Backup Site Url: %1$s", 'xcloner-backup-and-restore'), get_home_url());
+        $body .= sprintf(__('Backup Site Url: %1$s', 'xcloner-backup-and-restore'), get_home_url()); // phpcs:ignore WordPress.WP.I18n.InterpolatedVariableText
         $body .= "<br />";
 
         if (isset($params['backup_params']->backup_comments)) {
@@ -357,7 +357,7 @@ class Xcloner_Archive extends Tar
         wp_mail($to, $subject, $body, $headers, $notification_attachments);
 
         foreach ($notification_attachments as $attachment) {
-            @unlink($attachment);
+            wp_delete_file($attachment);
         }
     }
 
@@ -377,7 +377,7 @@ class Xcloner_Archive extends Tar
 
         $attachments_archive_path = $this->xcloner_settings->get_xcloner_tmp_path() . DS . "info.tgz";
 
-        if (!@touch($attachments_archive_path)) {
+        if (!@touch($attachments_archive_path)) { // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_touch
             $this->logger->error(sprintf("%s is not writable", $attachments_archive_path));
             return array();
         }
@@ -427,14 +427,14 @@ class Xcloner_Archive extends Tar
 
         if ($init) {
             /* translators: %1$s is a value */
-            $this->logger->info(sprintf(__("Initializing the backup archive %1$s", 'xcloner-backup-and-restore'), $this->get_archive_name()));
+            $this->logger->info(sprintf(__('Initializing the backup archive %1$s', 'xcloner-backup-and-restore'), $this->get_archive_name())); // phpcs:ignore WordPress.WP.I18n.InterpolatedVariableText
 
             $this->backup_archive->create($archive_info->getPath() . DS . $archive_info->getFilename());
 
             $return['extra']['backup_init'] = 1;
         } else {
             /* translators: %1$s is a value */
-            $this->logger->info(sprintf(__("Opening for append the backup archive %1$s", 'xcloner-backup-and-restore'), $this->get_archive_name()));
+            $this->logger->info(sprintf(__('Opening for append the backup archive %1$s', 'xcloner-backup-and-restore'), $this->get_archive_name())); // phpcs:ignore WordPress.WP.I18n.InterpolatedVariableText
 
             $this->backup_archive->openForAppend($archive_info->getPath() . DS . $archive_info->getFilename());
 
@@ -861,7 +861,7 @@ class Xcloner_Archive extends Tar
             return;
         }
 
-        $fp = fopen($file, 'rb');
+        $fp = fopen($file, 'rb'); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen
 
         fseek($fp, $start);
 
@@ -877,7 +877,7 @@ class Xcloner_Archive extends Tar
         $bytes = 0;
         // write data
         while ($end >= ftell($fp) and !feof($fp)) {
-            $data = fread($fp, 512);
+            $data = fread($fp, 512); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fread
             if ($data === false) {
                 break;
             }
@@ -896,7 +896,7 @@ class Xcloner_Archive extends Tar
             $last_position = -1;
         }
 
-        fclose($fp);
+        fclose($fp); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
 
         return $last_position;
     }
@@ -935,7 +935,7 @@ class Xcloner_Archive extends Tar
             } elseif ($this->comptype === Archive::COMPRESS_BZIP) {
                 $this->fh = @bzopen($this->file, 'a');
             } else {
-                $this->fh = @fopen($this->file, 'ab');
+                $this->fh = @fopen($this->file, 'ab'); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen
             }
 
             if (!$this->fh) {
@@ -1012,9 +1012,9 @@ class Xcloner_Archive extends Tar
 
         $outdir = rtrim($outdir, '/');
         if (!is_dir($outdir)) {
-            @mkdir($outdir, 0755, true);
+            @mkdir($outdir, 0755, true); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_mkdir
         } else {
-            @chmod($outdir, 0777);
+            @chmod($outdir, 0777); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod
         }
 
         if (!is_dir($outdir)) {
@@ -1055,33 +1055,33 @@ class Xcloner_Archive extends Tar
             $output = $outdir . '/' . $fileinfo->getPath();
             $directory = ($fileinfo->getIsdir()) ? $output : dirname($output);
             if (!is_dir($directory)) {
-                @mkdir($directory, 0755, true);
+                @mkdir($directory, 0755, true); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_mkdir
             } else {
-                @chmod($directory, 0755);
+                @chmod($directory, 0755); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod
             }
 
             // extract data
             if (!$fileinfo->getIsdir()) {
                 if (file_exists($output)) {
-                    unlink($output);
+                    wp_delete_file($output);
                 }
 
-                $fp = fopen($output, "wb");
+                $fp = fopen($output, "wb"); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen
                 if (!$fp) {
                     throw new ArchiveIOException('Could not open file for writing: ' . $output); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
                 }
 
                 $size = floor($header['size'] / 512);
                 for ($i = 0; $i < $size; $i++) {
-                    fwrite($fp, $this->readbytes(512), 512);
+                    fwrite($fp, $this->readbytes(512), 512); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite
                 }
                 if (($header['size'] % 512) != 0) {
-                    fwrite($fp, $this->readbytes(512), $header['size'] % 512);
+                    fwrite($fp, $this->readbytes(512), $header['size'] % 512); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite
                 }
 
-                fclose($fp);
-                touch($output, $fileinfo->getMtime());
-                chmod($output, $fileinfo->getMode());
+                fclose($fp); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
+                touch($output, $fileinfo->getMtime()); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_touch
+                chmod($output, $fileinfo->getMode()); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod
             } else {
                 $this->skipbytes(ceil(0 / 512) * 512); // the size is usually 0 for directories
             }

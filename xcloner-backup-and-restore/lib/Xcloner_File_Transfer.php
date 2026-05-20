@@ -74,7 +74,7 @@ class Xcloner_File_Transfer extends Xcloner_Filesystem {
 		
 		fseek( $fp, $start );
 		
-		$binary_data = fread( $fp, $this->transfer_limit );
+		$binary_data = fread( $fp, $this->transfer_limit ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fread
 		
 		$tmp_filename = "xcloner_upload_" . substr( md5( time() ), 0, 5 );
 		
@@ -105,35 +105,33 @@ class Xcloner_File_Transfer extends Xcloner_Filesystem {
 			     )
 		     );
 		
-		$ch = curl_init();
-		curl_setopt( $ch, CURLOPT_URL, $this->target_url );
-		
-		curl_setopt( $ch, CURLOPT_POST, 1 );
-		curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, 0 );
-		curl_setopt( $ch, CURLOPT_SSL_VERIFYHOST, 1 );
-		curl_setopt( $ch, CURLOPT_CONNECTTIMEOUT, 60 );
-		curl_setopt( $ch, CURLOPT_TIMEOUT, 1200 );
-		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1 );
-		
-		curl_setopt(
+		$ch = curl_init(); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_init
+		curl_setopt( $ch, CURLOPT_URL, $this->target_url ); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_setopt
+
+		curl_setopt( $ch, CURLOPT_POST, 1 ); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_setopt
+		curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, 0 ); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_setopt
+		curl_setopt( $ch, CURLOPT_SSL_VERIFYHOST, 1 ); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_setopt
+		curl_setopt( $ch, CURLOPT_CONNECTTIMEOUT, 60 ); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_setopt
+		curl_setopt( $ch, CURLOPT_TIMEOUT, 1200 ); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_setopt
+		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1 ); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_setopt
+
+		curl_setopt( // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_setopt
 			$ch,
 			CURLOPT_USERAGENT,
 			sprintf( 'XCloner/%s (+https://www.xcloner.com)', XCLONER_PLUGIN_VERSION )
 		);
-		
-		curl_setopt( $ch, CURLOPT_POSTFIELDS, $send_array );
-		curl_setopt( $ch, CURLOPT_VERBOSE, true );
-		
-		$original_result = curl_exec( $ch );
+
+		curl_setopt( $ch, CURLOPT_POSTFIELDS, $send_array ); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_setopt
+		curl_setopt( $ch, CURLOPT_VERBOSE, true ); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_setopt
+
+		$original_result = curl_exec( $ch ); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_exec
 		
 		$this->get_tmp_filesystem()->delete( $tmp_filename );
 		
 		$result = json_decode( $original_result );
 		
 		if ( ! $result ) {
-			throw new Exception(
-				"We have received no valid response from the remote host, original message: " . $original_result
-			);
+			throw new Exception( "We have received no valid response from the remote host, original message: " . $original_result ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
 		}
 		
 		if ( $result->status != 200 ) {
@@ -172,7 +170,7 @@ class Xcloner_File_Transfer extends Xcloner_Filesystem {
 			       . ( $postname ?: basename( $filename ) )
 			       . ( $mimetype ? ";type=$mimetype" : '' );
 		} else {
-			return curl_file_create( $filename, $mimetype, $postname );
+			return curl_file_create( $filename, $mimetype, $postname ); // phpcs:ignore WordPress.WP.AlternativeFunctions.curl_curl_file_create
 		}
 	}
 }

@@ -2,6 +2,10 @@
 
 namespace Watchfulli\XClonerCore;
 
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 use Exception;
 use League\Flysystem\FileNotFoundException;
 use splitbrain\PHPArchive\ArchiveCorruptedException;

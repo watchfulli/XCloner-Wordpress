@@ -188,9 +188,9 @@ class Xcloner_Api
         }
 
         if (!$schedule['start_at']) {
-            $schedule['start_at'] = date('Y-m-d H:i:s', time());
+            $schedule['start_at'] = gmdate('Y-m-d H:i:s', time());
         } else {
-            $schedule['start_at'] = date(
+            $schedule['start_at'] = gmdate(
                 'Y-m-d H:i:s',
                 $schedule['start_at'] - ($this->xcloner_settings->get_xcloner_option('gmt_offset') * HOUR_IN_SECONDS)
             );
@@ -613,12 +613,12 @@ class Xcloner_Api
         $scheduler = $this->xcloner_scheduler;
         $data = $scheduler->get_schedule_by_id($schedule_id);
 
-        $data['start_at'] = date(
+        $data['start_at'] = gmdate(
             "Y-m-d H:i",
             strtotime($data['start_at']) + ($this->xcloner_settings->get_xcloner_option('gmt_offset') * HOUR_IN_SECONDS)
         );
         if (isset($data['backup_params']->diff_start_date) && $data['backup_params']->diff_start_date != "") {
-            $data['backup_params']->diff_start_date = date("Y-m-d", ($data['backup_params']->diff_start_date));
+            $data['backup_params']->diff_start_date = gmdate("Y-m-d", ($data['backup_params']->diff_start_date));
         }
 
         $this->send_response($data);
@@ -649,7 +649,7 @@ class Xcloner_Api
 
             $next_run_time = wp_next_scheduled('xcloner_scheduler_' . $res->id, array($res->id));
 
-            $next_run = date($this->xcloner_settings->get_xcloner_option('date_format') . " " . $this->xcloner_settings->get_xcloner_option('time_format'), $next_run_time);
+            $next_run = gmdate($this->xcloner_settings->get_xcloner_option('date_format') . " " . $this->xcloner_settings->get_xcloner_option('time_format'), $next_run_time);
 
             $remote_storage = $res->remote_storage;
 
@@ -658,7 +658,7 @@ class Xcloner_Api
             }
 
             if (trim($next_run)) {
-                $date_text = date(
+                $date_text = gmdate(
                     $this->xcloner_settings->get_xcloner_option('date_format') . " " . $this->xcloner_settings->get_xcloner_option('time_format'),
                     $next_run_time + ($this->xcloner_settings->get_xcloner_option('gmt_offset') * HOUR_IN_SECONDS)
                 );
@@ -681,7 +681,7 @@ class Xcloner_Api
                 if ($this->xcloner_file_system->get_storage_filesystem()->has($res->last_backup)) {
                     $metadata = $this->xcloner_file_system->get_storage_filesystem()->getMetadata($res->last_backup);
                     $backup_size = size_format($this->xcloner_file_system->get_backup_size($res->last_backup));
-                    $backup_time = date(
+                    $backup_time = gmdate(
                         $this->xcloner_settings->get_xcloner_option('date_format') . " " . $this->xcloner_settings->get_xcloner_option('time_format'),
                         $metadata['timestamp'] + ($this->xcloner_settings->get_xcloner_option('gmt_offset') * HOUR_IN_SECONDS)
                     );
@@ -971,7 +971,7 @@ class Xcloner_Api
 				$return['data'][ $i ][] = $column2;
 
 				// Column 3: Date
-				$return['data'][ $i ][] = ( ! empty( $file_info['timestamp'] ) ) ? date( "Y-m-d H:i", (int) $file_info['timestamp'] ) : '';
+				$return['data'][ $i ][] = ( ! empty( $file_info['timestamp'] ) ) ? gmdate( "Y-m-d H:i", (int) $file_info['timestamp'] ) : '';
 
 				// Column 4: Size
 				$return['data'][ $i ][] = esc_html( size_format( $file_info['size'] ) );
@@ -1059,7 +1059,7 @@ class Xcloner_Api
             foreach ($data['extracted_files'] as $file) {
                 $return['files'][$i]['path'] = $file->getPath();
                 $return['files'][$i]['size'] = $file->getSize();
-                $return['files'][$i]['mtime'] = date(
+                $return['files'][$i]['mtime'] = gmdate(
                     $this->xcloner_settings->get_xcloner_option('date_format') . " " . $this->xcloner_settings->get_xcloner_option('time_format'),
                     $file->getMtime()
                 );
@@ -1215,10 +1215,10 @@ class Xcloner_Api
 
         $chunkSize = 1024 * 1024;
         while (!feof($read_stream)) {
-            $buffer = fread($read_stream, $chunkSize);
+            $buffer = fread($read_stream, $chunkSize); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fread
             echo $buffer; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
         }
-        fclose($read_stream);
+        fclose($read_stream); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
 
         wp_die();
     }

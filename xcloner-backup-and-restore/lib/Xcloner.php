@@ -287,7 +287,7 @@ class Xcloner
         $characters = array_merge(range('A', 'Z'), range('a', 'z'), range('0', '9'));
         $max = count($characters) - 1;
         for ($i = 0; $i < $length; $i++) {
-            $rand = mt_rand(0, $max);
+            $rand = wp_rand(0, $max);
             $str .= $characters[$rand];
         }
         return $str;
@@ -305,11 +305,11 @@ class Xcloner
         }
 
         if (!is_dir($backup_storage_path)) {
-            if (!@mkdir($backup_storage_path)) {
+            if (!@mkdir($backup_storage_path)) { // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_mkdir
                 $status = "error";
                 $message = sprintf(
                     /* translators: %1$s is a value */
-                    __("Unable to create the Backup Storage Location Folder %1$s . This will automatically be fixed using a default path.", 'xcloner-backup-and-restore'),
+                    __('Unable to create the Backup Storage Location Folder %1$s . This will automatically be fixed using a default path.', 'xcloner-backup-and-restore'), // phpcs:ignore WordPress.WP.I18n.InterpolatedVariableText
                     $backup_storage_path
                 );
                 $this->trigger_message($message, $status, $backup_storage_path);
@@ -317,11 +317,11 @@ class Xcloner
                 return;
             }
         }
-        if (!is_writable($backup_storage_path)) {
+        if (!is_writable($backup_storage_path)) { // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_is_writable
             $status = "error";
             $message = sprintf(
                 /* translators: %1$s is a value */
-                __("Unable to write to the Backup Storage Location Folder %1$s . This will automatically be fixed using a default path.", 'xcloner-backup-and-restore'),
+                __('Unable to write to the Backup Storage Location Folder %1$s . This will automatically be fixed using a default path.', 'xcloner-backup-and-restore'), // phpcs:ignore WordPress.WP.I18n.InterpolatedVariableText
                 $backup_storage_path
             );
             $this->trigger_message($message, $status, $backup_storage_path);
@@ -342,7 +342,7 @@ class Xcloner
         do_action('xcloner_admin_notices', $message, $status);
 
         if (defined('XCLONER_STANDALONE_MODE') && XCLONER_STANDALONE_MODE) {
-            throw new Exception($message);
+            throw new Exception($message); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
         }
     }
 

@@ -41,7 +41,7 @@ class Xcloner_Logger extends Logger
 
         $this->logger_path = $logger_path;
 
-        if (!is_dir($xcloner_settings->get_xcloner_store_path()) or !is_writable($xcloner_settings->get_xcloner_store_path())) {
+        if (!is_dir($xcloner_settings->get_xcloner_store_path()) or !is_writable($xcloner_settings->get_xcloner_store_path())) { // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_is_writable
             $logger_path = 'php://stderr';
             $logger_path_tmp = "";
         }
@@ -99,7 +99,7 @@ class Xcloner_Logger extends Logger
             return false;
         }
 
-        $fp = fopen($this->main_logger_url, 'r');
+        $fp = fopen($this->main_logger_url, 'r'); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen
         fseek($fp, -1, SEEK_END);
         $pos = ftell($fp);
         $lastLine = "";
@@ -134,7 +134,7 @@ class Xcloner_Logger extends Logger
     public function print_info($message, $context = array())
     {
         if (php_sapi_name() == "cli" && !WP_DEBUG && !defined('XCLONER_DISABLE_OUTPUT')) {
-            echo sprintf("[%s] %s \n", date("Y-m-d H:i:s"), $message); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+            echo sprintf("[%s] %s \n", gmdate("Y-m-d H:i:s"), $message); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
         }
         return parent::info($message, $context);
     }

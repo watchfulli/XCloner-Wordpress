@@ -119,7 +119,7 @@ if ($requirements->check_backup_ready_status()) {
                                                 <?php echo esc_html__("Backup Date", 'xcloner-backup-and-restore') ?> :
                                             </div>
                                             <?php
-                                            echo esc_html(date($date_format . " " . $time_format, $latest_backup['timestamp'] + (get_option('gmt_offset') * HOUR_IN_SECONDS)))
+                                            echo esc_html(gmdate($date_format . " " . $time_format, $latest_backup['timestamp'] + (get_option('gmt_offset') * HOUR_IN_SECONDS)))
                                             ?>
                                         </div>
                                     <?php else: ?>
@@ -168,7 +168,7 @@ if ($requirements->check_backup_ready_status()) {
                                                 <?php echo esc_html__("Next Call", 'xcloner-backup-and-restore') ?>:
                                             </div>
                                             <?php if (isset($latest_schedule->next_run_time)) {
-                                                echo esc_html(date($date_format . " " . $time_format, $latest_schedule->next_run_time));
+                                                echo esc_html(gmdate($date_format . " " . $time_format, $latest_schedule->next_run_time));
                                             } else {
                                                 echo esc_html__("Unscheduled", 'xcloner-backup-and-restore');
                                             }

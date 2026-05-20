@@ -51,10 +51,10 @@ class Xcloner_Encryption
      */
     public function is_encrypted_file($filename)
     {
-        $fp = fopen($this->get_xcloner_path() . $filename, 'r');
+        $fp = fopen($this->get_xcloner_path() . $filename, 'r'); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen
         if (is_resource($fp)) {
-            $encryption_length = fread($fp, 16);
-            fclose($fp);
+            $encryption_length = fread($fp, 16); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fread
+            fclose($fp); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
             if (is_numeric($encryption_length)) {
                 return true;
             }
@@ -125,41 +125,41 @@ class Xcloner_Encryption
         }
 
         if (!$start) {
-            $fpOut = fopen($this->get_xcloner_path() . $dest, 'w');
+            $fpOut = fopen($this->get_xcloner_path() . $dest, 'w'); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen
         } else {
-            $fpOut = fopen($this->get_xcloner_path() . $dest, 'a');
+            $fpOut = fopen($this->get_xcloner_path() . $dest, 'a'); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen
         }
 
         if (is_resource($fpOut)) {
 
             // Put the initialization vector to the beginning of the file
             if (!$start) {
-                fwrite($fpOut, $iv);
+                fwrite($fpOut, $iv); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite
             }
 
             if (file_exists($this->get_xcloner_path() . $source) &&
-                $fpIn = fopen($this->get_xcloner_path() . $source, 'rb')) {
+                $fpIn = fopen($this->get_xcloner_path() . $source, 'rb')) { // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen
                 fseek($fpIn, (int)$start);
 
                 if (!feof($fpIn)) {
-                    $plaintext = fread($fpIn, 16 * self::FILE_ENCRYPTION_BLOCKS);
+                    $plaintext = fread($fpIn, 16 * self::FILE_ENCRYPTION_BLOCKS); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fread
                     $ciphertext = openssl_encrypt($plaintext, 'AES-128-CBC', $key_digest, OPENSSL_RAW_DATA, $iv);
 
                     // Use the first 16 bytes of the ciphertext as the next initialization vector
                     $iv = substr($ciphertext, 0, 16);
                     //$iv = openssl_random_pseudo_bytes(16);
 
-                    fwrite($fpOut, $ciphertext);
+                    fwrite($fpOut, $ciphertext); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite
 
                     $start = ftell($fpIn);
 
-                    fclose($fpOut);
+                    fclose($fpOut); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
 
                     unset($ciphertext);
                     unset($plaintext);
 
                     if (!feof($fpIn)) {
-                        fclose($fpIn);
+                        fclose($fpIn); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
                         //echo "\n NEW:".$key.md5($iv);
                         //self::encryptFile($source, $dest, $key, $start, $iv);
                         if ($recursive) {
@@ -200,7 +200,7 @@ class Xcloner_Encryption
                 $this->get_xcloner_path() . $dest,
                 $this->get_xcloner_path() . $source
             )) {
-            unlink($this->get_xcloner_path() . $dest);
+            wp_delete_file($this->get_xcloner_path() . $dest);
         }
 
 
@@ -258,22 +258,22 @@ class Xcloner_Encryption
 
         if (!$start) {
             if ($this->verification) {
-                $fpOut = fopen("php://stdout", 'w');
+                $fpOut = fopen("php://stdout", 'w'); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen
             } else {
-                $fpOut = fopen($this->get_xcloner_path() . $dest, 'w');
+                $fpOut = fopen($this->get_xcloner_path() . $dest, 'w'); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen
             }
         } else {
             if ($this->verification) {
-                $fpOut = fopen("php://stdout", 'a');
+                $fpOut = fopen("php://stdout", 'a'); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen
             } else {
-                $fpOut = fopen($this->get_xcloner_path() . $dest, 'a');
+                $fpOut = fopen($this->get_xcloner_path() . $dest, 'a'); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen
             }
         }
 
         if (is_resource($fpOut)) {
             if (file_exists($this->get_xcloner_path() . $source) &&
-                $fpIn = fopen($this->get_xcloner_path() . $source, 'rb')) {
-                $encryption_length = (int)fread($fpIn, 16);
+                $fpIn = fopen($this->get_xcloner_path() . $source, 'rb')) { // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen
+                $encryption_length = (int)fread($fpIn, 16); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fread
                 if (!$encryption_length) {
                     $encryption_length = self::FILE_ENCRYPTION_BLOCKS;
                 }
@@ -282,17 +282,17 @@ class Xcloner_Encryption
 
                 // Get the initialzation vector from the beginning of the file
                 if (!$iv) {
-                    $iv = fread($fpIn, 16);
+                    $iv = fread($fpIn, 16); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fread
                 }
 
                 if (!feof($fpIn)) {
 
                     // we have to read one block more for decrypting than for encrypting
-                    $ciphertext = fread($fpIn, 16 * ($encryption_length + 1));
+                    $ciphertext = fread($fpIn, 16 * ($encryption_length + 1)); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fread
                     $plaintext = openssl_decrypt($ciphertext, 'AES-128-CBC', $key_digest, OPENSSL_RAW_DATA, $iv);
 
                     if (!$plaintext) {
-                        unlink($this->get_xcloner_path() . $dest);
+                        wp_delete_file($this->get_xcloner_path() . $dest);
                         if (is_object($this->logger)) {
                             $this->logger->error('Backup decryption failed, please check your provided Encryption Key.');
                         }
@@ -303,15 +303,15 @@ class Xcloner_Encryption
                     $iv = substr($ciphertext, 0, 16);
 
                     if (!$this->verification) {
-                        fwrite($fpOut, $plaintext);
+                        fwrite($fpOut, $plaintext); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite
                     }
 
                     $start = ftell($fpIn);
 
-                    fclose($fpOut);
+                    fclose($fpOut); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
 
                     if (!feof($fpIn)) {
-                        fclose($fpIn);
+                        fclose($fpIn); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
                         if ($this->verification || $recursive) {
                             unset($ciphertext);
                             unset($plaintext);
@@ -349,7 +349,7 @@ class Xcloner_Encryption
                 $this->get_xcloner_path() . $dest,
                 $this->get_xcloner_path() . $source
             )) {
-            unlink($this->get_xcloner_path() . $dest);
+            wp_delete_file($this->get_xcloner_path() . $dest);
         }
 
         return array("target_file" => $dest, "finished" => 1);

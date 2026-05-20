@@ -73,7 +73,7 @@ if (version_compare(phpversion(), Xcloner_Activator::xcloner_minimum_version, '<
     ?>
     <div class="error notice">
         <p><?php /* translators: %1$s is a value, %2$s is a value */
-            echo sprintf(__("XCloner requires minimum PHP version %1$s in order to run correctly. We have detected your version as %2$s. Plugin is now deactivated.", 'xcloner-backup-and-restore'), Xcloner_Activator::xcloner_minimum_version, phpversion()) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></p>    </div>
+            echo sprintf(__('XCloner requires minimum PHP version %1$s in order to run correctly. We have detected your version as %2$s. Plugin is now deactivated.', 'xcloner-backup-and-restore'), Xcloner_Activator::xcloner_minimum_version, phpversion()) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped, WordPress.WP.I18n.InterpolatedVariableText ?></p>    </div>
     <?php
     include_once(ABSPATH . 'wp-admin/includes/plugin.php');
 

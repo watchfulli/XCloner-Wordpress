@@ -26,7 +26,10 @@ if (!defined('WPINC')) {
         </div>
         <div class=" col s12 m6">
             <p>
-                <?php echo sprintf(__('Visit %s and get your "Key" and "Secret <br />Visit %s to install your own S3 like service.'), "<a href='https://aws.amazon.com/s3/' target='_blank'>https://aws.amazon.com/s3/</a>", "<a href='https://minio.io/' target='_blank'>https://minio.io/</a>") // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+                <?php
+                /* translators: %1$s is the Amazon S3 URL link, %2$s is the MinIO URL link */
+                echo sprintf(__('Visit %1$s and get your "Key" and "Secret <br />Visit %2$s to install your own S3 like service.', 'xcloner-backup-and-restore'), "<a href='https://aws.amazon.com/s3/' target='_blank'>https://aws.amazon.com/s3/</a>", "<a href='https://minio.io/' target='_blank'>https://minio.io/</a>"); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped, WordPress.WP.I18n.InterpolatedVariableText
+                ?>
             </p>
         </div>
     </div>

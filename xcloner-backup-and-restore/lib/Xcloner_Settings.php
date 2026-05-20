@@ -124,13 +124,13 @@ class Xcloner_Settings
             $path = sys_get_temp_dir();
             if (!is_dir($path)) {
                 try {
-                    mkdir($path);
+                    wp_mkdir_p($path);
                 } catch (Exception $e) {
                     //silent catch
                 }
             }
 
-            if (!is_dir($path) || !is_writeable($path)) {
+            if (!is_dir($path) || !is_writeable($path)) { // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_is_writeable
                 $path = $this->get_xcloner_store_path();
             }
         }
@@ -141,7 +141,7 @@ class Xcloner_Settings
 
         if (!is_dir($path)) {
             try {
-                mkdir($path);
+                wp_mkdir_p( $path );
             } catch (Exception $e) {
                 //silent catch
             }
@@ -209,7 +209,7 @@ class Xcloner_Settings
 
     public function generate_new_hash()
     {
-        $hash = "-".md5(rand());
+        $hash = "-".md5(wp_rand());
 
         return substr($hash, 0, 6);
     }
@@ -221,7 +221,7 @@ class Xcloner_Settings
      */
     public function get_default_backup_name()
     {
-        $data = parse_url(get_site_url());
+        $data = wp_parse_url(get_site_url());
 
         return "backup_[domain]".(isset($data['port']) ? "_".$data['port'] : "")."-[time]-".($this->get_enable_mysql_backup() ? "sql" : "nosql");
     }
@@ -506,7 +506,7 @@ class Xcloner_Settings
             )
         );
 
-        register_setting('xcloner_system_settings_group', 'xcloner_force_tmp_path_site_root');
+        register_setting('xcloner_system_settings_group', 'xcloner_force_tmp_path_site_root', array('sanitize_callback' => 'absint'));
         add_settings_field(
             'xcloner_force_tmp_path_site_root',
             __('Force Temporary Path Within XCloner Storage', 'xcloner-backup-and-restore'),
@@ -519,7 +519,7 @@ class Xcloner_Settings
             )
         );
 
-        register_setting('xcloner_system_settings_group', 'xcloner_disable_email_notification');
+        register_setting('xcloner_system_settings_group', 'xcloner_disable_email_notification', array('sanitize_callback' => 'absint'));
         add_settings_field(
             'xcloner_disable_email_notification',
             __('Disable Email Notifications', 'xcloner-backup-and-restore'),
@@ -532,7 +532,7 @@ class Xcloner_Settings
             )
         );
 
-        register_setting('xcloner_system_settings_group', 'xcloner_restore_defaults');
+        register_setting('xcloner_system_settings_group', 'xcloner_restore_defaults', array('sanitize_callback' => 'absint'));
         add_settings_field(
             'xcloner_restore_defaults',
             __('Restore Default Settings', 'xcloner-backup-and-restore'),
@@ -630,7 +630,7 @@ class Xcloner_Settings
         */
 
         //REGISTERING THE 'CRON SECTION' FIELDS
-        register_setting('xcloner_cron_settings_group', 'xcloner_cron_frequency');
+        register_setting('xcloner_cron_settings_group', 'xcloner_cron_frequency', array('sanitize_callback' => 'sanitize_text_field'));
         add_settings_field(
             'xcloner_cron_frequency',
             __('Cron frequency', 'xcloner-backup-and-restore'),
