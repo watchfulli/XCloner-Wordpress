@@ -1,3 +1,11 @@
+= 4.8.7 =
+* Restrict OneDrive auth token access to users with manage_options capability
+* Improve output escaping for security compliance
+* Add ABSPATH check to prevent direct access to plugin files
+* Remove obsolete assets
+* Add translation domain to various strings to enhance translation
+* Improve date handling for consistency
+
 = 4.8.6 =
 * https://github.com/watchfulli/XCloner-Wordpress/issues/344
 
