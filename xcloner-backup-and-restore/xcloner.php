@@ -1,7 +1,4 @@
 <?php
-
-if ( ! defined( 'ABSPATH' ) ) exit;
-
 /**
  * The plugin bootstrap file
  *
@@ -17,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @wordpress-plugin
  * Plugin Name: XCloner - Site Backup and Restore
  * Plugin URI: https://xcloner.com/
- * Description:  XCloner is a tool that will help you manage your website backups, generate/restore/move so your website will be always secured! With XCloner you will be able to clone your site to any other location with just a few clicks, as well as transfer the backup archives to remote FTP, SFTP, DropBox, Amazon S3, Google Drive, WebDAV, Backblaze, Azure accounts.
+ * Description: XCloner is a tool that will help you manage your website backups, generate/restore/move so your website will be always secured! With XCloner you will be able to clone your site to any other location with just a few clicks, as well as transfer the backup archives to remote FTP, SFTP, DropBox, Amazon S3, Google Drive, WebDAV, Backblaze, Azure accounts.
  * Version: 4.8.7
  * Author: watchful
  * Author URI: https://watchful.net/
@@ -26,6 +23,10 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * Text Domain: xcloner-backup-and-restore
  * Domain Path: /languages
  */
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 require_once(__DIR__ . '/vendor/autoload.php');
 
 use Watchfulli\XClonerCore\Xcloner_Activator;
