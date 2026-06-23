@@ -4,7 +4,7 @@ jobs:
   deploy-wp:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
       - name: Update "tested up to version" to WordPress SVN
         run: |
           sudo apt-get update && sudo apt-get install -y subversion
