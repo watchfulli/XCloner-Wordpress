@@ -298,7 +298,8 @@ class Xcloner
      */
     public function check_dependencies()
     {
-        $backup_storage_path = (get_option('xcloner_store_path'));
+        $configured_storage_path = get_option('xcloner_store_path');
+        $backup_storage_path = $this->xcloner_settings->resolve_backup_storage_path($configured_storage_path);
 
         if (!$backup_storage_path) {
             $backup_storage_path = realpath(__DIR__ . DS . ".." . DS . ".." . DS . "..") . DS . "backups-" . $this->randomString('5') . DS;
@@ -306,30 +307,27 @@ class Xcloner
 
         if (!is_dir($backup_storage_path)) {
             if (!@mkdir($backup_storage_path)) { // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_mkdir
-                $status = "error";
                 $message = sprintf(
                     /* translators: %1$s is a value */
-                    __('Unable to create the Backup Storage Location Folder %1$s . This will automatically be fixed using a default path.', 'xcloner-backup-and-restore'), // phpcs:ignore WordPress.WP.I18n.InterpolatedVariableText
-                    $backup_storage_path
+                    __('Unable to create the Backup Storage Location Folder %1$s. Check the path and permissions. The configured storage location has not been changed.', 'xcloner-backup-and-restore'),
+                    esc_html($backup_storage_path)
                 );
-                $this->trigger_message($message, $status, $backup_storage_path);
-                update_option("xcloner_store_path", "");
-                return;
+                throw new Exception($message);
             }
         }
         if (!is_writable($backup_storage_path)) { // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_is_writable
-            $status = "error";
             $message = sprintf(
                 /* translators: %1$s is a value */
-                __('Unable to write to the Backup Storage Location Folder %1$s . This will automatically be fixed using a default path.', 'xcloner-backup-and-restore'), // phpcs:ignore WordPress.WP.I18n.InterpolatedVariableText
-                $backup_storage_path
+                __('Unable to write to the Backup Storage Location Folder %1$s. Check the path and permissions. The configured storage location has not been changed.', 'xcloner-backup-and-restore'),
+                esc_html($backup_storage_path)
             );
-            $this->trigger_message($message, $status, $backup_storage_path);
-            update_option("xcloner_store_path", "");
-            return;
+            throw new Exception($message);
         }
 
-        update_option("xcloner_store_path", $backup_storage_path);
+        // Only initialize an empty configuration; never replace a configured path.
+        if (!$configured_storage_path) {
+            update_option("xcloner_store_path", $backup_storage_path);
+        }
     }
 
     /**
