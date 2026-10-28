@@ -5,7 +5,7 @@ Tags: backup, database backup, cloud backup, WordPress backup, WordPress migrati
 Requires at least: 5.1
 Requires PHP: 7.3
 Tested up to: 7.0
-Stable tag: 4.8.7
+Stable tag: 4.8.8
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -118,6 +118,11 @@ Of course, schedules can be adjusted accordingly to how often you update your si
 11. Generate Backup Screen
 
 == Changelog ==
+
+= 4.8.8 =
+* Fix backup storage path resolution in chrooted CLI environments by resolving relative paths against the WordPress root, including local remote storage connections: https://github.com/watchfulli/XCloner-Wordpress/issues/336
+* Preserve the configured backup storage path when the directory cannot be created or is not writable, and report an error instead of falling back to a default location
+* Clarify supported backup storage paths in the Local Storage settings
 
 = 4.8.7 =
 * Restrict OneDrive auth token access to users with manage_options capability
