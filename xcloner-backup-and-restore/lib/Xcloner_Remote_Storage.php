@@ -579,7 +579,7 @@ class Xcloner_Remote_Storage
 
         $this->logger->info(sprintf("Creating the Local remote storage connection"), array(""));
 
-        $adapter = new Local($this->xcloner_settings->get_xcloner_option('xcloner_store_path'), LOCK_EX, '0001');
+        $adapter = new Local($this->xcloner_settings->get_xcloner_store_path(), LOCK_EX, '0001');
 
         $filesystem = new Filesystem($adapter, new Config([
             'disable_asserts' => true,

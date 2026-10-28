@@ -84,11 +84,30 @@ class Xcloner_Settings
     */
     public function get_xcloner_store_path()
     {
-        if (!$this->get_xcloner_option('xcloner_store_path') or !is_dir(/** @scrutinizer ignore-type */$this->get_xcloner_option('xcloner_store_path'))) {
-          $this->xcloner_container->check_dependencies();
+        $this->xcloner_container->check_dependencies();
+
+        return $this->resolve_backup_storage_path($this->get_xcloner_option('xcloner_store_path'));
+    }
+
+    /**
+     * Resolve relative paths against WordPress without changing the saved option.
+     *
+     * @param string $path
+     * @return string
+     */
+    public function resolve_backup_storage_path($path)
+    {
+        if (!$path) {
+            return '';
         }
 
-        return $this->get_xcloner_option('xcloner_store_path');
+        $windows_drive_path = strlen($path) >= 3 && preg_match('/^[a-zA-Z]:/', $path)
+            && ($path[2] === '/' || $path[2] === '\\');
+        if ($path[0] === '/' || $path[0] === '\\' || $windows_drive_path) {
+            return $path;
+        }
+
+        return rtrim(ABSPATH, '/\\') . DIRECTORY_SEPARATOR . $path;
     }
 
     /**

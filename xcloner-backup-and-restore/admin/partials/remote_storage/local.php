@@ -1,15 +1,17 @@
 <?php
+
 // If this file is called directly, abort.
 if (!defined('WPINC')) {
     die;
 }
 ?>
 <div class="collapsible-header">
-    <i class="material-icons">computer</i><?php echo esc_html__("Local Storage", 'xcloner-backup-and-restore') ?>
+    <i class="material-icons">computer</i><?php
+    echo esc_html__("Local Storage", 'xcloner-backup-and-restore') ?>
     <div class="switch right">
         <label>
             Off
-            <input type="checkbox" checked disabled class="disabled readonly" >
+            <input type="checkbox" checked disabled class="disabled readonly">
             <span class="lever"></span>
             On
         </label>
@@ -19,38 +21,52 @@ if (!defined('WPINC')) {
 
     <div class="row">
         <div class="col s12 m3 label">
-            <label for="aws_key"><?php echo esc_html__("Backup Start Location", 'xcloner-backup-and-restore') ?></label>
+            <label for="aws_key"><?php
+                echo esc_html__("Backup Start Location", 'xcloner-backup-and-restore') ?></label>
         </div>
         <div class=" col s12 m6">
-            <input placeholder="<?php echo esc_html__("Backup Start Location", 'xcloner-backup-and-restore') ?>" id="aws_key"
-                type="text" name="xcloner_start_path" class="validate"
-                value="<?php echo esc_attr(get_option("xcloner_start_path")) ?>" autocomplete="off">
+            <input placeholder="<?php
+            echo esc_html__("Backup Start Location", 'xcloner-backup-and-restore') ?>" id="aws_key"
+                   type="text" name="xcloner_start_path" class="validate"
+                   value="<?php
+                   echo esc_attr(get_option("xcloner_start_path")) ?>" autocomplete="off">
         </div>
     </div>
 
     <div class="row">
         <div class="col s12 m3 label">
-            <label for="aws_key"><?php echo esc_html__("Backup Storage Location", 'xcloner-backup-and-restore') ?></label>
+            <label for="aws_key"><?php
+                echo esc_html__("Backup Storage Location", 'xcloner-backup-and-restore') ?></label>
         </div>
         <div class=" col s12 m6">
-            <input placeholder="<?php echo esc_html__("Backup Storage Location", 'xcloner-backup-and-restore') ?>" id="aws_key"
-                type="text" name="xcloner_store_path" class="validate"
-                value="<?php echo esc_attr(get_option("xcloner_store_path")) ?>" autocomplete="off">
+            <input placeholder="<?php
+            echo esc_html__("Backup Storage Location", 'xcloner-backup-and-restore') ?>" id="aws_key"
+                   type="text" name="xcloner_store_path" class="validate"
+                   value="<?php
+                   echo esc_attr(get_option("xcloner_store_path")) ?>" autocomplete="off">
+            <p class="description"><?php
+                echo esc_html__(
+                        "Use an absolute path or a path relative to the WordPress root, for example ./wp-content/backups.",
+                        'xcloner-backup-and-restore'
+                ) ?></p>
         </div>
     </div>
 
-    <?php echo common_cleanup_html('local') // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+    <?php
+    echo common_cleanup_html('local') // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 
     <div class="row">
         <div class="col s6 m4">
             <button class="btn waves-effect waves-light" type="submit" name="action" id="action"
-                value="local"><?php echo esc_html__("Save Settings", 'xcloner-backup-and-restore') ?>
+                    value="local"><?php
+                echo esc_html__("Save Settings", 'xcloner-backup-and-restore') ?>
                 <i class="material-icons right">save</i>
             </button>
         </div>
         <div class="col s6 m4">
             <button class="btn waves-effect waves-light orange" type="submit" name="action" id="action" value="local"
-                onclick="jQuery('#connection_check').val('1')"><?php echo esc_html__("Verify", 'xcloner-backup-and-restore') ?>
+                    onclick="jQuery('#connection_check').val('1')"><?php
+                echo esc_html__("Verify", 'xcloner-backup-and-restore') ?>
                 <i class="material-icons right">import_export</i>
             </button>
         </div>
