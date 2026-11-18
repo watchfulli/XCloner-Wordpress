@@ -42,7 +42,9 @@ class Xcloner_Activator
 
         $xcloner_scheduler_table = $wpdb->prefix."xcloner_scheduler";
 
-        if ($installed_ver != $xcloner_db_version) {
+        $xcloner_scheduler_table_exists = $wpdb->get_var($wpdb->prepare("SHOW TABLES LIKE %s", $xcloner_scheduler_table));
+
+        if ($installed_ver != $xcloner_db_version || $xcloner_scheduler_table_exists != $xcloner_scheduler_table) {
             $xcloner_schedule_sql = "CREATE TABLE `".$xcloner_scheduler_table."` (
 				  `id` int(11) NOT NULL AUTO_INCREMENT,
 				  `name` varchar(255) NOT NULL,
@@ -60,7 +62,10 @@ class Xcloner_Activator
             require_once(ABSPATH.'wp-admin/includes/upgrade.php');
             dbDelta($xcloner_schedule_sql);
 
-            update_option("xcloner_db_version", $xcloner_db_version);
+            $xcloner_scheduler_table_exists = $wpdb->get_var($wpdb->prepare("SHOW TABLES LIKE %s", $xcloner_scheduler_table));
+            if ($xcloner_scheduler_table_exists == $xcloner_scheduler_table) {
+                update_option("xcloner_db_version", $xcloner_db_version);
+            }
         }
 
         if (get_option('xcloner_backup_compression_level') === false) {
