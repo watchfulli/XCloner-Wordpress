@@ -57,7 +57,8 @@ echo "➤ Installing composer dependencies (excluding dev) for scoping"
 composer install --no-dev --prefer-dist -o --no-interaction --working-dir="${SLUG}" --ignore-platform-reqs || exit 1
 
 echo "➤ Running PHP-Scoper to prefix namespaces"
-php "${PHPSCOPER_PHAR}" add-prefix --config "${CURRENT_DIR}/scoper.inc.php" --output-dir "${CURRENT_DIR}/build" --force || exit 1
+SCOPER_MEMORY_LIMIT="${XCLONER_BUILD_MEMORY_LIMIT:-2G}"
+php -d "memory_limit=${SCOPER_MEMORY_LIMIT}" "${PHPSCOPER_PHAR}" add-prefix --config "${CURRENT_DIR}/scoper.inc.php" --output-dir "${CURRENT_DIR}/build" --force || exit 1
 
 echo "➤ Preparing build directory from PHP-Scoper output"
 rm -rf "${BUILD_DIR}"
