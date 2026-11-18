@@ -23,6 +23,17 @@ return [
 	'exclude-constants' => $wordpress_constants,
 	'exclude-classes'   => $wordpress_classes,
 	'exclude-functions' => $wordpress_functions,
+	'patchers'          => [
+		static function ( string $file_path, string $prefix, string $contents ): string {
+			$path = str_replace( '\\', '/', $file_path );
+			if ( substr( $path, -strlen( '/aws/aws-sdk-php/src/Signature/SignatureV4.php' ) )
+			     !== '/aws/aws-sdk-php/src/Signature/SignatureV4.php' ) {
+				return $contents;
+			}
+
+			return str_replace( $prefix . '\\Ymd\\THis\\Z', 'Ymd\\THis\\Z', $contents );
+		},
+	],
 	'finders'           => [
 		Finder::create()
 		      ->files()

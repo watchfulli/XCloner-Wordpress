@@ -653,6 +653,8 @@ class Xcloner_Remote_Storage
             ),
             'region' => $this->xcloner_settings->get_xcloner_option("xcloner_aws_region"),
             'version' => 'latest',
+            // PHP-Scoper can prefix a class reference, but not the SDK's dynamic exception name.
+            'exception_class' => \Aws\S3\Exception\S3Exception::class,
         );
 
         if ($this->xcloner_settings->get_xcloner_option('xcloner_aws_endpoint')
