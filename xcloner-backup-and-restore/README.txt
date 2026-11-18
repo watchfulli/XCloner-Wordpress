@@ -5,7 +5,7 @@ Tags: backup, database backup, cloud backup, WordPress backup, WordPress migrati
 Requires at least: 5.1
 Requires PHP: 7.3
 Tested up to: 7.0
-Stable tag: 4.8.8
+Stable tag: 4.8.9
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -118,6 +118,12 @@ Of course, schedules can be adjusted accordingly to how often you update your si
 11. Generate Backup Screen
 
 == Changelog ==
+
+= 4.8.9 =
+* Fix Amazon S3 request signing and exception handling in packaged builds.
+* Make the PHP-Scoper memory limit configurable.
+* Improve ZIP packaging to work from any directory and include hidden files.
+* Add a Docker-based local build.
 
 = 4.8.8 =
 * Fix backup storage path resolution in chrooted CLI environments by resolving relative paths against the WordPress root, including local remote storage connections: https://github.com/watchfulli/XCloner-Wordpress/issues/336
